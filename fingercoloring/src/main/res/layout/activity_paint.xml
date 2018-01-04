@@ -1,0 +1,120 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/col_efefef">
+
+    <!--操作菜单-->
+    <LinearLayout
+        android:id="@+id/vgActionsPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg2"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/widget_size_10"
+        android:paddingTop="@dimen/widget_size_5">
+
+        <TextView
+            android:id="@+id/undo"
+            style="@style/PaintSecondTvStyle"
+            android:drawableTop="@drawable/fc_sel_undo"
+            android:text="@string/undo"/>
+
+        <TextView
+            android:id="@+id/redo"
+            style="@style/PaintSecondTvStyle"
+            android:drawableTop="@drawable/fc_sel_redo"
+            android:text="@string/redo"/>
+
+        <TextView
+            android:id="@+id/tvPickColor"
+            style="@style/PaintSecondTvStyle"
+            android:drawableTop="@drawable/sel_pick_color"
+            android:text="@string/pickcolor"/>
+
+        <TextView
+            android:id="@+id/tvGradient"
+            style="@style/PaintSecondTvStyle"
+            android:drawableTop="@drawable/sel_gradient_color"
+            android:text="@string/normal_color"/>
+
+        <TextView
+            android:id="@+id/tvTogglePalette"
+            style="@style/PaintSecondTvStyle"
+            android:drawableTop="@drawable/fc_svg_palette_wrapper"
+            android:text="@string/palette"/>
+
+        <TextView
+            android:id="@+id/tvAfterEffect"
+            style="@style/PaintSecondTvStyle"
+            android:drawableTop="@drawable/svg_effect_wrapper"
+            android:text="@string/after_effect"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/ivToggleActionBar"
+            android:layout_width="@dimen/widget_size_30"
+            android:layout_height="@dimen/widget_size_30"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/widget_size_5"
+            app:backgroundTint="@color/white"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/sel_bg_toggle_action_bar"/>
+    </LinearLayout>
+
+    <!--上色图片-->
+    <com.ue.fingercoloring.widget.ColourImageView
+        android:id="@+id/civColoring"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/vgColorsPanel"
+        android:layout_below="@id/vgActionsPanel"
+        android:layout_marginBottom="@dimen/widget_size_2"
+        android:layout_marginTop="@dimen/widget_size_2"
+        android:adjustViewBounds="true"
+        android:scaleType="fitEnd"/>
+
+    <!--取色板-->
+    <com.ue.fingercoloring.widget.ColorPicker
+        android:id="@+id/cpPaletteColorPicker"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/vgActionsPanel"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+    <!--底部颜色列表-->
+    <LinearLayout
+        android:id="@+id/vgColorsPanel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/widget_size_75"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/sp_maincolor_border"
+        android:orientation="horizontal">
+        <!--8种选定的颜色-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvPickedColors"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            app:layoutManager="android.support.v7.widget.GridLayoutManager"
+            app:reverseLayout="false"
+            app:spanCount="2"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvColors"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:scrollbars="none"
+            app:layoutManager="android.support.v7.widget.GridLayoutManager"
+            app:reverseLayout="false"
+            app:spanCount="2"/>
+    </LinearLayout>
+</RelativeLayout>

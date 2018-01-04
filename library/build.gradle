@@ -38,4 +38,8 @@ dependencies {
 
     compileOnly deps.kotlinJre
     compileOnly deps.support.app_compat
+    compileOnly deps.picasso
+    compileOnly deps.rxjava2
+    compileOnly deps.rxAndroid
+    compileOnly deps.gson
 }

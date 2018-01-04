@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvLastModify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/col_ffe0b2"
+        android:gravity="center"
+        android:padding="@dimen/widget_size_5"
+        android:textColor="@color/black"
+        android:textSize="@dimen/font_size_15"/>
+
+    <ImageView
+        android:id="@+id/ivThemeImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitStart"/>
+
+    <ImageView
+        android:id="@+id/ivDeleteWork"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/widget_size_5"
+        app:srcCompat="@drawable/fc_svg_delete_work"/>
+</LinearLayout>

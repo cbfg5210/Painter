@@ -3,8 +3,14 @@
           package="com.ue.fingercoloring">
 
     <application>
-        <activity android:name=".FingerColoringActivity">
-        </activity>
+        <activity
+            android:name=".feature.main.MainListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".feature.paint.PaintActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
