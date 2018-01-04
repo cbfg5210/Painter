@@ -50,4 +50,10 @@ dependencies {
     implementation deps.support.app_compat
     implementation deps.support.constraintLayout
     implementation project(':library')
+    if (!isRunAlone.toBoolean()) {
+        implementation project(':autodraw')
+        implementation project(':fingercoloring')
+        implementation project(':graffiti')
+        implementation project(':pixelpaint')
+    }
 }
