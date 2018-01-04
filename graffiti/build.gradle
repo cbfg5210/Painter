@@ -54,10 +54,14 @@ dependencies {
     if (isRunAlone.toBoolean()) {
         implementation deps.kotlinJre
         implementation deps.support.app_compat
+        implementation deps.support.design
         implementation project(':library')
+        implementation deps.picasso
     } else {
         compileOnly deps.kotlinJre
         compileOnly deps.support.app_compat
+        compileOnly deps.support.design
         compileOnly project(':library')
+        compileOnly deps.picasso
     }
 }

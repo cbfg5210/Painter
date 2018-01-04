@@ -3,8 +3,10 @@
           package="com.ue.graffiti">
 
     <application>
-        <activity android:name=".GraffitiActivity">
-        </activity>
+        <activity
+            android:name="com.yinghe.whiteboardlib.MultiImageSelectorActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Base.Theme.AppCompat.Dialog"/>
     </application>
 
 </manifest>
