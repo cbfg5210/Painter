@@ -1,4 +1,8 @@
-apply plugin: 'com.android.library'
+if (isRunAlone.toBoolean()) {
+    apply plugin: 'com.android.application'
+} else {
+    apply plugin: 'com.android.library'
+}
 
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -12,6 +16,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -33,6 +39,11 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
-    compileOnly deps.kotlinJre
-    compileOnly deps.support.app_compat
+    if (isRunAlone.toBoolean()) {
+        implementation deps.kotlinJre
+        implementation deps.support.app_compat
+    }else{
+        compileOnly deps.kotlinJre
+        compileOnly deps.support.app_compat
+    }
 }
