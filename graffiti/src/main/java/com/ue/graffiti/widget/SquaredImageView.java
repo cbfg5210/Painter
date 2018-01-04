@@ -1,4 +1,4 @@
-package com.yinghe.whiteboardlib.ui;
+package com.ue.graffiti.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;

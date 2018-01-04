@@ -1,4 +1,4 @@
-package com.yinghe.whiteboardlib.adapter;
+package com.ue.graffiti.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
@@ -12,8 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ue.graffiti.R;
-import com.yinghe.whiteboardlib.Utils.ScreenUtils;
-import com.yinghe.whiteboardlib.bean.SketchData;
+import com.ue.graffiti.util.ScreenUtils;
+import com.ue.graffiti.bean.SketchData;
 
 import java.util.List;
 

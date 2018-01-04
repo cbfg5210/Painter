@@ -1,4 +1,4 @@
-package com.yinghe.whiteboardlib;
+package com.ue.graffiti.ui;
 
 import android.Manifest;
 import android.app.Activity;

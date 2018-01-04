@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.yinghe.whiteboardlib.view;
+package com.ue.graffiti.widget;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -44,21 +44,21 @@ import android.view.View.OnTouchListener;
 import android.widget.Toast;
 
 import com.ue.graffiti.R;
-import com.yinghe.whiteboardlib.Utils.BitmapUtils;
-import com.yinghe.whiteboardlib.Utils.ScreenUtils;
-import com.yinghe.whiteboardlib.bean.PhotoRecord;
-import com.yinghe.whiteboardlib.bean.SketchData;
-import com.yinghe.whiteboardlib.bean.StrokeRecord;
+import com.ue.graffiti.util.BitmapUtils;
+import com.ue.graffiti.util.ScreenUtils;
+import com.ue.graffiti.bean.PhotoRecord;
+import com.ue.graffiti.bean.SketchData;
+import com.ue.graffiti.bean.StrokeRecord;
 
 import java.io.File;
 
-import static com.yinghe.whiteboardlib.Utils.BitmapUtils.createBitmapThumbnail;
-import static com.yinghe.whiteboardlib.bean.StrokeRecord.STROKE_TYPE_CIRCLE;
-import static com.yinghe.whiteboardlib.bean.StrokeRecord.STROKE_TYPE_DRAW;
-import static com.yinghe.whiteboardlib.bean.StrokeRecord.STROKE_TYPE_ERASER;
-import static com.yinghe.whiteboardlib.bean.StrokeRecord.STROKE_TYPE_LINE;
-import static com.yinghe.whiteboardlib.bean.StrokeRecord.STROKE_TYPE_RECTANGLE;
-import static com.yinghe.whiteboardlib.bean.StrokeRecord.STROKE_TYPE_TEXT;
+import static com.ue.graffiti.util.BitmapUtils.createBitmapThumbnail;
+import static com.ue.graffiti.bean.StrokeRecord.STROKE_TYPE_CIRCLE;
+import static com.ue.graffiti.bean.StrokeRecord.STROKE_TYPE_DRAW;
+import static com.ue.graffiti.bean.StrokeRecord.STROKE_TYPE_ERASER;
+import static com.ue.graffiti.bean.StrokeRecord.STROKE_TYPE_LINE;
+import static com.ue.graffiti.bean.StrokeRecord.STROKE_TYPE_RECTANGLE;
+import static com.ue.graffiti.bean.StrokeRecord.STROKE_TYPE_TEXT;
 
 
 public class SketchView extends View implements OnTouchListener {

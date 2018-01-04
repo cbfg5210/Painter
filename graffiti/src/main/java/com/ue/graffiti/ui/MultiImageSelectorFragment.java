@@ -1,4 +1,4 @@
-package com.yinghe.whiteboardlib;
+package com.ue.graffiti.ui;
 
 import android.Manifest;
 import android.app.Activity;
@@ -37,13 +37,12 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.ue.graffiti.R;
-import com.yinghe.whiteboardlib.Utils.DensityUtil;
-import com.yinghe.whiteboardlib.Utils.FileUtils;
-import com.yinghe.whiteboardlib.adapter.FolderAdapter;
-import com.yinghe.whiteboardlib.adapter.ImageGridAdapter;
-import com.yinghe.whiteboardlib.bean.Folder;
-import com.yinghe.whiteboardlib.bean.Image;
-import com.yinghe.whiteboardlib.fragment.WhiteBoardFragment;
+import com.ue.graffiti.util.DensityUtil;
+import com.ue.graffiti.util.FileUtils;
+import com.ue.graffiti.adapter.FolderAdapter;
+import com.ue.graffiti.adapter.ImageGridAdapter;
+import com.ue.graffiti.bean.Folder;
+import com.ue.graffiti.bean.Image;
 
 import java.io.File;
 import java.io.FileNotFoundException;

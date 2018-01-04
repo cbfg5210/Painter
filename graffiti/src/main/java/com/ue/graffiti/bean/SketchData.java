@@ -1,8 +1,8 @@
-package com.yinghe.whiteboardlib.bean;
+package com.ue.graffiti.bean;
 
 import android.graphics.Bitmap;
 
-import com.yinghe.whiteboardlib.view.SketchView;
+import com.ue.graffiti.widget.SketchView;
 
 import java.util.ArrayList;
 import java.util.List;

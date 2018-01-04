@@ -1,4 +1,4 @@
-package com.yinghe.whiteboardlib.adapter;
+package com.ue.graffiti.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,9 +10,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.ue.graffiti.R;
-import com.yinghe.whiteboardlib.MultiImageSelectorFragment;
-import com.yinghe.whiteboardlib.bean.Folder;
-import com.yinghe.whiteboardlib.fragment.WhiteBoardFragment;
+import com.ue.graffiti.ui.MultiImageSelectorFragment;
+import com.ue.graffiti.bean.Folder;
+import com.ue.graffiti.ui.WhiteBoardFragment;
 
 import java.io.File;
 import java.util.ArrayList;

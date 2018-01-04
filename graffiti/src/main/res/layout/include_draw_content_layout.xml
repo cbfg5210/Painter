@@ -14,7 +14,7 @@
             android:verticalSpacing="@dimen/sketch_gv_padding"
             android:numColumns="4" />
 
-        <com.yinghe.whiteboardlib.view.SketchView
+        <com.ue.graffiti.widget.SketchView
             android:id="@+id/sketch_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

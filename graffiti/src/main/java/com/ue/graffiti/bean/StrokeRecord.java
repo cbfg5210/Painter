@@ -1,4 +1,4 @@
-package com.yinghe.whiteboardlib.bean;
+package com.ue.graffiti.bean;
 
 import android.graphics.Paint;
 import android.graphics.Path;

@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
         <activity
-            android:name="com.MainActivity"
+            android:name=".ui.GraffitiActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
@@ -22,6 +22,6 @@
         <activity
             android:configChanges="orientation|screenSize"
             android:theme="@style/Base.Theme.AppCompat.Dialog"
-            android:name="com.yinghe.whiteboardlib.MultiImageSelectorActivity" />
+            android:name=".ui.MultiImageSelectorActivity" />
     </application>
 </manifest>

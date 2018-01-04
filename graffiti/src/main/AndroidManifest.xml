@@ -4,7 +4,7 @@
 
     <application>
         <activity
-            android:name="com.yinghe.whiteboardlib.MultiImageSelectorActivity"
+            android:name=".ui.MultiImageSelectorActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Base.Theme.AppCompat.Dialog"/>
     </application>

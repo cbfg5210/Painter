@@ -1,4 +1,4 @@
-package com.yinghe.whiteboardlib.fragment;
+package com.ue.graffiti.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -36,26 +36,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ue.graffiti.R;
-import com.yinghe.whiteboardlib.MultiImageSelector;
-import com.yinghe.whiteboardlib.Utils.BitmapUtils;
-import com.yinghe.whiteboardlib.Utils.ScreenUtils;
-import com.yinghe.whiteboardlib.Utils.TimeUtils;
-import com.yinghe.whiteboardlib.adapter.SketchDataGridAdapter;
-import com.yinghe.whiteboardlib.bean.SketchData;
-import com.yinghe.whiteboardlib.bean.StrokeRecord;
-import com.yinghe.whiteboardlib.view.SketchView;
+import com.ue.graffiti.util.BitmapUtils;
+import com.ue.graffiti.util.ScreenUtils;
+import com.ue.graffiti.util.TimeUtils;
+import com.ue.graffiti.adapter.SketchDataGridAdapter;
+import com.ue.graffiti.bean.SketchData;
+import com.ue.graffiti.bean.StrokeRecord;
+import com.ue.graffiti.widget.SketchView;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.yinghe.whiteboardlib.bean.StrokeRecord.STROKE_TYPE_CIRCLE;
-import static com.yinghe.whiteboardlib.bean.StrokeRecord.STROKE_TYPE_DRAW;
-import static com.yinghe.whiteboardlib.bean.StrokeRecord.STROKE_TYPE_ERASER;
-import static com.yinghe.whiteboardlib.bean.StrokeRecord.STROKE_TYPE_LINE;
-import static com.yinghe.whiteboardlib.bean.StrokeRecord.STROKE_TYPE_RECTANGLE;
-import static com.yinghe.whiteboardlib.bean.StrokeRecord.STROKE_TYPE_TEXT;
+import static com.ue.graffiti.bean.StrokeRecord.STROKE_TYPE_CIRCLE;
+import static com.ue.graffiti.bean.StrokeRecord.STROKE_TYPE_DRAW;
+import static com.ue.graffiti.bean.StrokeRecord.STROKE_TYPE_ERASER;
+import static com.ue.graffiti.bean.StrokeRecord.STROKE_TYPE_LINE;
+import static com.ue.graffiti.bean.StrokeRecord.STROKE_TYPE_RECTANGLE;
+import static com.ue.graffiti.bean.StrokeRecord.STROKE_TYPE_TEXT;
 
 public class WhiteBoardFragment extends Fragment implements SketchView.OnDrawChangedListener, View.OnClickListener {
 

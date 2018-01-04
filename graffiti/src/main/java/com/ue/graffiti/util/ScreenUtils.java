@@ -1,4 +1,4 @@
-package com.yinghe.whiteboardlib.Utils;
+package com.ue.graffiti.util;
 
 import android.content.Context;
 import android.graphics.Point;

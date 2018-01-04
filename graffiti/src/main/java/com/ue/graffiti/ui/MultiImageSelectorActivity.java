@@ -1,4 +1,4 @@
-package com.yinghe.whiteboardlib;
+package com.ue.graffiti.ui;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -19,7 +19,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.ue.graffiti.R;
-import com.yinghe.whiteboardlib.fragment.WhiteBoardFragment;
 
 import java.io.File;
 import java.util.ArrayList;
