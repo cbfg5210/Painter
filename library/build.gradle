@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -6,15 +6,16 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion buildVersions.targetSdk
     defaultConfig {
-        applicationId "com.ue.painter"
         minSdkVersion buildVersions.minSdk
         targetSdkVersion buildVersions.targetSdk
         versionCode 1
         versionName "1.0"
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -26,28 +27,15 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-    sourceSets {
-        main {
-            if (isRunAlone.toBoolean()) {
-                manifest.srcFile 'src/main/debug/AndroidManifest.xml'
-                java.srcDirs += "src/main/debug/java/";
-            } else {
-                manifest.srcFile 'src/main/AndroidManifest.xml'
-                java.srcDirs += "src/main/java/";
-            }
-        }
-    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
-    implementation deps.kotlinJre
-    implementation deps.support.app_compat
-    implementation deps.support.constraintLayout
-    implementation project(':library')
+    compileOnly deps.kotlinJre
+    compileOnly deps.support.app_compat
 }
