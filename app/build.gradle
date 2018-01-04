@@ -17,26 +17,17 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug{
+            versionNameSuffix '-DEBUG'
         }
     }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    sourceSets {
-        main {
-            if (isRunAlone.toBoolean()) {
-                manifest.srcFile 'src/main/debug/AndroidManifest.xml'
-                java.srcDirs += "src/main/debug/java/";
-            } else {
-                manifest.srcFile 'src/main/AndroidManifest.xml'
-                java.srcDirs += "src/main/java/";
-            }
-        }
     }
 }
 
