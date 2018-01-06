@@ -23,17 +23,22 @@ class PixelView : View {
     private var thirdOneRatio = 0F
     private var thirdTwoRatio = 0F
 
+    private val touchListener = MultiTouchListener()
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {
         thirdOneRatio = resources.getDimension(R.dimen.widget_size_1) / 3
         thirdTwoRatio = resources.getDimension(R.dimen.widget_size_2) / 3
 
-        val listener = MultiTouchListener()
-        listener.isRotateEnabled = false
-        listener.minimumScale = 1F
-        listener.maximumScale = 4F
-        setOnTouchListener(listener)
+        touchListener.isRotateEnabled = false
+        touchListener.minimumScale = 1F
+        touchListener.maximumScale = 4F
+        setOnTouchListener(touchListener)
+    }
+
+    fun setTranslateEnabled(isTranslateEnabled: Boolean) {
+        touchListener.isTranslateEnabled = isTranslateEnabled
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
