@@ -6,7 +6,9 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
 import com.ue.pixelpaint.gesture.MultiTouchListener
 
 
@@ -34,6 +36,11 @@ class PixelView : View {
         touchListener.isRotateEnabled = false
         touchListener.minimumScale = 1F
         touchListener.maximumScale = 4F
+        touchListener.setOnPixelTouchEvent(object : OnPixelTouchEvent {
+            override fun onPixelTouch(event: MotionEvent) {
+                Toast.makeText(context, "touch pixel", Toast.LENGTH_SHORT).show()
+            }
+        })
         setOnTouchListener(touchListener)
     }
 

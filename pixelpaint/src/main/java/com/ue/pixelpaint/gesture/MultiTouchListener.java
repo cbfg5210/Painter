@@ -4,6 +4,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
+import com.ue.pixelpaint.OnPixelTouchEvent;
+
 public class MultiTouchListener implements OnTouchListener {
     private static final int INVALID_POINTER_ID = -1;
     public boolean isRotateEnabled = true;
@@ -15,9 +17,14 @@ public class MultiTouchListener implements OnTouchListener {
     private float mPrevX;
     private float mPrevY;
     private ScaleGestureDetector mScaleGestureDetector;
+    private OnPixelTouchEvent mOnPixelTouchEvent;
 
     public MultiTouchListener() {
         mScaleGestureDetector = new ScaleGestureDetector(new ScaleGestureListener());
+    }
+
+    public void setOnPixelTouchEvent(OnPixelTouchEvent onPixelTouchEvent) {
+        mOnPixelTouchEvent = onPixelTouchEvent;
     }
 
     private static float adjustAngle(float degrees) {
@@ -77,6 +84,7 @@ public class MultiTouchListener implements OnTouchListener {
         mScaleGestureDetector.onTouchEvent(view, event);
 
         if (!isTranslateEnabled) {
+            mOnPixelTouchEvent.onPixelTouch(event);
             return true;
         }
 
