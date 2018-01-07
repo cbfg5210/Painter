@@ -1,8 +1,11 @@
 package com.ue.pixelpaint
 
 import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 
 
@@ -23,12 +26,12 @@ class PixelView : View {
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {
-//        thirdOneRatio = resources.getDimension(R.dimen.widget_size_1) / 3
-//        thirdTwoRatio = resources.getDimension(R.dimen.widget_size_2) / 3
+        thirdOneRatio = resources.getDimension(R.dimen.widget_size_1) * 0.3f
+        thirdTwoRatio = resources.getDimension(R.dimen.widget_size_2) * 0.3f
         setOnTouchListener(GestureTouchListener())
     }
 
-/*    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, widthMeasureSpec)
         Log.e("PixelView", "onMeasure: w=$measuredWidth,h=$measuredHeight")
     }
@@ -69,5 +72,5 @@ class PixelView : View {
 
             i += 8
         }
-    }*/
+    }
 }
