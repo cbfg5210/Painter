@@ -30,7 +30,7 @@ class PixelView : View, View.OnTouchListener {
     private var mActivePointerId = INVALID_POINTER_ID
     private var mPrevX = 0f
     private var mPrevY = 0f
-    private var mScaleGestureDetector = NScaleGestureDetector(NScaleGestureListener())
+    private val scaleGestureListener = NScaleGestureListener()
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -123,7 +123,7 @@ class PixelView : View, View.OnTouchListener {
     }
 
     override fun onTouch(view: View, event: MotionEvent): Boolean {
-        mScaleGestureDetector.onTouchEvent(view, event)
+        onTouchEvent(view, event)
 
         if (!isTranslateEnabled) {
             return true
@@ -148,7 +148,7 @@ class PixelView : View, View.OnTouchListener {
 
                     // Only move if the ScaleGestureDetector isn't processing a
                     // gesture.
-                    if (!mScaleGestureDetector.isInProgress()) {
+                    if (!isInProgress()) {
                         adjustTranslation(view, currX - mPrevX, currY - mPrevY)
                     }
                 }
@@ -182,18 +182,18 @@ class PixelView : View, View.OnTouchListener {
         private var mPivotY = 0f
         private val mPrevSpanVector = Vector2D()
 
-        fun onScaleBegin(detector: NScaleGestureDetector): Boolean {
-            mPivotX = detector.getFocusX()
-            mPivotY = detector.getFocusY()
-            mPrevSpanVector.set(detector.currentSpanVector)
+        fun onScaleBegin(): Boolean {
+            mPivotX = getFocusX()
+            mPivotY = getFocusY()
+            mPrevSpanVector.set(currentSpanVector)
             return true
         }
 
-        fun onScale(detector: NScaleGestureDetector): Boolean {
+        fun onScale(): Boolean {
             val info = TransformInfo()
-            info.deltaScale = if (isScaleEnabled) detector.getScaleFactor() else 1.0f
-            info.deltaX = if (isTranslateEnabled) detector.getFocusX() - mPivotX else 0.0f
-            info.deltaY = if (isTranslateEnabled) detector.getFocusY() - mPivotY else 0.0f
+            info.deltaScale = if (isScaleEnabled) getScaleFactor() else 1.0f
+            info.deltaX = if (isTranslateEnabled) getFocusX() - mPivotX else 0.0f
+            info.deltaY = if (isTranslateEnabled) getFocusY() - mPivotY else 0.0f
             info.pivotX = mPivotX
             info.pivotY = mPivotY
             info.minimumScale = minimumScale
@@ -214,358 +214,344 @@ class PixelView : View, View.OnTouchListener {
         var maximumScale = 0f
     }
 
-    class NScaleGestureDetector(private val mListener: NScaleGestureListener) {
-        private var mGestureInProgress = false
+    private val TAG = "ScaleGestureDetector"
+    private val PRESSURE_THRESHOLD = 0.67f
 
-        private var mPrevEvent: MotionEvent? = null
-        private var mCurrEvent: MotionEvent? = null
+    private var mGestureInProgress = false
 
-        val currentSpanVector: Vector2D
-        private var mFocusX = 0f
-        private var mFocusY = 0f
-        private var mPrevFingerDiffX = 0f
-        private var mPrevFingerDiffY = 0f
-        private var mCurrFingerDiffX = 0f
-        private var mCurrFingerDiffY = 0f
-        private var mCurrLen = 0f
-        private var mPrevLen = 0f
-        private var mScaleFactor = 0f
-        private var mCurrPressure = 0f
-        private var mPrevPressure = 0f
+    private var mPrevEvent: MotionEvent? = null
+    private var mCurrEvent: MotionEvent? = null
 
-        private var mInvalidGesture = false
+    val currentSpanVector: Vector2D
+    private var mFocusX = 0f
+    private var mFocusY = 0f
+    private var mPrevFingerDiffX = 0f
+    private var mPrevFingerDiffY = 0f
+    private var mCurrFingerDiffX = 0f
+    private var mCurrFingerDiffY = 0f
+    private var mCurrLen = 0f
+    private var mPrevLen = 0f
+    private var mScaleFactor = 0f
+    private var mCurrPressure = 0f
+    private var mPrevPressure = 0f
 
-        // Pointer IDs currently responsible for the two fingers controlling the gesture
-        private var mActiveId0 = 0
-        private var mActiveId1 = 0
-        private var mActive0MostRecent = false
+    private var mInvalidGesture = false
 
-        init {
-            currentSpanVector = Vector2D()
+    // Pointer IDs currently responsible for the two fingers controlling the gesture
+    private var mActiveId0 = 0
+    private var mActiveId1 = 0
+    private var mActive0MostRecent = false
+
+    init {
+        currentSpanVector = Vector2D()
+    }
+
+    fun onTouchEvent(view: View, event: MotionEvent): Boolean {
+        val action = event.actionMasked
+
+        if (action == MotionEvent.ACTION_DOWN) {
+            reset() // Start fresh
         }
 
-        fun onTouchEvent(view: View, event: MotionEvent): Boolean {
-            val action = event.actionMasked
+        var handled = true
+        if (mInvalidGesture) {
+            handled = false
+        } else if (!mGestureInProgress) {
+            when (action) {
+                MotionEvent.ACTION_DOWN -> {
+                    mActiveId0 = event.getPointerId(0)
+                    mActive0MostRecent = true
+                }
 
-            if (action == MotionEvent.ACTION_DOWN) {
-                reset() // Start fresh
+                MotionEvent.ACTION_UP -> reset()
+
+                MotionEvent.ACTION_POINTER_DOWN -> {
+                    // We have a new multi-finger gesture
+                    if (mPrevEvent != null) mPrevEvent!!.recycle()
+                    mPrevEvent = MotionEvent.obtain(event)
+
+                    val index1 = event.actionIndex
+                    var index0 = event.findPointerIndex(mActiveId0)
+                    mActiveId1 = event.getPointerId(index1)
+                    if (index0 < 0 || index0 == index1) {
+                        // Probably someone sending us a broken event stream.
+                        index0 = findNewActiveIndex(event, mActiveId1, -1)
+                        mActiveId0 = event.getPointerId(index0)
+                    }
+                    mActive0MostRecent = false
+
+                    setContext(event)
+
+                    mGestureInProgress = scaleGestureListener.onScaleBegin()
+                }
             }
+        } else {
+            // Transform gesture in progress - attempt to handle it
+            when (action) {
+                MotionEvent.ACTION_POINTER_DOWN -> {
+                    // End the old gesture and begin a new one with the most recent two fingers.
+                    val oldActive0 = mActiveId0
+                    val oldActive1 = mActiveId1
+                    reset()
 
-            var handled = true
-            if (mInvalidGesture) {
-                handled = false
-            } else if (!mGestureInProgress) {
-                when (action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        mActiveId0 = event.getPointerId(0)
+                    mPrevEvent = MotionEvent.obtain(event)
+                    mActiveId0 = if (mActive0MostRecent) oldActive0 else oldActive1
+                    mActiveId1 = event.getPointerId(event.actionIndex)
+                    mActive0MostRecent = false
+
+                    var index0 = event.findPointerIndex(mActiveId0)
+                    if (index0 < 0 || mActiveId0 == mActiveId1) {
+                        // Probably someone sending us a broken event stream.
+                        index0 = findNewActiveIndex(event, mActiveId1, -1)
+                        mActiveId0 = event.getPointerId(index0)
+                    }
+
+                    setContext(event)
+
+                    mGestureInProgress = scaleGestureListener.onScaleBegin()
+                }
+
+                MotionEvent.ACTION_POINTER_UP -> {
+                    val pointerCount = event.pointerCount
+                    val actionIndex = event.actionIndex
+                    val actionId = event.getPointerId(actionIndex)
+
+                    var gestureEnded = false
+                    if (pointerCount > 2) {
+                        if (actionId == mActiveId0) {
+                            val newIndex = findNewActiveIndex(event, mActiveId1, actionIndex)
+                            if (newIndex >= 0) {
+                                mActiveId0 = event.getPointerId(newIndex)
+                                mActive0MostRecent = true
+                                mPrevEvent = MotionEvent.obtain(event)
+                                setContext(event)
+                                mGestureInProgress = scaleGestureListener.onScaleBegin()
+                            } else {
+                                gestureEnded = true
+                            }
+                        } else if (actionId == mActiveId1) {
+                            val newIndex = findNewActiveIndex(event, mActiveId0, actionIndex)
+                            if (newIndex >= 0) {
+                                mActiveId1 = event.getPointerId(newIndex)
+                                mActive0MostRecent = false
+                                mPrevEvent = MotionEvent.obtain(event)
+                                setContext(event)
+                                mGestureInProgress = scaleGestureListener.onScaleBegin()
+                            } else {
+                                gestureEnded = true
+                            }
+                        }
+                        mPrevEvent!!.recycle()
+                        mPrevEvent = MotionEvent.obtain(event)
+                        setContext(event)
+                    } else {
+                        gestureEnded = true
+                    }
+
+                    if (gestureEnded) {
+                        // Gesture ended
+                        setContext(event)
+
+                        // Set focus point to the remaining finger
+                        val activeId = if (actionId == mActiveId0) mActiveId1 else mActiveId0
+                        val index = event.findPointerIndex(activeId)
+                        mFocusX = event.getX(index)
+                        mFocusY = event.getY(index)
+
+                        reset()
+                        mActiveId0 = activeId
                         mActive0MostRecent = true
                     }
-
-                    MotionEvent.ACTION_UP -> reset()
-
-                    MotionEvent.ACTION_POINTER_DOWN -> {
-                        // We have a new multi-finger gesture
-                        if (mPrevEvent != null) mPrevEvent!!.recycle()
-                        mPrevEvent = MotionEvent.obtain(event)
-
-                        val index1 = event.actionIndex
-                        var index0 = event.findPointerIndex(mActiveId0)
-                        mActiveId1 = event.getPointerId(index1)
-                        if (index0 < 0 || index0 == index1) {
-                            // Probably someone sending us a broken event stream.
-                            index0 = findNewActiveIndex(event, mActiveId1, -1)
-                            mActiveId0 = event.getPointerId(index0)
-                        }
-                        mActive0MostRecent = false
-
-                        setContext(event)
-
-                        mGestureInProgress = mListener.onScaleBegin(this)
-                    }
                 }
-            } else {
-                // Transform gesture in progress - attempt to handle it
-                when (action) {
-                    MotionEvent.ACTION_POINTER_DOWN -> {
-                        // End the old gesture and begin a new one with the most recent two fingers.
-                        val oldActive0 = mActiveId0
-                        val oldActive1 = mActiveId1
-                        reset()
 
-                        mPrevEvent = MotionEvent.obtain(event)
-                        mActiveId0 = if (mActive0MostRecent) oldActive0 else oldActive1
-                        mActiveId1 = event.getPointerId(event.actionIndex)
-                        mActive0MostRecent = false
+                MotionEvent.ACTION_CANCEL -> {
+                    reset()
+                }
 
-                        var index0 = event.findPointerIndex(mActiveId0)
-                        if (index0 < 0 || mActiveId0 == mActiveId1) {
-                            // Probably someone sending us a broken event stream.
-                            index0 = findNewActiveIndex(event, mActiveId1, -1)
-                            mActiveId0 = event.getPointerId(index0)
-                        }
+                MotionEvent.ACTION_UP -> reset()
 
-                        setContext(event)
+                MotionEvent.ACTION_MOVE -> {
+                    setContext(event)
 
-                        mGestureInProgress = mListener.onScaleBegin(this)
-                    }
+                    // Only accept the event if our relative pressure is within
+                    // a certain limit - this can help filter shaky data as a
+                    // finger is lifted.
+                    if (mCurrPressure / mPrevPressure > PRESSURE_THRESHOLD) {
+                        val updatePrevious = scaleGestureListener.onScale()
 
-                    MotionEvent.ACTION_POINTER_UP -> {
-                        val pointerCount = event.pointerCount
-                        val actionIndex = event.actionIndex
-                        val actionId = event.getPointerId(actionIndex)
-
-                        var gestureEnded = false
-                        if (pointerCount > 2) {
-                            if (actionId == mActiveId0) {
-                                val newIndex = findNewActiveIndex(event, mActiveId1, actionIndex)
-                                if (newIndex >= 0) {
-                                    mActiveId0 = event.getPointerId(newIndex)
-                                    mActive0MostRecent = true
-                                    mPrevEvent = MotionEvent.obtain(event)
-                                    setContext(event)
-                                    mGestureInProgress = mListener.onScaleBegin(this)
-                                } else {
-                                    gestureEnded = true
-                                }
-                            } else if (actionId == mActiveId1) {
-                                val newIndex = findNewActiveIndex(event, mActiveId0, actionIndex)
-                                if (newIndex >= 0) {
-                                    mActiveId1 = event.getPointerId(newIndex)
-                                    mActive0MostRecent = false
-                                    mPrevEvent = MotionEvent.obtain(event)
-                                    setContext(event)
-                                    mGestureInProgress = mListener.onScaleBegin(this)
-                                } else {
-                                    gestureEnded = true
-                                }
-                            }
+                        if (updatePrevious) {
                             mPrevEvent!!.recycle()
                             mPrevEvent = MotionEvent.obtain(event)
-                            setContext(event)
-                        } else {
-                            gestureEnded = true
-                        }
-
-                        if (gestureEnded) {
-                            // Gesture ended
-                            setContext(event)
-
-                            // Set focus point to the remaining finger
-                            val activeId = if (actionId == mActiveId0) mActiveId1 else mActiveId0
-                            val index = event.findPointerIndex(activeId)
-                            mFocusX = event.getX(index)
-                            mFocusY = event.getY(index)
-
-                            reset()
-                            mActiveId0 = activeId
-                            mActive0MostRecent = true
-                        }
-                    }
-
-                    MotionEvent.ACTION_CANCEL -> {
-                        reset()
-                    }
-
-                    MotionEvent.ACTION_UP -> reset()
-
-                    MotionEvent.ACTION_MOVE -> {
-                        setContext(event)
-
-                        // Only accept the event if our relative pressure is within
-                        // a certain limit - this can help filter shaky data as a
-                        // finger is lifted.
-                        if (mCurrPressure / mPrevPressure > PRESSURE_THRESHOLD) {
-                            val updatePrevious = mListener.onScale(this)
-
-                            if (updatePrevious) {
-                                mPrevEvent!!.recycle()
-                                mPrevEvent = MotionEvent.obtain(event)
-                            }
                         }
                     }
                 }
             }
-
-            return handled
         }
 
-        private fun findNewActiveIndex(ev: MotionEvent, otherActiveId: Int, removedPointerIndex: Int): Int {
-            val pointerCount = ev.pointerCount
+        return handled
+    }
 
-            // It's ok if this isn't found and returns -1, it simply won't match.
-            val otherActiveIndex = ev.findPointerIndex(otherActiveId)
+    private fun findNewActiveIndex(ev: MotionEvent, otherActiveId: Int, removedPointerIndex: Int): Int {
+        val pointerCount = ev.pointerCount
 
-            // Pick a new id and update tracking state.
-            for (i in 0 until pointerCount) {
-                if (i != removedPointerIndex && i != otherActiveIndex) {
-                    return i
-                }
+        // It's ok if this isn't found and returns -1, it simply won't match.
+        val otherActiveIndex = ev.findPointerIndex(otherActiveId)
+
+        // Pick a new id and update tracking state.
+        for (i in 0 until pointerCount) {
+            if (i != removedPointerIndex && i != otherActiveIndex) {
+                return i
             }
-            return -1
+        }
+        return -1
+    }
+
+    private fun setContext(curr: MotionEvent) {
+        if (mCurrEvent != null) {
+            mCurrEvent!!.recycle()
+        }
+        mCurrEvent = MotionEvent.obtain(curr)
+
+        mCurrLen = -1f
+        mPrevLen = -1f
+        mScaleFactor = -1f
+        currentSpanVector.set(0.0f, 0.0f)
+
+        val prev = mPrevEvent
+
+        val prevIndex0 = prev!!.findPointerIndex(mActiveId0)
+        val prevIndex1 = prev.findPointerIndex(mActiveId1)
+        val currIndex0 = curr.findPointerIndex(mActiveId0)
+        val currIndex1 = curr.findPointerIndex(mActiveId1)
+
+        if (prevIndex0 < 0 || prevIndex1 < 0 || currIndex0 < 0 || currIndex1 < 0) {
+            mInvalidGesture = true
+            Log.e(TAG, "Invalid MotionEvent stream detected.", Throwable())
+            return
         }
 
-        private fun setContext(curr: MotionEvent) {
-            if (mCurrEvent != null) {
-                mCurrEvent!!.recycle()
-            }
-            mCurrEvent = MotionEvent.obtain(curr)
+        val px0 = prev.getX(prevIndex0)
+        val py0 = prev.getY(prevIndex0)
+        val px1 = prev.getX(prevIndex1)
+        val py1 = prev.getY(prevIndex1)
+        val cx0 = curr.getX(currIndex0)
+        val cy0 = curr.getY(currIndex0)
+        val cx1 = curr.getX(currIndex1)
+        val cy1 = curr.getY(currIndex1)
 
-            mCurrLen = -1f
-            mPrevLen = -1f
-            mScaleFactor = -1f
-            currentSpanVector.set(0.0f, 0.0f)
+        val pvx = px1 - px0
+        val pvy = py1 - py0
+        val cvx = cx1 - cx0
+        val cvy = cy1 - cy0
 
-            val prev = mPrevEvent
+        currentSpanVector.set(cvx, cvy)
 
-            val prevIndex0 = prev!!.findPointerIndex(mActiveId0)
-            val prevIndex1 = prev.findPointerIndex(mActiveId1)
-            val currIndex0 = curr.findPointerIndex(mActiveId0)
-            val currIndex1 = curr.findPointerIndex(mActiveId1)
+        mPrevFingerDiffX = pvx
+        mPrevFingerDiffY = pvy
+        mCurrFingerDiffX = cvx
+        mCurrFingerDiffY = cvy
 
-            if (prevIndex0 < 0 || prevIndex1 < 0 || currIndex0 < 0 || currIndex1 < 0) {
-                mInvalidGesture = true
-                Log.e(TAG, "Invalid MotionEvent stream detected.", Throwable())
-                return
-            }
+        mFocusX = cx0 + cvx * 0.5f
+        mFocusY = cy0 + cvy * 0.5f
+        mCurrPressure = curr.getPressure(currIndex0) + curr.getPressure(currIndex1)
+        mPrevPressure = prev.getPressure(prevIndex0) + prev.getPressure(prevIndex1)
+    }
 
-            val px0 = prev.getX(prevIndex0)
-            val py0 = prev.getY(prevIndex0)
-            val px1 = prev.getX(prevIndex1)
-            val py1 = prev.getY(prevIndex1)
-            val cx0 = curr.getX(currIndex0)
-            val cy0 = curr.getY(currIndex0)
-            val cx1 = curr.getX(currIndex1)
-            val cy1 = curr.getY(currIndex1)
-
-            val pvx = px1 - px0
-            val pvy = py1 - py0
-            val cvx = cx1 - cx0
-            val cvy = cy1 - cy0
-
-            currentSpanVector.set(cvx, cvy)
-
-            mPrevFingerDiffX = pvx
-            mPrevFingerDiffY = pvy
-            mCurrFingerDiffX = cvx
-            mCurrFingerDiffY = cvy
-
-            mFocusX = cx0 + cvx * 0.5f
-            mFocusY = cy0 + cvy * 0.5f
-            mCurrPressure = curr.getPressure(currIndex0) + curr.getPressure(currIndex1)
-            mPrevPressure = prev.getPressure(prevIndex0) + prev.getPressure(prevIndex1)
+    private fun reset() {
+        if (mPrevEvent != null) {
+            mPrevEvent!!.recycle()
+            mPrevEvent = null
         }
-
-        private fun reset() {
-            if (mPrevEvent != null) {
-                mPrevEvent!!.recycle()
-                mPrevEvent = null
-            }
-            if (mCurrEvent != null) {
-                mCurrEvent!!.recycle()
-                mCurrEvent = null
-            }
-            mGestureInProgress = false
-            mActiveId0 = -1
-            mActiveId1 = -1
-            mInvalidGesture = false
+        if (mCurrEvent != null) {
+            mCurrEvent!!.recycle()
+            mCurrEvent = null
         }
+        mGestureInProgress = false
+        mActiveId0 = -1
+        mActiveId1 = -1
+        mInvalidGesture = false
+    }
 
-        /**
-         * Returns `true` if a two-finger scale gesture is in progress.
-         *
-         * @return `true` if a scale gesture is in progress, `false` otherwise.
-         */
-        fun isInProgress(): Boolean {
-            return mGestureInProgress
+    /**
+     * Returns `true` if a two-finger scale gesture is in progress.
+     *
+     * @return `true` if a scale gesture is in progress, `false` otherwise.
+     */
+    fun isInProgress(): Boolean {
+        return mGestureInProgress
+    }
+
+    /**
+     * Get the X coordinate of the current gesture's focal point.
+     * If a gesture is in progress, the focal point is directly between
+     * the two pointers forming the gesture.
+     * If a gesture is ending, the focal point is the location of the
+     * remaining pointer on the screen.
+     * If [.isInProgress] would return false, the result of this
+     * function is undefined.
+     *
+     * @return X coordinate of the focal point in pixels.
+     */
+    fun getFocusX(): Float {
+        return mFocusX
+    }
+
+    /**
+     * Get the Y coordinate of the current gesture's focal point.
+     * If a gesture is in progress, the focal point is directly between
+     * the two pointers forming the gesture.
+     * If a gesture is ending, the focal point is the location of the
+     * remaining pointer on the screen.
+     * If [.isInProgress] would return false, the result of this
+     * function is undefined.
+     *
+     * @return Y coordinate of the focal point in pixels.
+     */
+    fun getFocusY(): Float {
+        return mFocusY
+    }
+
+    /**
+     * Return the current distance between the two pointers forming the
+     * gesture in progress.
+     *
+     * @return Distance between pointers in pixels.
+     */
+    fun getCurrentSpan(): Float {
+        if (mCurrLen == -1f) {
+            val cvx = mCurrFingerDiffX
+            val cvy = mCurrFingerDiffY
+            mCurrLen = Math.sqrt((cvx * cvx + cvy * cvy).toDouble()).toFloat()
         }
+        return mCurrLen
+    }
 
-        /**
-         * Get the X coordinate of the current gesture's focal point.
-         * If a gesture is in progress, the focal point is directly between
-         * the two pointers forming the gesture.
-         * If a gesture is ending, the focal point is the location of the
-         * remaining pointer on the screen.
-         * If [.isInProgress] would return false, the result of this
-         * function is undefined.
-         *
-         * @return X coordinate of the focal point in pixels.
-         */
-        fun getFocusX(): Float {
-            return mFocusX
+    /**
+     * Return the previous distance between the two pointers forming the
+     * gesture in progress.
+     *
+     * @return Previous distance between pointers in pixels.
+     */
+    fun getPreviousSpan(): Float {
+        if (mPrevLen == -1f) {
+            val pvx = mPrevFingerDiffX
+            val pvy = mPrevFingerDiffY
+            mPrevLen = Math.sqrt((pvx * pvx + pvy * pvy).toDouble()).toFloat()
         }
+        return mPrevLen
+    }
 
-        /**
-         * Get the Y coordinate of the current gesture's focal point.
-         * If a gesture is in progress, the focal point is directly between
-         * the two pointers forming the gesture.
-         * If a gesture is ending, the focal point is the location of the
-         * remaining pointer on the screen.
-         * If [.isInProgress] would return false, the result of this
-         * function is undefined.
-         *
-         * @return Y coordinate of the focal point in pixels.
-         */
-        fun getFocusY(): Float {
-            return mFocusY
+    /**
+     * Return the scaling factor from the previous scale event to the current
+     * event. This value is defined as
+     * ([.getCurrentSpan] / [.getPreviousSpan]).
+     *
+     * @return The current scaling factor.
+     */
+    fun getScaleFactor(): Float {
+        if (mScaleFactor == -1f) {
+            mScaleFactor = getCurrentSpan() / getPreviousSpan()
         }
-
-        /**
-         * Return the current distance between the two pointers forming the
-         * gesture in progress.
-         *
-         * @return Distance between pointers in pixels.
-         */
-        fun getCurrentSpan(): Float {
-            if (mCurrLen == -1f) {
-                val cvx = mCurrFingerDiffX
-                val cvy = mCurrFingerDiffY
-                mCurrLen = Math.sqrt((cvx * cvx + cvy * cvy).toDouble()).toFloat()
-            }
-            return mCurrLen
-        }
-
-        /**
-         * Return the previous distance between the two pointers forming the
-         * gesture in progress.
-         *
-         * @return Previous distance between pointers in pixels.
-         */
-        fun getPreviousSpan(): Float {
-            if (mPrevLen == -1f) {
-                val pvx = mPrevFingerDiffX
-                val pvy = mPrevFingerDiffY
-                mPrevLen = Math.sqrt((pvx * pvx + pvy * pvy).toDouble()).toFloat()
-            }
-            return mPrevLen
-        }
-
-        /**
-         * Return the scaling factor from the previous scale event to the current
-         * event. This value is defined as
-         * ([.getCurrentSpan] / [.getPreviousSpan]).
-         *
-         * @return The current scaling factor.
-         */
-        fun getScaleFactor(): Float {
-            if (mScaleFactor == -1f) {
-                mScaleFactor = getCurrentSpan() / getPreviousSpan()
-            }
-            return mScaleFactor
-        }
-
-        companion object {
-            private val TAG = "ScaleGestureDetector"
-
-            /**
-             * This value is the threshold ratio between our previous combined pressure
-             * and the current combined pressure. We will only fire an onScale event if
-             * the computed ratio between the current and previous event pressures is
-             * greater than this value. When pressure decreases rapidly between events
-             * the position values can often be imprecise, as it usually indicates
-             * that the user is in the process of lifting a pointer off of the device.
-             * Its value was tuned experimentally.
-             */
-            private val PRESSURE_THRESHOLD = 0.67f
-        }
+        return mScaleFactor
     }
 }
