@@ -30,7 +30,6 @@ class PixelView : View, View.OnTouchListener {
     private var mActivePointerId = INVALID_POINTER_ID
     private var mPrevX = 0f
     private var mPrevY = 0f
-    private val scaleGestureListener = NScaleGestureListener()
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -176,32 +175,29 @@ class PixelView : View, View.OnTouchListener {
         return true
     }
 
-    inner class NScaleGestureListener {
+    private var mPivotX = 0f
+    private var mPivotY = 0f
+    private val mPrevSpanVector = Vector2D()
 
-        private var mPivotX = 0f
-        private var mPivotY = 0f
-        private val mPrevSpanVector = Vector2D()
+    fun onScaleBegin(): Boolean {
+        mPivotX = getFocusX()
+        mPivotY = getFocusY()
+        mPrevSpanVector.set(currentSpanVector)
+        return true
+    }
 
-        fun onScaleBegin(): Boolean {
-            mPivotX = getFocusX()
-            mPivotY = getFocusY()
-            mPrevSpanVector.set(currentSpanVector)
-            return true
-        }
+    fun onScale(): Boolean {
+        val info = TransformInfo()
+        info.deltaScale = if (isScaleEnabled) getScaleFactor() else 1.0f
+        info.deltaX = if (isTranslateEnabled) getFocusX() - mPivotX else 0.0f
+        info.deltaY = if (isTranslateEnabled) getFocusY() - mPivotY else 0.0f
+        info.pivotX = mPivotX
+        info.pivotY = mPivotY
+        info.minimumScale = minimumScale
+        info.maximumScale = maximumScale
 
-        fun onScale(): Boolean {
-            val info = TransformInfo()
-            info.deltaScale = if (isScaleEnabled) getScaleFactor() else 1.0f
-            info.deltaX = if (isTranslateEnabled) getFocusX() - mPivotX else 0.0f
-            info.deltaY = if (isTranslateEnabled) getFocusY() - mPivotY else 0.0f
-            info.pivotX = mPivotX
-            info.pivotY = mPivotY
-            info.minimumScale = minimumScale
-            info.maximumScale = maximumScale
-
-            move(info)
-            return false
-        }
+        move(info)
+        return false
     }
 
     private inner class TransformInfo {
@@ -282,7 +278,7 @@ class PixelView : View, View.OnTouchListener {
 
                     setContext(event)
 
-                    mGestureInProgress = scaleGestureListener.onScaleBegin()
+                    mGestureInProgress = onScaleBegin()
                 }
             }
         } else {
@@ -308,7 +304,7 @@ class PixelView : View, View.OnTouchListener {
 
                     setContext(event)
 
-                    mGestureInProgress = scaleGestureListener.onScaleBegin()
+                    mGestureInProgress = onScaleBegin()
                 }
 
                 MotionEvent.ACTION_POINTER_UP -> {
@@ -325,7 +321,7 @@ class PixelView : View, View.OnTouchListener {
                                 mActive0MostRecent = true
                                 mPrevEvent = MotionEvent.obtain(event)
                                 setContext(event)
-                                mGestureInProgress = scaleGestureListener.onScaleBegin()
+                                mGestureInProgress = onScaleBegin()
                             } else {
                                 gestureEnded = true
                             }
@@ -336,7 +332,7 @@ class PixelView : View, View.OnTouchListener {
                                 mActive0MostRecent = false
                                 mPrevEvent = MotionEvent.obtain(event)
                                 setContext(event)
-                                mGestureInProgress = scaleGestureListener.onScaleBegin()
+                                mGestureInProgress = onScaleBegin()
                             } else {
                                 gestureEnded = true
                             }
@@ -377,7 +373,7 @@ class PixelView : View, View.OnTouchListener {
                     // a certain limit - this can help filter shaky data as a
                     // finger is lifted.
                     if (mCurrPressure / mPrevPressure > PRESSURE_THRESHOLD) {
-                        val updatePrevious = scaleGestureListener.onScale()
+                        val updatePrevious = onScale()
 
                         if (updatePrevious) {
                             mPrevEvent!!.recycle()
