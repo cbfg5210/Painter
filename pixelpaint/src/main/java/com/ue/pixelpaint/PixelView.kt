@@ -5,7 +5,6 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
-import android.view.ScaleGestureDetector
 import android.view.View
 import com.ue.pixelpaint.gesture.Vector2D
 
@@ -31,14 +30,13 @@ class PixelView : View, View.OnTouchListener {
     private var mActivePointerId = INVALID_POINTER_ID
     private var mPrevX = 0f
     private var mPrevY = 0f
-    private var mScaleGestureDetector: NScaleGestureDetector
+    private var mScaleGestureDetector = NScaleGestureDetector(NScaleGestureListener())
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {
 //        thirdOneRatio = resources.getDimension(R.dimen.widget_size_1) / 3
 //        thirdTwoRatio = resources.getDimension(R.dimen.widget_size_2) / 3
-        mScaleGestureDetector = NScaleGestureDetector(context, ScaleGestureListener())
         setOnTouchListener(this)
     }
 
@@ -150,7 +148,7 @@ class PixelView : View, View.OnTouchListener {
 
                     // Only move if the ScaleGestureDetector isn't processing a
                     // gesture.
-                    if (!mScaleGestureDetector.isInProgress) {
+                    if (!mScaleGestureDetector.isInProgress()) {
                         adjustTranslation(view, currX - mPrevX, currY - mPrevY)
                     }
                 }
@@ -178,25 +176,24 @@ class PixelView : View, View.OnTouchListener {
         return true
     }
 
-    private inner class ScaleGestureListener : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+    inner class NScaleGestureListener {
 
         private var mPivotX = 0f
         private var mPivotY = 0f
         private val mPrevSpanVector = Vector2D()
 
-        override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
-            mPivotX = detector.focusX
-            mPivotY = detector.focusY
-            detector as NScaleGestureDetector
+        fun onScaleBegin(detector: NScaleGestureDetector): Boolean {
+            mPivotX = detector.getFocusX()
+            mPivotY = detector.getFocusY()
             mPrevSpanVector.set(detector.currentSpanVector)
             return true
         }
 
-        override fun onScale(detector: ScaleGestureDetector): Boolean {
+        fun onScale(detector: NScaleGestureDetector): Boolean {
             val info = TransformInfo()
-            info.deltaScale = if (isScaleEnabled) detector.scaleFactor else 1.0f
-            info.deltaX = if (isTranslateEnabled) detector.focusX - mPivotX else 0.0f
-            info.deltaY = if (isTranslateEnabled) detector.focusY - mPivotY else 0.0f
+            info.deltaScale = if (isScaleEnabled) detector.getScaleFactor() else 1.0f
+            info.deltaX = if (isTranslateEnabled) detector.getFocusX() - mPivotX else 0.0f
+            info.deltaY = if (isTranslateEnabled) detector.getFocusY() - mPivotY else 0.0f
             info.pivotX = mPivotX
             info.pivotY = mPivotY
             info.minimumScale = minimumScale
@@ -217,7 +214,7 @@ class PixelView : View, View.OnTouchListener {
         var maximumScale = 0f
     }
 
-    internal class NScaleGestureDetector(context: Context, private val mListener: android.view.ScaleGestureDetector.OnScaleGestureListener) : ScaleGestureDetector(context, mListener) {
+    class NScaleGestureDetector(private val mListener: NScaleGestureListener) {
         private var mGestureInProgress: Boolean = false
 
         private var mPrevEvent: MotionEvent? = null
@@ -291,7 +288,6 @@ class PixelView : View, View.OnTouchListener {
                 when (action) {
                     MotionEvent.ACTION_POINTER_DOWN -> {
                         // End the old gesture and begin a new one with the most recent two fingers.
-                        mListener.onScaleEnd(this)
                         val oldActive0 = mActiveId0
                         val oldActive1 = mActiveId1
                         reset()
@@ -323,7 +319,6 @@ class PixelView : View, View.OnTouchListener {
                             if (actionId == mActiveId0) {
                                 val newIndex = findNewActiveIndex(event, mActiveId1, actionIndex)
                                 if (newIndex >= 0) {
-                                    mListener.onScaleEnd(this)
                                     mActiveId0 = event.getPointerId(newIndex)
                                     mActive0MostRecent = true
                                     mPrevEvent = MotionEvent.obtain(event)
@@ -335,7 +330,6 @@ class PixelView : View, View.OnTouchListener {
                             } else if (actionId == mActiveId1) {
                                 val newIndex = findNewActiveIndex(event, mActiveId0, actionIndex)
                                 if (newIndex >= 0) {
-                                    mListener.onScaleEnd(this)
                                     mActiveId1 = event.getPointerId(newIndex)
                                     mActive0MostRecent = false
                                     mPrevEvent = MotionEvent.obtain(event)
@@ -362,7 +356,6 @@ class PixelView : View, View.OnTouchListener {
                             mFocusX = event.getX(index)
                             mFocusY = event.getY(index)
 
-                            mListener.onScaleEnd(this)
                             reset()
                             mActiveId0 = activeId
                             mActive0MostRecent = true
@@ -370,7 +363,6 @@ class PixelView : View, View.OnTouchListener {
                     }
 
                     MotionEvent.ACTION_CANCEL -> {
-                        mListener.onScaleEnd(this)
                         reset()
                     }
 
@@ -433,9 +425,6 @@ class PixelView : View, View.OnTouchListener {
             if (prevIndex0 < 0 || prevIndex1 < 0 || currIndex0 < 0 || currIndex1 < 0) {
                 mInvalidGesture = true
                 Log.e(TAG, "Invalid MotionEvent stream detected.", Throwable())
-                if (mGestureInProgress) {
-                    mListener.onScaleEnd(this)
-                }
                 return
             }
 
@@ -486,7 +475,7 @@ class PixelView : View, View.OnTouchListener {
          *
          * @return `true` if a scale gesture is in progress, `false` otherwise.
          */
-        override fun isInProgress(): Boolean {
+        fun isInProgress(): Boolean {
             return mGestureInProgress
         }
 
@@ -501,7 +490,7 @@ class PixelView : View, View.OnTouchListener {
          *
          * @return X coordinate of the focal point in pixels.
          */
-        override fun getFocusX(): Float {
+        fun getFocusX(): Float {
             return mFocusX
         }
 
@@ -516,7 +505,7 @@ class PixelView : View, View.OnTouchListener {
          *
          * @return Y coordinate of the focal point in pixels.
          */
-        override fun getFocusY(): Float {
+        fun getFocusY(): Float {
             return mFocusY
         }
 
@@ -526,7 +515,7 @@ class PixelView : View, View.OnTouchListener {
          *
          * @return Distance between pointers in pixels.
          */
-        override fun getCurrentSpan(): Float {
+        fun getCurrentSpan(): Float {
             if (mCurrLen == -1f) {
                 val cvx = mCurrFingerDiffX
                 val cvy = mCurrFingerDiffY
@@ -541,7 +530,7 @@ class PixelView : View, View.OnTouchListener {
          *
          * @return Previous distance between pointers in pixels.
          */
-        override fun getPreviousSpan(): Float {
+        fun getPreviousSpan(): Float {
             if (mPrevLen == -1f) {
                 val pvx = mPrevFingerDiffX
                 val pvy = mPrevFingerDiffY
@@ -557,9 +546,9 @@ class PixelView : View, View.OnTouchListener {
          *
          * @return The current scaling factor.
          */
-        override fun getScaleFactor(): Float {
+        fun getScaleFactor(): Float {
             if (mScaleFactor == -1f) {
-                mScaleFactor = currentSpan / previousSpan
+                mScaleFactor = getCurrentSpan() / getPreviousSpan()
             }
             return mScaleFactor
         }
