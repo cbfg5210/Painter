@@ -105,7 +105,7 @@ public class NScaleGestureDetector extends ScaleGestureDetector {
                     }
                     mActive0MostRecent = false;
 
-                    setContext(view, event);
+                    setContext(event);
 
                     mGestureInProgress = mListener.onScaleBegin(this);
                     break;
@@ -133,7 +133,7 @@ public class NScaleGestureDetector extends ScaleGestureDetector {
                         mActiveId0 = event.getPointerId(index0);
                     }
 
-                    setContext(view, event);
+                    setContext(event);
 
                     mGestureInProgress = mListener.onScaleBegin(this);
                 }
@@ -153,7 +153,7 @@ public class NScaleGestureDetector extends ScaleGestureDetector {
                                 mActiveId0 = event.getPointerId(newIndex);
                                 mActive0MostRecent = true;
                                 mPrevEvent = MotionEvent.obtain(event);
-                                setContext(view, event);
+                                setContext(event);
                                 mGestureInProgress = mListener.onScaleBegin(this);
                             } else {
                                 gestureEnded = true;
@@ -165,7 +165,7 @@ public class NScaleGestureDetector extends ScaleGestureDetector {
                                 mActiveId1 = event.getPointerId(newIndex);
                                 mActive0MostRecent = false;
                                 mPrevEvent = MotionEvent.obtain(event);
-                                setContext(view, event);
+                                setContext(event);
                                 mGestureInProgress = mListener.onScaleBegin(this);
                             } else {
                                 gestureEnded = true;
@@ -173,14 +173,14 @@ public class NScaleGestureDetector extends ScaleGestureDetector {
                         }
                         mPrevEvent.recycle();
                         mPrevEvent = MotionEvent.obtain(event);
-                        setContext(view, event);
+                        setContext(event);
                     } else {
                         gestureEnded = true;
                     }
 
                     if (gestureEnded) {
                         // Gesture ended
-                        setContext(view, event);
+                        setContext(event);
 
                         // Set focus point to the remaining finger
                         final int activeId = actionId == mActiveId0 ? mActiveId1 : mActiveId0;
@@ -206,7 +206,7 @@ public class NScaleGestureDetector extends ScaleGestureDetector {
                     break;
 
                 case MotionEvent.ACTION_MOVE: {
-                    setContext(view, event);
+                    setContext(event);
 
                     // Only accept the event if our relative pressure is within
                     // a certain limit - this can help filter shaky data as a
@@ -242,7 +242,7 @@ public class NScaleGestureDetector extends ScaleGestureDetector {
         return -1;
     }
 
-    private void setContext(View view, MotionEvent curr) {
+    private void setContext(MotionEvent curr) {
         if (mCurrEvent != null) {
             mCurrEvent.recycle();
         }
