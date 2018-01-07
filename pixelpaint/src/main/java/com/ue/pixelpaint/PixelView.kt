@@ -3,7 +3,6 @@ package com.ue.pixelpaint
 import android.content.Context
 import android.graphics.Paint
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.ue.pixelpaint.gesture.Vector2D
@@ -18,14 +17,12 @@ class PixelView : View {
     private var mPivotY = 0f
     private val mPrevSpanVector = Vector2D()
 
-    private val PRESSURE_THRESHOLD = 0.67f
-
     private var mGestureInProgress = false
 
     private var mPrevEvent: MotionEvent? = null
     private var mCurrEvent: MotionEvent? = null
 
-    val currentSpanVector = Vector2D()
+    private val currentSpanVector = Vector2D()
     private var mFocusX = 0f
     private var mFocusY = 0f
     private var mPrevFingerDiffX = 0f
@@ -54,7 +51,6 @@ class PixelView : View {
     private var thirdOneRatio = 0F
     private var thirdTwoRatio = 0F
 
-    private val INVALID_POINTER_ID = -1
     var isTranslateEnabled = true
     var isScaleEnabled = true
     var minimumScale = 1f
@@ -62,6 +58,11 @@ class PixelView : View {
     private var mActivePointerId = INVALID_POINTER_ID
     private var mPrevX = 0f
     private var mPrevY = 0f
+
+    companion object {
+        private val PRESSURE_THRESHOLD = 0.67f
+        private val INVALID_POINTER_ID = -1
+    }
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -116,11 +117,9 @@ class PixelView : View {
     override fun onTouchEvent(event: MotionEvent): Boolean {
         handleEventForScale(event)
 
-        if (!isTranslateEnabled) {
-            return true
+        if (isTranslateEnabled) {
+            handleEventForTranslate(event)
         }
-
-        handleEventForTranslate(event)
 
         return true
     }
@@ -201,8 +200,10 @@ class PixelView : View {
                 val actionId = event.getPointerId(actionIndex)
 
                 var gestureEnded = false
-                if (pointerCount > 2) {
-                    if (actionId == mActiveId0) {
+                if (pointerCount <= 2) {
+                    gestureEnded = true
+                } else {
+                    if (actionId != mActiveId0) {
                         val newIndex = findNewActiveIndex(event, mActiveId1, actionIndex)
                         if (newIndex >= 0) {
                             mActiveId0 = event.getPointerId(newIndex)
@@ -228,14 +229,11 @@ class PixelView : View {
                     mPrevEvent?.recycle()
                     mPrevEvent = MotionEvent.obtain(event)
                     setContext(event)
-                } else {
-                    gestureEnded = true
                 }
 
                 if (gestureEnded) {
                     // Gesture ended
                     setContext(event)
-
                     // Set focus point to the remaining finger
                     val activeId = if (actionId == mActiveId0) mActiveId1 else mActiveId0
                     val index = event.findPointerIndex(activeId)
@@ -259,9 +257,7 @@ class PixelView : View {
                 // a certain limit - this can help filter shaky data as a
                 // finger is lifted.
                 if (mCurrPressure / mPrevPressure > PRESSURE_THRESHOLD) {
-                    val updatePrevious = onScale()
-
-                    if (updatePrevious) {
+                    if (onScale()) {
                         mPrevEvent?.recycle()
                         mPrevEvent = MotionEvent.obtain(event)
                     }
@@ -277,7 +273,6 @@ class PixelView : View {
             MotionEvent.ACTION_DOWN -> {
                 mPrevX = event.x
                 mPrevY = event.y
-
                 // Save the ID of this pointer.
                 mActivePointerId = event.getPointerId(0)
             }
@@ -286,13 +281,10 @@ class PixelView : View {
                 // Find the index of the active pointer and fetch its position.
                 val pointerIndex = event.findPointerIndex(mActivePointerId)
                 if (pointerIndex != -1) {
-                    val currX = event.getX(pointerIndex)
-                    val currY = event.getY(pointerIndex)
-
                     // Only move if the ScaleGestureDetector isn't processing a
                     // gesture.
                     if (!mGestureInProgress) {
-                        adjustTranslation(this, currX - mPrevX, currY - mPrevY)
+                        adjustTranslation(this, event.getX(pointerIndex) - mPrevX, event.getY(pointerIndex) - mPrevY)
                     }
                 }
             }
@@ -331,8 +323,8 @@ class PixelView : View {
     private fun adjustTranslation(view: View, deltaX: Float, deltaY: Float) {
         val deltaVector = floatArrayOf(deltaX, deltaY)
         view.matrix.mapVectors(deltaVector)
-        view.translationX = view.translationX + deltaVector[0]
-        view.translationY = view.translationY + deltaVector[1]
+        view.translationX += deltaVector[0]
+        view.translationY += deltaVector[1]
     }
 
     private fun computeRenderOffset(view: View, pivotX: Float, pivotY: Float) {
@@ -352,8 +344,8 @@ class PixelView : View {
         val offsetX = currPoint[0] - prevPoint[0]
         val offsetY = currPoint[1] - prevPoint[1]
 
-        view.translationX = view.translationX - offsetX
-        view.translationY = view.translationY - offsetY
+        view.translationX -= offsetX
+        view.translationY -= offsetY
     }
 
     private fun onScaleBegin(): Boolean {
@@ -379,10 +371,8 @@ class PixelView : View {
 
     private fun findNewActiveIndex(ev: MotionEvent, otherActiveId: Int, removedPointerIndex: Int): Int {
         val pointerCount = ev.pointerCount
-
         // It's ok if this isn't found and returns -1, it simply won't match.
         val otherActiveIndex = ev.findPointerIndex(otherActiveId)
-
         // Pick a new id and update tracking state.
         for (i in 0 until pointerCount) {
             if (i != removedPointerIndex && i != otherActiveIndex) {
@@ -410,33 +400,21 @@ class PixelView : View {
 
         if (prevIndex0 < 0 || prevIndex1 < 0 || currIndex0 < 0 || currIndex1 < 0) {
             mInvalidGesture = true
-            Log.e("PixelView", "setContext: Invalid MotionEvent stream detected.")
             return
         }
 
-        val px0 = prev.getX(prevIndex0)
-        val py0 = prev.getY(prevIndex0)
-        val px1 = prev.getX(prevIndex1)
-        val py1 = prev.getY(prevIndex1)
         val cx0 = curr.getX(currIndex0)
         val cy0 = curr.getY(currIndex0)
-        val cx1 = curr.getX(currIndex1)
-        val cy1 = curr.getY(currIndex1)
 
-        val pvx = px1 - px0
-        val pvy = py1 - py0
-        val cvx = cx1 - cx0
-        val cvy = cy1 - cy0
+        mPrevFingerDiffX = prev.getX(prevIndex1) - prev.getX(prevIndex0)
+        mPrevFingerDiffY = prev.getY(prevIndex1) - prev.getY(prevIndex0)
+        mCurrFingerDiffX = curr.getX(currIndex1) - cx0
+        mCurrFingerDiffY = curr.getY(currIndex1) - cy0
 
-        currentSpanVector.set(cvx, cvy)
+        currentSpanVector.set(mCurrFingerDiffX, mCurrFingerDiffY)
 
-        mPrevFingerDiffX = pvx
-        mPrevFingerDiffY = pvy
-        mCurrFingerDiffX = cvx
-        mCurrFingerDiffY = cvy
-
-        mFocusX = cx0 + cvx * 0.5f
-        mFocusY = cy0 + cvy * 0.5f
+        mFocusX = cx0 + mCurrFingerDiffX * 0.5f
+        mFocusY = cy0 + mCurrFingerDiffY * 0.5f
         mCurrPressure = curr.getPressure(currIndex0) + curr.getPressure(currIndex1)
         mPrevPressure = prev.getPressure(prevIndex0) + prev.getPressure(prevIndex1)
     }
