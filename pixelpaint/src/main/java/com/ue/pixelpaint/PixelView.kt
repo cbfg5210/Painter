@@ -83,15 +83,15 @@ class PixelView : View, View.OnTouchListener {
         }
     }*/
 
-    private fun move(view: View, info: TransformInfo) {
-        computeRenderOffset(view, info.pivotX, info.pivotY)
-        adjustTranslation(view, info.deltaX, info.deltaY)
+    private fun move(info: TransformInfo) {
+        computeRenderOffset(this, info.pivotX, info.pivotY)
+        adjustTranslation(this, info.deltaX, info.deltaY)
 
         // Assume that scaling still maintains aspect ratio.
-        var scale = view.scaleX * info.deltaScale
+        var scale = scaleX * info.deltaScale
         scale = Math.max(info.minimumScale, Math.min(info.maximumScale, scale))
-        view.scaleX = scale
-        view.scaleY = scale
+        scaleX = scale
+        scaleY = scale
     }
 
     private fun adjustTranslation(view: View, deltaX: Float, deltaY: Float) {
@@ -199,7 +199,7 @@ class PixelView : View, View.OnTouchListener {
             info.minimumScale = minimumScale
             info.maximumScale = maximumScale
 
-            move(this@PixelView, info)
+            move(info)
             return false
         }
     }
@@ -215,30 +215,30 @@ class PixelView : View, View.OnTouchListener {
     }
 
     class NScaleGestureDetector(private val mListener: NScaleGestureListener) {
-        private var mGestureInProgress: Boolean = false
+        private var mGestureInProgress = false
 
         private var mPrevEvent: MotionEvent? = null
         private var mCurrEvent: MotionEvent? = null
 
         val currentSpanVector: Vector2D
-        private var mFocusX: Float = 0.toFloat()
-        private var mFocusY: Float = 0.toFloat()
-        private var mPrevFingerDiffX: Float = 0.toFloat()
-        private var mPrevFingerDiffY: Float = 0.toFloat()
-        private var mCurrFingerDiffX: Float = 0.toFloat()
-        private var mCurrFingerDiffY: Float = 0.toFloat()
-        private var mCurrLen: Float = 0.toFloat()
-        private var mPrevLen: Float = 0.toFloat()
-        private var mScaleFactor: Float = 0.toFloat()
-        private var mCurrPressure: Float = 0.toFloat()
-        private var mPrevPressure: Float = 0.toFloat()
+        private var mFocusX = 0f
+        private var mFocusY = 0f
+        private var mPrevFingerDiffX = 0f
+        private var mPrevFingerDiffY = 0f
+        private var mCurrFingerDiffX = 0f
+        private var mCurrFingerDiffY = 0f
+        private var mCurrLen = 0f
+        private var mPrevLen = 0f
+        private var mScaleFactor = 0f
+        private var mCurrPressure = 0f
+        private var mPrevPressure = 0f
 
-        private var mInvalidGesture: Boolean = false
+        private var mInvalidGesture = false
 
         // Pointer IDs currently responsible for the two fingers controlling the gesture
-        private var mActiveId0: Int = 0
-        private var mActiveId1: Int = 0
-        private var mActive0MostRecent: Boolean = false
+        private var mActiveId0 = 0
+        private var mActiveId1 = 0
+        private var mActive0MostRecent = false
 
         init {
             currentSpanVector = Vector2D()
