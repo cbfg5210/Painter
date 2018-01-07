@@ -5,7 +5,6 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import com.ue.pixelpaint.gesture.Vector2D
 
 
 /**
@@ -13,16 +12,11 @@ import com.ue.pixelpaint.gesture.Vector2D
  */
 class PixelView : View {
 
-    private var mPivotX = 0f
-    private var mPivotY = 0f
-    private val mPrevSpanVector = Vector2D()
-
-    private var mGestureInProgress = false
-
     private var mPrevEvent: MotionEvent? = null
     private var mCurrEvent: MotionEvent? = null
 
-    private val currentSpanVector = Vector2D()
+    private var mPivotX = 0f
+    private var mPivotY = 0f
     private var mFocusX = 0f
     private var mFocusY = 0f
     private var mPrevFingerDiffX = 0f
@@ -34,12 +28,12 @@ class PixelView : View {
     private var mScaleFactor = 0f
     private var mCurrPressure = 0f
     private var mPrevPressure = 0f
-
-    private var mInvalidGesture = false
-
     // Pointer IDs currently responsible for the two fingers controlling the gesture
     private var mActiveId0 = 0
     private var mActiveId1 = 0
+
+    private var mGestureInProgress = false
+    private var mInvalidGesture = false
     private var mActive0MostRecent = false
 
     var lineNum = 16
@@ -310,7 +304,7 @@ class PixelView : View {
         computeRenderOffset(this, info.pivotX, info.pivotY)
         adjustTranslation(this, info.deltaX, info.deltaY)
         // Assume that scaling still maintains aspect ratio.
-        val scale = Math.max(info.minimumScale, Math.min(info.maximumScale, scaleX * info.deltaScale))
+        val scale = Math.max(minimumScale, Math.min(maximumScale, scaleX * info.deltaScale))
         scaleX = scale
         scaleY = scale
     }
@@ -346,7 +340,6 @@ class PixelView : View {
     private fun onScaleBegin(): Boolean {
         mPivotX = mFocusX
         mPivotY = mFocusY
-        mPrevSpanVector.set(currentSpanVector)
         return true
     }
 
@@ -357,8 +350,6 @@ class PixelView : View {
         info.deltaY = if (isTranslateEnabled) mFocusY - mPivotY else 0.0f
         info.pivotX = mPivotX
         info.pivotY = mPivotY
-        info.minimumScale = minimumScale
-        info.maximumScale = maximumScale
 
         move(info)
         return false
@@ -383,7 +374,6 @@ class PixelView : View {
         mCurrLen = -1f
         mPrevLen = -1f
         mScaleFactor = -1f
-        currentSpanVector.set(0.0f, 0.0f)
 
         val prev = mPrevEvent!!
 
@@ -404,8 +394,6 @@ class PixelView : View {
         mPrevFingerDiffY = prev.getY(prevIndex1) - prev.getY(prevIndex0)
         mCurrFingerDiffX = curr.getX(currIndex1) - cx0
         mCurrFingerDiffY = curr.getY(currIndex1) - cy0
-
-        currentSpanVector.set(mCurrFingerDiffX, mCurrFingerDiffY)
 
         mFocusX = cx0 + mCurrFingerDiffX * 0.5f
         mFocusY = cy0 + mCurrFingerDiffY * 0.5f
@@ -474,7 +462,5 @@ class PixelView : View {
         var deltaScale = 0f
         var pivotX = 0f
         var pivotY = 0f
-        var minimumScale = 0f
-        var maximumScale = 0f
     }
 }
