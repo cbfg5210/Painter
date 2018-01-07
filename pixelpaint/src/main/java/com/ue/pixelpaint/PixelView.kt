@@ -195,55 +195,7 @@ class PixelView : View {
             }
 
             MotionEvent.ACTION_POINTER_UP -> {
-                val pointerCount = event.pointerCount
-                val actionIndex = event.actionIndex
-                val actionId = event.getPointerId(actionIndex)
-
-                var gestureEnded = false
-                if (pointerCount <= 2) {
-                    gestureEnded = true
-                } else {
-                    if (actionId != mActiveId0) {
-                        val newIndex = findNewActiveIndex(event, mActiveId1, actionIndex)
-                        if (newIndex >= 0) {
-                            mActiveId0 = event.getPointerId(newIndex)
-                            mActive0MostRecent = true
-                            mPrevEvent = MotionEvent.obtain(event)
-                            setContext(event)
-                            mGestureInProgress = onScaleBegin()
-                        } else {
-                            gestureEnded = true
-                        }
-                    } else if (actionId == mActiveId1) {
-                        val newIndex = findNewActiveIndex(event, mActiveId0, actionIndex)
-                        if (newIndex >= 0) {
-                            mActiveId1 = event.getPointerId(newIndex)
-                            mActive0MostRecent = false
-                            mPrevEvent = MotionEvent.obtain(event)
-                            setContext(event)
-                            mGestureInProgress = onScaleBegin()
-                        } else {
-                            gestureEnded = true
-                        }
-                    }
-                    mPrevEvent?.recycle()
-                    mPrevEvent = MotionEvent.obtain(event)
-                    setContext(event)
-                }
-
-                if (gestureEnded) {
-                    // Gesture ended
-                    setContext(event)
-                    // Set focus point to the remaining finger
-                    val activeId = if (actionId == mActiveId0) mActiveId1 else mActiveId0
-                    val index = event.findPointerIndex(activeId)
-                    mFocusX = event.getX(index)
-                    mFocusY = event.getY(index)
-
-                    reset()
-                    mActiveId0 = activeId
-                    mActive0MostRecent = true
-                }
+                handlePointerUpEvent(event)
             }
 
             MotionEvent.ACTION_CANCEL,
@@ -268,6 +220,54 @@ class PixelView : View {
         return true
     }
 
+    private fun handlePointerUpEvent(event: MotionEvent) {
+        val actionId = event.getPointerId(event.actionIndex)
+        var gestureEnded = event.pointerCount <= 2
+
+        if (!gestureEnded) {
+            if (actionId != mActiveId0) {
+                val newIndex = findNewActiveIndex(event, mActiveId1, event.actionIndex)
+                if (newIndex >= 0) {
+                    mActiveId0 = event.getPointerId(newIndex)
+                    mActive0MostRecent = true
+                    mPrevEvent = MotionEvent.obtain(event)
+                    setContext(event)
+                    mGestureInProgress = onScaleBegin()
+                } else {
+                    gestureEnded = true
+                }
+            } else if (actionId == mActiveId1) {
+                val newIndex = findNewActiveIndex(event, mActiveId0, event.actionIndex)
+                if (newIndex >= 0) {
+                    mActiveId1 = event.getPointerId(newIndex)
+                    mActive0MostRecent = false
+                    mPrevEvent = MotionEvent.obtain(event)
+                    setContext(event)
+                    mGestureInProgress = onScaleBegin()
+                } else {
+                    gestureEnded = true
+                }
+            }
+            mPrevEvent?.recycle()
+            mPrevEvent = MotionEvent.obtain(event)
+            setContext(event)
+        }
+
+        if (gestureEnded) {
+            // Gesture ended
+            setContext(event)
+            // Set focus point to the remaining finger
+            val activeId = if (actionId == mActiveId0) mActiveId1 else mActiveId0
+            val index = event.findPointerIndex(activeId)
+            mFocusX = event.getX(index)
+            mFocusY = event.getY(index)
+
+            reset()
+            mActiveId0 = activeId
+            mActive0MostRecent = true
+        }
+    }
+
     private fun handleEventForTranslate(event: MotionEvent) {
         when (event.action and event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
@@ -280,12 +280,9 @@ class PixelView : View {
             MotionEvent.ACTION_MOVE -> {
                 // Find the index of the active pointer and fetch its position.
                 val pointerIndex = event.findPointerIndex(mActivePointerId)
-                if (pointerIndex != -1) {
-                    // Only move if the ScaleGestureDetector isn't processing a
-                    // gesture.
-                    if (!mGestureInProgress) {
-                        adjustTranslation(this, event.getX(pointerIndex) - mPrevX, event.getY(pointerIndex) - mPrevY)
-                    }
+                if (pointerIndex != -1 && !mGestureInProgress) {
+                    // Only move if the ScaleGestureDetector isn't processing a gesture.
+                    adjustTranslation(this, event.getX(pointerIndex) - mPrevX, event.getY(pointerIndex) - mPrevY)
                 }
             }
 
@@ -297,8 +294,7 @@ class PixelView : View {
             MotionEvent.ACTION_POINTER_UP -> {
                 // Extract the index of the pointer that left the touch sensor.
                 val pointerIndex = event.action and MotionEvent.ACTION_POINTER_INDEX_MASK shr MotionEvent.ACTION_POINTER_INDEX_SHIFT
-                val pointerId = event.getPointerId(pointerIndex)
-                if (pointerId == mActivePointerId) {
+                if (event.getPointerId(pointerIndex) == mActivePointerId) {
                     // This was our active pointer going up. Choose a new
                     // active pointer and adjust accordingly.
                     val newPointerIndex = if (pointerIndex == 0) 1 else 0
@@ -313,7 +309,6 @@ class PixelView : View {
     private fun move(info: TransformInfo) {
         computeRenderOffset(this, info.pivotX, info.pivotY)
         adjustTranslation(this, info.deltaX, info.deltaY)
-
         // Assume that scaling still maintains aspect ratio.
         val scale = Math.max(info.minimumScale, Math.min(info.maximumScale, scaleX * info.deltaScale))
         scaleX = scale
@@ -370,11 +365,10 @@ class PixelView : View {
     }
 
     private fun findNewActiveIndex(ev: MotionEvent, otherActiveId: Int, removedPointerIndex: Int): Int {
-        val pointerCount = ev.pointerCount
         // It's ok if this isn't found and returns -1, it simply won't match.
         val otherActiveIndex = ev.findPointerIndex(otherActiveId)
         // Pick a new id and update tracking state.
-        for (i in 0 until pointerCount) {
+        for (i in 0 until ev.pointerCount) {
             if (i != removedPointerIndex && i != otherActiveIndex) {
                 return i
             }
@@ -391,9 +385,9 @@ class PixelView : View {
         mScaleFactor = -1f
         currentSpanVector.set(0.0f, 0.0f)
 
-        val prev = mPrevEvent
+        val prev = mPrevEvent!!
 
-        val prevIndex0 = prev!!.findPointerIndex(mActiveId0)
+        val prevIndex0 = prev.findPointerIndex(mActiveId0)
         val prevIndex1 = prev.findPointerIndex(mActiveId1)
         val currIndex0 = curr.findPointerIndex(mActiveId0)
         val currIndex1 = curr.findPointerIndex(mActiveId1)
@@ -455,9 +449,7 @@ class PixelView : View {
      */
     private fun getPreviousSpan(): Float {
         if (mPrevLen == -1f) {
-            val pvx = mPrevFingerDiffX
-            val pvy = mPrevFingerDiffY
-            mPrevLen = Math.sqrt((pvx * pvx + pvy * pvy).toDouble()).toFloat()
+            mPrevLen = Math.sqrt((mPrevFingerDiffX * mPrevFingerDiffX + mPrevFingerDiffY * mPrevFingerDiffY).toDouble()).toFloat()
         }
         return mPrevLen
     }
