@@ -4,8 +4,9 @@ import android.content.Context
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.view.ScaleGestureDetector
 import android.view.View
-import com.ue.pixelpaint.gesture.ScaleGestureDetector
+import com.ue.pixelpaint.gesture.NScaleGestureDetector
 import com.ue.pixelpaint.gesture.Vector2D
 
 
@@ -30,13 +31,14 @@ class PixelView : View, View.OnTouchListener {
     private var mActivePointerId = INVALID_POINTER_ID
     private var mPrevX = 0f
     private var mPrevY = 0f
-    private val mScaleGestureDetector = ScaleGestureDetector(ScaleGestureListener())
+    private var mScaleGestureDetector: NScaleGestureDetector
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {
 //        thirdOneRatio = resources.getDimension(R.dimen.widget_size_1) / 3
 //        thirdTwoRatio = resources.getDimension(R.dimen.widget_size_2) / 3
+        mScaleGestureDetector = NScaleGestureDetector(context, ScaleGestureListener())
         setOnTouchListener(this)
     }
 
@@ -182,14 +184,15 @@ class PixelView : View, View.OnTouchListener {
         private var mPivotY = 0f
         private val mPrevSpanVector = Vector2D()
 
-        override fun onScaleBegin(view: View, detector: ScaleGestureDetector): Boolean {
+        override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
             mPivotX = detector.focusX
             mPivotY = detector.focusY
+            detector as NScaleGestureDetector
             mPrevSpanVector.set(detector.currentSpanVector)
             return true
         }
 
-        override fun onScale(view: View, detector: ScaleGestureDetector): Boolean {
+        override fun onScale(detector: ScaleGestureDetector): Boolean {
             val info = TransformInfo()
             info.deltaScale = if (isScaleEnabled) detector.scaleFactor else 1.0f
             info.deltaX = if (isTranslateEnabled) detector.focusX - mPivotX else 0.0f
@@ -199,7 +202,7 @@ class PixelView : View, View.OnTouchListener {
             info.minimumScale = minimumScale
             info.maximumScale = maximumScale
 
-            move(view, info)
+            move(this@PixelView, info)
             return false
         }
     }
