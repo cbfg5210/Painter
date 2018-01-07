@@ -12,7 +12,39 @@ import com.ue.pixelpaint.gesture.Vector2D
 /**
  * Created by hawk on 2018/1/4.
  */
-class PixelView : View, View.OnTouchListener {
+class PixelView : View {
+
+    private var mPivotX = 0f
+    private var mPivotY = 0f
+    private val mPrevSpanVector = Vector2D()
+
+    private val PRESSURE_THRESHOLD = 0.67f
+
+    private var mGestureInProgress = false
+
+    private var mPrevEvent: MotionEvent? = null
+    private var mCurrEvent: MotionEvent? = null
+
+    val currentSpanVector = Vector2D()
+    private var mFocusX = 0f
+    private var mFocusY = 0f
+    private var mPrevFingerDiffX = 0f
+    private var mPrevFingerDiffY = 0f
+    private var mCurrFingerDiffX = 0f
+    private var mCurrFingerDiffY = 0f
+    private var mCurrLen = 0f
+    private var mPrevLen = 0f
+    private var mScaleFactor = 0f
+    private var mCurrPressure = 0f
+    private var mPrevPressure = 0f
+
+    private var mInvalidGesture = false
+
+    // Pointer IDs currently responsible for the two fingers controlling the gesture
+    private var mActiveId0 = 0
+    private var mActiveId1 = 0
+    private var mActive0MostRecent = false
+
     var lineNum = 16
     private var linePaint: Paint = Paint()
     private var squareSize = 0F
@@ -36,7 +68,6 @@ class PixelView : View, View.OnTouchListener {
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {
 //        thirdOneRatio = resources.getDimension(R.dimen.widget_size_1) / 3
 //        thirdTwoRatio = resources.getDimension(R.dimen.widget_size_2) / 3
-        setOnTouchListener(this)
     }
 
 /*    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -82,6 +113,59 @@ class PixelView : View, View.OnTouchListener {
         }
     }*/
 
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        handleEventForScale(event)
+
+        if (!isTranslateEnabled) {
+            return true
+        }
+
+        when (event.action and event.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                mPrevX = event.x
+                mPrevY = event.y
+
+                // Save the ID of this pointer.
+                mActivePointerId = event.getPointerId(0)
+            }
+
+            MotionEvent.ACTION_MOVE -> {
+                // Find the index of the active pointer and fetch its position.
+                val pointerIndex = event.findPointerIndex(mActivePointerId)
+                if (pointerIndex != -1) {
+                    val currX = event.getX(pointerIndex)
+                    val currY = event.getY(pointerIndex)
+
+                    // Only move if the ScaleGestureDetector isn't processing a
+                    // gesture.
+                    if (!mGestureInProgress) {
+                        adjustTranslation(this, currX - mPrevX, currY - mPrevY)
+                    }
+                }
+            }
+
+            MotionEvent.ACTION_CANCEL -> mActivePointerId = INVALID_POINTER_ID
+
+            MotionEvent.ACTION_UP -> mActivePointerId = INVALID_POINTER_ID
+
+            MotionEvent.ACTION_POINTER_UP -> {
+                // Extract the index of the pointer that left the touch sensor.
+                val pointerIndex = event.action and MotionEvent.ACTION_POINTER_INDEX_MASK shr MotionEvent.ACTION_POINTER_INDEX_SHIFT
+                val pointerId = event.getPointerId(pointerIndex)
+                if (pointerId == mActivePointerId) {
+                    // This was our active pointer going up. Choose a new
+                    // active pointer and adjust accordingly.
+                    val newPointerIndex = if (pointerIndex == 0) 1 else 0
+                    mPrevX = event.getX(newPointerIndex)
+                    mPrevY = event.getY(newPointerIndex)
+                    mActivePointerId = event.getPointerId(newPointerIndex)
+                }
+            }
+        }
+
+        return true
+    }
+
     private fun move(info: TransformInfo) {
         computeRenderOffset(this, info.pivotX, info.pivotY)
         adjustTranslation(this, info.deltaX, info.deltaY)
@@ -121,76 +205,18 @@ class PixelView : View, View.OnTouchListener {
         view.translationY = view.translationY - offsetY
     }
 
-    override fun onTouch(view: View, event: MotionEvent): Boolean {
-        onTouchEvent(view, event)
-
-        if (!isTranslateEnabled) {
-            return true
-        }
-
-        val action = event.action
-        when (action and event.actionMasked) {
-            MotionEvent.ACTION_DOWN -> {
-                mPrevX = event.x
-                mPrevY = event.y
-
-                // Save the ID of this pointer.
-                mActivePointerId = event.getPointerId(0)
-            }
-
-            MotionEvent.ACTION_MOVE -> {
-                // Find the index of the active pointer and fetch its position.
-                val pointerIndex = event.findPointerIndex(mActivePointerId)
-                if (pointerIndex != -1) {
-                    val currX = event.getX(pointerIndex)
-                    val currY = event.getY(pointerIndex)
-
-                    // Only move if the ScaleGestureDetector isn't processing a
-                    // gesture.
-                    if (!isInProgress()) {
-                        adjustTranslation(view, currX - mPrevX, currY - mPrevY)
-                    }
-                }
-            }
-
-            MotionEvent.ACTION_CANCEL -> mActivePointerId = INVALID_POINTER_ID
-
-            MotionEvent.ACTION_UP -> mActivePointerId = INVALID_POINTER_ID
-
-            MotionEvent.ACTION_POINTER_UP -> {
-                // Extract the index of the pointer that left the touch sensor.
-                val pointerIndex = action and MotionEvent.ACTION_POINTER_INDEX_MASK shr MotionEvent.ACTION_POINTER_INDEX_SHIFT
-                val pointerId = event.getPointerId(pointerIndex)
-                if (pointerId == mActivePointerId) {
-                    // This was our active pointer going up. Choose a new
-                    // active pointer and adjust accordingly.
-                    val newPointerIndex = if (pointerIndex == 0) 1 else 0
-                    mPrevX = event.getX(newPointerIndex)
-                    mPrevY = event.getY(newPointerIndex)
-                    mActivePointerId = event.getPointerId(newPointerIndex)
-                }
-            }
-        }
-
-        return true
-    }
-
-    private var mPivotX = 0f
-    private var mPivotY = 0f
-    private val mPrevSpanVector = Vector2D()
-
-    fun onScaleBegin(): Boolean {
-        mPivotX = getFocusX()
-        mPivotY = getFocusY()
+    private fun onScaleBegin(): Boolean {
+        mPivotX = mFocusX
+        mPivotY = mFocusY
         mPrevSpanVector.set(currentSpanVector)
         return true
     }
 
-    fun onScale(): Boolean {
+    private fun onScale(): Boolean {
         val info = TransformInfo()
         info.deltaScale = if (isScaleEnabled) getScaleFactor() else 1.0f
-        info.deltaX = if (isTranslateEnabled) getFocusX() - mPivotX else 0.0f
-        info.deltaY = if (isTranslateEnabled) getFocusY() - mPivotY else 0.0f
+        info.deltaX = if (isTranslateEnabled) mFocusX - mPivotX else 0.0f
+        info.deltaY = if (isTranslateEnabled) mFocusY - mPivotY else 0.0f
         info.pivotX = mPivotX
         info.pivotY = mPivotY
         info.minimumScale = minimumScale
@@ -210,39 +236,7 @@ class PixelView : View, View.OnTouchListener {
         var maximumScale = 0f
     }
 
-    private val TAG = "ScaleGestureDetector"
-    private val PRESSURE_THRESHOLD = 0.67f
-
-    private var mGestureInProgress = false
-
-    private var mPrevEvent: MotionEvent? = null
-    private var mCurrEvent: MotionEvent? = null
-
-    val currentSpanVector: Vector2D
-    private var mFocusX = 0f
-    private var mFocusY = 0f
-    private var mPrevFingerDiffX = 0f
-    private var mPrevFingerDiffY = 0f
-    private var mCurrFingerDiffX = 0f
-    private var mCurrFingerDiffY = 0f
-    private var mCurrLen = 0f
-    private var mPrevLen = 0f
-    private var mScaleFactor = 0f
-    private var mCurrPressure = 0f
-    private var mPrevPressure = 0f
-
-    private var mInvalidGesture = false
-
-    // Pointer IDs currently responsible for the two fingers controlling the gesture
-    private var mActiveId0 = 0
-    private var mActiveId1 = 0
-    private var mActive0MostRecent = false
-
-    init {
-        currentSpanVector = Vector2D()
-    }
-
-    fun onTouchEvent(view: View, event: MotionEvent): Boolean {
+    private fun handleEventForScale(event: MotionEvent): Boolean {
         val action = event.actionMasked
 
         if (action == MotionEvent.ACTION_DOWN) {
@@ -263,7 +257,7 @@ class PixelView : View, View.OnTouchListener {
 
                 MotionEvent.ACTION_POINTER_DOWN -> {
                     // We have a new multi-finger gesture
-                    if (mPrevEvent != null) mPrevEvent!!.recycle()
+                    mPrevEvent?.recycle()
                     mPrevEvent = MotionEvent.obtain(event)
 
                     val index1 = event.actionIndex
@@ -337,7 +331,7 @@ class PixelView : View, View.OnTouchListener {
                                 gestureEnded = true
                             }
                         }
-                        mPrevEvent!!.recycle()
+                        mPrevEvent?.recycle()
                         mPrevEvent = MotionEvent.obtain(event)
                         setContext(event)
                     } else {
@@ -376,7 +370,7 @@ class PixelView : View, View.OnTouchListener {
                         val updatePrevious = onScale()
 
                         if (updatePrevious) {
-                            mPrevEvent!!.recycle()
+                            mPrevEvent?.recycle()
                             mPrevEvent = MotionEvent.obtain(event)
                         }
                     }
@@ -403,9 +397,7 @@ class PixelView : View, View.OnTouchListener {
     }
 
     private fun setContext(curr: MotionEvent) {
-        if (mCurrEvent != null) {
-            mCurrEvent!!.recycle()
-        }
+        mCurrEvent?.recycle()
         mCurrEvent = MotionEvent.obtain(curr)
 
         mCurrLen = -1f
@@ -422,7 +414,7 @@ class PixelView : View, View.OnTouchListener {
 
         if (prevIndex0 < 0 || prevIndex1 < 0 || currIndex0 < 0 || currIndex1 < 0) {
             mInvalidGesture = true
-            Log.e(TAG, "Invalid MotionEvent stream detected.", Throwable())
+            Log.e("PixelView", "setContext: Invalid MotionEvent stream detected.")
             return
         }
 
@@ -454,57 +446,16 @@ class PixelView : View, View.OnTouchListener {
     }
 
     private fun reset() {
-        if (mPrevEvent != null) {
-            mPrevEvent!!.recycle()
-            mPrevEvent = null
-        }
-        if (mCurrEvent != null) {
-            mCurrEvent!!.recycle()
-            mCurrEvent = null
-        }
+        mPrevEvent?.recycle()
+        mPrevEvent = null
+
+        mCurrEvent?.recycle()
+        mCurrEvent = null
+
         mGestureInProgress = false
         mActiveId0 = -1
         mActiveId1 = -1
         mInvalidGesture = false
-    }
-
-    /**
-     * Returns `true` if a two-finger scale gesture is in progress.
-     *
-     * @return `true` if a scale gesture is in progress, `false` otherwise.
-     */
-    fun isInProgress(): Boolean {
-        return mGestureInProgress
-    }
-
-    /**
-     * Get the X coordinate of the current gesture's focal point.
-     * If a gesture is in progress, the focal point is directly between
-     * the two pointers forming the gesture.
-     * If a gesture is ending, the focal point is the location of the
-     * remaining pointer on the screen.
-     * If [.isInProgress] would return false, the result of this
-     * function is undefined.
-     *
-     * @return X coordinate of the focal point in pixels.
-     */
-    fun getFocusX(): Float {
-        return mFocusX
-    }
-
-    /**
-     * Get the Y coordinate of the current gesture's focal point.
-     * If a gesture is in progress, the focal point is directly between
-     * the two pointers forming the gesture.
-     * If a gesture is ending, the focal point is the location of the
-     * remaining pointer on the screen.
-     * If [.isInProgress] would return false, the result of this
-     * function is undefined.
-     *
-     * @return Y coordinate of the focal point in pixels.
-     */
-    fun getFocusY(): Float {
-        return mFocusY
     }
 
     /**
@@ -513,7 +464,7 @@ class PixelView : View, View.OnTouchListener {
      *
      * @return Distance between pointers in pixels.
      */
-    fun getCurrentSpan(): Float {
+    private fun getCurrentSpan(): Float {
         if (mCurrLen == -1f) {
             val cvx = mCurrFingerDiffX
             val cvy = mCurrFingerDiffY
@@ -528,7 +479,7 @@ class PixelView : View, View.OnTouchListener {
      *
      * @return Previous distance between pointers in pixels.
      */
-    fun getPreviousSpan(): Float {
+    private fun getPreviousSpan(): Float {
         if (mPrevLen == -1f) {
             val pvx = mPrevFingerDiffX
             val pvy = mPrevFingerDiffY
@@ -544,7 +495,7 @@ class PixelView : View, View.OnTouchListener {
      *
      * @return The current scaling factor.
      */
-    fun getScaleFactor(): Float {
+    private fun getScaleFactor(): Float {
         if (mScaleFactor == -1f) {
             mScaleFactor = getCurrentSpan() / getPreviousSpan()
         }
