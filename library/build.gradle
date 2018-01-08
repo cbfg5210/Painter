@@ -42,4 +42,5 @@ dependencies {
     compileOnly deps.rxjava2
     compileOnly deps.rxAndroid
     compileOnly deps.gson
+    compileOnly deps.andPermission
 }
