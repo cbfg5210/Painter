@@ -14,7 +14,7 @@ import android.view.SurfaceView;
  * Package com.hc.myoutline
  * Created by HuaChao on 2016/5/27.
  */
-public class DrawOutlineView extends SurfaceView implements SurfaceHolder.Callback {
+public class AutoDrawView extends SurfaceView implements SurfaceHolder.Callback {
 
     private SurfaceHolder mSurfaceHolder;
     private Bitmap mTmpBm;
@@ -30,14 +30,16 @@ public class DrawOutlineView extends SurfaceView implements SurfaceHolder.Callba
     private Bitmap mPaintBm;
     private Point mLastPoint = new Point(0, 0);
 
-    public DrawOutlineView(Context context) {
-        super(context);
-        init();
+    public AutoDrawView(Context context) {
+        this(context, null);
     }
 
-    public DrawOutlineView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    public AutoDrawView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
 
+    public AutoDrawView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
         init();
     }
 
@@ -124,6 +126,7 @@ public class DrawOutlineView extends SurfaceView implements SurfaceHolder.Callba
         mSurfaceHolder.unlockCanvasAndPost(canvas);
         return true;
     }
+
     //重画
     public void reDraw(boolean[][] array) {
         if (isDrawing) return;
@@ -165,7 +168,6 @@ public class DrawOutlineView extends SurfaceView implements SurfaceHolder.Callba
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-
     }
 
     @Override
@@ -186,6 +188,5 @@ public class DrawOutlineView extends SurfaceView implements SurfaceHolder.Callba
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-
     }
 }

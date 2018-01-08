@@ -15,7 +15,7 @@
         android:background="#FFFFFF"
         android:src="@drawable/test"/>
 
-    <com.ue.autodraw.DrawOutlineView
+    <com.ue.autodraw.AutoDrawView
         android:id="@+id/outline"
         android:layout_width="0dp"
         android:layout_height="match_parent"
