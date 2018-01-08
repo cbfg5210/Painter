@@ -25,14 +25,14 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     private var mPaintBm: Bitmap? = null
     private var mLastPoint: Point? = Point(0, 0)
 
+    private var isDrawing = false
+
     //获取下一个需要绘制的点
     private val nextPoint: Point?
         get() {
             mLastPoint = getNearestPoint(mLastPoint)
             return mLastPoint
         }
-
-    private var isDrawing = false
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -73,7 +73,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
                 }
             }
             //搜索正方形的左右边
-            for (y in beginY + 1..endY - 1) {
+            for (y in beginY + 1 until endY) {
                 if (mArray!![beginX][y]) {
                     mArray!![beginX][beginY] = false
                     return Point(beginX, beginY)

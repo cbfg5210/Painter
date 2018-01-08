@@ -42,8 +42,9 @@ class AutoDrawActivity : AppCompatActivity() {
         if (first) {
             first = false
             outline.beginDraw(getArray(sobelBm))
-        } else
+        } else {
             outline.reDraw(getArray(sobelBm))
+        }
         return true
     }
 }
