@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MyOutline</string>
+    <string name="auto_draw">轮廓临摹</string>
 </resources>
