@@ -40,10 +40,10 @@ class AutoDrawActivity : AppCompatActivity(), View.OnTouchListener {
         sobelBm = SobelUtils.sobel(bm, reqWidth, reqHeight)
 
         val paintBm = AutoDrawUtils.getRatioBitmap(this, R.drawable.paint, 10, 20)
-        outline.setPaintBm(paintBm)
+        advOutline.setPaintBm(paintBm)
 
-        dd.setOnTouchListener(this)
-        outline.setOnTouchListener(this)
+        ivObjectView.setOnTouchListener(this)
+        advOutline.setOnTouchListener(this)
     }
 
     //根据Bitmap信息，获取每个位置的像素点是否需要绘制
@@ -61,13 +61,13 @@ class AutoDrawActivity : AppCompatActivity(), View.OnTouchListener {
 
     override fun onTouch(v: View, event: MotionEvent?): Boolean {
         when (v.id) {
-            R.id.dd -> dd.visibility = View.GONE
-            R.id.outline -> {
+            R.id.ivObjectView -> ivObjectView.visibility = View.GONE
+            R.id.advOutline -> {
                 if (first) {
                     first = false
-                    outline.beginDraw(getArray(sobelBm))
+                    advOutline.beginDraw(getArray(sobelBm))
                 } else {
-                    outline.reDraw(getArray(sobelBm))
+                    advOutline.reDraw(getArray(sobelBm))
                 }
             }
         }
