@@ -2,7 +2,6 @@ package com.ue.autodraw
 
 import android.content.Context
 import android.graphics.*
-import android.util.Log
 
 /**
  * 共用的工具
@@ -17,7 +16,7 @@ object AutoDrawUtils {
         BitmapFactory.decodeResource(context.resources, imgId, newOpts)
         newOpts.inSampleSize = calculateInSampleSize(newOpts, reqWidth, reqHeight)
 
-        Log.e("AutoDrawUtils", "getRatioBitmap: opt w=${newOpts.outWidth},h=${newOpts.outHeight},sampleSize=${newOpts.inSampleSize},div=${newOpts.outWidth / newOpts.inSampleSize}")
+        //Log.e("AutoDrawUtils", "getRatioBitmap: opt w=${newOpts.outWidth},h=${newOpts.outHeight},sampleSize=${newOpts.inSampleSize},div=${newOpts.outWidth / newOpts.inSampleSize}")
 
         newOpts.inJustDecodeBounds = false
         return BitmapFactory.decodeResource(context.resources, imgId, newOpts)
@@ -47,14 +46,14 @@ object AutoDrawUtils {
         val height = bmpOriginal.height
         val width = bmpOriginal.width
 
-        val bmpGrayscale = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
-        val c = Canvas(bmpGrayscale)
+        val bmpGrayScale = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+        val c = Canvas(bmpGrayScale)
         val cm = ColorMatrix()
         cm.setSaturation(0f)
         val paint = Paint()
         paint.colorFilter = ColorMatrixColorFilter(cm)
         c.drawBitmap(bmpOriginal, 0f, 0f, paint)
-        return bmpGrayscale
+        return bmpGrayScale
     }
 
     /**
@@ -66,20 +65,14 @@ object AutoDrawUtils {
      * @return
      */
     fun compress(bm: Bitmap, reqWidth: Int, reqHeight: Int): Bitmap {
-        val width = bm.width
-        val height = bm.height
+        if (bm.height <= reqHeight && bm.width <= reqWidth) return bm
 
-        if (height > reqHeight || width > reqWidth) {
-            val scaleWidth = reqWidth.toFloat() / width
-            val scaleHeight = reqHeight.toFloat() / height
-            val scale = if (scaleWidth < scaleHeight) scaleWidth else scaleHeight
-
-            val matrix = Matrix()
-            matrix.postScale(scale, scale)
-            val result = Bitmap.createBitmap(bm, 0, 0, bm.width, bm.height, matrix, true)
-            bm.recycle()
-            return result
-        }
-        return bm
+        val matrix = Matrix()
+        val scale = Math.min(reqWidth.toFloat() / bm.width, reqHeight.toFloat() / bm.height)
+        //scale=0.8f的时候绘制1080x1920图片比较合适
+        matrix.postScale(scale, scale)
+        val result = Bitmap.createBitmap(bm, 0, 0, bm.width, bm.height, matrix, true)
+        bm.recycle()
+        return result
     }
 }
