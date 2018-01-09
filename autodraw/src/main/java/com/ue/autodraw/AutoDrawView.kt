@@ -5,6 +5,11 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import com.ue.library.util.RxJavaUtils
+import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 /**
  * Package com.hc.myoutline
@@ -28,6 +33,8 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     private var mLastPoint: Point? = null
 
     private var isDrawing = false
+
+    private var disposable: Disposable? = null
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -125,28 +132,24 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
     fun beginDraw(array: Array<BooleanArray>) {
         if (isDrawing) return
+
         this.mArray = array
         mSrcBmWidth = array.size
         mSrcBmHeight = array[0].size
 
         offsetX = (measuredWidth - mSrcBmWidth) / 2
 
-        object : Thread() {
-            override fun run() {
-                while (true) {
+        RxJavaUtils.dispose(disposable)
+        disposable = Observable.interval(0, 20, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .subscribe {
                     isDrawing = true
-                    if (!draw()) break
-                    try {
-                        Thread.sleep(20)
-                    } catch (e: InterruptedException) {
-                        e.printStackTrace()
+                    while (draw()) {
                     }
+                    isDrawing = false
+                    RxJavaUtils.dispose(disposable)
                 }
-                isDrawing = false
-            }
-        }.start()
     }
-
 
     override fun surfaceCreated(holder: SurfaceHolder) {}
 
@@ -167,5 +170,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         mPaint.style = Paint.Style.STROKE
     }
 
-    override fun surfaceDestroyed(holder: SurfaceHolder) {}
+    override fun surfaceDestroyed(holder: SurfaceHolder) {
+        RxJavaUtils.dispose(disposable)
+    }
 }
