@@ -16,7 +16,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     private var mHeight = 0
     private var mSrcBmWidth = 0
     private var mSrcBmHeight = 0
-    private val offsetX = 100
+    private var offsetX = 100
     private val offsetY = 100
 
     private var mPaint: Paint = Paint()
@@ -128,6 +128,8 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         this.mArray = array
         mSrcBmWidth = array.size
         mSrcBmHeight = array[0].size
+
+        offsetX = (measuredWidth - mSrcBmWidth) / 2
 
         object : Thread() {
             override fun run() {
