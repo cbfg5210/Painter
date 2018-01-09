@@ -16,6 +16,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     private var mHeight = 0
     private var mSrcBmWidth = 0
     private var mSrcBmHeight = 0
+    private val offsetX = 100
     private val offsetY = 100
 
     private var mPaint: Paint = Paint()
@@ -96,18 +97,18 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
             p = mLastPoint
             //如果p为空，说明所有的点已经绘制完成
-            p ?: return false
+            p ?: break
 
-            mTmpCanvas?.drawPoint(p.x.toFloat(), (p.y + offsetY).toFloat(), mPaint)
+            mTmpCanvas?.drawPoint((p.x + offsetX).toFloat(), (p.y + offsetY).toFloat(), mPaint)
         }
         //将bitmap绘制到SurfaceView中
         val canvas = holder.lockCanvas()
         canvas.drawBitmap(mTmpBm!!, 0f, 0f, mPaint)
         if (p != null) {
-            canvas.drawBitmap(mPaintBm!!, p.x.toFloat(), (p.y - mPaintBm!!.height + offsetY).toFloat(), mPaint)
+            canvas.drawBitmap(mPaintBm!!, (p.x + offsetX).toFloat(), (p.y - mPaintBm!!.height + offsetY).toFloat(), mPaint)
         }
         holder.unlockCanvasAndPost(canvas)
-        return true
+        return p != null
     }
 
     //重画

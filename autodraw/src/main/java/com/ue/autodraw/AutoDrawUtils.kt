@@ -2,6 +2,7 @@ package com.ue.autodraw
 
 import android.content.Context
 import android.graphics.*
+import android.util.Log
 
 /**
  * 共用的工具
@@ -15,6 +16,8 @@ object AutoDrawUtils {
         newOpts.inJustDecodeBounds = true
         BitmapFactory.decodeResource(context.resources, imgId, newOpts)
         newOpts.inSampleSize = calculateInSampleSize(newOpts, reqWidth, reqHeight)
+
+        Log.e("AutoDrawUtils", "getRatioBitmap: opt w=${newOpts.outWidth},h=${newOpts.outHeight},sampleSize=${newOpts.inSampleSize},div=${newOpts.outWidth / newOpts.inSampleSize}")
 
         newOpts.inJustDecodeBounds = false
         return BitmapFactory.decodeResource(context.resources, imgId, newOpts)
