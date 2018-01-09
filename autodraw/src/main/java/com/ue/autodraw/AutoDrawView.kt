@@ -12,38 +12,29 @@ import android.view.SurfaceView
  */
 class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
-    private var mTmpBm: Bitmap? = null
-    private var mTmpCanvas: Canvas? = null
-    private var mWidth: Int = 0
-    private var mHeight: Int = 0
-    private lateinit var mPaint: Paint
-    private var mSrcBmWidth: Int = 0
-    private var mSrcBmHeight: Int = 0
-    private lateinit var mArray: Array<BooleanArray>
+    private var mWidth = 0
+    private var mHeight = 0
+    private var mSrcBmWidth = 0
+    private var mSrcBmHeight = 0
     private val offsetY = 100
 
+    private var mPaint: Paint = Paint()
+    private lateinit var mArray: Array<BooleanArray>
+
+    private var mTmpBm: Bitmap? = null
+    private var mTmpCanvas: Canvas? = null
     private var mPaintBm: Bitmap? = null
-    private var mLastPoint: Point? = Point(0, 0)
+    private var mLastPoint: Point? = null
 
     private var isDrawing = false
 
-    //获取下一个需要绘制的点
-    private val nextPoint: Point?
-        get() {
-            mLastPoint = getNearestPoint(mLastPoint)
-            return mLastPoint
-        }
-
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {
-        init()
-    }
+    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
 
-    private fun init() {
-        holder.addCallback(this)
-        mPaint = Paint()
+    init {
         mPaint.color = Color.BLACK
+        holder.addCallback(this)
     }
 
     //设置画笔图片
@@ -63,29 +54,28 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
             val endY = if (p.y + add < mSrcBmHeight) p.y + add else mSrcBmHeight - 1
             //搜索正方形的上下边
             for (x in beginX..endX) {
-                if (mArray!![x][beginY]) {
-                    mArray!![x][beginY] = false
+                if (mArray[x][beginY]) {
+                    mArray[x][beginY] = false
                     return Point(x, beginY)
                 }
-                if (mArray!![x][endY]) {
-                    mArray!![x][endY] = false
+                if (mArray[x][endY]) {
+                    mArray[x][endY] = false
                     return Point(x, endY)
                 }
             }
             //搜索正方形的左右边
             for (y in beginY + 1 until endY) {
-                if (mArray!![beginX][y]) {
-                    mArray!![beginX][beginY] = false
+                if (mArray[beginX][y]) {
+                    mArray[beginX][beginY] = false
                     return Point(beginX, beginY)
                 }
-                if (mArray!![endX][y]) {
-                    mArray!![endX][y] = false
+                if (mArray[endX][y]) {
+                    mArray[endX][y] = false
                     return Point(endX, y)
                 }
             }
             add++
         }
-
         return null
     }
 
@@ -101,7 +91,10 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         var count = 100
         var p: Point? = null
         while (count-- > 0) {
-            p = nextPoint
+            //获取下一个需要绘制的点
+            mLastPoint = getNearestPoint(mLastPoint)
+
+            p = mLastPoint
             //如果p为空，说明所有的点已经绘制完成
             p ?: return false
 
@@ -157,11 +150,13 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
         this.mWidth = width
         this.mHeight = height
+
         mTmpBm = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         mTmpCanvas = Canvas(mTmpBm!!)
         mPaint.color = Color.WHITE
         mPaint.style = Paint.Style.FILL
         mTmpCanvas?.drawRect(0f, 0f, mWidth.toFloat(), mHeight.toFloat(), mPaint)
+
         val canvas = holder.lockCanvas()
         canvas.drawBitmap(mTmpBm!!, 0f, 0f, mPaint)
         holder.unlockCanvasAndPost(canvas)
