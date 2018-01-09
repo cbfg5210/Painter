@@ -15,11 +15,11 @@ class AutoDrawActivity : AppCompatActivity() {
         setContentView(R.layout.activity_auto_draw)
 
         //将Bitmap压缩处理，防止OOM
-        val bm = CommenUtils.getRatioBitmap(this, R.drawable.test, 100, 100)
+        val bm = AutoDrawUtils.getRatioBitmap(this, R.drawable.tim, 180, 180)
         //返回的是处理过的Bitmap
         sobelBm = SobelUtils.Sobel(bm)
 
-        val paintBm = CommenUtils.getRatioBitmap(this, R.drawable.paint, 10, 20)
+        val paintBm = AutoDrawUtils.getRatioBitmap(this, R.drawable.paint, 10, 20)
         outline.setPaintBm(paintBm)
     }
 

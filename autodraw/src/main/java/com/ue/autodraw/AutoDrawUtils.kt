@@ -8,7 +8,7 @@ import android.graphics.*
  *
  * @author leaf
  */
-object CommenUtils {
+object AutoDrawUtils {
 
     fun getRatioBitmap(context: Context, imgId: Int, reqWidth: Int, reqHeight: Int): Bitmap {
         val newOpts = BitmapFactory.Options()
@@ -18,11 +18,9 @@ object CommenUtils {
 
         newOpts.inJustDecodeBounds = false
         return BitmapFactory.decodeResource(context.resources, imgId, newOpts)
-
     }
 
-
-    fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
         val height = options.outHeight
         val width = options.outWidth
         var inSampleSize = 1

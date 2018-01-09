@@ -12,8 +12,8 @@ object SobelUtils {
      * @return
      */
     fun Sobel(mBitmap: Bitmap): Bitmap {
-        var bitmap = CommenUtils.compress(mBitmap, 480, 800)
-        val temp = CommenUtils.toGrayScale(bitmap)
+        var bitmap = AutoDrawUtils.compress(mBitmap, 480, 800)
+        val temp = AutoDrawUtils.toGrayScale(bitmap)
         val w = temp.width
         val h = temp.height
 
