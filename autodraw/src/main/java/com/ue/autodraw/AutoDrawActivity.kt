@@ -38,8 +38,6 @@ class AutoDrawActivity : AppCompatActivity(), View.OnTouchListener, RadioGroup.O
         supportActionBar?.title = getString(R.string.auto_draw)
 
         advOutline.setPaintBitmap(AutoDrawUtils.getRatioBitmap(this, R.drawable.paint, 10, 20))
-//        advOutline.setBgBitmapRes(R.drawable.fs0)
-//        advOutline.setBgBitmap(AutoDrawUtils.getRatioBitmap(this, R.drawable.fs0, REQ_SIZE, REQ_SIZE))
 
         advOutline.setOnTouchListener(this)
         rgTabs.setOnCheckedChangeListener(this)
@@ -97,7 +95,8 @@ class AutoDrawActivity : AppCompatActivity(), View.OnTouchListener, RadioGroup.O
             R.id.rbTabBackground -> {
                 val bgDialog = TabBgDialog()
                 bgDialog.itemListener = AdapterView.OnItemClickListener { _, _, imgRes, _ ->
-
+                    advOutline.setBgBitmapRes(imgRes)
+                    bgDialog.dismiss()
                 }
                 bgDialog.show(supportFragmentManager, "")
             }

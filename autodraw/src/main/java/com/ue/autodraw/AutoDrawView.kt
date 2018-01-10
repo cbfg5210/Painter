@@ -17,8 +17,6 @@ import java.util.concurrent.TimeUnit
  */
 class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
-    private var mWidth = 0
-    private var mHeight = 0
     private var mSrcBmWidth = 0
     private var mSrcBmHeight = 0
     private var offsetX = 100
@@ -31,6 +29,8 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     private var mTmpBm: Bitmap? = null
     private var mPaintBm: Bitmap? = null
 
+    private var bgBitmapRes = 0
+
     private var mLastPoint: Point? = null
     private var isDrawing = false
 
@@ -41,13 +41,17 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
 
     init {
-        mPaint.color = Color.BLACK
         holder.addCallback(this)
     }
 
     //设置画笔图片
     fun setPaintBitmap(paintBm: Bitmap) {
         mPaintBm = paintBm
+    }
+
+    fun setBgBitmapRes(bgBitmapRes: Int) {
+        this.bgBitmapRes = bgBitmapRes
+        resetBgBitmap()
     }
 
     //获取离指定点最近的一个未绘制过的点
@@ -87,9 +91,8 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         return null
     }
 
-
     /**
-     * //绘制
+     * 绘制
      * return :false 表示绘制完成，true表示还需要继续绘制
      */
     private fun drawOutline(): Boolean {
@@ -110,9 +113,9 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         }
         //将bitmap绘制到SurfaceView中
         val canvas = holder.lockCanvas()
-        canvas.drawBitmap(mTmpBm!!, 0f, 0f, mPaint)
+        canvas.drawBitmap(mTmpBm, 0f, 0f, mPaint)
         if (p != null) {
-            canvas.drawBitmap(mPaintBm!!, (p.x + offsetX).toFloat(), (p.y - mPaintBm!!.height + offsetY).toFloat(), mPaint)
+            canvas.drawBitmap(mPaintBm, (p.x + offsetX).toFloat(), (p.y - mPaintBm!!.height + offsetY).toFloat(), mPaint)
         }
         holder.unlockCanvasAndPost(canvas)
         return p != null
@@ -122,9 +125,8 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     fun reDraw(array: Array<BooleanArray>) {
         if (isDrawing) return
 
-//        resetBgBitmap()
-
         mLastPoint = Point(0, 0)
+        resetBgBitmap()
         beginDraw(array)
     }
 
@@ -157,24 +159,26 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     override fun surfaceCreated(holder: SurfaceHolder) {}
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-        this.mWidth = width
-        this.mHeight = height
-
         resetBgBitmap()
-
-        val canvas = holder.lockCanvas()
-        canvas.drawBitmap(mTmpBm!!, 0f, 0f, mPaint)
-        holder.unlockCanvasAndPost(canvas)
-
-        mPaint.style = Paint.Style.STROKE
     }
 
     private fun resetBgBitmap() {
-        mTmpBm = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888)
-        mTmpCanvas = Canvas(mTmpBm!!)
-        mPaint.color = Color.WHITE
-        mPaint.style = Paint.Style.FILL
-        mTmpCanvas?.drawRect(0f, 0f, mWidth.toFloat(), mHeight.toFloat(), mPaint)
+        if (bgBitmapRes > 0) {
+            mTmpBm = AutoDrawUtils.getRatioBitmap(context, bgBitmapRes, measuredWidth, measuredHeight)
+            mTmpBm = Bitmap.createScaledBitmap(mTmpBm, measuredWidth, measuredHeight, false)
+            mTmpCanvas = Canvas(mTmpBm)
+        } else {
+            mTmpBm = Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
+            mTmpCanvas = Canvas(mTmpBm)
+            mPaint.color = Color.WHITE
+            mPaint.style = Paint.Style.FILL
+            mTmpCanvas?.drawRect(0f, 0f, measuredWidth.toFloat(), measuredHeight.toFloat(), mPaint)
+        }
+        val canvas = holder.lockCanvas()
+        canvas.drawBitmap(mTmpBm, 0f, 0f, mPaint)
+        holder.unlockCanvasAndPost(canvas)
+
+        mPaint.style = Paint.Style.STROKE
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
