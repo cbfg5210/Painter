@@ -4,9 +4,11 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
 import com.ue.library.util.RxJavaUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
@@ -36,7 +38,6 @@ class AutoDrawActivity : AppCompatActivity(), View.OnTouchListener, View.OnClick
 
         advOutline.setOnTouchListener(this)
         btnBackground.setOnClickListener(this)
-        btnShare.setOnClickListener(this)
 
         loadBitmapToDraw()
     }
@@ -89,18 +90,27 @@ class AutoDrawActivity : AppCompatActivity(), View.OnTouchListener, View.OnClick
     override fun onClick(v: View) {
         when (v.id) {
             R.id.btnBackground -> {
-            }
-            R.id.btnShare -> {
+                Toast.makeText(this, "bg", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_auto_draw, menu)
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            finish()
-            return true
+        when (item.itemId) {
+            android.R.id.home -> finish()
+            R.id.actionShareDrawPicture -> {
+                Toast.makeText(this, "picture", Toast.LENGTH_SHORT).show()
+            }
+            R.id.actionShareDrawVideo -> {
+                Toast.makeText(this, "video", Toast.LENGTH_SHORT).show()
+            }
         }
-        return super.onOptionsItemSelected(item)
+        return true
     }
 
     override fun onDestroy() {

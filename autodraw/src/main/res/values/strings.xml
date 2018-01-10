@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">MyOutline</string>
     <string name="auto_draw">轮廓临摹</string>
+    <string name="save_draw_picture">保存临摹结果图片</string>
+    <string name="save_draw_video">保存临摹过程视频</string>
+    <string name="share">分享</string>
+    <string name="share_draw_picture">分享临摹结果图片</string>
+    <string name="share_draw_video">分享临摹过程视频</string>
 </resources>

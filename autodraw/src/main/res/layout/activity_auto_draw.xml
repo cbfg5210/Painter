@@ -31,11 +31,33 @@
                 android:layout_height="wrap_content"
                 android:text="background"/>
 
-            <Button
-                android:id="@+id/btnShare"
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/cbSaveDrawPicture"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="share"/>
+                android:text="@string/save_draw_picture"/>
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/cbSaveDrawVideo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save_draw_video"/>
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/paintOptions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/lineOptions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/btnLineColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="line color"/>
         </LinearLayout>
     </LinearLayout>
 
