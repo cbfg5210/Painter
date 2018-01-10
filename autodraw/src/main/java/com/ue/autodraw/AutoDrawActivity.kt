@@ -8,7 +8,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import android.widget.RadioGroup
 import android.widget.Toast
+import com.ue.autodraw.dialog.TabBgDialog
 import com.ue.library.util.RxJavaUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
@@ -17,7 +19,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_auto_draw.*
 
-class AutoDrawActivity : AppCompatActivity(), View.OnTouchListener, View.OnClickListener {
+class AutoDrawActivity : AppCompatActivity(), View.OnTouchListener, RadioGroup.OnCheckedChangeListener {
 
     private var sobelBm: Bitmap? = null
     private var first = true
@@ -37,7 +39,7 @@ class AutoDrawActivity : AppCompatActivity(), View.OnTouchListener, View.OnClick
         advOutline.setPaintBm(AutoDrawUtils.getRatioBitmap(this, R.drawable.paint, 10, 20))
 
         advOutline.setOnTouchListener(this)
-        btnBackground.setOnClickListener(this)
+        rgTabs.setOnCheckedChangeListener(this)
 
         loadBitmapToDraw()
     }
@@ -87,10 +89,18 @@ class AutoDrawActivity : AppCompatActivity(), View.OnTouchListener, View.OnClick
         return true
     }
 
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.btnBackground -> {
-                Toast.makeText(this, "bg", Toast.LENGTH_SHORT).show()
+    override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
+        when (checkedId) {
+            R.id.rbTabBackground -> {
+                TabBgDialog().show(supportFragmentManager, "")
+            }
+            R.id.rbTabPaint -> {
+            }
+            R.id.rbTabLine -> {
+            }
+            R.id.rbTabSpeed -> {
+            }
+            R.id.rbTabSave -> {
             }
         }
     }

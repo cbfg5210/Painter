@@ -6,4 +6,9 @@
     <string name="share">分享</string>
     <string name="share_draw_picture">分享临摹结果图片</string>
     <string name="share_draw_video">分享临摹过程视频</string>
+    <string name="background">背景</string>
+    <string name="paint">画笔</string>
+    <string name="line">线条</string>
+    <string name="speed">速度</string>
+    <string name="save">保存</string>
 </resources>

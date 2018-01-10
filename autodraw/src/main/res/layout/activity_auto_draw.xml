@@ -19,46 +19,37 @@
             android:adjustViewBounds="true"
             android:src="@drawable/test"/>
 
-        <LinearLayout
+        <RadioGroup
+            android:id="@+id/rgTabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/widget_size_10"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btnBackground"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="background"/>
+            <RadioButton
+                android:id="@+id/rbTabBackground"
+                style="@style/AutoDrawTab"
+                android:text="@string/background"/>
 
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/cbSaveDrawPicture"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/save_draw_picture"/>
+            <RadioButton
+                android:id="@+id/rbTabPaint"
+                style="@style/AutoDrawTab"
+                android:text="@string/paint"/>
 
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/cbSaveDrawVideo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/save_draw_video"/>
+            <RadioButton
+                android:id="@+id/rbTabLine"
+                style="@style/AutoDrawTab"
+                android:text="@string/line"/>
 
-            <android.support.v7.widget.AppCompatSpinner
-                android:id="@+id/paintOptions"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            <RadioButton
+                android:id="@+id/rbTabSpeed"
+                style="@style/AutoDrawTab"
+                android:text="@string/speed"/>
 
-            <android.support.v7.widget.AppCompatSpinner
-                android:id="@+id/lineOptions"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <Button
-                android:id="@+id/btnLineColor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="line color"/>
-        </LinearLayout>
+            <RadioButton
+                android:id="@+id/rbTabSave"
+                style="@style/AutoDrawTab"
+                android:text="@string/save"/>
+        </RadioGroup>
     </LinearLayout>
 
     <com.ue.autodraw.AutoDrawView

@@ -57,11 +57,16 @@ dependencies {
         implementation project(':library')
         implementation deps.rxjava2
         implementation deps.rxAndroid
+        implementation deps.support.recyclerview
+        implementation deps.picasso
     } else {
         compileOnly deps.kotlinJre
         compileOnly deps.support.app_compat
         compileOnly project(':library')
         compileOnly deps.rxjava2
         compileOnly deps.rxAndroid
+        compileOnly deps.support.recyclerview
+        compileOnly deps.picasso
     }
+    implementation project(':resource')
 }
