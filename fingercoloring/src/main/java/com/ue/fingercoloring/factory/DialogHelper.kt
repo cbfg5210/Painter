@@ -12,7 +12,7 @@ import com.ue.fingercoloring.constant.SPKeys
 import com.ue.fingercoloring.event.OnAddWordsSuccessListener
 import com.ue.fingercoloring.event.OnChangeBorderListener
 import com.ue.fingercoloring.widget.ColorPickerSeekBar
-import com.ue.library.util.DensityUtil
+import com.ue.library.util.DensityUtils
 import com.ue.library.util.SPUtils
 import kotlinx.android.synthetic.main.layout_check_box.view.*
 import kotlinx.android.synthetic.main.view_addborder.view.*
@@ -88,9 +88,9 @@ class DialogHelper(private val context: Context) {
                 .setTitle(R.string.addborder)
                 .setPositiveButton(R.string.ok) { _, _ ->
                     if (drawableId == 1)
-                        listener.changeBorder(R.drawable.xiangkuang, DensityUtil.dip2px(context, 36f), DensityUtil.dip2px(context, 36f), DensityUtil.dip2px(context, 21f), DensityUtil.dip2px(context, 21f))
+                        listener.changeBorder(R.drawable.xiangkuang, DensityUtils.dip2px(context, 36f), DensityUtils.dip2px(context, 36f), DensityUtils.dip2px(context, 21f), DensityUtils.dip2px(context, 21f))
                     else
-                        listener.changeBorder(R.drawable.xiangkuang2, DensityUtil.dip2px(context, 16f), DensityUtil.dip2px(context, 16f), DensityUtil.dip2px(context, 16f), DensityUtil.dip2px(context, 16f))
+                        listener.changeBorder(R.drawable.xiangkuang2, DensityUtils.dip2px(context, 16f), DensityUtils.dip2px(context, 16f), DensityUtils.dip2px(context, 16f), DensityUtils.dip2px(context, 16f))
                 }
                 .setNegativeButton(R.string.cancel, null)
                 .setView(layout)

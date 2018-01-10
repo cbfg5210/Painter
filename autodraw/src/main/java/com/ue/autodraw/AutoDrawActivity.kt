@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.RadioGroup
@@ -20,7 +19,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_auto_draw.*
 
-class AutoDrawActivity : AppCompatActivity(), View.OnTouchListener, RadioGroup.OnCheckedChangeListener {
+class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 
     private var sobelBm: Bitmap? = null
     private var first = true
@@ -37,9 +36,7 @@ class AutoDrawActivity : AppCompatActivity(), View.OnTouchListener, RadioGroup.O
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.auto_draw)
 
-        advOutline.setPaintBitmap(AutoDrawUtils.getRatioBitmap(this, R.drawable.paint, 10, 20))
-
-        advOutline.setOnTouchListener(this)
+        advOutline.setOnClickListener(this)
         rgTabs.setOnCheckedChangeListener(this)
 
         loadBitmapToDraw()
@@ -75,10 +72,10 @@ class AutoDrawActivity : AppCompatActivity(), View.OnTouchListener, RadioGroup.O
         return b
     }
 
-    override fun onTouch(v: View, event: MotionEvent?): Boolean {
+    override fun onClick(v: View) {
         when (v.id) {
             R.id.advOutline -> {
-                sobelBm ?: return true
+                sobelBm ?: return
                 if (first) {
                     first = false
                     advOutline.beginDraw(getArray(sobelBm!!))
@@ -87,7 +84,6 @@ class AutoDrawActivity : AppCompatActivity(), View.OnTouchListener, RadioGroup.O
                 }
             }
         }
-        return true
     }
 
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
