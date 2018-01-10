@@ -151,6 +151,13 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
                         }
                     }
                     RxJavaUtils.dispose(disposable)
+                    /*保存结果图片
+                    val path = Environment.getExternalStorageDirectory().path + "/tt/"
+                    FileUtils.saveImageLocally(context, mTmpBm!!, path, "tt.png", object : FileUtils.OnSaveImageListener {
+                        override fun onSaved(path: String) {
+                            Log.e("AutoDrawView", "onSaved: save path:$path")
+                        }
+                    })*/
                 })
                 .subscribeOn(Schedulers.single())
                 .subscribe()
