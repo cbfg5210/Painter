@@ -7,9 +7,9 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.ue.library.util.RxJavaUtils
 import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import java.util.concurrent.TimeUnit
 
 class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
@@ -26,6 +26,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     private var mPaintBm: Bitmap? = null
 
     private var bgBitmapRes = 0
+    private var delaySpeed = 20L
 
     private var mLastPoint: Point? = null
     private var isDrawing = false
@@ -134,16 +135,21 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         offsetX = (measuredWidth - mSrcBmWidth) / 2
         offsetY = (measuredHeight - mSrcBmHeight) / 2
 
+        isDrawing = true
         RxJavaUtils.dispose(disposable)
-        disposable = Observable.interval(0, 20, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.io())
-                .subscribe {
-                    isDrawing = true
+        disposable = Observable
+                .create(ObservableOnSubscribe<Any> {
                     while (drawOutline()) {
+                        try {
+                            Thread.sleep(delaySpeed)
+                        } catch (exp: InterruptedException) {
+                        }
                     }
                     isDrawing = false
                     RxJavaUtils.dispose(disposable)
-                }
+                })
+                .subscribeOn(Schedulers.single())
+                .subscribe()
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) {}
