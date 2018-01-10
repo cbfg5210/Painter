@@ -11,16 +11,12 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
-/**
- * Package com.hc.myoutline
- * Created by HuaChao on 2016/5/27.
- */
 class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
     private var mSrcBmWidth = 0
     private var mSrcBmHeight = 0
-    private var offsetX = 100
-    private val offsetY = 100
+    private var offsetX = 0
+    private var offsetY = 0
 
     private var mPaint: Paint = Paint()
     private lateinit var mArray: Array<BooleanArray>
@@ -96,8 +92,6 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
      * return :false 表示绘制完成，true表示还需要继续绘制
      */
     private fun drawOutline(): Boolean {
-        mPaint.style = Paint.Style.STROKE
-        mPaint.color = Color.BLACK
         //获取count个点后，一次性绘制到bitmap在把bitmap绘制到SurfaceView
         var count = 100
         var p: Point? = null
@@ -125,7 +119,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     fun reDraw(array: Array<BooleanArray>) {
         if (isDrawing) return
 
-        mLastPoint = Point(0, 0)
+        mLastPoint = Point()
         resetBgBitmap()
         beginDraw(array)
     }
@@ -138,17 +132,13 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         mSrcBmHeight = array[0].size
 
         offsetX = (measuredWidth - mSrcBmWidth) / 2
+        offsetY = (measuredHeight - mSrcBmHeight) / 2
 
         RxJavaUtils.dispose(disposable)
         disposable = Observable.interval(0, 20, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .subscribe {
                     isDrawing = true
-                    //绘制背景
-                    val canvas = holder.lockCanvas()
-                    canvas.drawBitmap(mTmpBm!!, 0f, 0f, null)
-                    holder.unlockCanvasAndPost(canvas)
-                    //绘制轮廓
                     while (drawOutline()) {
                     }
                     isDrawing = false
@@ -177,8 +167,9 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         val canvas = holder.lockCanvas()
         canvas.drawBitmap(mTmpBm, 0f, 0f, mPaint)
         holder.unlockCanvasAndPost(canvas)
-
+        //设置回轮廓画笔
         mPaint.style = Paint.Style.STROKE
+        mPaint.color = Color.BLACK
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
