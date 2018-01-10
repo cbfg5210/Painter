@@ -27,11 +27,11 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     private var mPaint: Paint = Paint()
     private lateinit var mArray: Array<BooleanArray>
 
-    private var mTmpBm: Bitmap? = null
     private var mTmpCanvas: Canvas? = null
+    private var mTmpBm: Bitmap? = null
     private var mPaintBm: Bitmap? = null
-    private var mLastPoint: Point? = null
 
+    private var mLastPoint: Point? = null
     private var isDrawing = false
 
     private var disposable: Disposable? = null
@@ -46,7 +46,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     }
 
     //设置画笔图片
-    fun setPaintBm(paintBm: Bitmap) {
+    fun setPaintBitmap(paintBm: Bitmap) {
         mPaintBm = paintBm
     }
 
@@ -92,7 +92,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
      * //绘制
      * return :false 表示绘制完成，true表示还需要继续绘制
      */
-    private fun draw(): Boolean {
+    private fun drawOutline(): Boolean {
         mPaint.style = Paint.Style.STROKE
         mPaint.color = Color.BLACK
         //获取count个点后，一次性绘制到bitmap在把bitmap绘制到SurfaceView
@@ -121,11 +121,9 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     //重画
     fun reDraw(array: Array<BooleanArray>) {
         if (isDrawing) return
-        mTmpBm = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888)
-        mTmpCanvas = Canvas(mTmpBm!!)
-        mPaint.color = Color.WHITE
-        mPaint.style = Paint.Style.FILL
-        mTmpCanvas?.drawRect(0f, 0f, mWidth.toFloat(), mHeight.toFloat(), mPaint)
+
+//        resetBgBitmap()
+
         mLastPoint = Point(0, 0)
         beginDraw(array)
     }
@@ -144,7 +142,12 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
                 .subscribeOn(Schedulers.io())
                 .subscribe {
                     isDrawing = true
-                    while (draw()) {
+                    //绘制背景
+                    val canvas = holder.lockCanvas()
+                    canvas.drawBitmap(mTmpBm!!, 0f, 0f, null)
+                    holder.unlockCanvasAndPost(canvas)
+                    //绘制轮廓
+                    while (drawOutline()) {
                     }
                     isDrawing = false
                     RxJavaUtils.dispose(disposable)
@@ -157,17 +160,21 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         this.mWidth = width
         this.mHeight = height
 
-        mTmpBm = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        mTmpCanvas = Canvas(mTmpBm!!)
-        mPaint.color = Color.WHITE
-        mPaint.style = Paint.Style.FILL
-        mTmpCanvas?.drawRect(0f, 0f, mWidth.toFloat(), mHeight.toFloat(), mPaint)
+        resetBgBitmap()
 
         val canvas = holder.lockCanvas()
         canvas.drawBitmap(mTmpBm!!, 0f, 0f, mPaint)
         holder.unlockCanvasAndPost(canvas)
 
         mPaint.style = Paint.Style.STROKE
+    }
+
+    private fun resetBgBitmap() {
+        mTmpBm = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888)
+        mTmpCanvas = Canvas(mTmpBm!!)
+        mPaint.color = Color.WHITE
+        mPaint.style = Paint.Style.FILL
+        mTmpCanvas?.drawRect(0f, 0f, mWidth.toFloat(), mHeight.toFloat(), mPaint)
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {

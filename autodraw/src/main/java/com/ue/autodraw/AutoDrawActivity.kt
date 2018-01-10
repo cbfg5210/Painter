@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import android.widget.AdapterView
 import android.widget.RadioGroup
 import android.widget.Toast
 import com.ue.autodraw.dialog.TabBgDialog
@@ -36,7 +37,9 @@ class AutoDrawActivity : AppCompatActivity(), View.OnTouchListener, RadioGroup.O
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.auto_draw)
 
-        advOutline.setPaintBm(AutoDrawUtils.getRatioBitmap(this, R.drawable.paint, 10, 20))
+        advOutline.setPaintBitmap(AutoDrawUtils.getRatioBitmap(this, R.drawable.paint, 10, 20))
+//        advOutline.setBgBitmapRes(R.drawable.fs0)
+//        advOutline.setBgBitmap(AutoDrawUtils.getRatioBitmap(this, R.drawable.fs0, REQ_SIZE, REQ_SIZE))
 
         advOutline.setOnTouchListener(this)
         rgTabs.setOnCheckedChangeListener(this)
@@ -92,7 +95,11 @@ class AutoDrawActivity : AppCompatActivity(), View.OnTouchListener, RadioGroup.O
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
         when (checkedId) {
             R.id.rbTabBackground -> {
-                TabBgDialog().show(supportFragmentManager, "")
+                val bgDialog = TabBgDialog()
+                bgDialog.itemListener = AdapterView.OnItemClickListener { _, _, imgRes, _ ->
+
+                }
+                bgDialog.show(supportFragmentManager, "")
             }
             R.id.rbTabPaint -> {
             }

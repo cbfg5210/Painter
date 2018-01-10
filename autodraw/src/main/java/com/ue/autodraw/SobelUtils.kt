@@ -18,7 +18,7 @@ object SobelUtils {
         val temp = AutoDrawUtils.toGrayScale(bitmap)
         //Log.e("SobelUtils", "sobel: toGrayScale totalTime=${System.currentTimeMillis()-startTime}")//18
 
-        var startTime = System.currentTimeMillis()
+//        var startTime = System.currentTimeMillis()
 
         val w = temp.width
         val h = temp.height

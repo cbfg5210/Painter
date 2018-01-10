@@ -22,7 +22,7 @@ class BgAdapter(context: Context, private val bgs: IntArray) : RecyclerView.Adap
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_bg, parent, false)
         val holder = ViewHolder(itemView)
         itemView.setOnClickListener { v ->
-            itemListener?.onItemClick(null, v, holder.adapterPosition, 0)
+            itemListener?.onItemClick(null, v, bgs[holder.adapterPosition], 0)
         }
         return holder
     }
