@@ -97,26 +97,26 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
      * 绘制
      * return :false 表示绘制完成，true表示还需要继续绘制
      */
+    private var tmpPoint: Point? = null
+
     private fun drawOutline(): Boolean {
-        //获取count个点后，一次性绘制到bitmap在把bitmap绘制到SurfaceView
-        var count = 100
-        var p: Point? = null
-        while (count-- > 0) {
+        //获取100个点后，一次性绘制到bitmap在把bitmap绘制到SurfaceView
+        for (i in 0..99) {
             //获取下一个需要绘制的点
-            p = getNearestPoint(mLastPoint)
-            //如果p为空，说明所有的点已经绘制完成
-            p ?: break
-            mLastPoint = p
-            mTmpCanvas.drawPoint((p.x + offsetX).toFloat(), (p.y + offsetY).toFloat(), mPaint)
+            tmpPoint = getNearestPoint(mLastPoint)
+            //如果tmpPoint为空，说明所有的点已经绘制完成
+            tmpPoint ?: break
+            mLastPoint = tmpPoint!!
+            mTmpCanvas.drawPoint((mLastPoint.x + offsetX).toFloat(), (mLastPoint.y + offsetY).toFloat(), mPaint)
         }
         //将bitmap绘制到SurfaceView中
         val canvas = holder.lockCanvas()
         canvas.drawBitmap(mTmpBm, 0f, 0f, mPaint)
-        if (p != null) {
-            canvas.drawBitmap(mPaintBm, (p.x + offsetX).toFloat(), (p.y - mPaintBm!!.height + offsetY).toFloat(), mPaint)
+        if (tmpPoint != null) {
+            canvas.drawBitmap(mPaintBm, (mLastPoint.x + offsetX).toFloat(), (mLastPoint.y - mPaintBm.height + offsetY).toFloat(), mPaint)
         }
         holder.unlockCanvasAndPost(canvas)
-        return p != null
+        return tmpPoint != null
     }
 
     //重画
