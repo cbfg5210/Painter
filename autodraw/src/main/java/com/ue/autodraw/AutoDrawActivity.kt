@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -13,21 +12,15 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
-import com.ue.library.util.BitmapUtils
 import com.ue.library.util.ImageLoaderUtils
 import com.ue.library.util.PermissionUtils
 import com.ue.library.util.RxJavaUtils
 import com.yanzhenjie.permission.PermissionListener
-import io.reactivex.Observable
-import io.reactivex.ObservableOnSubscribe
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_auto_draw.*
 
 class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, NumberSelectorView.OnNumberChangeListener {
 
-    private var sobelBm: Bitmap? = null
     private var first = true
     private var disposable: Disposable? = null
 
@@ -70,50 +63,14 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, NumberSelect
         nsLineThickness.setNumberChangeListener(this)
         nsDelaySpeed.setNumberChangeListener(this)
 
-        loadBitmapToDraw()
-    }
-
-    private fun loadBitmapToDraw() {
-        disposable = Observable
-                .create(ObservableOnSubscribe<Any> {
-                    //将Bitmap压缩处理，防止OOM
-                    val bm = BitmapUtils.getRatioBitmap(this, R.drawable.bg_4, REQ_SIZE, REQ_SIZE)
-                    //Log.e("AutoDrawActivity", "onCreate: bm w=${bm.width},h=${bm.height}")
-                    //480x800,648x1152
-                    //返回的是处理过的Bitmap
-                    sobelBm =
-                            if (resources.displayMetrics.widthPixels >= 1080) SobelUtils.sobel(bm, 648, 1152)
-                            else SobelUtils.sobel(bm, 480, 800)
-                })
-                .subscribeOn(Schedulers.single())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
-    }
-
-    //根据Bitmap信息，获取每个位置的像素点是否需要绘制
-    //使用boolean数组而不是int[][]主要是考虑到内存的消耗
-    private fun getArray(bitmap: Bitmap): Array<BooleanArray> {
-        val b = Array(bitmap.width) { BooleanArray(bitmap.height) }
-
-        for (i in 0 until bitmap.width) {
-            for (j in 0 until bitmap.height) {
-                b[i][j] = bitmap.getPixel(i, j) != Color.WHITE
-            }
-        }
-        return b
+        advOutline.loadBitmapThenDraw(R.drawable.test)
     }
 
     override fun onClick(v: View) {
         when (v.id) {
             R.id.ivObjectView -> pickPhoto()
             R.id.advOutline -> {
-                sobelBm ?: return
-                if (first) {
-                    first = false
-                    advOutline.beginDraw(getArray(sobelBm!!))
-                } else {
-                    advOutline.reDraw(getArray(sobelBm!!))
-                }
+                advOutline.redraw()
             }
         }
     }
@@ -167,10 +124,8 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, NumberSelect
                     data.dataString,
                     object : ImageLoaderUtils.ImageLoaderCallback {
                         override fun onBitmapLoaded(bitmap: Bitmap) {
-                            sobelBm =
-                                    if (resources.displayMetrics.widthPixels >= 1080) SobelUtils.sobel(bitmap, 648, 1152)
-                                    else SobelUtils.sobel(bitmap, 480, 800)
                             Log.e("AutoDrawActivity", "onBitmapLoaded: ok")
+                            advOutline.resetBitmapThenDraw(bitmap)
                         }
 
                         override fun onBitmapFailed() {

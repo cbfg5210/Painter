@@ -9,7 +9,9 @@ import com.ue.library.util.BitmapUtils
 import com.ue.library.util.RxJavaUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 
 class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
@@ -24,6 +26,9 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     private lateinit var mTmpCanvas: Canvas
     private var mTmpBm: Bitmap? = null
     private lateinit var mPaintBm: Bitmap
+    private lateinit var sobelBitmapArray: Array<BooleanArray>
+
+    private var autoDrawListener: OnAutoDrawListener? = null
 
     private var bgBitmapRes = 0
     private var delaySpeed = 0L
@@ -32,11 +37,17 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     private var mLastPoint = Point()
     private var isDrawing = false
 
-    private var disposable: Disposable? = null
+    private var drawDisposable: Disposable? = null
+    private var loadDisposable: Disposable? = null
 
     companion object {
         private val PAINT_WIDTH = 10
         private val PAINT_HEIGHT = 20
+        private val REQ_SIZE = 150
+
+        private val FLAG_PREPARE = 1
+        private val FLAG_START = 2
+        private val FLAG_COMPLETE = 3
     }
 
     constructor(context: Context) : this(context, null)
@@ -46,6 +57,57 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     init {
         setPaintBitmapRes(R.drawable.svg_pencil)
         holder.addCallback(this)
+    }
+
+    fun setAutoDrawListener(autoDrawListener: OnAutoDrawListener) {
+        this.autoDrawListener = autoDrawListener
+    }
+
+    fun loadBitmapThenDraw(imgSrc: Int) {
+        autoDrawListener?.onPrepare()
+        val bm = BitmapUtils.getRatioBitmap(context, imgSrc, REQ_SIZE, REQ_SIZE)
+        resetBitmapThenDraw(bm)
+    }
+
+    fun resetBitmapThenDraw(bm: Bitmap) {
+        RxJavaUtils.dispose(loadDisposable)
+        loadDisposable = Observable
+                .create(ObservableOnSubscribe<Int> { e ->
+                    //480x800,648x1152
+                    //返回的是处理过的Bitmap
+                    val sobelBm =
+                            if (resources.displayMetrics.widthPixels >= 1080) SobelUtils.sobel(bm, 648, 1152)
+                            else SobelUtils.sobel(bm, 480, 800)
+
+                    sobelBitmapArray = getArray(sobelBm)
+
+                    e.onNext(FLAG_START)
+
+                    beginDraw(sobelBitmapArray)
+                })
+                .subscribeOn(Schedulers.single())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(Consumer { flag ->
+                    if (flag == FLAG_START) {
+                        autoDrawListener?.onStart()
+                    }
+                })
+    }
+
+    fun redraw() {
+        reDraw(sobelBitmapArray)
+    }
+
+    //根据Bitmap信息，获取每个位置的像素点是否需要绘制
+    //使用boolean数组而不是int[][]主要是考虑到内存的消耗
+    private fun getArray(bitmap: Bitmap): Array<BooleanArray> {
+        val b = Array(bitmap.width) { BooleanArray(bitmap.height) }
+        for (i in 0 until bitmap.width) {
+            for (j in 0 until bitmap.height) {
+                b[i][j] = bitmap.getPixel(i, j) != Color.WHITE
+            }
+        }
+        return b
     }
 
     //设置画笔图片
@@ -133,14 +195,14 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     }
 
     //重画
-    fun reDraw(array: Array<BooleanArray>) {
+    private fun reDraw(array: Array<BooleanArray>) {
         if (isDrawing) return
 
         resetBgBitmap()
         beginDraw(array)
     }
 
-    fun beginDraw(array: Array<BooleanArray>) {
+    private fun beginDraw(array: Array<BooleanArray>) {
         if (isDrawing) return
         isDrawing = true
 
@@ -153,9 +215,9 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
         mLastPoint = Point()
 
-        RxJavaUtils.dispose(disposable)
-        disposable = Observable
-                .create(ObservableOnSubscribe<Any> {
+        RxJavaUtils.dispose(drawDisposable)
+        drawDisposable = Observable
+                .create(ObservableOnSubscribe<Int> { e ->
                     while (isDrawing) {
                         isDrawing = drawOutline()
                         if (delaySpeed > 0) {
@@ -165,7 +227,8 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
                             }
                         }
                     }
-                    RxJavaUtils.dispose(disposable)
+                    RxJavaUtils.dispose(drawDisposable)
+                    e.onNext(FLAG_COMPLETE)
                     /*保存结果图片
                     val path = Environment.getExternalStorageDirectory().path + "/tt/"
                     FileUtils.saveImageLocally(context, mTmpBm!!, path, "tt.png", object : FileUtils.OnSaveImageListener {
@@ -175,7 +238,12 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
                     })*/
                 })
                 .subscribeOn(Schedulers.single())
-                .subscribe()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(Consumer { flag ->
+                    if (flag == FLAG_COMPLETE) {
+                        autoDrawListener?.onComplete()
+                    }
+                })
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) {}
@@ -207,6 +275,13 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
         isDrawing = false
-        RxJavaUtils.dispose(disposable)
+        RxJavaUtils.dispose(loadDisposable)
+        RxJavaUtils.dispose(drawDisposable)
+    }
+
+    interface OnAutoDrawListener {
+        fun onPrepare()
+        fun onStart()
+        fun onComplete()
     }
 }
