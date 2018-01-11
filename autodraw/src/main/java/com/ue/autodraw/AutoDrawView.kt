@@ -5,6 +5,7 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import com.ue.library.util.BitmapUtils
 import com.ue.library.util.RxJavaUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
@@ -26,6 +27,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
     private var bgBitmapRes = 0
     private var delaySpeed = 0L
+    private var paintBitmapRes = 0
 
     private var mLastPoint = Point()
     private var isDrawing = false
@@ -42,13 +44,17 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
 
     init {
-        setPaintBitmapRes(R.drawable.paint)
+        setPaintBitmapRes(R.drawable.svg_pencil)
         holder.addCallback(this)
     }
 
     //设置画笔图片
     fun setPaintBitmapRes(paintBitmapRes: Int) {
-        mPaintBm = AutoDrawUtils.getRatioBitmap(context, paintBitmapRes, PAINT_WIDTH, PAINT_HEIGHT)
+        if (this.paintBitmapRes == paintBitmapRes) {
+            return
+        }
+        mPaintBm = BitmapUtils.getSvgBitmap(context, paintBitmapRes)
+        this.paintBitmapRes = paintBitmapRes
     }
 
     fun setBgBitmapRes(bgBitmapRes: Int) {
@@ -180,7 +186,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
     private fun resetBgBitmap() {
         if (bgBitmapRes > 0) {
-            mTmpBm = AutoDrawUtils.getRatioBitmap(context, bgBitmapRes, measuredWidth, measuredHeight)
+            mTmpBm = BitmapUtils.getRatioBitmap(context, bgBitmapRes, measuredWidth, measuredHeight)
             mTmpBm = Bitmap.createScaledBitmap(mTmpBm, measuredWidth, measuredHeight, false)
             mTmpCanvas = Canvas(mTmpBm)
         } else {
@@ -192,6 +198,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         }
         val canvas = holder.lockCanvas()
         canvas.drawBitmap(mTmpBm, 0f, 0f, mPaint)
+        canvas.drawPicture(Picture())
         holder.unlockCanvasAndPost(canvas)
         //设置回轮廓画笔
         mPaint.style = Paint.Style.STROKE

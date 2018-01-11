@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
+import com.ue.library.util.BitmapUtils
 import com.ue.library.util.RxJavaUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
@@ -34,17 +35,26 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, NumberSelect
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.auto_draw)
 
-        val adapter = BgAdapter(this, intArrayOf(
+        val bgAdapter = BgAdapter(this, intArrayOf(
                 R.drawable.fs0, R.drawable.fs1,
                 R.drawable.fs2, R.drawable.fs3,
                 R.drawable.fs4, R.drawable.fs5,
                 R.drawable.fs6, R.drawable.fs7,
                 R.drawable.fs8, R.drawable.fs9, R.drawable.fs10))
-        adapter.itemListener = AdapterView.OnItemClickListener { _, _, imgRes, _ ->
+        bgAdapter.itemListener = AdapterView.OnItemClickListener { _, _, imgRes, _ ->
             advOutline.setBgBitmapRes(imgRes)
         }
         rvBgOptions.setHasFixedSize(true)
-        rvBgOptions.adapter = adapter
+        rvBgOptions.adapter = bgAdapter
+
+        val paintAdapter = PaintAdapter(intArrayOf(
+                R.drawable.svg_pencil, R.drawable.svg_pen,
+                R.drawable.svg_blush, R.drawable.svg_feather))
+        paintAdapter.itemListener = AdapterView.OnItemClickListener { _, _, imgRes, _ ->
+            advOutline.setPaintBitmapRes(imgRes)
+        }
+        rvPaintOptions.setHasFixedSize(true)
+        rvPaintOptions.adapter = paintAdapter
 
         advOutline.setOnClickListener(this)
         nsLineThickness.setNumberChangeListener(this)
@@ -57,7 +67,7 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, NumberSelect
         disposable = Observable
                 .create(ObservableOnSubscribe<Any> {
                     //将Bitmap压缩处理，防止OOM
-                    val bm = AutoDrawUtils.getRatioBitmap(this, R.drawable.bg_4, REQ_SIZE, REQ_SIZE)
+                    val bm = BitmapUtils.getRatioBitmap(this, R.drawable.bg_4, REQ_SIZE, REQ_SIZE)
                     //Log.e("AutoDrawActivity", "onCreate: bm w=${bm.width},h=${bm.height}")
                     //480x800,648x1152
                     //返回的是处理过的Bitmap

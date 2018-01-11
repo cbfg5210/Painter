@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ue.library.widget.SquareImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sivPaint"
+    android:layout_width="@dimen/widget_size_30"
+    android:layout_height="@dimen/widget_size_30"
+    android:layout_marginLeft="8dp"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    tools:src="@mipmap/ic_launcher"/>

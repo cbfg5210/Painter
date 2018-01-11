@@ -1,23 +1,20 @@
-package com.ue.autodraw
+package com.ue.library.util
 
 import android.content.Context
 import android.graphics.*
 
+
 /**
- * 共用的工具
- *
- * @author leaf
+ * Created by hawk on 2018/1/11.
  */
-object AutoDrawUtils {
+object BitmapUtils {
 
     fun getRatioBitmap(context: Context, imgId: Int, reqWidth: Int, reqHeight: Int): Bitmap {
         val newOpts = BitmapFactory.Options()
         newOpts.inJustDecodeBounds = true
         BitmapFactory.decodeResource(context.resources, imgId, newOpts)
         newOpts.inSampleSize = calculateInSampleSize(newOpts, reqWidth, reqHeight)
-
 //        Log.e("AutoDrawUtils", "getRatioBitmap: opt w=${newOpts.outWidth},h=${newOpts.outHeight},sampleSize=${newOpts.inSampleSize},div=${newOpts.outWidth / newOpts.inSampleSize}")
-
         newOpts.inJustDecodeBounds = false
         return BitmapFactory.decodeResource(context.resources, imgId, newOpts)
     }
@@ -36,24 +33,13 @@ object AutoDrawUtils {
         return inSampleSize
     }
 
-    /**
-     * 转化成灰度图
-     *
-     * @param bmpOriginal
-     * @return
-     */
-    fun toGrayScale(bmpOriginal: Bitmap): Bitmap {
-        val height = bmpOriginal.height
-        val width = bmpOriginal.width
-
-        val bmpGrayScale = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
-        val c = Canvas(bmpGrayScale)
-        val cm = ColorMatrix()
-        cm.setSaturation(0f)
-        val paint = Paint()
-        paint.colorFilter = ColorMatrixColorFilter(cm)
-        c.drawBitmap(bmpOriginal, 0f, 0f, paint)
-        return bmpGrayScale
+    fun getSvgBitmap(context: Context, imgId: Int): Bitmap {
+        val drawable = context.resources.getDrawable(imgId)
+        val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+        return bitmap
     }
 
     /**
@@ -74,5 +60,25 @@ object AutoDrawUtils {
         val result = Bitmap.createBitmap(bm, 0, 0, bm.width, bm.height, matrix, true)
         bm.recycle()
         return result
+    }
+
+    /**
+     * 转化成灰度图
+     *
+     * @param bmpOriginal
+     * @return
+     */
+    fun toGrayScale(bmpOriginal: Bitmap): Bitmap {
+        val height = bmpOriginal.height
+        val width = bmpOriginal.width
+
+        val bmpGrayScale = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+        val c = Canvas(bmpGrayScale)
+        val cm = ColorMatrix()
+        cm.setSaturation(0f)
+        val paint = Paint()
+        paint.colorFilter = ColorMatrixColorFilter(cm)
+        c.drawBitmap(bmpOriginal, 0f, 0f, paint)
+        return bmpGrayScale
     }
 }

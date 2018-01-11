@@ -3,6 +3,7 @@ package com.ue.autodraw
 import android.graphics.Bitmap
 import android.graphics.Bitmap.Config
 import android.graphics.Color
+import com.ue.library.util.BitmapUtils
 
 object SobelUtils {
     /**
@@ -13,12 +14,8 @@ object SobelUtils {
      */
     fun sobel(mBitmap: Bitmap, reqWidth: Int, reqHeight: Int): Bitmap {
         //480x800,648x1152
-        var bitmap = AutoDrawUtils.compress(mBitmap, reqWidth, reqHeight)
-        //Log.e("SobelUtils", "sobel: compress totalTime=${System.currentTimeMillis()-startTime}")//11
-        val temp = AutoDrawUtils.toGrayScale(bitmap)
-        //Log.e("SobelUtils", "sobel: toGrayScale totalTime=${System.currentTimeMillis()-startTime}")//18
-
-//        var startTime = System.currentTimeMillis()
+        var bitmap = BitmapUtils.compress(mBitmap, reqWidth, reqHeight)
+        val temp = BitmapUtils.toGrayScale(bitmap)
 
         val w = temp.width
         val h = temp.height
@@ -47,8 +44,6 @@ object SobelUtils {
                 cMap[j * w + i] = if (tMap[j * w + i] > top) mMap[j * w + i] else Color.WHITE
             }
         }
-
-        //Log.e("SobelUtils", "sobel: totalTime=${System.currentTimeMillis() - startTime}")//14174
 
         return Bitmap.createBitmap(cMap, temp.width, temp.height, Config.ARGB_8888)
     }
