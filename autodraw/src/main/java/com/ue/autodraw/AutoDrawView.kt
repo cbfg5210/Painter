@@ -2,14 +2,21 @@ package com.ue.autodraw
 
 import android.content.Context
 import android.graphics.*
+import android.media.CamcorderProfile
+import android.media.MediaRecorder
+import android.os.Environment
 import android.util.AttributeSet
+import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import android.widget.Toast
 import com.ue.library.util.RxJavaUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.io.File
+import java.io.IOException
 
 class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
@@ -143,6 +150,12 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         RxJavaUtils.dispose(disposable)
         disposable = Observable
                 .create(ObservableOnSubscribe<Any> {
+                    initRecorder()
+                    prepareRecorder()
+                    recorder.start()
+
+                    Log.e("AutoDrawView", "beginDraw: Recording Started")
+                    recording = true
                     while (isDrawing) {
                         isDrawing = drawOutline()
                         try {
@@ -151,6 +164,11 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
                         }
                     }
                     RxJavaUtils.dispose(disposable)
+
+                    recorder.stop()
+                    recording = false
+                    Toast.makeText(context, "Stopped Recording", Toast.LENGTH_SHORT).show()// toast shows a display of little sorts
+
                     /*保存结果图片
                     val path = Environment.getExternalStorageDirectory().path + "/tt/"
                     FileUtils.saveImageLocally(context, mTmpBm!!, path, "tt.png", object : FileUtils.OnSaveImageListener {
@@ -193,4 +211,94 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         isDrawing = false
         RxJavaUtils.dispose(disposable)
     }
+
+
+    private var recorder = MediaRecorder()
+    private var recording = false
+
+    /**
+     * Called when the activity is first created.
+     */
+    /*override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+
+        recorder = MediaRecorder()// Instantiate our media recording object
+        initRecorder()
+        setContentView(R.layout.view)
+
+        val cameraView = findViewById<View>(R.id.surface_view) as SurfaceView
+        holder = cameraView.holder
+        holder.addCallback(this)
+        holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS)
+
+        cameraView.isClickable = true// make the surface view clickable
+        cameraView.setOnClickListener(this)// onClicklistener to be called when the surface view is clicked
+    }*/
+
+    private fun initRecorder() {// this takes care of all the mediarecorder settings
+        val outputFile = File(Environment.getExternalStorageDirectory().path)
+        val cpHigh = CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH)
+//        recorder.setProfile(cpHigh)
+
+        //recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+        // default microphone to be used for audio
+        // recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);// default camera to be used for video capture.
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)// generally used also includes h264 and best for flash
+        // recorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264); //well known video codec used by many including for flash
+        //recorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);// typically amr_nb is the only codec for mobile phones so...
+
+        //recorder.setVideoFrameRate(15);// typically 12-15 best for normal use. For 1080p usually 30fms is used.
+        // recorder.setVideoSize(720,480);// best size for resolution.
+        //recorder.setMaxFileSize(10000000);
+        recorder.setOutputFile(outputFile.absolutePath + "/tt.3gp")
+        //recorder.setVideoEncodingBitRate(256000);//
+        //recorder.setAudioEncodingBitRate(8000);
+        recorder.setMaxDuration(600000)
+    }
+
+    private fun prepareRecorder() {
+        recorder.setPreviewDisplay(holder.surface)
+
+        try {
+            recorder.prepare()
+        } catch (e: IllegalStateException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    /*override fun onClick(v: View) {
+        if (recording) {
+            recorder.stop()
+            recording = false
+            // Let's initRecorder so we can record again
+            initRecorder()
+            prepareRecorder()
+            Toast.makeText(context, "Stopped Recording", Toast.LENGTH_SHORT).show()// toast shows a display of little sorts
+        } else {
+            recorder.start()
+            Log.v(TAG, "Recording Started")
+            recording = true
+        }
+    }*/
+
+//    override fun surfaceCreated(holder: SurfaceHolder) {
+//        initRecorder()
+//        Log.v(TAG, "surfaceCreated")
+//        prepareRecorder()
+//    }
+
+//    override fun surfaceDestroyed(holder: SurfaceHolder) {
+//        if (recording) {
+//            recorder.stop()
+//            recording = false
+//        }
+//        recorder.release()
+//        finish()
+//    }
 }
