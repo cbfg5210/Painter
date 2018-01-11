@@ -60,6 +60,7 @@ dependencies {
         implementation deps.support.recyclerview
         implementation deps.picasso
         implementation deps.andPermission
+        implementation deps.transitionsEverywhere
     } else {
         compileOnly deps.kotlinJre
         compileOnly deps.support.app_compat
@@ -69,6 +70,7 @@ dependencies {
         compileOnly deps.support.recyclerview
         compileOnly deps.picasso
         compileOnly deps.andPermission
+        compileOnly deps.transitionsEverywhere
     }
     implementation project(':resource')
 }
