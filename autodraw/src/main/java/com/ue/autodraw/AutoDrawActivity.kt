@@ -8,9 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
-import android.widget.RadioGroup
 import android.widget.Toast
-import com.ue.autodraw.dialog.TabBgDialog
 import com.ue.library.util.RxJavaUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
@@ -19,8 +17,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_auto_draw.*
 
-class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.OnCheckedChangeListener {
-
+class AutoDrawActivity : AppCompatActivity(), View.OnClickListener {
     private var sobelBm: Bitmap? = null
     private var first = true
     private var disposable: Disposable? = null
@@ -36,8 +33,19 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.O
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.auto_draw)
 
+        val adapter = BgAdapter(this, intArrayOf(
+                R.drawable.fs0, R.drawable.fs1,
+                R.drawable.fs2, R.drawable.fs3,
+                R.drawable.fs4, R.drawable.fs5,
+                R.drawable.fs6, R.drawable.fs7,
+                R.drawable.fs8, R.drawable.fs9, R.drawable.fs10))
+        adapter.itemListener = AdapterView.OnItemClickListener { _, _, imgRes, _ ->
+            advOutline.setBgBitmapRes(imgRes)
+        }
+        rvBgOptions.setHasFixedSize(true)
+        rvBgOptions.adapter = adapter
+
         advOutline.setOnClickListener(this)
-        rgTabs.setOnCheckedChangeListener(this)
 
         loadBitmapToDraw()
     }
@@ -82,27 +90,6 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.O
                 } else {
                     advOutline.reDraw(getArray(sobelBm!!))
                 }
-            }
-        }
-    }
-
-    override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
-        when (checkedId) {
-            R.id.rbTabBackground -> {
-                val bgDialog = TabBgDialog()
-                bgDialog.itemListener = AdapterView.OnItemClickListener { _, _, imgRes, _ ->
-                    advOutline.setBgBitmapRes(imgRes)
-                    bgDialog.dismiss()
-                }
-                bgDialog.show(supportFragmentManager, "")
-            }
-            R.id.rbTabPaint -> {
-            }
-            R.id.rbTabLine -> {
-            }
-            R.id.rbTabSpeed -> {
-            }
-            R.id.rbTabSave -> {
             }
         }
     }

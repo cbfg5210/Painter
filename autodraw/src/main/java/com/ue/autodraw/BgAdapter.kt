@@ -1,4 +1,4 @@
-package com.ue.autodraw.dialog
+package com.ue.autodraw
 
 import android.content.Context
 import android.graphics.Point
@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import com.ue.autodraw.R
 import com.ue.library.util.ImageLoaderUtils
 import kotlinx.android.synthetic.main.item_bg.view.*
 
