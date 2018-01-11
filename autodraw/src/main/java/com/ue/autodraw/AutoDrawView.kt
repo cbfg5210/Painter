@@ -11,7 +11,6 @@ import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 
 class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
@@ -26,7 +25,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     private lateinit var mTmpCanvas: Canvas
     private var mTmpBm: Bitmap? = null
     private lateinit var mPaintBm: Bitmap
-    private lateinit var sobelBitmapArray: Array<BooleanArray>
+    private lateinit var sobelBitmap: Bitmap
 
     private var autoDrawListener: OnAutoDrawListener? = null
 
@@ -75,19 +74,17 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
                 .create(ObservableOnSubscribe<Int> { e ->
                     //480x800,648x1152
                     //返回的是处理过的Bitmap
-                    val sobelBm =
+                    sobelBitmap =
                             if (resources.displayMetrics.widthPixels >= 1080) SobelUtils.sobel(bm, 648, 1152)
                             else SobelUtils.sobel(bm, 480, 800)
 
-                    sobelBitmapArray = getArray(sobelBm)
-
                     e.onNext(FLAG_START)
 
-                    beginDraw(sobelBitmapArray)
+                    beginDraw(getArray(sobelBitmap))
                 })
                 .subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(Consumer { flag ->
+                .subscribe({ flag ->
                     if (flag == FLAG_START) {
                         autoDrawListener?.onStart()
                     }
@@ -95,7 +92,10 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     }
 
     fun redraw() {
-        reDraw(sobelBitmapArray)
+        if (!isDrawing) {
+            resetBgBitmap()
+            beginDraw(getArray(sobelBitmap))
+        }
     }
 
     //根据Bitmap信息，获取每个位置的像素点是否需要绘制
@@ -194,14 +194,6 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         return tmpPoint != null
     }
 
-    //重画
-    private fun reDraw(array: Array<BooleanArray>) {
-        if (isDrawing) return
-
-        resetBgBitmap()
-        beginDraw(array)
-    }
-
     private fun beginDraw(array: Array<BooleanArray>) {
         if (isDrawing) return
         isDrawing = true
@@ -218,8 +210,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         RxJavaUtils.dispose(drawDisposable)
         drawDisposable = Observable
                 .create(ObservableOnSubscribe<Int> { e ->
-                    while (isDrawing) {
-                        isDrawing = drawOutline()
+                    while (drawOutline()) {
                         if (delaySpeed > 0) {
                             try {
                                 Thread.sleep(delaySpeed)
@@ -227,6 +218,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
                             }
                         }
                     }
+                    isDrawing = false
                     RxJavaUtils.dispose(drawDisposable)
                     e.onNext(FLAG_COMPLETE)
                     /*保存结果图片
@@ -239,7 +231,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
                 })
                 .subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(Consumer { flag ->
+                .subscribe({ flag ->
                     if (flag == FLAG_COMPLETE) {
                         autoDrawListener?.onComplete()
                     }

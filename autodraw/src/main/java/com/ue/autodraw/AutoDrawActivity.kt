@@ -21,7 +21,6 @@ import kotlinx.android.synthetic.main.activity_auto_draw.*
 
 class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, NumberSelectorView.OnNumberChangeListener {
 
-    private var first = true
     private var disposable: Disposable? = null
 
     companion object {
