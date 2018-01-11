@@ -9,6 +9,11 @@ import com.yanzhenjie.permission.PermissionListener
  */
 object PermissionUtils {
     fun checkPermission(context: Context, reqCode: Int, perms: Array<String>, callback: PermissionListener?) {
+        val permList = perms.toList()
+        if (AndPermission.hasPermission(context, permList)) {
+            callback?.onSucceed(reqCode, permList)
+            return
+        }
         AndPermission.with(context)
                 .requestCode(reqCode)
                 .permission(perms)

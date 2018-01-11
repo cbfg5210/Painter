@@ -11,4 +11,7 @@
     <string name="line_px">线条(px)</string>
     <string name="speed_delay">延时(ms)</string>
     <string name="save">保存</string>
+    <string name="choose_photo">选择图片</string>
+    <string name="no_read_storage_perm">无法读取本地图片：没有外部存储读取权限</string>
+    <string name="load_photo_failed">加载图片失败</string>
 </resources>

@@ -1,5 +1,8 @@
 package com.ue.autodraw
 
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
@@ -10,7 +13,10 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
 import com.ue.library.util.BitmapUtils
+import com.ue.library.util.ImageLoaderUtils
+import com.ue.library.util.PermissionUtils
 import com.ue.library.util.RxJavaUtils
+import com.yanzhenjie.permission.PermissionListener
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -26,6 +32,8 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, NumberSelect
 
     companion object {
         private val REQ_SIZE = 150
+        private val REQ_PERM_EXTERNAL = 1
+        private val REQ_PICK_PHOTO = 2
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +64,7 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, NumberSelect
         rvPaintOptions.setHasFixedSize(true)
         rvPaintOptions.adapter = paintAdapter
 
+        ivObjectView.setOnClickListener(this)
         advOutline.setOnClickListener(this)
         nsLineThickness.setNumberChangeListener(this)
         nsDelaySpeed.setNumberChangeListener(this)
@@ -95,6 +104,7 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, NumberSelect
 
     override fun onClick(v: View) {
         when (v.id) {
+            R.id.ivObjectView -> pickPhoto()
             R.id.advOutline -> {
                 sobelBm ?: return
                 if (first) {
@@ -131,6 +141,39 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, NumberSelect
             }
         }
         return true
+    }
+
+    private fun pickPhoto() {
+        PermissionUtils.checkPermission(this,
+                REQ_PERM_EXTERNAL,
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                object : PermissionListener {
+                    override fun onSucceed(requestCode: Int, grantPermissions: MutableList<String>) {
+                        startActivityForResult(Intent.createChooser(Intent(Intent.ACTION_GET_CONTENT).setType("image/*"), getString(R.string.choose_photo)), REQ_PICK_PHOTO)
+                    }
+
+                    override fun onFailed(requestCode: Int, deniedPermissions: MutableList<String>) {
+                        Toast.makeText(this@AutoDrawActivity, R.string.no_read_storage_perm, Toast.LENGTH_SHORT).show()
+                    }
+                })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQ_PICK_PHOTO && resultCode == Activity.RESULT_OK && data != null) {
+            ImageLoaderUtils.display(this,
+                    ivObjectView,
+                    data.dataString,
+                    object : ImageLoaderUtils.ImageLoaderCallback {
+                        override fun onBitmapLoaded(bitmap: Bitmap) {
+
+                        }
+
+                        override fun onBitmapFailed() {
+                            Toast.makeText(this@AutoDrawActivity, R.string.load_photo_failed, Toast.LENGTH_SHORT).show()
+                        }
+                    })
+        }
     }
 
     override fun onDestroy() {

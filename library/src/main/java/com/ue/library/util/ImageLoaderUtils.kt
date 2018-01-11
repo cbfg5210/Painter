@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.drawable.Drawable
-import android.util.Size
 import android.widget.ImageView
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
@@ -40,6 +39,10 @@ object ImageLoaderUtils {
                 if (context is Activity && context.isFinishing) {
                     return
                 }
+                if (bitmap == null) {
+                    callback.onBitmapFailed()
+                    return
+                }
                 iv.setImageBitmap(bitmap)
                 callback.onBitmapLoaded(bitmap)
             }
@@ -61,7 +64,7 @@ object ImageLoaderUtils {
     }
 
     interface ImageLoaderCallback {
-        fun onBitmapLoaded(bitmap: Bitmap?)
+        fun onBitmapLoaded(bitmap: Bitmap)
         fun onBitmapFailed()
     }
 }

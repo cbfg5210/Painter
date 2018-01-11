@@ -59,6 +59,7 @@ dependencies {
         implementation deps.rxAndroid
         implementation deps.support.recyclerview
         implementation deps.picasso
+        implementation deps.andPermission
     } else {
         compileOnly deps.kotlinJre
         compileOnly deps.support.app_compat
@@ -67,6 +68,7 @@ dependencies {
         compileOnly deps.rxAndroid
         compileOnly deps.support.recyclerview
         compileOnly deps.picasso
+        compileOnly deps.andPermission
     }
     implementation project(':resource')
 }
