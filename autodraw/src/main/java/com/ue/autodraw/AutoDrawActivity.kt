@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -166,7 +167,10 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, NumberSelect
                     data.dataString,
                     object : ImageLoaderUtils.ImageLoaderCallback {
                         override fun onBitmapLoaded(bitmap: Bitmap) {
-
+                            sobelBm =
+                                    if (resources.displayMetrics.widthPixels >= 1080) SobelUtils.sobel(bitmap, 648, 1152)
+                                    else SobelUtils.sobel(bitmap, 480, 800)
+                            Log.e("AutoDrawActivity", "onBitmapLoaded: ok")
                         }
 
                         override fun onBitmapFailed() {

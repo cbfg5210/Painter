@@ -57,9 +57,7 @@ object BitmapUtils {
         val scale = Math.min(reqWidth.toFloat() / bm.width, reqHeight.toFloat() / bm.height)
         //scale=0.8f的时候绘制1080x1920图片比较合适
         matrix.postScale(scale, scale)
-        val result = Bitmap.createBitmap(bm, 0, 0, bm.width, bm.height, matrix, true)
-        bm.recycle()
-        return result
+        return Bitmap.createBitmap(bm, 0, 0, bm.width, bm.height, matrix, true)
     }
 
     /**
