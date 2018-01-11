@@ -11,6 +11,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
+import android.widget.RadioGroup
 import android.widget.Toast
 import com.ue.library.util.ImageLoaderUtils
 import com.ue.library.util.PermissionUtils
@@ -18,8 +19,9 @@ import com.ue.library.util.RxJavaUtils
 import com.yanzhenjie.permission.PermissionListener
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_auto_draw.*
+import kotlinx.android.synthetic.main.layout_auto_draw_settings.*
 
-class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, NumberSelectorView.OnNumberChangeListener {
+class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.OnCheckedChangeListener, NumberSelectorView.OnNumberChangeListener {
 
     private var disposable: Disposable? = null
 
@@ -57,6 +59,8 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, NumberSelect
         rvPaintOptions.setHasFixedSize(true)
         rvPaintOptions.adapter = paintAdapter
 
+        rgTabs.check(R.id.rbTabObject)
+        rgTabs.setOnCheckedChangeListener(this)
         ivObjectView.setOnClickListener(this)
         advOutline.setOnClickListener(this)
         nsLineThickness.setNumberChangeListener(this)
@@ -72,6 +76,10 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, NumberSelect
                 advOutline.redraw()
             }
         }
+    }
+
+    override fun onCheckedChanged(group: RadioGroup, checkedId: Int) {
+        vgTabContentFlipper.displayedChild = group.indexOfChild(group.findViewById<View>(checkedId))
     }
 
     override fun onNumberChanged(view: View, number: Int) {

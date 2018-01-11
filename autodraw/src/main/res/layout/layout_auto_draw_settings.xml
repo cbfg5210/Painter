@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/vgDrawSettings"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:id="@+id/rgTabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rbTabObject"
+            style="@style/AutoDrawTab"
+            android:paddingLeft="5dp"
+            android:text="@string/outline_object"/>
+
+        <RadioButton
+            android:id="@+id/rbTabBackground"
+            style="@style/AutoDrawTab"
+            android:text="@string/background"/>
+
+        <RadioButton
+            android:id="@+id/rbTabPaint"
+            style="@style/AutoDrawTab"
+            android:text="@string/paint"/>
+
+        <RadioButton
+            android:id="@+id/rbTabPaintColor"
+            style="@style/AutoDrawTab"
+            android:text="@string/paint_color"/>
+
+        <RadioButton
+            android:id="@+id/rbTabLine"
+            style="@style/AutoDrawTab"
+            android:text="@string/line_px"/>
+
+        <RadioButton
+            android:id="@+id/rbTabSpeed"
+            style="@style/AutoDrawTab"
+            android:paddingRight="5dp"
+            android:text="@string/speed_delay"/>
+    </RadioGroup>
+
+    <ViewFlipper
+        android:id="@+id/vgTabContentFlipper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp">
+
+        <ImageView
+            android:id="@+id/ivObjectView"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/widget_size_100"
+            android:adjustViewBounds="true"
+            android:src="@drawable/test"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvBgOptions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvPaintOptions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="画笔颜色"/>
+
+        <com.ue.autodraw.NumberSelectorView
+            android:id="@+id/nsLineThickness"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.ue.autodraw.NumberSelectorView
+            android:id="@+id/nsDelaySpeed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </ViewFlipper>
+</LinearLayout>
