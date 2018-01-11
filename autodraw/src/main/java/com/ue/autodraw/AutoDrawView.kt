@@ -12,7 +12,6 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
-
     private var mSrcBmWidth = 0
     private var mSrcBmHeight = 0
     private var offsetX = 0
@@ -26,7 +25,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     private lateinit var mPaintBm: Bitmap
 
     private var bgBitmapRes = 0
-    private var delaySpeed = 20L
+    private var delaySpeed = 0L
 
     private var mLastPoint = Point()
     private var isDrawing = false
@@ -55,6 +54,14 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     fun setBgBitmapRes(bgBitmapRes: Int) {
         this.bgBitmapRes = bgBitmapRes
         resetBgBitmap()
+    }
+
+    fun setLineThickness(thickness: Int) {
+        mPaint.strokeWidth = thickness.toFloat()
+    }
+
+    fun setDelaySpeed(delay: Int) {
+        delaySpeed = delay + 1L
     }
 
     //获取离指定点最近的一个未绘制过的点
@@ -145,9 +152,11 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
                 .create(ObservableOnSubscribe<Any> {
                     while (isDrawing) {
                         isDrawing = drawOutline()
-                        try {
-                            Thread.sleep(delaySpeed)
-                        } catch (exp: InterruptedException) {
+                        if (delaySpeed > 0) {
+                            try {
+                                Thread.sleep(delaySpeed)
+                            } catch (exp: InterruptedException) {
+                            }
                         }
                     }
                     RxJavaUtils.dispose(disposable)

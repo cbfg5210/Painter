@@ -17,7 +17,8 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_auto_draw.*
 
-class AutoDrawActivity : AppCompatActivity(), View.OnClickListener {
+class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, NumberSelectorView.OnNumberChangeListener {
+
     private var sobelBm: Bitmap? = null
     private var first = true
     private var disposable: Disposable? = null
@@ -46,6 +47,8 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener {
         rvBgOptions.adapter = adapter
 
         advOutline.setOnClickListener(this)
+        nsLineThickness.setNumberChangeListener(this)
+        nsDelaySpeed.setNumberChangeListener(this)
 
         loadBitmapToDraw()
     }
@@ -91,6 +94,14 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener {
                     advOutline.reDraw(getArray(sobelBm!!))
                 }
             }
+        }
+    }
+
+    override fun onNumberChanged(view: View, number: Int) {
+        if (view.id == R.id.nsLineThickness) {
+            advOutline.setLineThickness(number)
+        } else {
+            advOutline.setDelaySpeed(number)
         }
     }
 
