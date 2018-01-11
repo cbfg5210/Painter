@@ -2,17 +2,49 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/actionShare"
+        android:id="@+id/actionSettings"
         android:icon="@drawable/lay_svg_share_white"
         android:title="@string/share"
         app:showAsAction="always">
         <menu>
             <item
-                android:id="@+id/actionShareDrawPicture"
-                android:title="@string/share_draw_picture"/>
+                android:id="@+id/actionObjLabel"
+                android:title="@string/outline_object">
+                <menu>
+                    <item
+                        android:id="@+id/actionObj"
+                        android:title="@string/outline_object"/>
+                </menu>
+            </item>
             <item
-                android:id="@+id/actionShareDrawVideo"
-                android:title="@string/share_draw_video"/>
+                android:id="@+id/actionBg"
+                android:title="@string/background"/>
+            <item
+                android:id="@+id/actionPaint"
+                android:title="@string/paint"/>
+            <item
+                android:id="@+id/actionPaintColor"
+                android:title="@string/paint_color"/>
+            <item
+                android:id="@+id/actionLine"
+                android:title="@string/line_px"/>
+            <item
+                android:id="@+id/actionDelay"
+                android:title="@string/speed_delay"/>
+            <item
+                android:id="@+id/actionShare"
+                android:icon="@drawable/lay_svg_share_white"
+                android:title="@string/share"
+                app:showAsAction="always">
+                <menu>
+                    <item
+                        android:id="@+id/actionShareDrawPicture"
+                        android:title="@string/share_draw_picture"/>
+                    <item
+                        android:id="@+id/actionShareDrawVideo"
+                        android:title="@string/share_draw_video"/>
+                </menu>
+            </item>
         </menu>
     </item>
 </menu>
