@@ -28,7 +28,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     private lateinit var sobelBitmap: Bitmap
     private var paintColor = Color.BLACK
 
-    private var autoDrawListener: OnAutoDrawListener? = null
+    var autoDrawListener: OnAutoDrawListener? = null
 
     private var bgBitmapRes = 0
     private var delaySpeed = 0L
@@ -41,10 +41,6 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     private var loadDisposable: Disposable? = null
 
     companion object {
-        private val PAINT_WIDTH = 10
-        private val PAINT_HEIGHT = 20
-        private val REQ_SIZE = 150
-
         private val FLAG_PREPARE = 1
         private val FLAG_START = 2
         private val FLAG_COMPLETE = 3
@@ -57,10 +53,6 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     init {
         setPaintBitmapRes(R.drawable.svg_pencil)
         holder.addCallback(this)
-    }
-
-    fun setAutoDrawListener(autoDrawListener: OnAutoDrawListener) {
-        this.autoDrawListener = autoDrawListener
     }
 
     fun resetBitmapThenDraw(bm: Bitmap) {
@@ -220,8 +212,8 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
                         }
                     }
                     isDrawing = false
-                    RxJavaUtils.dispose(drawDisposable)
                     e.onNext(FLAG_COMPLETE)
+                    e.onComplete()
                     /*保存结果图片
                     val path = Environment.getExternalStorageDirectory().path + "/tt/"
                     FileUtils.saveImageLocally(context, mTmpBm!!, path, "tt.png", object : FileUtils.OnSaveImageListener {

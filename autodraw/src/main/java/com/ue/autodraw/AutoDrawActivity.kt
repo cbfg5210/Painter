@@ -7,10 +7,12 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
+import android.widget.CompoundButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import com.ue.library.util.ImageLoaderUtils
@@ -22,7 +24,11 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_auto_draw.*
 import kotlinx.android.synthetic.main.layout_auto_draw_settings.*
 
-class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.OnCheckedChangeListener, NumberSelectorView.OnNumberChangeListener {
+class AutoDrawActivity : AppCompatActivity(),
+        View.OnClickListener,
+        RadioGroup.OnCheckedChangeListener,
+        NumberSelectorView.OnNumberChangeListener,
+        CompoundButton.OnCheckedChangeListener {
 
     private var disposable: Disposable? = null
 
@@ -30,6 +36,8 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.O
         private val REQ_PERM_EXTERNAL = 1
         private val REQ_PICK_PHOTO = 2
         private val SP_OUTLINE_OBJ_PATH = "sp_outline_obj_path"
+        private val SP_SHARE_DRAW_PICTURE = "sp_share_draw_picture"
+        private val SP_SHARE_DRAW_VIDEO = "sp_share_draw_video"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,14 +47,35 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.O
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.auto_draw)
 
+        rgTabs.check(R.id.rbTabObject)
+        cbShareDrawPicture.isChecked = SPUtils.getBoolean(SP_SHARE_DRAW_PICTURE, false)
+        cbShareDrawVideo.isChecked = SPUtils.getBoolean(SP_SHARE_DRAW_VIDEO, false)
+
         initRecyclerViews()
 
-        rgTabs.check(R.id.rbTabObject)
         rgTabs.setOnCheckedChangeListener(this)
         ivObjectView.setOnClickListener(this)
         advOutline.setOnClickListener(this)
         nsLineThickness.setNumberChangeListener(this)
         nsDelaySpeed.setNumberChangeListener(this)
+        cbShareDrawPicture.setOnCheckedChangeListener(this)
+        cbShareDrawVideo.setOnCheckedChangeListener(this)
+
+        advOutline.autoDrawListener = object : AutoDrawView.OnAutoDrawListener {
+            override fun onPrepare() {
+                Toast.makeText(this@AutoDrawActivity, "绘制前准备", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onStart() {
+                Toast.makeText(this@AutoDrawActivity, "开始绘制", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onComplete() {
+                if (cbShareDrawPicture.isChecked || cbShareDrawVideo.isChecked) {
+                    Toast.makeText(this@AutoDrawActivity, "分享图片或视频", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
 
         val outlineObjPath = SPUtils.getString(SP_OUTLINE_OBJ_PATH, "")
         if (TextUtils.isEmpty(outlineObjPath)) {
@@ -102,15 +131,17 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.O
     }
 
     override fun onClick(v: View) {
-        when (v.id) {
-            R.id.ivObjectView -> pickPhoto()
-            R.id.advOutline -> {
-                if (vgDrawSettings.visibility == View.VISIBLE) {
-                    vgDrawSettings.visibility = View.GONE
-                    return
-                }
-                advOutline.redraw()
+        if (v.id == R.id.ivObjectView) {
+            pickPhoto()
+            return
+        }
+        if (v.id == R.id.advOutline) {
+            if (vgDrawSettings.visibility == View.VISIBLE) {
+                vgDrawSettings.visibility = View.GONE
+                return
             }
+            advOutline.redraw()
+            return
         }
     }
 
@@ -124,6 +155,10 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.O
         } else {
             advOutline.setDelaySpeed(number)
         }
+    }
+
+    override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
+        SPUtils.putBoolean(if (buttonView.id == R.id.cbShareDrawPicture) SP_SHARE_DRAW_PICTURE else SP_SHARE_DRAW_VIDEO, isChecked)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -166,6 +201,7 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.O
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQ_PICK_PHOTO && resultCode == Activity.RESULT_OK && data != null) {
+            Log.e("AutoDrawActivity", "onActivityResult: photo path=${data.dataString}")
             SPUtils.putString(SP_OUTLINE_OBJ_PATH, data.dataString)
             loadPhoto(data.dataString)
         }
