@@ -38,6 +38,19 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.O
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.auto_draw)
 
+        initRecyclerViews()
+
+        rgTabs.check(R.id.rbTabObject)
+        rgTabs.setOnCheckedChangeListener(this)
+        ivObjectView.setOnClickListener(this)
+        advOutline.setOnClickListener(this)
+        nsLineThickness.setNumberChangeListener(this)
+        nsDelaySpeed.setNumberChangeListener(this)
+
+        advOutline.loadBitmapThenDraw(R.drawable.test)
+    }
+
+    private fun initRecyclerViews() {
         val bgAdapter = BgAdapter(this, intArrayOf(
                 R.drawable.fs0, R.drawable.fs1,
                 R.drawable.fs2, R.drawable.fs3,
@@ -59,14 +72,12 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.O
         rvPaintOptions.setHasFixedSize(true)
         rvPaintOptions.adapter = paintAdapter
 
-        rgTabs.check(R.id.rbTabObject)
-        rgTabs.setOnCheckedChangeListener(this)
-        ivObjectView.setOnClickListener(this)
-        advOutline.setOnClickListener(this)
-        nsLineThickness.setNumberChangeListener(this)
-        nsDelaySpeed.setNumberChangeListener(this)
-
-        advOutline.loadBitmapThenDraw(R.drawable.test)
+        val paintColorAdapter = PaintColorAdapter(resources.getIntArray(R.array.PaintColorOptions))
+        paintColorAdapter.setItemListener(AdapterView.OnItemClickListener { _, _, paintColor, _ ->
+            advOutline.setPaintColor(paintColor)
+        })
+        rvPaintColorOptions.setHasFixedSize(true)
+        rvPaintColorOptions.adapter = paintColorAdapter
     }
 
     override fun onClick(v: View) {
@@ -101,7 +112,13 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.O
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> finish()
+            android.R.id.home -> {
+                if (vgDrawSettings.visibility == View.VISIBLE) {
+                    vgDrawSettings.visibility = View.GONE
+                    return true
+                }
+                finish()
+            }
             R.id.actionSettings -> vgDrawSettings.visibility = if (vgDrawSettings.visibility == View.VISIBLE) View.GONE else View.VISIBLE
 //            R.id.actionShareDrawPicture -> {
 //                Toast.makeText(this, "picture", Toast.LENGTH_SHORT).show()

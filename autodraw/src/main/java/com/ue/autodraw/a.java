@@ -11,6 +11,8 @@ import io.reactivex.functions.Consumer;
 
 public class a {
     private void a() {
+        int a=10;
+        for(int i=0;i<a;i++){}
         Observable
                 .create(new ObservableOnSubscribe<Object>() {
                     @Override

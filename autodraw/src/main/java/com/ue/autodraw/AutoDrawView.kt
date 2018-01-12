@@ -26,6 +26,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     private var mTmpBm: Bitmap? = null
     private lateinit var mPaintBm: Bitmap
     private lateinit var sobelBitmap: Bitmap
+    private var paintColor = Color.BLACK
 
     private var autoDrawListener: OnAutoDrawListener? = null
 
@@ -117,6 +118,10 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         }
         mPaintBm = BitmapUtils.getSvgBitmap(context, paintBitmapRes)
         this.paintBitmapRes = paintBitmapRes
+    }
+
+    fun setPaintColor(paintColor: Int) {
+        this.paintColor = paintColor
     }
 
     fun setBgBitmapRes(bgBitmapRes: Int) {
@@ -262,7 +267,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         holder.unlockCanvasAndPost(canvas)
         //设置回轮廓画笔
         mPaint.style = Paint.Style.STROKE
-        mPaint.color = Color.BLACK
+        mPaint.color = paintColor
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {

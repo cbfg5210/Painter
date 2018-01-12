@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="PaintColorOptions">
+        <item>@color/black</item>
+        <item>@color/col_f44336</item>
+        <item>@color/col_e91e63</item>
+        <item>@color/col_9c27b0</item>
+        <item>@color/col_673ab7</item>
+        <item>@color/col_3f51b5</item>
+        <item>@color/col_2196f3</item>
+        <item>@color/col_03a9f4</item>
+        <item>@color/col_00bcd4</item>
+        <item>@color/col_009688</item>
+        <item>@color/col_4caf50</item>
+        <item>@color/col_8bc34a</item>
+        <item>@color/col_cddc39</item>
+        <item>@color/col_ffeb3b</item>
+        <item>@color/col_ffc107</item>
+        <item>@color/col_ff9800</item>
+        <item>@color/col_ff5722</item>
+        <item>@color/col_795548</item>
+        <item>@color/col_9e9e9e</item>
+        <item>@color/col_607d8b</item>
+    </array>
+</resources>

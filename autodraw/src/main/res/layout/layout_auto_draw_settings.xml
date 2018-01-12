@@ -72,17 +72,25 @@
                 app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
         </LinearLayout>
         <!--颜料-->
-        <LinearLayout style="@style/AutoDrawSettingVg">
+        <LinearLayout
+            style="@style/AutoDrawSettingVg"
+            android:layout_gravity="right|top"
+            android:layout_marginTop="0dp">
 
             <TextView
                 style="@style/AutoDrawSettingTv"
                 android:text="@string/paint_color"/>
 
-            <TextView
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvPaintColorOptions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
-                android:text="画笔颜色"/>
+                android:orientation="vertical"
+                android:scrollbars="none"
+                app:layoutManager="android.support.v7.widget.GridLayoutManager"
+                app:spanCount="3"
+                tools:listitem="@layout/item_paint_color"/>
         </LinearLayout>
         <!--线条粗细-->
         <LinearLayout style="@style/AutoDrawSettingVg">

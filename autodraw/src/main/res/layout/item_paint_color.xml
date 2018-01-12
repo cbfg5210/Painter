@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ue.library.widget.SquareImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sivPaintColor"
+    android:layout_width="@dimen/widget_size_30"
+    android:layout_height="@dimen/widget_size_30"
+    android:layout_margin="@dimen/widget_size_10"
+    android:background="@drawable/sel_bg_paint_color"
+    app:srcCompat="@drawable/svg_ink"/>
