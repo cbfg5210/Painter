@@ -113,11 +113,7 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.O
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                if (vgDrawSettings.visibility == View.VISIBLE) {
-                    vgDrawSettings.visibility = View.GONE
-                    return true
-                }
-                finish()
+                onBackPressed()
             }
             R.id.actionSettings -> vgDrawSettings.visibility = if (vgDrawSettings.visibility == View.VISIBLE) View.GONE else View.VISIBLE
 //            R.id.actionShareDrawPicture -> {
@@ -128,6 +124,14 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.O
 //            }
         }
         return true
+    }
+
+    override fun onBackPressed() {
+        if (vgDrawSettings.visibility == View.VISIBLE) {
+            vgDrawSettings.visibility = View.GONE
+            return
+        }
+        super.onBackPressed()
     }
 
     private fun pickPhoto() {
