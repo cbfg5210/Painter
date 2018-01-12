@@ -2,6 +2,7 @@ package com.ue.library.util
 
 import android.content.Context
 import android.graphics.*
+import android.util.Log
 
 
 /**
@@ -14,9 +15,11 @@ object BitmapUtils {
         newOpts.inJustDecodeBounds = true
         BitmapFactory.decodeResource(context.resources, imgId, newOpts)
         newOpts.inSampleSize = calculateInSampleSize(newOpts, reqWidth, reqHeight)
-//        Log.e("AutoDrawUtils", "getRatioBitmap: opt w=${newOpts.outWidth},h=${newOpts.outHeight},sampleSize=${newOpts.inSampleSize},div=${newOpts.outWidth / newOpts.inSampleSize}")
+        Log.e("AutoDrawUtils", "getRatioBitmap: opt w=${newOpts.outWidth},h=${newOpts.outHeight},sampleSize=${newOpts.inSampleSize},div=${newOpts.outWidth / newOpts.inSampleSize}")
         newOpts.inJustDecodeBounds = false
-        return BitmapFactory.decodeResource(context.resources, imgId, newOpts)
+        val bm = BitmapFactory.decodeResource(context.resources, imgId, newOpts)
+        Log.e("BitmapUtils", "getRatioBitmap: bm w=${bm.width},h=${bm.height}")
+        return bm
     }
 
     private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {

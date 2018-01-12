@@ -26,7 +26,6 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.O
     private var disposable: Disposable? = null
 
     companion object {
-        private val REQ_SIZE = 150
         private val REQ_PERM_EXTERNAL = 1
         private val REQ_PICK_PHOTO = 2
     }
@@ -116,12 +115,6 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.O
                 onBackPressed()
             }
             R.id.actionSettings -> vgDrawSettings.visibility = if (vgDrawSettings.visibility == View.VISIBLE) View.GONE else View.VISIBLE
-//            R.id.actionShareDrawPicture -> {
-//                Toast.makeText(this, "picture", Toast.LENGTH_SHORT).show()
-//            }
-//            R.id.actionShareDrawVideo -> {
-//                Toast.makeText(this, "video", Toast.LENGTH_SHORT).show()
-//            }
         }
         return true
     }

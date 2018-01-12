@@ -130,11 +130,13 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     }
 
     fun setLineThickness(thickness: Int) {
-        mPaint.strokeWidth = thickness.toFloat()
+        if (thickness > 0) {
+            mPaint.strokeWidth = thickness.toFloat()
+        }
     }
 
     fun setDelaySpeed(delay: Int) {
-        delaySpeed = delay + 1L
+        delaySpeed = delay.toLong()
     }
 
     //获取离指定点最近的一个未绘制过的点

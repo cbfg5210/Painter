@@ -103,7 +103,9 @@
                 android:id="@+id/nsLineThickness"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right|center_vertical"/>
+                android:layout_gravity="right|center_vertical"
+                app:spKey="sp_line_px"
+                app:stepLen="1"/>
         </LinearLayout>
         <!--延时-->
         <LinearLayout style="@style/AutoDrawSettingVg">
@@ -116,7 +118,9 @@
                 android:id="@+id/nsDelaySpeed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right|center_vertical"/>
+                android:layout_gravity="right|center_vertical"
+                app:spKey="sp_delay_speed"
+                app:stepLen="10"/>
         </LinearLayout>
     </ViewFlipper>
 
