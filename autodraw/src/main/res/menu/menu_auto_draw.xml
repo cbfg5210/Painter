@@ -3,6 +3,11 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/actionSettings"
+        android:icon="@drawable/svg_settings"
+        android:title="@string/settings"
+        app:showAsAction="always"/>
+    <!--<item
+        android:id="@+id/actionSettings"
         android:icon="@drawable/lay_svg_share_white"
         android:title="@string/share"
         app:showAsAction="always">
@@ -46,5 +51,5 @@
                 </menu>
             </item>
         </menu>
-    </item>
+    </item>-->
 </menu>

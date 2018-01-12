@@ -3,20 +3,115 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/vgDrawSettings"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_gravity="right"
+    android:orientation="horizontal">
+
+    <ViewFlipper
+        android:id="@+id/vgTabContentFlipper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="@dimen/widget_size_5"
+        android:paddingTop="@dimen/widget_size_5">
+        <!--临摹对象-->
+        <LinearLayout style="@style/AutoDrawSettingVg">
+
+            <TextView
+                style="@style/AutoDrawSettingTv"
+                android:text="@string/outline_object"/>
+
+            <ImageView
+                android:id="@+id/ivObjectView"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/widget_size_100"
+                android:layout_marginTop="@dimen/widget_size_10"
+                android:adjustViewBounds="true"
+                android:src="@drawable/test"/>
+        </LinearLayout>
+        <!--背景-->
+        <LinearLayout
+            style="@style/AutoDrawSettingVg"
+            android:layout_marginTop="0dp">
+
+            <TextView
+                style="@style/AutoDrawSettingTv"
+                android:text="@string/background"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvBgOptions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:orientation="vertical"
+                app:layoutManager="android.support.v7.widget.GridLayoutManager"
+                app:spanCount="2"/>
+        </LinearLayout>
+        <!--画笔-->
+        <LinearLayout style="@style/AutoDrawSettingVg">
+
+            <TextView
+                style="@style/AutoDrawSettingTv"
+                android:text="@string/paint"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvPaintOptions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:orientation="vertical"
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
+        </LinearLayout>
+        <!--颜料-->
+        <LinearLayout style="@style/AutoDrawSettingVg">
+
+            <TextView
+                style="@style/AutoDrawSettingTv"
+                android:text="@string/paint_color"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:text="画笔颜色"/>
+        </LinearLayout>
+        <!--线条粗细-->
+        <LinearLayout style="@style/AutoDrawSettingVg">
+
+            <TextView
+                style="@style/AutoDrawSettingTv"
+                android:text="@string/line_px"/>
+
+            <com.ue.autodraw.NumberSelectorView
+                android:id="@+id/nsLineThickness"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"/>
+        </LinearLayout>
+        <!--延时-->
+        <LinearLayout style="@style/AutoDrawSettingVg">
+
+            <TextView
+                style="@style/AutoDrawSettingTv"
+                android:text="@string/speed_delay"/>
+
+            <com.ue.autodraw.NumberSelectorView
+                android:id="@+id/nsDelaySpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"/>
+        </LinearLayout>
+    </ViewFlipper>
 
     <RadioGroup
         android:id="@+id/rgTabs"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <RadioButton
             android:id="@+id/rbTabObject"
             style="@style/AutoDrawTab"
-            android:paddingLeft="5dp"
             android:text="@string/outline_object"/>
 
         <RadioButton
@@ -42,50 +137,6 @@
         <RadioButton
             android:id="@+id/rbTabSpeed"
             style="@style/AutoDrawTab"
-            android:paddingRight="5dp"
             android:text="@string/speed_delay"/>
     </RadioGroup>
-
-    <ViewFlipper
-        android:id="@+id/vgTabContentFlipper"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp">
-
-        <ImageView
-            android:id="@+id/ivObjectView"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/widget_size_100"
-            android:adjustViewBounds="true"
-            android:src="@drawable/test"/>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvBgOptions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvPaintOptions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="画笔颜色"/>
-
-        <com.ue.autodraw.NumberSelectorView
-            android:id="@+id/nsLineThickness"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <com.ue.autodraw.NumberSelectorView
-            android:id="@+id/nsDelaySpeed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </ViewFlipper>
 </LinearLayout>

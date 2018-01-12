@@ -73,6 +73,10 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.O
         when (v.id) {
             R.id.ivObjectView -> pickPhoto()
             R.id.advOutline -> {
+                if (vgDrawSettings.visibility == View.VISIBLE) {
+                    vgDrawSettings.visibility = View.GONE
+                    return
+                }
                 advOutline.redraw()
             }
         }
@@ -98,12 +102,13 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.O
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> finish()
-            R.id.actionShareDrawPicture -> {
-                Toast.makeText(this, "picture", Toast.LENGTH_SHORT).show()
-            }
-            R.id.actionShareDrawVideo -> {
-                Toast.makeText(this, "video", Toast.LENGTH_SHORT).show()
-            }
+            R.id.actionSettings -> vgDrawSettings.visibility = if (vgDrawSettings.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+//            R.id.actionShareDrawPicture -> {
+//                Toast.makeText(this, "picture", Toast.LENGTH_SHORT).show()
+//            }
+//            R.id.actionShareDrawVideo -> {
+//                Toast.makeText(this, "video", Toast.LENGTH_SHORT).show()
+//            }
         }
         return true
     }

@@ -15,5 +15,6 @@
     <string name="no_read_storage_perm">无法读取本地图片：没有外部存储读取权限</string>
     <string name="load_photo_failed">加载图片失败</string>
     <string name="outline_object">临摹对象</string>
-    <string name="paint_color">笔墨</string>
+    <string name="paint_color">颜料</string>
+    <string name="settings">设置</string>
 </resources>
