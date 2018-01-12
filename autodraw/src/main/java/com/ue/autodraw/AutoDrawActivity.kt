@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -16,6 +17,7 @@ import android.widget.Toast
 import com.ue.library.util.ImageLoaderUtils
 import com.ue.library.util.PermissionUtils
 import com.ue.library.util.RxJavaUtils
+import com.ue.library.util.SPUtils
 import com.yanzhenjie.permission.PermissionListener
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_auto_draw.*
@@ -28,6 +30,7 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.O
     companion object {
         private val REQ_PERM_EXTERNAL = 1
         private val REQ_PICK_PHOTO = 2
+        private val SP_OUTLINE_OBJ_PATH = "sp_outline_obj_path"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +49,26 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.O
         nsLineThickness.setNumberChangeListener(this)
         nsDelaySpeed.setNumberChangeListener(this)
 
-        advOutline.loadBitmapThenDraw(R.drawable.test)
+        val outlineObjPath = SPUtils.getString(SP_OUTLINE_OBJ_PATH, "")
+        if (TextUtils.isEmpty(outlineObjPath)) {
+            loadPhoto(R.drawable.test)
+        } else {
+            loadPhoto(outlineObjPath!!)
+        }
+    }
+
+    private fun loadPhoto(photo: Any) {
+        ImageLoaderUtils.display(this, ivObjectView, photo,
+                object : ImageLoaderUtils.ImageLoaderCallback {
+                    override fun onBitmapLoaded(bitmap: Bitmap) {
+                        Log.e("AutoDrawActivity", "onBitmapLoaded: ok")
+                        advOutline.resetBitmapThenDraw(bitmap)
+                    }
+
+                    override fun onBitmapFailed() {
+                        Toast.makeText(this@AutoDrawActivity, R.string.load_photo_failed, Toast.LENGTH_SHORT).show()
+                    }
+                })
     }
 
     private fun initRecyclerViews() {
@@ -145,19 +167,8 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.O
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQ_PICK_PHOTO && resultCode == Activity.RESULT_OK && data != null) {
-            ImageLoaderUtils.display(this,
-                    ivObjectView,
-                    data.dataString,
-                    object : ImageLoaderUtils.ImageLoaderCallback {
-                        override fun onBitmapLoaded(bitmap: Bitmap) {
-                            Log.e("AutoDrawActivity", "onBitmapLoaded: ok")
-                            advOutline.resetBitmapThenDraw(bitmap)
-                        }
-
-                        override fun onBitmapFailed() {
-                            Toast.makeText(this@AutoDrawActivity, R.string.load_photo_failed, Toast.LENGTH_SHORT).show()
-                        }
-                    })
+            SPUtils.putString(SP_OUTLINE_OBJ_PATH, data.dataString)
+            loadPhoto(data.dataString)
         }
     }
 

@@ -33,7 +33,7 @@ object ImageLoaderUtils {
                 .into(iv)
     }
 
-    fun display(context: Context, iv: ImageView, imgUrl: String, callback: ImageLoaderCallback) {
+    fun display(context: Context, iv: ImageView, image: Any, callback: ImageLoaderCallback) {
         iv.tag = object : SimpleTarget() {
             override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom) {
                 if (context is Activity && context.isFinishing) {
@@ -58,9 +58,11 @@ object ImageLoaderUtils {
             }
         }
 
-        Picasso.with(context)
-                .load(imgUrl)
-                .into(iv.tag as Target)
+        if (image is String) {
+            Picasso.with(context).load(image).into(iv.tag as Target)
+        } else if (image is Int) {
+            Picasso.with(context).load(image).into(iv.tag as Target)
+        }
     }
 
     interface ImageLoaderCallback {

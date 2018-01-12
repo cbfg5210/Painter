@@ -63,12 +63,6 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         this.autoDrawListener = autoDrawListener
     }
 
-    fun loadBitmapThenDraw(imgSrc: Int) {
-        autoDrawListener?.onPrepare()
-        val bm = BitmapUtils.getRatioBitmap(context, imgSrc, REQ_SIZE, REQ_SIZE)
-        resetBitmapThenDraw(bm)
-    }
-
     fun resetBitmapThenDraw(bm: Bitmap) {
         RxJavaUtils.dispose(loadDisposable)
         loadDisposable = Observable
