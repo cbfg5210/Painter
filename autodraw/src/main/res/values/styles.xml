@@ -9,6 +9,8 @@
         <item name="android:paddingRight">@dimen/widget_size_20</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/col_444444</item>
+        <item name="android:textSize">@dimen/font_size_16</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:button">@null</item>
     </style>
@@ -17,16 +19,21 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/col_eeeeee</item>
+        <item name="android:background">@drawable/sp_bg_setting_detail</item>
         <item name="android:orientation">vertical</item>
         <item name="android:padding">@dimen/widget_size_5</item>
         <item name="android:layout_gravity">right|center_vertical</item>
         <item name="android:layout_marginTop">-50dp</item>
     </style>
+
     <style name="AutoDrawSettingTv">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:padding">@dimen/widget_size_5</item>
+        <item name="android:textSize">@dimen/font_size_15</item>
     </style>
+
+    <color name="col_444444">#444444</color>
 </resources>

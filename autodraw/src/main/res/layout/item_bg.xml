@@ -5,5 +5,6 @@
     android:id="@+id/sivBg"
     android:layout_width="@dimen/widget_size_50"
     android:layout_height="@dimen/widget_size_50"
-    android:layout_marginLeft="1dp"
+    android:layout_marginLeft="@dimen/widget_size_1"
+    android:layout_marginTop="@dimen/widget_size_1"
     tools:src="@mipmap/ic_launcher"/>

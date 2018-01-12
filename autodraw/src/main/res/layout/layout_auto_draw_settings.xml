@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/vgDrawSettings"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -32,6 +33,7 @@
         <!--背景-->
         <LinearLayout
             style="@style/AutoDrawSettingVg"
+            android:layout_gravity="right|top"
             android:layout_marginTop="0dp">
 
             <TextView
@@ -44,11 +46,16 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
                 android:orientation="vertical"
+                android:scrollbars="none"
                 app:layoutManager="android.support.v7.widget.GridLayoutManager"
-                app:spanCount="2"/>
+                app:spanCount="2"
+                tools:listitem="@layout/item_bg"/>
         </LinearLayout>
         <!--画笔-->
-        <LinearLayout style="@style/AutoDrawSettingVg">
+        <LinearLayout
+            style="@style/AutoDrawSettingVg"
+            android:layout_gravity="right|top"
+            android:layout_marginTop="0dp">
 
             <TextView
                 style="@style/AutoDrawSettingTv"
@@ -60,6 +67,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
                 android:orientation="vertical"
+                android:overScrollMode="never"
+                android:scrollbars="none"
                 app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
         </LinearLayout>
         <!--颜料-->
@@ -93,7 +102,7 @@
 
             <TextView
                 style="@style/AutoDrawSettingTv"
-                android:text="@string/speed_delay"/>
+                android:text="@string/speed_delay_ms"/>
 
             <com.ue.autodraw.NumberSelectorView
                 android:id="@+id/nsDelaySpeed"
@@ -132,7 +141,7 @@
         <RadioButton
             android:id="@+id/rbTabLine"
             style="@style/AutoDrawTab"
-            android:text="@string/line_px"/>
+            android:text="@string/line"/>
 
         <RadioButton
             android:id="@+id/rbTabSpeed"

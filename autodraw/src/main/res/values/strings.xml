@@ -9,7 +9,9 @@
     <string name="background">背景</string>
     <string name="paint">画笔</string>
     <string name="line_px">线条(px)</string>
-    <string name="speed_delay">延时(ms)</string>
+    <string name="speed_delay">延时</string>
+    <string name="line">线条</string>
+    <string name="speed_delay_ms">延时(ms)</string>
     <string name="save">保存</string>
     <string name="choose_photo">选择图片</string>
     <string name="no_read_storage_perm">无法读取本地图片：没有外部存储读取权限</string>
