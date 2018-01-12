@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Point
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import com.squareup.picasso.Picasso
@@ -34,13 +35,13 @@ object ImageLoaderUtils {
     }
 
     fun display(context: Context, iv: ImageView, image: Any, callback: ImageLoaderCallback) {
+        display(context, iv, image, 0, callback)
+    }
+
+    fun display(context: Context, iv: ImageView, image: Any, errorDrawableRes: Int, callback: ImageLoaderCallback) {
         iv.tag = object : SimpleTarget() {
-            override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom) {
+            override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
                 if (context is Activity && context.isFinishing) {
-                    return
-                }
-                if (bitmap == null) {
-                    callback.onBitmapFailed()
                     return
                 }
                 iv.setImageBitmap(bitmap)
@@ -51,22 +52,23 @@ object ImageLoaderUtils {
                 if (context == null || context is Activity && context.isFinishing) {
                     return
                 }
-                if (errorDrawable != null) {
-                    iv.setImageDrawable(errorDrawable)
+                if (errorDrawable == null) {
+                    callback.onBitmapFailed(null)
+                    return
                 }
-                callback.onBitmapFailed()
+                iv.setImageDrawable(errorDrawable)
+                callback.onBitmapFailed(if (errorDrawable is BitmapDrawable) errorDrawable.bitmap else null)
             }
         }
-
         if (image is String) {
-            Picasso.with(context).load(image).into(iv.tag as Target)
+            Picasso.with(context).load(image).error(errorDrawableRes).into(iv.tag as Target)
         } else if (image is Int) {
-            Picasso.with(context).load(image).into(iv.tag as Target)
+            Picasso.with(context).load(image).error(errorDrawableRes).into(iv.tag as Target)
         }
     }
 
     interface ImageLoaderCallback {
         fun onBitmapLoaded(bitmap: Bitmap)
-        fun onBitmapFailed()
+        fun onBitmapFailed(errorBitmap: Bitmap?)
     }
 }

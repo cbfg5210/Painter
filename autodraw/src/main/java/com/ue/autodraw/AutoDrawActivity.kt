@@ -7,7 +7,6 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -58,15 +57,16 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.O
     }
 
     private fun loadPhoto(photo: Any) {
-        ImageLoaderUtils.display(this, ivObjectView, photo,
+        ImageLoaderUtils.display(this, ivObjectView, photo, R.drawable.test,
                 object : ImageLoaderUtils.ImageLoaderCallback {
                     override fun onBitmapLoaded(bitmap: Bitmap) {
-                        Log.e("AutoDrawActivity", "onBitmapLoaded: ok")
                         advOutline.resetBitmapThenDraw(bitmap)
                     }
 
-                    override fun onBitmapFailed() {
-                        Toast.makeText(this@AutoDrawActivity, R.string.load_photo_failed, Toast.LENGTH_SHORT).show()
+                    override fun onBitmapFailed(errorBitmap: Bitmap?) {
+                        if (errorBitmap != null) {
+                            advOutline.resetBitmapThenDraw(errorBitmap)
+                        }
                     }
                 })
     }
@@ -132,11 +132,10 @@ class AutoDrawActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.O
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                onBackPressed()
-            }
-            R.id.actionSettings -> vgDrawSettings.visibility = if (vgDrawSettings.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+        } else if (item.itemId == R.id.actionSettings) {
+            vgDrawSettings.visibility = if (vgDrawSettings.visibility == View.VISIBLE) View.GONE else View.VISIBLE
         }
         return true
     }

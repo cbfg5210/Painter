@@ -25,7 +25,7 @@
         android:gravity="center"
         android:inputType="number"
         android:minEms="3"
-        android:text="1"/>
+        android:textSize="@dimen/font_size_15"/>
 
     <ImageView
         android:id="@+id/ivPlus"

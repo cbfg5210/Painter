@@ -25,10 +25,9 @@
             <ImageView
                 android:id="@+id/ivObjectView"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/widget_size_100"
+                android:layout_height="@dimen/widget_size_150"
                 android:layout_marginTop="@dimen/widget_size_10"
-                android:adjustViewBounds="true"
-                android:src="@drawable/test"/>
+                android:adjustViewBounds="true"/>
         </LinearLayout>
         <!--背景-->
         <LinearLayout
