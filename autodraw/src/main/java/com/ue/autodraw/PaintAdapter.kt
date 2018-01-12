@@ -5,25 +5,50 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import com.ue.library.util.SPUtils
 import kotlinx.android.synthetic.main.item_paint.view.*
 
 /**
  * Created by hawk on 2018/1/10.
  */
 class PaintAdapter(private val bgs: IntArray) : RecyclerView.Adapter<PaintAdapter.ViewHolder>() {
+    companion object {
+        private val SP_PAINT_INDEX = "sp_paint_index"
+    }
+
+    private var lastSelectedIndex: Int = 0
+    private var selectedIndex: Int
+
     var itemListener: AdapterView.OnItemClickListener? = null
+        set(value) {
+            field = value
+            field?.onItemClick(null, null, bgs[selectedIndex], 0)
+        }
+
+    init {
+        selectedIndex = SPUtils.getInt(SP_PAINT_INDEX, 0)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_paint, parent, false)
         val holder = ViewHolder(itemView)
         itemView.setOnClickListener { v ->
+            if (selectedIndex == holder.adapterPosition) {
+                return@setOnClickListener
+            }
+            lastSelectedIndex = selectedIndex
+            selectedIndex = holder.adapterPosition
+            SPUtils.putInt(SP_PAINT_INDEX, selectedIndex)
+            notifyItemChanged(lastSelectedIndex)
+            notifyItemChanged(selectedIndex)
+
             itemListener?.onItemClick(null, v, bgs[holder.adapterPosition], 0)
         }
         return holder
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//        ImageLoaderUtils.display(holder.itemView.context, holder.sivPaint, bgs[position])
+        holder.sivPaint.isSelected = selectedIndex == position
         holder.sivPaint.setImageResource(bgs[position])
     }
 

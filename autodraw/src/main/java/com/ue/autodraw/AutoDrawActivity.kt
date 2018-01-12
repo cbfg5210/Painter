@@ -12,7 +12,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
-import android.widget.CompoundButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import com.ue.library.util.ImageLoaderUtils
@@ -27,8 +26,7 @@ import kotlinx.android.synthetic.main.layout_auto_draw_settings.*
 class AutoDrawActivity : AppCompatActivity(),
         View.OnClickListener,
         RadioGroup.OnCheckedChangeListener,
-        NumberSelectorView.OnNumberChangeListener,
-        CompoundButton.OnCheckedChangeListener {
+        NumberSelectorView.OnNumberChangeListener {
 
     private var disposable: Disposable? = null
 
@@ -36,8 +34,6 @@ class AutoDrawActivity : AppCompatActivity(),
         private val REQ_PERM_EXTERNAL = 1
         private val REQ_PICK_PHOTO = 2
         private val SP_OUTLINE_OBJ_PATH = "sp_outline_obj_path"
-        private val SP_SHARE_DRAW_PICTURE = "sp_share_draw_picture"
-        private val SP_SHARE_DRAW_VIDEO = "sp_share_draw_video"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,18 +44,16 @@ class AutoDrawActivity : AppCompatActivity(),
         supportActionBar?.title = getString(R.string.auto_draw)
 
         rgTabs.check(R.id.rbTabObject)
-        cbShareDrawPicture.isChecked = SPUtils.getBoolean(SP_SHARE_DRAW_PICTURE, false)
-        cbShareDrawVideo.isChecked = SPUtils.getBoolean(SP_SHARE_DRAW_VIDEO, false)
 
         initRecyclerViews()
 
         rgTabs.setOnCheckedChangeListener(this)
         ivObjectView.setOnClickListener(this)
         advOutline.setOnClickListener(this)
+        tvShareDrawPicture.setOnClickListener(this)
+        tvShareDrawVideo.setOnClickListener(this)
         nsLineThickness.setNumberChangeListener(this)
         nsDelaySpeed.setNumberChangeListener(this)
-        cbShareDrawPicture.setOnCheckedChangeListener(this)
-        cbShareDrawVideo.setOnCheckedChangeListener(this)
 
         advOutline.autoDrawListener = object : AutoDrawView.OnAutoDrawListener {
             override fun onPrepare() {
@@ -71,9 +65,7 @@ class AutoDrawActivity : AppCompatActivity(),
             }
 
             override fun onComplete() {
-                if (cbShareDrawPicture.isChecked || cbShareDrawVideo.isChecked) {
-                    Toast.makeText(this@AutoDrawActivity, "分享图片或视频", Toast.LENGTH_SHORT).show()
-                }
+                Toast.makeText(this@AutoDrawActivity, "分享图片或视频", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -123,9 +115,9 @@ class AutoDrawActivity : AppCompatActivity(),
         rvPaintOptions.adapter = paintAdapter
 
         val paintColorAdapter = PaintColorAdapter(resources.getIntArray(R.array.PaintColorOptions))
-        paintColorAdapter.setItemListener(AdapterView.OnItemClickListener { _, _, paintColor, _ ->
+        paintColorAdapter.itemListener = AdapterView.OnItemClickListener { _, _, paintColor, _ ->
             advOutline.setPaintColor(paintColor)
-        })
+        }
         rvPaintColorOptions.setHasFixedSize(true)
         rvPaintColorOptions.adapter = paintColorAdapter
     }
@@ -157,25 +149,33 @@ class AutoDrawActivity : AppCompatActivity(),
         }
     }
 
-    override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
-        SPUtils.putBoolean(if (buttonView.id == R.id.cbShareDrawPicture) SP_SHARE_DRAW_PICTURE else SP_SHARE_DRAW_VIDEO, isChecked)
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_auto_draw, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            onBackPressed()
-        } else if (item.itemId == R.id.actionSettings) {
-            vgDrawSettings.visibility = if (vgDrawSettings.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+        when (item.itemId) {
+            android.R.id.home -> onBackPressed()
+            R.id.actionSettings -> {
+                if (vgShare.visibility == View.VISIBLE) vgShare.visibility = View.GONE
+                vgDrawSettings.visibility = if (vgDrawSettings.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+            }
+            R.id.actionShare -> {
+                if (vgDrawSettings.visibility == View.VISIBLE) vgDrawSettings.visibility = View.GONE
+                vgShare.visibility = if (vgShare.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+            }
+            R.id.tvShareDrawPicture -> Toast.makeText(this, "share picture", Toast.LENGTH_SHORT).show()
+            R.id.tvShareDrawVideo -> Toast.makeText(this, "share video", Toast.LENGTH_SHORT).show()
         }
         return true
     }
 
     override fun onBackPressed() {
+        if (vgShare.visibility == View.VISIBLE) {
+            vgShare.visibility = View.GONE
+            return
+        }
         if (vgDrawSettings.visibility == View.VISIBLE) {
             vgDrawSettings.visibility = View.GONE
             return

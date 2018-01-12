@@ -103,6 +103,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
+                android:gravity="center"
                 app:spKey="sp_line_px"
                 app:stepLen="1"/>
         </LinearLayout>
@@ -118,39 +119,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
+                android:gravity="center"
                 app:spKey="sp_delay_speed"
                 app:stepLen="10"/>
-        </LinearLayout>
-        <!--分享-->
-        <LinearLayout style="@style/AutoDrawSettingVg">
-
-            <TextView
-                style="@style/AutoDrawSettingTv"
-                android:text="@string/share"/>
-
-            <CheckBox
-                android:id="@+id/cbShareDrawPicture"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:minWidth="@dimen/widget_size_80"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:text="@string/share_draw_picture"
-                android:textColor="@color/col_444444"
-                android:textSize="@dimen/font_size_16"/>
-
-            <CheckBox
-                android:id="@+id/cbShareDrawVideo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:minWidth="@dimen/widget_size_100"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:text="@string/share_draw_video"
-                android:textColor="@color/col_444444"
-                android:textSize="@dimen/font_size_16"/>
         </LinearLayout>
     </ViewFlipper>
 
@@ -189,10 +160,5 @@
             android:id="@+id/rbTabSpeed"
             style="@style/AutoDrawTab"
             android:text="@string/speed_delay"/>
-
-        <RadioButton
-            android:id="@+id/rbTabShare"
-            style="@style/AutoDrawTab"
-            android:text="@string/share"/>
     </RadioGroup>
 </LinearLayout>

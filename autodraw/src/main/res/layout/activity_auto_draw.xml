@@ -5,11 +5,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <!--画板-->
     <com.ue.autodraw.AutoDrawView
         android:id="@+id/advOutline"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+    <!--分享-->
+    <LinearLayout
+        android:id="@+id/vgShare"
+        style="@style/AutoDrawSettingVg"
+        android:layout_gravity="right"
+        android:layout_marginTop="0dp"
+        android:background="@color/col_eeeeee"
+        android:padding="0dp"
+        android:visibility="gone">
 
+        <TextView
+            android:id="@+id/tvShareDrawPicture"
+            style="@style/AutoDrawTab"
+            android:background="?attr/selectableItemBackground"
+            android:text="@string/share_draw_picture"/>
+
+        <TextView
+            android:id="@+id/tvShareDrawVideo"
+            style="@style/AutoDrawTab"
+            android:background="?attr/selectableItemBackground"
+            android:text="@string/share_draw_video"/>
+    </LinearLayout>
+    <!--设置-->
     <include layout="@layout/layout_auto_draw_settings"/>
 </FrameLayout>

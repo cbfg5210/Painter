@@ -3,6 +3,7 @@ package com.ue.autodraw
 import android.graphics.PorterDuff
 import android.support.graphics.drawable.VectorDrawableCompat
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,20 +19,21 @@ class PaintColorAdapter(private val bgs: IntArray) : RecyclerView.Adapter<PaintC
         private val SP_PAINT_COLOR_INDEX = "sp_paint_color_index"
     }
 
-    private var itemListener: AdapterView.OnItemClickListener? = null
     private var lastSelectedIndex: Int = 0
     private var selectedIndex: Int
 
+    var itemListener: AdapterView.OnItemClickListener? = null
+        set(value) {
+            field = value
+            field?.onItemClick(null, null, bgs[selectedIndex], 0)
+        }
+
     init {
         selectedIndex = SPUtils.getInt(SP_PAINT_COLOR_INDEX, 0)
-        if (selectedIndex >= bgs.size) {
-            selectedIndex = 0
-        }
     }
 
-    fun setItemListener(itemListener: AdapterView.OnItemClickListener) {
-        this.itemListener = itemListener
-        itemListener.onItemClick(null, null, bgs[selectedIndex], 0)
+    fun setItemListener() {
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -47,6 +49,7 @@ class PaintColorAdapter(private val bgs: IntArray) : RecyclerView.Adapter<PaintC
             notifyItemChanged(lastSelectedIndex)
             notifyItemChanged(selectedIndex)
 
+            Log.e("PaintColorAdapter", "onCreateViewHolder: itemListener=$itemListener")
             itemListener?.onItemClick(null, v, bgs[selectedIndex], 0)
         }
         return holder

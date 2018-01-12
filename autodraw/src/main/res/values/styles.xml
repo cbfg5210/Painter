@@ -10,7 +10,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/col_444444</item>
-        <item name="android:textSize">@dimen/font_size_16</item>
+        <item name="android:textSize">@dimen/font_size_17</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:button">@null</item>
     </style>
@@ -32,7 +32,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:padding">@dimen/widget_size_5</item>
-        <item name="android:textSize">@dimen/font_size_15</item>
+        <item name="android:textSize">@dimen/font_size_16</item>
     </style>
 
     <color name="col_444444">#444444</color>
