@@ -20,4 +20,5 @@
     <string name="paint_color">颜料</string>
     <string name="settings">设置</string>
     <string name="no_outline_to_save">绘制轮廓后再进行分享吧~</string>
+    <string name="share_to">分享到</string>
 </resources>

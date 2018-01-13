@@ -6,11 +6,10 @@ import android.net.Uri
 import java.io.File
 
 /**
- * Created by Swifty.Wang on 2015/8/4.
+ * Created by hawk on 2018/1/13.
  */
-object ShareImageUtil {
-
-    fun shareImg(context: Context, subject: String, text: String, path: String, chooserTxt: String) {
+object IntentUtils {
+    fun shareImage(context: Context, subject: String?, text: String?, path: String, chooserTxt: String) {
         val file = File(path)
         val uri = Uri.fromFile(file)
         val intent = Intent()

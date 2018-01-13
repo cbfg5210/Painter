@@ -7,7 +7,6 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -151,7 +150,7 @@ class AutoDrawActivity : AppCompatActivity(),
                 }
                 advOutline.saveOutlinePicture(object : FileUtils.OnSaveImageListener {
                     override fun onSaved(path: String) {
-                        Log.e("AutoDrawActivity", "onSaved: path=$path")
+                        IntentUtils.shareImage(this@AutoDrawActivity, null, null, path, getString(R.string.share_to))
                     }
                 })
             }

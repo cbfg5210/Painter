@@ -20,8 +20,8 @@ import com.ue.fingercoloring.widget.ColorPicker
 import com.ue.fingercoloring.widget.ColourImageView
 import com.ue.fingercoloring.widget.TipDialog
 import com.ue.library.event.SimpleTarget
+import com.ue.library.util.IntentUtils
 import com.ue.library.util.PicassoUtils
-import com.ue.library.util.ShareImageUtil
 import kotlinx.android.synthetic.main.activity_paint.*
 
 
@@ -69,7 +69,7 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
     private fun loadPicture() {
         tipDialog.showTip(supportFragmentManager, getString(R.string.loadpicture))
         PicassoUtils.displayImage(this, civColoring, picturePath, object : SimpleTarget() {
-            override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom) {
+            override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
                 tipDialog.dismiss()
             }
 
@@ -243,7 +243,7 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
                 if (saveFlag == FLAG_EXIT)
                     finish()
                 else if (saveFlag == FLAG_SHARE)
-                    ShareImageUtil.shareImg(
+                    IntentUtils.shareImage(
                             this@PaintActivity,
                             getString(R.string.app_name),
                             getString(R.string.sharemywork) + getString(R.string.sharecontent),
@@ -288,7 +288,7 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
         hasSaved = true
 
         PicassoUtils.displayImage(this, civColoring, path ?: picturePath, object : SimpleTarget() {
-            override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom) {
+            override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
                 tipDialog.dismiss()
             }
 
