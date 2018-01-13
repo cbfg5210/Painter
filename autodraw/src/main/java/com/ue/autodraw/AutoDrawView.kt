@@ -2,16 +2,19 @@ package com.ue.autodraw
 
 import android.content.Context
 import android.graphics.*
+import android.os.Environment
 import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.ue.library.util.BitmapUtils
+import com.ue.library.util.FileUtils
 import com.ue.library.util.RxJavaUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.text.SimpleDateFormat
 
 class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     private var mSrcBmWidth = 0
@@ -27,6 +30,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     private lateinit var mPaintBm: Bitmap
     private var sobelBitmap: Bitmap? = null
     private var paintColor = Color.BLACK
+    private var bitmapName = ""
 
     var autoDrawListener: OnAutoDrawListener? = null
 
@@ -42,6 +46,12 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         private set
         get() {
             return sobelBitmap != null
+        }
+
+    var isCanSave = false
+        private set
+        get() {
+            return sobelBitmap != null && mTmpBm != null
         }
 
     private var drawDisposable: Disposable? = null
@@ -91,7 +101,10 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     fun setOutlineObject(bm: Bitmap) {
         //重设对象时第一步就是取消原先的加载
         RxJavaUtils.dispose(loadDisposable)
+
+        this.bitmapName = SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis())
         autoDrawListener?.onPrepare()
+
         loadDisposable = Observable
                 .create(ObservableOnSubscribe<Bitmap> { e ->
                     //480x800,648x1152
@@ -184,6 +197,16 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         return isDrawing && tmpPoint != null
     }
 
+    /**
+     * 保存结果图片
+     */
+    fun saveOutlinePicture(saveListener: FileUtils.OnSaveImageListener) {
+        if (!isCanSave) return
+
+        val path = Environment.getExternalStorageDirectory().path + Constants.PATH_AUTO_DRAW
+        FileUtils.saveImageLocally(context, mTmpBm!!, path, "$bitmapName.png", saveListener)
+    }
+
     fun stopDrawing() {
         if (!isDrawing) {
             return
@@ -224,13 +247,6 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
                     isDrawing = false
                     e.onNext(1)
                     e.onComplete()
-                    /*保存结果图片
-                    val path = Environment.getExternalStorageDirectory().path + "/tt/"
-                    FileUtils.saveImageLocally(context, mTmpBm!!, path, "tt.png", object : FileUtils.OnSaveImageListener {
-                        override fun onSaved(path: String) {
-                            Log.e("AutoDrawView", "onSaved: save path:$path")
-                        }
-                    })*/
                 })
                 .subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread())

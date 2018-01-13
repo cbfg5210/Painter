@@ -34,6 +34,7 @@ versions.flexbox = "0.3.1"
 versions.photoview="2.0.0"
 versions.myPhotoview = "1.0.2"
 versions.dashedCircularProgress = "1.0@aar"
+versions.spinKit="1.1.0"
 
 
 def deps = [:]
@@ -102,6 +103,7 @@ deps.flexbox = "com.google.android:flexbox:$versions.flexbox"
 deps.photoview="com.github.chrisbanes:PhotoView:$versions.photoview"
 deps.myPhotoview = "com.github.cbfg5210:PhotoView:$versions.myPhotoview"
 deps.dashedCircularProgress = "com.github.glomadrian:$versions.dashedCircularProgress"
+deps.spinKit="com.github.ybq:Android-SpinKit:$versions.spinKit"
 
 ext.deps = deps
 

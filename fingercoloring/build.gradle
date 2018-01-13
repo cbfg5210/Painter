@@ -65,6 +65,7 @@ dependencies {
         implementation deps.rxjava2
         implementation deps.rxAndroid
         implementation deps.gson
+        implementation deps.spinKit
     } else {
         compileOnly deps.kotlinJre
         compileOnly deps.support.app_compat
@@ -79,5 +80,6 @@ dependencies {
         compileOnly deps.rxjava2
         compileOnly deps.rxAndroid
         compileOnly deps.gson
+        compileOnly deps.spinKit
     }
 }

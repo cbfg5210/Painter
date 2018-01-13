@@ -14,10 +14,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.RadioGroup
 import android.widget.Toast
-import com.ue.library.util.ImageLoaderUtils
-import com.ue.library.util.PermissionUtils
-import com.ue.library.util.RxJavaUtils
-import com.ue.library.util.SPUtils
+import com.ue.library.util.*
 import com.yanzhenjie.permission.PermissionListener
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_auto_draw.*
@@ -131,25 +128,34 @@ class AutoDrawActivity : AppCompatActivity(),
     }
 
     override fun onClick(v: View) {
-        if (v.id == R.id.ivObjectView) {
-            pickPhoto()
-            return
-        }
-        if (v.id == R.id.advOutline) {
-            if (vgDrawSettings.visibility == View.VISIBLE) {
-                vgDrawSettings.visibility = View.GONE
-                return
+        when (v.id) {
+            R.id.ivObjectView -> pickPhoto()
+            R.id.advOutline -> {
+                if (vgShare.visibility == View.VISIBLE) vgShare.visibility = View.GONE
+                if (vgDrawSettings.visibility == View.VISIBLE) vgDrawSettings.visibility = View.GONE
+
+                if (!advOutline.isReadyToDraw) {
+                    Toast.makeText(this, "not ready", Toast.LENGTH_SHORT).show()
+                    return
+                }
+                if (advOutline.isDrawing) {
+                    advOutline.stopDrawing()
+                    return
+                }
+                advOutline.startDrawing()
             }
-            if (!advOutline.isReadyToDraw) {
-                Toast.makeText(this, "not ready", Toast.LENGTH_SHORT).show()
-                return
+            R.id.tvShareDrawPicture -> {
+                if (!advOutline.isCanSave) {
+                    Toast.makeText(this, R.string.no_outline_to_save, Toast.LENGTH_SHORT).show()
+                    return
+                }
+                advOutline.saveOutlinePicture(object : FileUtils.OnSaveImageListener {
+                    override fun onSaved(path: String) {
+                        Log.e("AutoDrawActivity", "onSaved: path=$path")
+                    }
+                })
             }
-            if (advOutline.isDrawing) {
-                advOutline.stopDrawing()
-                return
-            }
-            advOutline.startDrawing()
-            return
+            R.id.tvShareDrawVideo -> Toast.makeText(this, "share video", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -183,10 +189,6 @@ class AutoDrawActivity : AppCompatActivity(),
                 if (vgDrawSettings.visibility == View.VISIBLE) vgDrawSettings.visibility = View.GONE
                 vgShare.visibility = if (vgShare.visibility == View.VISIBLE) View.GONE else View.VISIBLE
             }
-            R.id.tvShareDrawPicture -> {
-                Toast.makeText(this, "share picture", Toast.LENGTH_SHORT).show()
-            }
-            R.id.tvShareDrawVideo -> Toast.makeText(this, "share video", Toast.LENGTH_SHORT).show()
         }
         return true
     }
@@ -209,7 +211,7 @@ class AutoDrawActivity : AppCompatActivity(),
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQ_PICK_PHOTO && resultCode == Activity.RESULT_OK && data != null) {
-            Log.e("AutoDrawActivity", "onActivityResult: photo path=${data.dataString}")
+            //Log.e("AutoDrawActivity", "onActivityResult: photo path=${data.dataString}")
             SPUtils.putString(SP_OUTLINE_OBJ_PATH, data.dataString)
             loadPhoto(data.dataString)
         }

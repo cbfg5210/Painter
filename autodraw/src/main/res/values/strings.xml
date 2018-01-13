@@ -19,4 +19,5 @@
     <string name="outline_object">临摹对象</string>
     <string name="paint_color">颜料</string>
     <string name="settings">设置</string>
+    <string name="no_outline_to_save">绘制轮廓后再进行分享吧~</string>
 </resources>
