@@ -141,6 +141,7 @@ class AutoDrawActivity : AppCompatActivity(),
                 return
             }
             if (!advOutline.isReadyToDraw) {
+                Toast.makeText(this, "not ready", Toast.LENGTH_SHORT).show()
                 return
             }
             if (advOutline.isDrawing) {

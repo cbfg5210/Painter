@@ -47,14 +47,6 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     private var drawDisposable: Disposable? = null
     private var loadDisposable: Disposable? = null
 
-    companion object {
-        private val FLAG_PREPARE = 1
-        private val FLAG_READY = 2
-        private val FLAG_START = 3
-        private val FLAG_STOP = 4
-        private val FLAG_COMPLETE = 5
-    }
-
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
@@ -189,7 +181,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
             canvas.drawBitmap(mPaintBm, (mLastPoint.x + offsetX).toFloat(), (mLastPoint.y - mPaintBm.height + offsetY).toFloat(), mPaint)
         }
         holder.unlockCanvasAndPost(canvas)
-        return tmpPoint != null
+        return isDrawing && tmpPoint != null
     }
 
     fun stopDrawing() {
@@ -218,20 +210,19 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
         RxJavaUtils.dispose(drawDisposable)
         drawDisposable = Observable
-                .create(ObservableOnSubscribe<Int> { e ->
+                .create(ObservableOnSubscribe<Any> { e ->
                     //绘制背景
                     resetBgBitmap()
                     //绘制轮廓
-                    while (drawOutline()) {
-                        if (delaySpeed > 0) {
-                            try {
-                                Thread.sleep(delaySpeed)
-                            } catch (exp: InterruptedException) {
-                            }
+                    while (isDrawing) {
+                        isDrawing = drawOutline()
+                        try {
+                            Thread.sleep(delaySpeed)
+                        } catch (exp: InterruptedException) {
                         }
                     }
                     isDrawing = false
-                    e.onNext(FLAG_COMPLETE)
+                    e.onNext(1)
                     e.onComplete()
                     /*保存结果图片
                     val path = Environment.getExternalStorageDirectory().path + "/tt/"
@@ -243,10 +234,8 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
                 })
                 .subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ flag ->
-                    if (flag == FLAG_COMPLETE) {
-                        autoDrawListener?.onComplete()
-                    }
+                .subscribe({
+                    autoDrawListener?.onComplete()
                 })
     }
 
