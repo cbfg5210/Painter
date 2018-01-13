@@ -49,7 +49,7 @@ object ImageLoaderUtils {
             }
 
             override fun onBitmapFailed(errorDrawable: Drawable?) {
-                if (context == null || context is Activity && context.isFinishing) {
+                if (context is Activity && context.isFinishing) {
                     return
                 }
                 if (errorDrawable == null) {

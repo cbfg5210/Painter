@@ -54,20 +54,22 @@ dependencies {
     if (isRunAlone.toBoolean()) {
         implementation deps.kotlinJre
         implementation deps.support.app_compat
+        implementation deps.support.recyclerview
+
         implementation project(':library')
         implementation deps.rxjava2
         implementation deps.rxAndroid
-        implementation deps.support.recyclerview
         implementation deps.picasso
         implementation deps.andPermission
         implementation deps.transitionsEverywhere
     } else {
         compileOnly deps.kotlinJre
         compileOnly deps.support.app_compat
+        compileOnly deps.support.recyclerview
+
         compileOnly project(':library')
         compileOnly deps.rxjava2
         compileOnly deps.rxAndroid
-        compileOnly deps.support.recyclerview
         compileOnly deps.picasso
         compileOnly deps.andPermission
         compileOnly deps.transitionsEverywhere

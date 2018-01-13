@@ -23,7 +23,7 @@ object PicassoUtils {
 
     fun displayImage(context: Context, iv: ImageView, imageUrl: String, picassoListener: Target) {
         iv.tag = object : SimpleTarget() {
-            override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom) {
+            override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
                 if (context is Activity && context.isFinishing) {
                     return
                 }
@@ -32,7 +32,7 @@ object PicassoUtils {
             }
 
             override fun onBitmapFailed(errorDrawable: Drawable?) {
-                if (context == null || context is Activity && context.isFinishing) {
+                if ( context is Activity && context.isFinishing) {
                     return
                 }
                 if (errorDrawable != null) iv.setImageDrawable(errorDrawable)

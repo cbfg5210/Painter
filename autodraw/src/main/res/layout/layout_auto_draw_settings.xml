@@ -92,7 +92,9 @@
                 tools:listitem="@layout/item_paint_color"/>
         </LinearLayout>
         <!--线条粗细-->
-        <LinearLayout style="@style/AutoDrawSettingVg">
+        <LinearLayout
+            style="@style/AutoDrawSettingVg"
+            android:layout_gravity="right|center_vertical">
 
             <TextView
                 style="@style/AutoDrawSettingTv"
@@ -108,7 +110,9 @@
                 app:stepLen="1"/>
         </LinearLayout>
         <!--延时-->
-        <LinearLayout style="@style/AutoDrawSettingVg">
+        <LinearLayout
+            style="@style/AutoDrawSettingVg"
+            android:layout_gravity="right|center_vertical">
 
             <TextView
                 style="@style/AutoDrawSettingTv"
