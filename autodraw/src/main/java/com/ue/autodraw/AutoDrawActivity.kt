@@ -60,8 +60,16 @@ class AutoDrawActivity : AppCompatActivity(),
                 Toast.makeText(this@AutoDrawActivity, "绘制前准备", Toast.LENGTH_SHORT).show()
             }
 
+            override fun onReady() {
+                Toast.makeText(this@AutoDrawActivity, "准备就绪", Toast.LENGTH_SHORT).show()
+            }
+
             override fun onStart() {
                 Toast.makeText(this@AutoDrawActivity, "开始绘制", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onStop() {
+                Toast.makeText(this@AutoDrawActivity, "取消绘制", Toast.LENGTH_SHORT).show()
             }
 
             override fun onComplete() {
@@ -81,12 +89,12 @@ class AutoDrawActivity : AppCompatActivity(),
         ImageLoaderUtils.display(this, ivObjectView, photo, R.drawable.test,
                 object : ImageLoaderUtils.ImageLoaderCallback {
                     override fun onBitmapLoaded(bitmap: Bitmap) {
-                        advOutline.resetBitmapThenDraw(bitmap)
+                        advOutline.setOutlineObject(bitmap)
                     }
 
                     override fun onBitmapFailed(errorBitmap: Bitmap?) {
                         if (errorBitmap != null) {
-                            advOutline.resetBitmapThenDraw(errorBitmap)
+                            advOutline.setOutlineObject(errorBitmap)
                         }
                     }
                 })
@@ -132,7 +140,14 @@ class AutoDrawActivity : AppCompatActivity(),
                 vgDrawSettings.visibility = View.GONE
                 return
             }
-            advOutline.redraw()
+            if (!advOutline.isReadyToDraw) {
+                return
+            }
+            if (advOutline.isDrawing) {
+                advOutline.stopDrawing()
+                return
+            }
+            advOutline.startDrawing()
             return
         }
     }
@@ -158,29 +173,21 @@ class AutoDrawActivity : AppCompatActivity(),
         when (item.itemId) {
             android.R.id.home -> onBackPressed()
             R.id.actionSettings -> {
+                advOutline.stopDrawing()
                 if (vgShare.visibility == View.VISIBLE) vgShare.visibility = View.GONE
                 vgDrawSettings.visibility = if (vgDrawSettings.visibility == View.VISIBLE) View.GONE else View.VISIBLE
             }
             R.id.actionShare -> {
+                advOutline.stopDrawing()
                 if (vgDrawSettings.visibility == View.VISIBLE) vgDrawSettings.visibility = View.GONE
                 vgShare.visibility = if (vgShare.visibility == View.VISIBLE) View.GONE else View.VISIBLE
             }
-            R.id.tvShareDrawPicture -> Toast.makeText(this, "share picture", Toast.LENGTH_SHORT).show()
+            R.id.tvShareDrawPicture -> {
+                Toast.makeText(this, "share picture", Toast.LENGTH_SHORT).show()
+            }
             R.id.tvShareDrawVideo -> Toast.makeText(this, "share video", Toast.LENGTH_SHORT).show()
         }
         return true
-    }
-
-    override fun onBackPressed() {
-        if (vgShare.visibility == View.VISIBLE) {
-            vgShare.visibility = View.GONE
-            return
-        }
-        if (vgDrawSettings.visibility == View.VISIBLE) {
-            vgDrawSettings.visibility = View.GONE
-            return
-        }
-        super.onBackPressed()
     }
 
     private fun pickPhoto() {
@@ -205,6 +212,22 @@ class AutoDrawActivity : AppCompatActivity(),
             SPUtils.putString(SP_OUTLINE_OBJ_PATH, data.dataString)
             loadPhoto(data.dataString)
         }
+    }
+
+    override fun onBackPressed() {
+        if (vgShare.visibility == View.VISIBLE) {
+            vgShare.visibility = View.GONE
+            return
+        }
+        if (vgDrawSettings.visibility == View.VISIBLE) {
+            vgDrawSettings.visibility = View.GONE
+            return
+        }
+        if (advOutline.isDrawing) {
+            advOutline.stopDrawing()
+            return
+        }
+        super.onBackPressed()
     }
 
     override fun onDestroy() {

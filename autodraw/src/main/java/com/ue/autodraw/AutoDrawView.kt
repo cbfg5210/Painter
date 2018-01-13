@@ -25,7 +25,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     private lateinit var mTmpCanvas: Canvas
     private var mTmpBm: Bitmap? = null
     private lateinit var mPaintBm: Bitmap
-    private lateinit var sobelBitmap: Bitmap
+    private var sobelBitmap: Bitmap? = null
     private var paintColor = Color.BLACK
 
     var autoDrawListener: OnAutoDrawListener? = null
@@ -35,15 +35,24 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     private var paintBitmapRes = 0
 
     private var mLastPoint = Point()
-    private var isDrawing = false
+    var isDrawing = false
+        private set
+
+    var isReadyToDraw = false
+        private set
+        get() {
+            return sobelBitmap != null
+        }
 
     private var drawDisposable: Disposable? = null
     private var loadDisposable: Disposable? = null
 
     companion object {
         private val FLAG_PREPARE = 1
-        private val FLAG_START = 2
-        private val FLAG_COMPLETE = 3
+        private val FLAG_READY = 2
+        private val FLAG_START = 3
+        private val FLAG_STOP = 4
+        private val FLAG_COMPLETE = 5
     }
 
     constructor(context: Context) : this(context, null)
@@ -55,48 +64,9 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         holder.addCallback(this)
     }
 
-    fun resetBitmapThenDraw(bm: Bitmap) {
-        RxJavaUtils.dispose(loadDisposable)
-        loadDisposable = Observable
-                .create(ObservableOnSubscribe<Int> { e ->
-                    //480x800,648x1152
-                    //返回的是处理过的Bitmap
-                    sobelBitmap =
-                            if (resources.displayMetrics.widthPixels >= 1080) SobelUtils.sobel(bm, 648, 1152)
-                            else SobelUtils.sobel(bm, 480, 800)
-
-                    e.onNext(FLAG_START)
-
-                    beginDraw(getArray(sobelBitmap))
-                })
-                .subscribeOn(Schedulers.single())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ flag ->
-                    if (flag == FLAG_START) {
-                        autoDrawListener?.onStart()
-                    }
-                })
-    }
-
-    fun redraw() {
-        if (!isDrawing) {
-            resetBgBitmap()
-            beginDraw(getArray(sobelBitmap))
-        }
-    }
-
-    //根据Bitmap信息，获取每个位置的像素点是否需要绘制
-    //使用boolean数组而不是int[][]主要是考虑到内存的消耗
-    private fun getArray(bitmap: Bitmap): Array<BooleanArray> {
-        val b = Array(bitmap.width) { BooleanArray(bitmap.height) }
-        for (i in 0 until bitmap.width) {
-            for (j in 0 until bitmap.height) {
-                b[i][j] = bitmap.getPixel(i, j) != Color.WHITE
-            }
-        }
-        return b
-    }
-
+    /**
+     * 设置参数
+     */
     //设置画笔图片
     fun setPaintBitmapRes(paintBitmapRes: Int) {
         if (this.paintBitmapRes == paintBitmapRes) {
@@ -123,6 +93,41 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
     fun setDelaySpeed(delay: Int) {
         delaySpeed = delay.toLong()
+    }
+    /* 设置参数 end */
+
+    fun setOutlineObject(bm: Bitmap) {
+        //重设对象时第一步就是取消原先的加载
+        RxJavaUtils.dispose(loadDisposable)
+        autoDrawListener?.onPrepare()
+        loadDisposable = Observable
+                .create(ObservableOnSubscribe<Bitmap> { e ->
+                    //480x800,648x1152
+                    //返回的是处理过的Bitmap
+                    val sobelBitmap =
+                            if (resources.displayMetrics.widthPixels >= 1080) SobelUtils.sobel(bm, 648, 1152)
+                            else SobelUtils.sobel(bm, 480, 800)
+
+                    e.onNext(sobelBitmap)
+                })
+                .subscribeOn(Schedulers.single())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ sobelBitmap ->
+                    this.sobelBitmap = sobelBitmap
+                    autoDrawListener?.onReady()
+                })
+    }
+
+    //根据Bitmap信息，获取每个位置的像素点是否需要绘制
+    //使用boolean数组而不是int[][]主要是考虑到内存的消耗
+    private fun getArray(bitmap: Bitmap): Array<BooleanArray> {
+        val b = Array(bitmap.width) { BooleanArray(bitmap.height) }
+        for (i in 0 until bitmap.width) {
+            for (j in 0 until bitmap.height) {
+                b[i][j] = bitmap.getPixel(i, j) != Color.WHITE
+            }
+        }
+        return b
     }
 
     //获取离指定点最近的一个未绘制过的点
@@ -187,13 +192,24 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         return tmpPoint != null
     }
 
-    private fun beginDraw(array: Array<BooleanArray>) {
+    fun stopDrawing() {
+        if (!isDrawing) {
+            return
+        }
+        isDrawing = false
+        RxJavaUtils.dispose(drawDisposable)
+        autoDrawListener?.onStop()
+    }
+
+    fun startDrawing() {
+        sobelBitmap ?: return
         if (isDrawing) return
+
         isDrawing = true
 
-        this.mArray = array
-        mSrcBmWidth = array.size
-        mSrcBmHeight = array[0].size
+        mArray = getArray(sobelBitmap!!)
+        mSrcBmWidth = mArray.size
+        mSrcBmHeight = mArray[0].size
 
         offsetX = (measuredWidth - mSrcBmWidth) / 2
         offsetY = (measuredHeight - mSrcBmHeight) / 2
@@ -203,6 +219,9 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         RxJavaUtils.dispose(drawDisposable)
         drawDisposable = Observable
                 .create(ObservableOnSubscribe<Int> { e ->
+                    //绘制背景
+                    resetBgBitmap()
+                    //绘制轮廓
                     while (drawOutline()) {
                         if (delaySpeed > 0) {
                             try {
@@ -266,7 +285,9 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
     interface OnAutoDrawListener {
         fun onPrepare()
+        fun onReady()
         fun onStart()
+        fun onStop()
         fun onComplete()
     }
 }
