@@ -43,4 +43,5 @@ dependencies {
     compileOnly deps.rxAndroid
     compileOnly deps.gson
     compileOnly deps.andPermission
+    compileOnly deps.spinKit
 }

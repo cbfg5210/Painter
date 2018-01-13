@@ -62,6 +62,7 @@ dependencies {
         implementation deps.picasso
         implementation deps.andPermission
         implementation deps.transitionsEverywhere
+        implementation deps.spinKit
     } else {
         compileOnly deps.kotlinJre
         compileOnly deps.support.app_compat
@@ -73,6 +74,7 @@ dependencies {
         compileOnly deps.picasso
         compileOnly deps.andPermission
         compileOnly deps.transitionsEverywhere
+        compileOnly deps.spinKit
     }
     implementation project(':resource')
 }

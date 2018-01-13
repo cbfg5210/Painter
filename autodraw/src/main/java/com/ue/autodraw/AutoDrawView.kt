@@ -6,6 +6,7 @@ import android.os.Environment
 import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import com.ue.library.constant.Constants
 import com.ue.library.util.BitmapUtils
 import com.ue.library.util.FileUtils
 import com.ue.library.util.RxJavaUtils
