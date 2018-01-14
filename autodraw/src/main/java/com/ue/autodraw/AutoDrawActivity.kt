@@ -3,6 +3,7 @@ package com.ue.autodraw
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
@@ -26,10 +27,12 @@ class AutoDrawActivity : AppCompatActivity(),
     companion object {
         private val REQ_PICK_PHOTO = 2
         private val SP_OUTLINE_OBJ_PATH = "sp_outline_obj_path"
+        private val SP_RECORD_TIP_VISIBLE = "sp_record_tip_visible"
     }
 
     private var disposable: Disposable? = null
     private lateinit var loadingDialog: LoadingDialog
+    private var recordVideoHelper: RecordVideoHelper? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,13 +135,17 @@ class AutoDrawActivity : AppCompatActivity(),
                     vgDrawSettings.visibility = View.GONE
                     return
                 }
-
                 if (!advOutline.isReadyToDraw) {
                     loadingDialog.showLoading(supportFragmentManager, getString(R.string.is_preparing))
                     return
                 }
                 if (advOutline.isDrawing) {
                     advOutline.stopDrawing()
+                    return
+                }
+                if (recordVideoHelper != null && recordVideoHelper!!.isRecording) {
+                    recordVideoHelper!!.stopRecording()
+                    Toast.makeText(this, R.string.cancel_record_video, Toast.LENGTH_SHORT).show()
                     return
                 }
                 advOutline.startDrawing()
@@ -157,7 +164,30 @@ class AutoDrawActivity : AppCompatActivity(),
             }
             R.id.tvShareDrawVideo -> {
                 vgShare.visibility = View.GONE
-                Toast.makeText(this, "share video", Toast.LENGTH_SHORT).show()
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                    Toast.makeText(this, R.string.cannot_share_video_version, Toast.LENGTH_SHORT).show()
+                    return
+                }
+                if (!advOutline.isCanSave) {
+                    Toast.makeText(this, R.string.not_ready_record_video, Toast.LENGTH_SHORT).show()
+                    return
+                }
+                DialogUtils.showOnceHintDialog(this,
+                        R.string.record_draw_video_title,
+                        R.string.record_draw_video_tip,
+                        R.string.got_it,
+                        View.OnClickListener {
+                            if (recordVideoHelper == null) {
+                                recordVideoHelper = RecordVideoHelper(this)
+                                recordVideoHelper!!.recordVideoListener = object : RecordVideoHelper.RecordVideoListener {
+                                    override fun onStart() {
+                                        advOutline.startDrawing()
+                                    }
+                                }
+                            }
+                            recordVideoHelper!!.startRecording()
+                        },
+                        SP_RECORD_TIP_VISIBLE)
             }
         }
     }
@@ -209,11 +239,15 @@ class AutoDrawActivity : AppCompatActivity(),
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQ_PICK_PHOTO && resultCode == Activity.RESULT_OK && data != null) {
-            //Log.e("AutoDrawActivity", "onActivityResult: photo path=${data.dataString}")
-            SPUtils.putString(SP_OUTLINE_OBJ_PATH, data.dataString)
-            loadPhoto(data.dataString)
+        if (requestCode == REQ_PICK_PHOTO) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                //Log.e("AutoDrawActivity", "onActivityResult: photo path=${data.dataString}")
+                SPUtils.putString(SP_OUTLINE_OBJ_PATH, data.dataString)
+                loadPhoto(data.dataString)
+            }
+            return
         }
+        recordVideoHelper?.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onBackPressed() {
@@ -227,6 +261,11 @@ class AutoDrawActivity : AppCompatActivity(),
         }
         if (advOutline.isDrawing) {
             advOutline.stopDrawing()
+            return
+        }
+        if (recordVideoHelper != null && recordVideoHelper!!.isRecording) {
+            recordVideoHelper!!.stopRecording()
+            Toast.makeText(this, R.string.cancel_record_video, Toast.LENGTH_SHORT).show()
             return
         }
         super.onBackPressed()

@@ -10,7 +10,7 @@ import com.yanzhenjie.permission.PermissionListener
  * Created by hawk on 2018/1/8.
  */
 object PermissionUtils {
-    private val REQ_PERM_READ_WRITE_STORAGE = 11
+    val REQ_PERM_READ_WRITE_STORAGE = 11
 
     fun checkReadWriteStoragePerms(context: Context, failureTip: String, successCallback: SimplePermissionListener) {
         checkPermissions(context,
