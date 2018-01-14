@@ -204,7 +204,7 @@ class AutoDrawActivity : AppCompatActivity(),
                 R.string.got_it,
                 View.OnClickListener {
                     if (recordVideoHelper == null) initRecordVideoHelper()
-                    advOutline.resetCanvas()
+                    advOutline.resetCanvas(true)
                     recordVideoHelper!!.startRecording()
                 },
                 SP_RECORD_TIP_VISIBLE)

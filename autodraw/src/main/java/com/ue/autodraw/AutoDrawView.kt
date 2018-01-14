@@ -86,7 +86,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
     fun setBgBitmapRes(bgBitmapRes: Int) {
         this.bgBitmapRes = bgBitmapRes
-        resetCanvas()
+        resetCanvas(true)
     }
 
     fun setLineThickness(thickness: Int) {
@@ -242,7 +242,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         drawDisposable = Observable
                 .create(ObservableOnSubscribe<Any> { e ->
                     //绘制背景
-                    resetCanvas()
+                    resetCanvas(true)
                     //绘制轮廓
                     while (drawOutline()) {
                         try {
@@ -265,20 +265,25 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-        resetCanvas()
+        resetCanvas(false)
     }
 
-    fun resetCanvas() {
-        if (bgBitmapRes > 0) {
-            mTmpBm = BitmapUtils.getRatioBitmap(context, bgBitmapRes, measuredWidth, measuredHeight)
+    fun resetCanvas(isClear: Boolean) {
+        if (!isClear && mTmpBm != null) {
             mTmpBm = Bitmap.createScaledBitmap(mTmpBm, measuredWidth, measuredHeight, false)
             mTmpCanvas = Canvas(mTmpBm)
         } else {
-            mTmpBm = Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
-            mTmpCanvas = Canvas(mTmpBm)
-            mPaint.color = Color.WHITE
-            mPaint.style = Paint.Style.FILL
-            mTmpCanvas.drawRect(0f, 0f, measuredWidth.toFloat(), measuredHeight.toFloat(), mPaint)
+            if (bgBitmapRes > 0) {
+                mTmpBm = BitmapUtils.getRatioBitmap(context, bgBitmapRes, measuredWidth, measuredHeight)
+                mTmpBm = Bitmap.createScaledBitmap(mTmpBm, measuredWidth, measuredHeight, false)
+                mTmpCanvas = Canvas(mTmpBm)
+            } else {
+                mTmpBm = Bitmap.createBitmap(measuredWidth, measuredHeight, Bitmap.Config.ARGB_8888)
+                mTmpCanvas = Canvas(mTmpBm)
+                mPaint.color = Color.WHITE
+                mPaint.style = Paint.Style.FILL
+                mTmpCanvas.drawRect(0f, 0f, measuredWidth.toFloat(), measuredHeight.toFloat(), mPaint)
+            }
         }
         val canvas = holder.lockCanvas()
         canvas.drawBitmap(mTmpBm, 0f, 0f, mPaint)
