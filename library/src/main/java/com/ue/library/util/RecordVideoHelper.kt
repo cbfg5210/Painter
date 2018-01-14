@@ -13,7 +13,6 @@ import android.media.projection.MediaProjectionManager
 import android.os.Build
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.util.SparseIntArray
 import android.view.Surface
 import android.widget.Toast
@@ -42,8 +41,8 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
     }
 
     private var mScreenDensity = 0
-    private var DISPLAY_WIDTH = 720
-    private var DISPLAY_HEIGHT = 1280
+    private var displayWidth = 720
+    private var displayHeight = 1280
 
     private val mMediaRecorder: MediaRecorder
     private val mProjectionManager: MediaProjectionManager
@@ -56,8 +55,8 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
 
     init {
         val dm = activity.resources.displayMetrics
-        DISPLAY_WIDTH = dm.widthPixels
-        DISPLAY_HEIGHT = dm.heightPixels
+        displayWidth = dm.widthPixels
+        displayHeight = dm.heightPixels
         mScreenDensity = dm.densityDpi
 
         mMediaRecorder = MediaRecorder()
@@ -99,7 +98,6 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
     }
 
     fun cancelRecording() {
-        Log.e("RecordVideoHelper", "cancelRecording: ")
         if (!isRecording) return
         stopRecoding()
         recordVideoListener?.onCancel()
@@ -116,19 +114,19 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
         mMediaRecorder.stop()
         mMediaRecorder.reset()
         mVirtualDisplay.release()
-        //mMediaRecorder.release(); //If used: mMediaRecorder object cannot be reused again
 
         isRecording = false
     }
 
     fun destroyMediaProjection() {
+        mMediaRecorder.release()//If used: mMediaRecorder object cannot be reused again
         mMediaProjection?.unregisterCallback(mMediaProjectionCallback)
         mMediaProjection?.stop()
     }
 
     private fun createVirtualDisplay(): VirtualDisplay {
         return mMediaProjection!!.createVirtualDisplay("recordDrawVideo",
-                DISPLAY_WIDTH, DISPLAY_HEIGHT, mScreenDensity,
+                displayWidth, displayHeight, mScreenDensity,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
                 mMediaRecorder.surface, null, null)/*Callbacks*/
     }
@@ -159,7 +157,7 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
             mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE)
             mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
             mMediaRecorder.setOutputFile(savePath)
-            mMediaRecorder.setVideoSize(DISPLAY_WIDTH, DISPLAY_HEIGHT)
+            mMediaRecorder.setVideoSize(displayWidth, displayHeight)
             mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264)
             mMediaRecorder.setVideoEncodingBitRate(512 * 1000)
             mMediaRecorder.setVideoFrameRate(30)
