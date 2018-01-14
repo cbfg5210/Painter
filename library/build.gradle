@@ -36,12 +36,12 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
-    compileOnly deps.kotlinJre
-    compileOnly deps.support.app_compat
-    compileOnly deps.picasso
-    compileOnly deps.rxjava2
-    compileOnly deps.rxAndroid
-    compileOnly deps.gson
-    compileOnly deps.andPermission
-    compileOnly deps.spinKit
+    implementation deps.kotlinJre
+    implementation deps.support.app_compat
+    implementation deps.picasso
+    implementation deps.rxjava2
+    implementation deps.rxAndroid
+    implementation deps.gson
+    implementation deps.andPermission
+    implementation deps.spinKit
 }

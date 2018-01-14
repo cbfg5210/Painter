@@ -51,13 +51,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    if (isRunAlone.toBoolean()) {
-        implementation deps.kotlinJre
-        implementation deps.support.app_compat
-        implementation project(':library')
-    } else {
-        compileOnly deps.kotlinJre
-        compileOnly deps.support.app_compat
-        compileOnly project(':library')
-    }
+
+    implementation deps.kotlinJre
+    implementation deps.support.app_compat
+    implementation project(':library')
 }

@@ -51,18 +51,12 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    if (isRunAlone.toBoolean()) {
-        implementation deps.kotlinJre
-        implementation deps.support.app_compat
-        implementation deps.support.design
-        implementation project(':library')
-        implementation deps.picasso
-    } else {
-        compileOnly deps.kotlinJre
-        compileOnly deps.support.app_compat
-        compileOnly deps.support.design
-        compileOnly project(':library')
-        compileOnly deps.picasso
-    }
+
+    implementation project(':library')
     implementation project(':resource')
+
+    implementation deps.kotlinJre
+    implementation deps.support.app_compat
+    implementation deps.support.design
+    implementation deps.picasso
 }

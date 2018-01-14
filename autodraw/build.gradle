@@ -51,30 +51,17 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    if (isRunAlone.toBoolean()) {
-        implementation deps.kotlinJre
-        implementation deps.support.app_compat
-        implementation deps.support.recyclerview
+    implementation deps.kotlinJre
+    implementation deps.support.app_compat
+    implementation deps.support.recyclerview
 
-        implementation project(':library')
-        implementation deps.rxjava2
-        implementation deps.rxAndroid
-        implementation deps.picasso
-        implementation deps.andPermission
-        implementation deps.transitionsEverywhere
-        implementation deps.spinKit
-    } else {
-        compileOnly deps.kotlinJre
-        compileOnly deps.support.app_compat
-        compileOnly deps.support.recyclerview
-
-        compileOnly project(':library')
-        compileOnly deps.rxjava2
-        compileOnly deps.rxAndroid
-        compileOnly deps.picasso
-        compileOnly deps.andPermission
-        compileOnly deps.transitionsEverywhere
-        compileOnly deps.spinKit
-    }
+    implementation project(':library')
     implementation project(':resource')
+
+    implementation deps.rxjava2
+    implementation deps.rxAndroid
+    implementation deps.picasso
+    implementation deps.andPermission
+    implementation deps.transitionsEverywhere
+    implementation deps.spinKit
 }
