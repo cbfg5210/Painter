@@ -29,6 +29,7 @@ class AutoDrawActivity : AppCompatActivity(),
         private val REQ_PICK_PHOTO = 2
         private val SP_OUTLINE_OBJ_PATH = "sp_outline_obj_path"
         private val SP_RECORD_TIP_VISIBLE = "sp_record_tip_visible"
+        private val SP_OUTLINE_TIP_VISIBLE = "sp_outline_tip_visible"
     }
 
     private var disposable: Disposable? = null
@@ -66,6 +67,13 @@ class AutoDrawActivity : AppCompatActivity(),
             }
         }
         homeWatcher.startWatch()
+
+        DialogUtils.showOnceHintDialog(this,
+                R.string.auto_draw,
+                R.string.auto_draw_tip,
+                R.string.got_it,
+                null,
+                SP_OUTLINE_TIP_VISIBLE)
     }
 
     private fun setListeners() {

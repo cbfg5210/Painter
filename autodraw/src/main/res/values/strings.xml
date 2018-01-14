@@ -32,4 +32,5 @@
     <string name="share_draw_video_tip">临摹视频录制完成，您可以通过下方的按钮进行预览和分享~</string>
     <string name="preview">预览</string>
     <string name="cancel">取消</string>
+    <string name="auto_draw_tip">欢迎使用轮廓临摹功能，点击画布即可开始/取消图片临摹，您可以通过设置菜单设置相关参数，通过分享菜单进行图片或视频的保存及分享</string>
 </resources>
