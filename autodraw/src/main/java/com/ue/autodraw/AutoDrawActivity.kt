@@ -125,7 +125,7 @@ class AutoDrawActivity : AppCompatActivity(),
         rvBgOptions.adapter = bgAdapter
 
         val paintAdapter = PaintAdapter(intArrayOf(
-                R.drawable.svg_pencil, R.drawable.svg_pen,
+                R.drawable.svg_pencil, R.drawable.svg_fountain_pen,
                 R.drawable.svg_blush, R.drawable.svg_feather))
         paintAdapter.itemListener = AdapterView.OnItemClickListener { _, _, imgRes, _ ->
             advOutline.setPaintBitmapRes(imgRes)
