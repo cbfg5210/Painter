@@ -2,4 +2,5 @@
     <string name="app_name">library</string>
     <string name="dont_show_next_time">下次不再显示</string>
     <string name="no_recording_perms">录制取消：没有授予录制相关权限</string>
+    <string name="share_to">分享到</string>
 </resources>

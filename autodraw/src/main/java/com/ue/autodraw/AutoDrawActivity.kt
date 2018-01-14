@@ -165,7 +165,7 @@ class AutoDrawActivity : AppCompatActivity(),
         }
         advOutline.saveOutlinePicture(object : FileUtils.OnSaveImageListener {
             override fun onSaved(path: String) {
-                IntentUtils.shareImage(this@AutoDrawActivity, null, null, path, getString(R.string.share_to))
+                IntentUtils.shareImage(this@AutoDrawActivity, null, null, path)
             }
         })
     }
@@ -221,8 +221,9 @@ class AutoDrawActivity : AppCompatActivity(),
                 Toast.makeText(this@AutoDrawActivity, R.string.cancel_record_video, Toast.LENGTH_SHORT).show()
             }
 
-            override fun onComplete() {
+            override fun onComplete(videoPath: String) {
                 Toast.makeText(this@AutoDrawActivity, R.string.complete_recording, Toast.LENGTH_SHORT).show()
+                ShareVideoDialog.newInstance(videoPath).show(supportFragmentManager, "")
             }
         }
     }

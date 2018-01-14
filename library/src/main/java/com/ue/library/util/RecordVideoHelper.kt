@@ -49,9 +49,10 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
     private var mMediaProjection: MediaProjection? = null
     private lateinit var mMediaProjectionCallback: MediaProjection.Callback
     private lateinit var mVirtualDisplay: VirtualDisplay
+
     var isRecording = false
     var recordVideoListener: RecordVideoListener? = null
-    private var savePath = ""
+    private var videoPath = ""
 
     init {
         val dm = activity.resources.displayMetrics
@@ -85,7 +86,7 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
     }
 
     fun startRecording() {
-        savePath = "${Environment.getExternalStorageDirectory().path}${Constants.PATH_AUTO_DRAW}${SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis())}.mp4"
+        videoPath = "${Environment.getExternalStorageDirectory().path}${Constants.PATH_AUTO_DRAW}${SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis())}.mp4"
         PermissionUtils.checkPermissions(activity,
                 PermissionUtils.REQ_PERM_READ_WRITE_STORAGE,
                 arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE),
@@ -106,7 +107,7 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
     fun finishRecording() {
         if (!isRecording) return
         stopRecoding()
-        recordVideoListener?.onComplete()
+        recordVideoListener?.onComplete(videoPath)
     }
 
     private fun stopRecoding() {
@@ -156,7 +157,7 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
         try {
             mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE)
             mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
-            mMediaRecorder.setOutputFile(savePath)
+            mMediaRecorder.setOutputFile(videoPath)
             mMediaRecorder.setVideoSize(displayWidth, displayHeight)
             mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264)
             mMediaRecorder.setVideoEncodingBitRate(512 * 1000)
@@ -173,6 +174,6 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
     interface RecordVideoListener {
         fun onStart()
         fun onCancel()
-        fun onComplete()
+        fun onComplete(videoPath: String)
     }
 }
