@@ -86,7 +86,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
     fun setBgBitmapRes(bgBitmapRes: Int) {
         this.bgBitmapRes = bgBitmapRes
-        clearCanvas()
+        resetCanvas()
     }
 
     fun setLineThickness(thickness: Int) {
@@ -242,7 +242,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         drawDisposable = Observable
                 .create(ObservableOnSubscribe<Any> { e ->
                     //绘制背景
-                    clearCanvas()
+                    resetCanvas()
                     //绘制轮廓
                     while (drawOutline()) {
                         try {
@@ -261,13 +261,14 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
                 })
     }
 
-    override fun surfaceCreated(holder: SurfaceHolder) {}
-
-    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-        clearCanvas()
+    override fun surfaceCreated(holder: SurfaceHolder) {
     }
 
-    fun clearCanvas() {
+    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+        resetCanvas()
+    }
+
+    fun resetCanvas() {
         if (bgBitmapRes > 0) {
             mTmpBm = BitmapUtils.getRatioBitmap(context, bgBitmapRes, measuredWidth, measuredHeight)
             mTmpBm = Bitmap.createScaledBitmap(mTmpBm, measuredWidth, measuredHeight, false)

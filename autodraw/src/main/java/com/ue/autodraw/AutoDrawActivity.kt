@@ -13,6 +13,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.RadioGroup
 import android.widget.Toast
+import com.ue.library.event.HomeWatcher
 import com.ue.library.util.*
 import com.ue.library.widget.LoadingDialog
 import io.reactivex.disposables.Disposable
@@ -35,6 +36,7 @@ class AutoDrawActivity : AppCompatActivity(),
     private var recordVideoHelper: RecordVideoHelper? = null
 
     private var readyThenDraw = true//when ready,true:draw,false:record
+    private lateinit var homeWatcher: HomeWatcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +48,27 @@ class AutoDrawActivity : AppCompatActivity(),
         rgTabs.check(R.id.rbTabObject)
 
         initRecyclerViews()
+        setListeners()
 
+        loadingDialog = LoadingDialog.newInstance()
+
+        val outlineObjPath = SPUtils.getString(SP_OUTLINE_OBJ_PATH, "")
+        if (TextUtils.isEmpty(outlineObjPath)) {
+            loadPhoto(R.drawable.test)
+        } else {
+            loadPhoto(outlineObjPath!!)
+        }
+
+        homeWatcher = HomeWatcher(this)
+        homeWatcher.homeListener = object : HomeWatcher.OnHomePressedListener {
+            override fun onHomePressed() {
+                advOutline.stopDrawing()
+            }
+        }
+        homeWatcher.startWatch()
+    }
+
+    private fun setListeners() {
         rgTabs.setOnCheckedChangeListener(this)
         ivObjectView.setOnClickListener(this)
         advOutline.setOnClickListener(this)
@@ -66,7 +88,11 @@ class AutoDrawActivity : AppCompatActivity(),
             }
 
             override fun onStop() {
-                Toast.makeText(this@AutoDrawActivity, R.string.cancel_draw, Toast.LENGTH_SHORT).show()
+                if (recordVideoHelper != null && recordVideoHelper!!.isRecording) {
+                    recordVideoHelper!!.cancelRecording()
+                } else {
+                    Toast.makeText(this@AutoDrawActivity, R.string.cancel_draw, Toast.LENGTH_SHORT).show()
+                }
             }
 
             override fun onComplete() {
@@ -75,32 +101,6 @@ class AutoDrawActivity : AppCompatActivity(),
                 }
             }
         }
-
-        loadingDialog = LoadingDialog.newInstance()
-
-        val outlineObjPath = SPUtils.getString(SP_OUTLINE_OBJ_PATH, "")
-        if (TextUtils.isEmpty(outlineObjPath)) {
-            loadPhoto(R.drawable.test)
-        } else {
-            loadPhoto(outlineObjPath!!)
-        }
-    }
-
-    private fun loadPhoto(photo: Any) {
-        loadingDialog.showLoading(supportFragmentManager, getString(R.string.is_preparing))
-
-        ImageLoaderUtils.display(this, ivObjectView, photo, R.drawable.test,
-                object : ImageLoaderUtils.ImageLoaderCallback {
-                    override fun onBitmapLoaded(bitmap: Bitmap) {
-                        advOutline.setOutlineObject(bitmap)
-                    }
-
-                    override fun onBitmapFailed(errorBitmap: Bitmap?) {
-                        if (errorBitmap != null) {
-                            advOutline.setOutlineObject(errorBitmap)
-                        }
-                    }
-                })
     }
 
     private fun initRecyclerViews() {
@@ -136,59 +136,67 @@ class AutoDrawActivity : AppCompatActivity(),
     override fun onClick(v: View) {
         when (v.id) {
             R.id.ivObjectView -> pickPhoto()
-            R.id.advOutline -> {
-                if (vgShare.visibility == View.VISIBLE) {
-                    vgShare.visibility = View.GONE
-                    return
-                }
-                if (vgDrawSettings.visibility == View.VISIBLE) {
-                    vgDrawSettings.visibility = View.GONE
-                    return
-                }
-                if (!advOutline.isReadyToDraw) {
-                    loadingDialog.showLoading(supportFragmentManager, getString(R.string.is_preparing))
-                    return
-                }
-                if (advOutline.isDrawing) {
-                    advOutline.stopDrawing()
-                    if (recordVideoHelper != null && recordVideoHelper!!.isRecording) {
-                        recordVideoHelper!!.cancelRecording()
-                        Toast.makeText(this, R.string.cancel_record_video, Toast.LENGTH_SHORT).show()
-                    }
-                    return
-                }
-
-                advOutline.startDrawing()
-            }
-            R.id.tvShareDrawPicture -> {
-                vgShare.visibility = View.GONE
-                readyThenDraw = true
-                if (!advOutline.isCanSave) {
-                    Toast.makeText(this, R.string.no_outline_to_save, Toast.LENGTH_SHORT).show()
-                    return
-                }
-                advOutline.saveOutlinePicture(object : FileUtils.OnSaveImageListener {
-                    override fun onSaved(path: String) {
-                        IntentUtils.shareImage(this@AutoDrawActivity, null, null, path, getString(R.string.share_to))
-                    }
-                })
-            }
-            R.id.tvShareDrawVideo -> {
-                vgShare.visibility = View.GONE
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                    Toast.makeText(this, R.string.cannot_share_video_version, Toast.LENGTH_SHORT).show()
-                    return
-                }
-                readyThenDraw = false
-                if (!advOutline.isCanSave) {
-                    loadingDialog.showLoading(supportFragmentManager, getString(R.string.is_preparing))
-                    return
-                }
-                recordDrawVideo()
-            }
+            R.id.advOutline -> onOutlineClick()
+            R.id.tvShareDrawPicture -> onShareDrawPictureClick()
+            R.id.tvShareDrawVideo -> onShareDrawVideoClick()
         }
     }
 
+    private fun onShareDrawVideoClick() {
+        vgShare.visibility = View.GONE
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            Toast.makeText(this, R.string.cannot_share_video_version, Toast.LENGTH_SHORT).show()
+            return
+        }
+        readyThenDraw = false
+        if (!advOutline.isCanSave) {
+            loadingDialog.showLoading(supportFragmentManager, getString(R.string.is_preparing))
+            return
+        }
+        recordDrawVideo()
+    }
+
+    private fun onShareDrawPictureClick() {
+        vgShare.visibility = View.GONE
+        readyThenDraw = true
+        if (!advOutline.isCanSave) {
+            Toast.makeText(this, R.string.no_outline_to_save, Toast.LENGTH_SHORT).show()
+            return
+        }
+        advOutline.saveOutlinePicture(object : FileUtils.OnSaveImageListener {
+            override fun onSaved(path: String) {
+                IntentUtils.shareImage(this@AutoDrawActivity, null, null, path, getString(R.string.share_to))
+            }
+        })
+    }
+
+    private fun onOutlineClick() {
+        if (vgShare.visibility == View.VISIBLE) {
+            vgShare.visibility = View.GONE
+            return
+        }
+        if (vgDrawSettings.visibility == View.VISIBLE) {
+            vgDrawSettings.visibility = View.GONE
+            return
+        }
+        if (!advOutline.isReadyToDraw) {
+            loadingDialog.showLoading(supportFragmentManager, getString(R.string.is_preparing))
+            return
+        }
+        if (advOutline.isDrawing) {
+            advOutline.stopDrawing()
+            if (recordVideoHelper != null && recordVideoHelper!!.isRecording) {
+                recordVideoHelper!!.cancelRecording()
+                Toast.makeText(this, R.string.cancel_record_video, Toast.LENGTH_SHORT).show()
+            }
+            return
+        }
+        advOutline.startDrawing()
+    }
+
+    /**
+     * 录制视频相关
+     */
     private fun recordDrawVideo() {
         DialogUtils.showOnceHintDialog(this,
                 R.string.record_draw_video_title,
@@ -196,7 +204,7 @@ class AutoDrawActivity : AppCompatActivity(),
                 R.string.got_it,
                 View.OnClickListener {
                     if (recordVideoHelper == null) initRecordVideoHelper()
-                    advOutline.clearCanvas()
+                    advOutline.resetCanvas()
                     recordVideoHelper!!.startRecording()
                 },
                 SP_RECORD_TIP_VISIBLE)
@@ -218,6 +226,8 @@ class AutoDrawActivity : AppCompatActivity(),
             }
         }
     }
+
+    /****/
 
     override fun onCheckedChanged(group: RadioGroup, checkedId: Int) {
         vgTabContentFlipper.displayedChild = group.indexOfChild(group.findViewById<View>(checkedId))
@@ -253,6 +263,25 @@ class AutoDrawActivity : AppCompatActivity(),
         return true
     }
 
+    /*
+    * 图片相关
+    * */
+    private fun loadPhoto(photo: Any) {
+        readyThenDraw = true
+        ImageLoaderUtils.display(this, ivObjectView, photo, R.drawable.test,
+                object : ImageLoaderUtils.ImageLoaderCallback {
+                    override fun onBitmapLoaded(bitmap: Bitmap) {
+                        advOutline.setOutlineObject(bitmap)
+                    }
+
+                    override fun onBitmapFailed(errorBitmap: Bitmap?) {
+                        if (errorBitmap != null) {
+                            advOutline.setOutlineObject(errorBitmap)
+                        }
+                    }
+                })
+    }
+
     private fun pickPhoto() {
         PermissionUtils.checkReadWriteStoragePerms(this,
                 getString(R.string.no_read_storage_perm),
@@ -263,6 +292,8 @@ class AutoDrawActivity : AppCompatActivity(),
                 }
         )
     }
+
+    /*******/
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -290,16 +321,13 @@ class AutoDrawActivity : AppCompatActivity(),
             advOutline.stopDrawing()
             return
         }
-        if (recordVideoHelper != null && recordVideoHelper!!.isRecording) {
-            recordVideoHelper!!.cancelRecording()
-            return
-        }
         super.onBackPressed()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         recordVideoHelper?.destroyMediaProjection()
+        homeWatcher.stopWatch()
         RxJavaUtils.dispose(disposable)
     }
 }
