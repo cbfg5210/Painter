@@ -47,7 +47,7 @@ class LoadingDialog() : DialogFragment() {
 
     fun showLoading(manager: FragmentManager?, loadingTip: String) {
         this.loadingTip = loadingTip
-        if (!isAdded) show(manager, "")
         if (isAdded) rootView.tvLoadingTip.text = loadingTip
+        else show(manager, "")
     }
 }

@@ -9,6 +9,7 @@ import android.view.SurfaceView
 import com.ue.library.constant.Constants
 import com.ue.library.util.BitmapUtils
 import com.ue.library.util.FileUtils
+import com.ue.library.util.PermissionUtils
 import com.ue.library.util.RxJavaUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
@@ -203,8 +204,14 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     fun saveOutlinePicture(saveListener: FileUtils.OnSaveImageListener) {
         if (!isCanSave) return
 
-        val path = Environment.getExternalStorageDirectory().path + Constants.PATH_AUTO_DRAW
-        FileUtils.saveImageLocally(context, mTmpBm!!, path, "$bitmapName.png", saveListener)
+        PermissionUtils.checkReadWriteStoragePerms(context,
+                context.getString(R.string.no_read_storage_perm),
+                object : PermissionUtils.SimplePermissionListener {
+                    override fun onSucceed(requestCode: Int, grantPermissions: List<String>) {
+                        val path = Environment.getExternalStorageDirectory().path + Constants.PATH_AUTO_DRAW
+                        FileUtils.saveImageLocally(context, mTmpBm!!, path, "$bitmapName.png", saveListener)
+                    }
+                })
     }
 
     fun stopDrawing() {

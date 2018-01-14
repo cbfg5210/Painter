@@ -1,6 +1,5 @@
 package com.ue.autodraw
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
@@ -15,7 +14,6 @@ import android.widget.RadioGroup
 import android.widget.Toast
 import com.ue.library.util.*
 import com.ue.library.widget.LoadingDialog
-import com.yanzhenjie.permission.PermissionListener
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_auto_draw.*
 import kotlinx.android.synthetic.main.layout_auto_draw_settings.*
@@ -26,7 +24,6 @@ class AutoDrawActivity : AppCompatActivity(),
         NumberSelectorView.OnNumberChangeListener {
 
     companion object {
-        private val REQ_PERM_EXTERNAL = 1
         private val REQ_PICK_PHOTO = 2
         private val SP_OUTLINE_OBJ_PATH = "sp_outline_obj_path"
     }
@@ -200,18 +197,14 @@ class AutoDrawActivity : AppCompatActivity(),
     }
 
     private fun pickPhoto() {
-        PermissionUtils.checkPermission(this,
-                REQ_PERM_EXTERNAL,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                object : PermissionListener {
-                    override fun onSucceed(requestCode: Int, grantPermissions: MutableList<String>) {
-                        startActivityForResult(Intent.createChooser(Intent(Intent.ACTION_GET_CONTENT).setType("image/*"), getString(R.string.choose_photo)), REQ_PICK_PHOTO)
+        PermissionUtils.checkReadWriteStoragePerms(this,
+                getString(R.string.no_read_storage_perm),
+                object : PermissionUtils.SimplePermissionListener {
+                    override fun onSucceed(requestCode: Int, grantPermissions: List<String>) {
+                        startActivityForResult(Intent.createChooser(Intent(Intent.ACTION_GET_CONTENT).setType("image*//*"), getString(R.string.choose_photo)), REQ_PICK_PHOTO)
                     }
-
-                    override fun onFailed(requestCode: Int, deniedPermissions: MutableList<String>) {
-                        Toast.makeText(this@AutoDrawActivity, R.string.no_read_storage_perm, Toast.LENGTH_SHORT).show()
-                    }
-                })
+                }
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
