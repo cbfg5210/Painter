@@ -151,13 +151,13 @@ class AutoDrawActivity : AppCompatActivity(),
                 }
                 if (advOutline.isDrawing) {
                     advOutline.stopDrawing()
+                    if (recordVideoHelper != null && recordVideoHelper!!.isRecording) {
+                        recordVideoHelper!!.cancelRecording()
+                        Toast.makeText(this, R.string.cancel_record_video, Toast.LENGTH_SHORT).show()
+                    }
                     return
                 }
-                if (recordVideoHelper != null && recordVideoHelper!!.isRecording) {
-                    recordVideoHelper!!.cancelRecording()
-                    Toast.makeText(this, R.string.cancel_record_video, Toast.LENGTH_SHORT).show()
-                    return
-                }
+
                 advOutline.startDrawing()
             }
             R.id.tvShareDrawPicture -> {
@@ -299,6 +299,7 @@ class AutoDrawActivity : AppCompatActivity(),
 
     override fun onDestroy() {
         super.onDestroy()
+        recordVideoHelper?.destroyMediaProjection()
         RxJavaUtils.dispose(disposable)
     }
 }
