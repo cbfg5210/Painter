@@ -296,7 +296,7 @@ class AutoDrawActivity : AppCompatActivity(),
                 getString(R.string.no_read_storage_perm),
                 object : PermissionUtils.SimplePermissionListener {
                     override fun onSucceed(requestCode: Int, grantPermissions: List<String>) {
-                        startActivityForResult(Intent.createChooser(Intent(Intent.ACTION_GET_CONTENT).setType("image*//*"), getString(R.string.choose_photo)), REQ_PICK_PHOTO)
+                        startActivityForResult(Intent.createChooser(Intent(Intent.ACTION_GET_CONTENT).setType("image/*"), getString(R.string.choose_photo)), REQ_PICK_PHOTO)
                     }
                 }
         )
