@@ -84,10 +84,7 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
         mMediaProjection!!.registerCallback(mMediaProjectionCallback, null)
         initRecorder()
 
-        Observable.timer(100, TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.single())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { recordVideo() }
+        recordVideo()
     }
 
     fun startRecording() {
@@ -142,16 +139,22 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
             return
         }
         ActivityUtils.toggleFullScreen(activity, true)
-        /*设置output path*/
-        mMediaRecorder.setOutputFile(savePath)
-        mMediaRecorder.prepare()
-        /**/
-        mVirtualDisplay = createVirtualDisplay()
-        mMediaRecorder.start()
+        //全屏过程会有一段时间，避免录入全屏过程及对绘制轮廓的影响
+        Observable.timer(300, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.single())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    /*设置output path*/
+                    mMediaRecorder.setOutputFile(savePath)//prepare()后不能再设置
+                    mMediaRecorder.prepare()
+                    /**/
+                    mVirtualDisplay = createVirtualDisplay()
+                    mMediaRecorder.start()
 
-        recordVideoListener?.onStart()
+                    recordVideoListener?.onStart()
 
-        isRecording = true
+                    isRecording = true
+                }
     }
 
     private fun initRecorder() {

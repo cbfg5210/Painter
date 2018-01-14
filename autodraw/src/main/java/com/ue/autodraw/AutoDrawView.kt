@@ -281,7 +281,6 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         }
         val canvas = holder.lockCanvas()
         canvas.drawBitmap(mTmpBm, 0f, 0f, mPaint)
-        canvas.drawPicture(Picture())
         holder.unlockCanvasAndPost(canvas)
         //设置回轮廓画笔
         mPaint.style = Paint.Style.STROKE

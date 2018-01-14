@@ -34,6 +34,8 @@ class AutoDrawActivity : AppCompatActivity(),
     private lateinit var loadingDialog: LoadingDialog
     private var recordVideoHelper: RecordVideoHelper? = null
 
+    private var readyThenDraw = true//when ready,true:draw,false:record
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auto_draw)
@@ -56,10 +58,11 @@ class AutoDrawActivity : AppCompatActivity(),
         advOutline.autoDrawListener = object : AutoDrawView.OnAutoDrawListener {
 
             override fun onReady() {
-                if (loadingDialog.isAdded) {
-                    advOutline.startDrawing()
-                }
+                if (!loadingDialog.isAdded) return
+
                 loadingDialog.dismiss()
+                if (readyThenDraw) advOutline.startDrawing()
+                else recordDrawVideo()
             }
 
             override fun onStop() {
@@ -159,6 +162,7 @@ class AutoDrawActivity : AppCompatActivity(),
             }
             R.id.tvShareDrawPicture -> {
                 vgShare.visibility = View.GONE
+                readyThenDraw = true
                 if (!advOutline.isCanSave) {
                     Toast.makeText(this, R.string.no_outline_to_save, Toast.LENGTH_SHORT).show()
                     return
@@ -175,22 +179,27 @@ class AutoDrawActivity : AppCompatActivity(),
                     Toast.makeText(this, R.string.cannot_share_video_version, Toast.LENGTH_SHORT).show()
                     return
                 }
+                readyThenDraw = false
                 if (!advOutline.isCanSave) {
-                    Toast.makeText(this, R.string.not_ready_record_video, Toast.LENGTH_SHORT).show()
+                    loadingDialog.showLoading(supportFragmentManager, getString(R.string.is_preparing))
                     return
                 }
-                DialogUtils.showOnceHintDialog(this,
-                        R.string.record_draw_video_title,
-                        R.string.record_draw_video_tip,
-                        R.string.got_it,
-                        View.OnClickListener {
-                            if (recordVideoHelper == null) initRecordVideoHelper()
-                            advOutline.clearCanvas()
-                            recordVideoHelper!!.startRecording()
-                        },
-                        SP_RECORD_TIP_VISIBLE)
+                recordDrawVideo()
             }
         }
+    }
+
+    private fun recordDrawVideo() {
+        DialogUtils.showOnceHintDialog(this,
+                R.string.record_draw_video_title,
+                R.string.record_draw_video_tip,
+                R.string.got_it,
+                View.OnClickListener {
+                    if (recordVideoHelper == null) initRecordVideoHelper()
+                    advOutline.clearCanvas()
+                    recordVideoHelper!!.startRecording()
+                },
+                SP_RECORD_TIP_VISIBLE)
     }
 
     private fun initRecordVideoHelper() {
