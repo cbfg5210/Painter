@@ -14,6 +14,7 @@ import android.widget.AdapterView
 import android.widget.RadioGroup
 import android.widget.Toast
 import com.ue.library.util.*
+import com.ue.library.widget.LoadingDialog
 import com.yanzhenjie.permission.PermissionListener
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_auto_draw.*
@@ -24,13 +25,14 @@ class AutoDrawActivity : AppCompatActivity(),
         RadioGroup.OnCheckedChangeListener,
         NumberSelectorView.OnNumberChangeListener {
 
-    private var disposable: Disposable? = null
-
     companion object {
         private val REQ_PERM_EXTERNAL = 1
         private val REQ_PICK_PHOTO = 2
         private val SP_OUTLINE_OBJ_PATH = "sp_outline_obj_path"
     }
+
+    private var disposable: Disposable? = null
+    private lateinit var loadingDialog: LoadingDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,26 +54,19 @@ class AutoDrawActivity : AppCompatActivity(),
         nsDelaySpeed.setNumberChangeListener(this)
 
         advOutline.autoDrawListener = object : AutoDrawView.OnAutoDrawListener {
-            override fun onPrepare() {
-                Toast.makeText(this@AutoDrawActivity, "绘制前准备", Toast.LENGTH_SHORT).show()
-            }
-
             override fun onReady() {
-                Toast.makeText(this@AutoDrawActivity, "准备就绪", Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onStart() {
-                Toast.makeText(this@AutoDrawActivity, "开始绘制", Toast.LENGTH_SHORT).show()
+                if (loadingDialog.isAdded) {
+                    advOutline.startDrawing()
+                }
+                loadingDialog.dismiss()
             }
 
             override fun onStop() {
-                Toast.makeText(this@AutoDrawActivity, "取消绘制", Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onComplete() {
-                Toast.makeText(this@AutoDrawActivity, "分享图片或视频", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@AutoDrawActivity, R.string.cancel_draw, Toast.LENGTH_SHORT).show()
             }
         }
+
+        loadingDialog = LoadingDialog.newInstance()
 
         val outlineObjPath = SPUtils.getString(SP_OUTLINE_OBJ_PATH, "")
         if (TextUtils.isEmpty(outlineObjPath)) {
@@ -82,6 +77,8 @@ class AutoDrawActivity : AppCompatActivity(),
     }
 
     private fun loadPhoto(photo: Any) {
+        loadingDialog.showLoading(supportFragmentManager, getString(R.string.is_preparing))
+
         ImageLoaderUtils.display(this, ivObjectView, photo, R.drawable.test,
                 object : ImageLoaderUtils.ImageLoaderCallback {
                     override fun onBitmapLoaded(bitmap: Bitmap) {
@@ -130,11 +127,17 @@ class AutoDrawActivity : AppCompatActivity(),
         when (v.id) {
             R.id.ivObjectView -> pickPhoto()
             R.id.advOutline -> {
-                if (vgShare.visibility == View.VISIBLE) vgShare.visibility = View.GONE
-                if (vgDrawSettings.visibility == View.VISIBLE) vgDrawSettings.visibility = View.GONE
+                if (vgShare.visibility == View.VISIBLE) {
+                    vgShare.visibility = View.GONE
+                    return
+                }
+                if (vgDrawSettings.visibility == View.VISIBLE) {
+                    vgDrawSettings.visibility = View.GONE
+                    return
+                }
 
                 if (!advOutline.isReadyToDraw) {
-                    Toast.makeText(this, "not ready", Toast.LENGTH_SHORT).show()
+                    loadingDialog.showLoading(supportFragmentManager, getString(R.string.is_preparing))
                     return
                 }
                 if (advOutline.isDrawing) {
@@ -144,6 +147,7 @@ class AutoDrawActivity : AppCompatActivity(),
                 advOutline.startDrawing()
             }
             R.id.tvShareDrawPicture -> {
+                vgShare.visibility = View.GONE
                 if (!advOutline.isCanSave) {
                     Toast.makeText(this, R.string.no_outline_to_save, Toast.LENGTH_SHORT).show()
                     return
@@ -154,7 +158,10 @@ class AutoDrawActivity : AppCompatActivity(),
                     }
                 })
             }
-            R.id.tvShareDrawVideo -> Toast.makeText(this, "share video", Toast.LENGTH_SHORT).show()
+            R.id.tvShareDrawVideo -> {
+                vgShare.visibility = View.GONE
+                Toast.makeText(this, "share video", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

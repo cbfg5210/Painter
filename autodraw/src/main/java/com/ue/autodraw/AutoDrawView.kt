@@ -104,7 +104,6 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         RxJavaUtils.dispose(loadDisposable)
 
         this.bitmapName = SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis())
-        autoDrawListener?.onPrepare()
 
         loadDisposable = Observable
                 .create(ObservableOnSubscribe<Bitmap> { e ->
@@ -238,22 +237,18 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
                     //绘制背景
                     resetBgBitmap()
                     //绘制轮廓
-                    while (isDrawing) {
-                        isDrawing = drawOutline()
+                    while (drawOutline()) {
                         try {
                             Thread.sleep(delaySpeed)
                         } catch (exp: InterruptedException) {
                         }
                     }
                     isDrawing = false
-                    e.onNext(1)
                     e.onComplete()
                 })
                 .subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    autoDrawListener?.onComplete()
-                })
+                .subscribe()
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) {}
@@ -290,10 +285,11 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     }
 
     interface OnAutoDrawListener {
-        fun onPrepare()
+        //fun onPrepare()
         fun onReady()
-        fun onStart()
+
+        //fun onStart()
         fun onStop()
-        fun onComplete()
+        //fun onComplete()
     }
 }

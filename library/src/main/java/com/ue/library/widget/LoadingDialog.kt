@@ -29,7 +29,7 @@ class LoadingDialog() : DialogFragment() {
     private var loadingTip = ""
         set(value) {
             field = value
-            if (isVisible) {
+            if (isAdded) {
                 rootView.tvLoadingTip.text = value
             }
         }
@@ -38,9 +38,8 @@ class LoadingDialog() : DialogFragment() {
         rootView = LayoutInflater.from(context).inflate(R.layout.dialog_loading, null)
         rootView.tvLoadingTip.text = loadingTip
 
-        val dialog = AlertDialog.Builder(context)
-                .setView(rootView)
-                .create()
+        val dialog = AlertDialog.Builder(context).setView(rootView).create()
+        dialog.setCanceledOnTouchOutside(false)
         dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         return dialog
@@ -48,9 +47,7 @@ class LoadingDialog() : DialogFragment() {
 
     fun showLoading(manager: FragmentManager?, loadingTip: String) {
         this.loadingTip = loadingTip
-        show(manager, "")
-        if (isVisible) {
-            rootView.tvLoadingTip.text = loadingTip
-        }
+        if (!isAdded) show(manager, "")
+        if (isAdded) rootView.tvLoadingTip.text = loadingTip
     }
 }
