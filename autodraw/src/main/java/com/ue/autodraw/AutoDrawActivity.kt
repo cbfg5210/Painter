@@ -54,6 +54,7 @@ class AutoDrawActivity : AppCompatActivity(),
         nsDelaySpeed.setNumberChangeListener(this)
 
         advOutline.autoDrawListener = object : AutoDrawView.OnAutoDrawListener {
+
             override fun onReady() {
                 if (loadingDialog.isAdded) {
                     advOutline.startDrawing()
@@ -63,6 +64,12 @@ class AutoDrawActivity : AppCompatActivity(),
 
             override fun onStop() {
                 Toast.makeText(this@AutoDrawActivity, R.string.cancel_draw, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onComplete() {
+                if (recordVideoHelper != null && recordVideoHelper!!.isRecording) {
+                    recordVideoHelper!!.finishRecording()
+                }
             }
         }
 
@@ -144,7 +151,7 @@ class AutoDrawActivity : AppCompatActivity(),
                     return
                 }
                 if (recordVideoHelper != null && recordVideoHelper!!.isRecording) {
-                    recordVideoHelper!!.stopRecording()
+                    recordVideoHelper!!.cancelRecording()
                     Toast.makeText(this, R.string.cancel_record_video, Toast.LENGTH_SHORT).show()
                     return
                 }
@@ -177,17 +184,28 @@ class AutoDrawActivity : AppCompatActivity(),
                         R.string.record_draw_video_tip,
                         R.string.got_it,
                         View.OnClickListener {
-                            if (recordVideoHelper == null) {
-                                recordVideoHelper = RecordVideoHelper(this)
-                                recordVideoHelper!!.recordVideoListener = object : RecordVideoHelper.RecordVideoListener {
-                                    override fun onStart() {
-                                        advOutline.startDrawing()
-                                    }
-                                }
-                            }
+                            if (recordVideoHelper == null) initRecordVideoHelper()
+                            advOutline.clearCanvas()
                             recordVideoHelper!!.startRecording()
                         },
                         SP_RECORD_TIP_VISIBLE)
+            }
+        }
+    }
+
+    private fun initRecordVideoHelper() {
+        recordVideoHelper = RecordVideoHelper(this)
+        recordVideoHelper!!.recordVideoListener = object : RecordVideoHelper.RecordVideoListener {
+            override fun onStart() {
+                advOutline.startDrawing()
+            }
+
+            override fun onCancel() {
+                Toast.makeText(this@AutoDrawActivity, R.string.cancel_record_video, Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onComplete() {
+                Toast.makeText(this@AutoDrawActivity, R.string.complete_recording, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -264,8 +282,7 @@ class AutoDrawActivity : AppCompatActivity(),
             return
         }
         if (recordVideoHelper != null && recordVideoHelper!!.isRecording) {
-            recordVideoHelper!!.stopRecording()
-            Toast.makeText(this, R.string.cancel_record_video, Toast.LENGTH_SHORT).show()
+            recordVideoHelper!!.cancelRecording()
             return
         }
         super.onBackPressed()

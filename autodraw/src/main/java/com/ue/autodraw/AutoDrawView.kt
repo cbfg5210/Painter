@@ -86,7 +86,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
     fun setBgBitmapRes(bgBitmapRes: Int) {
         this.bgBitmapRes = bgBitmapRes
-        resetBgBitmap()
+        clearCanvas()
     }
 
     fun setLineThickness(thickness: Int) {
@@ -242,7 +242,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         drawDisposable = Observable
                 .create(ObservableOnSubscribe<Any> { e ->
                     //绘制背景
-                    resetBgBitmap()
+                    clearCanvas()
                     //绘制轮廓
                     while (drawOutline()) {
                         try {
@@ -251,20 +251,23 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
                         }
                     }
                     isDrawing = false
+                    e.onNext(1)
                     e.onComplete()
                 })
                 .subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe()
+                .subscribe({
+                    autoDrawListener?.onComplete()
+                })
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) {}
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-        resetBgBitmap()
+        clearCanvas()
     }
 
-    private fun resetBgBitmap() {
+    fun clearCanvas() {
         if (bgBitmapRes > 0) {
             mTmpBm = BitmapUtils.getRatioBitmap(context, bgBitmapRes, measuredWidth, measuredHeight)
             mTmpBm = Bitmap.createScaledBitmap(mTmpBm, measuredWidth, measuredHeight, false)
@@ -297,6 +300,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
         //fun onStart()
         fun onStop()
-        //fun onComplete()
+
+        fun onComplete()
     }
 }

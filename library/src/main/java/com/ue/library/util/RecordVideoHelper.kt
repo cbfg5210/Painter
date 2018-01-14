@@ -18,7 +18,13 @@ import android.util.SparseIntArray
 import android.view.Surface
 import android.widget.Toast
 import com.ue.library.R
+import com.ue.library.constant.Constants
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.concurrent.TimeUnit
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 class RecordVideoHelper(private val activity: AppCompatActivity) {
@@ -46,6 +52,7 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
     private lateinit var mVirtualDisplay: VirtualDisplay
     var isRecording = false
     var recordVideoListener: RecordVideoListener? = null
+    private var savePath = ""
 
     init {
         val dm = activity.resources.displayMetrics
@@ -70,17 +77,21 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
                 Log.e("RecordVideoHelper", "onStop: Recording Stopped")
                 mMediaRecorder.stop()
                 mMediaRecorder.reset()
-                stopRecording()
+                cancelRecording()
             }
         }
         mMediaProjection = mProjectionManager.getMediaProjection(resultCode, data)
         mMediaProjection!!.registerCallback(mMediaProjectionCallback, null)
         initRecorder()
 
-        recordVideo()
+        Observable.timer(100, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.single())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { recordVideo() }
     }
 
     fun startRecording() {
+        savePath = "${Environment.getExternalStorageDirectory().path}${Constants.PATH_AUTO_DRAW}${SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis())}.mp4"
         PermissionUtils.checkPermissions(activity,
                 PermissionUtils.REQ_PERM_READ_WRITE_STORAGE,
                 arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE),
@@ -92,8 +103,20 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
                 })
     }
 
-    fun stopRecording() {
-        Log.e("RecordVideoHelper", "stopRecording: ")
+    fun cancelRecording() {
+        Log.e("RecordVideoHelper", "cancelRecording: ")
+        if (!isRecording) return
+        stopRecoding()
+        recordVideoListener?.onCancel()
+    }
+
+    fun finishRecording() {
+        if (!isRecording) return
+        stopRecoding()
+        recordVideoListener?.onComplete()
+    }
+
+    private fun stopRecoding() {
         ActivityUtils.toggleFullScreen(activity, false)
         mMediaRecorder.stop()
         mMediaRecorder.reset()
@@ -106,32 +129,36 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
         isRecording = false
     }
 
+    private fun createVirtualDisplay(): VirtualDisplay {
+        return mMediaProjection!!.createVirtualDisplay("recordDrawVideo",
+                DISPLAY_WIDTH, DISPLAY_HEIGHT, mScreenDensity,
+                DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
+                mMediaRecorder.surface, null, null)/*Callbacks*/
+    }
+
     private fun recordVideo() {
         if (mMediaProjection == null) {
             activity.startActivityForResult(mProjectionManager.createScreenCaptureIntent(), REQ_RECORD_VIDEO)
             return
         }
         ActivityUtils.toggleFullScreen(activity, true)
+        /*设置output path*/
+        mMediaRecorder.setOutputFile(savePath)
+        mMediaRecorder.prepare()
+        /**/
         mVirtualDisplay = createVirtualDisplay()
         mMediaRecorder.start()
 
-        isRecording = true
         recordVideoListener?.onStart()
-    }
 
-    private fun createVirtualDisplay(): VirtualDisplay {
-        return mMediaProjection!!.createVirtualDisplay("MainActivity",
-                DISPLAY_WIDTH, DISPLAY_HEIGHT, mScreenDensity,
-                DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
-                mMediaRecorder.surface, null, null
-                /*Handler*/)/*Callbacks*/
+        isRecording = true
     }
 
     private fun initRecorder() {
         try {
             mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE)
             mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
-            mMediaRecorder.setOutputFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/video.mp4")
+            //mMediaRecorder.setOutputFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/video.mp4")
             mMediaRecorder.setVideoSize(DISPLAY_WIDTH, DISPLAY_HEIGHT)
             mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264)
             mMediaRecorder.setVideoEncodingBitRate(512 * 1000)
@@ -139,7 +166,6 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
             val rotation = activity.windowManager.defaultDisplay.rotation
             val orientation = ORIENTATIONS.get(rotation + 90)
             mMediaRecorder.setOrientationHint(orientation)
-            mMediaRecorder.prepare()
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -147,5 +173,7 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
 
     interface RecordVideoListener {
         fun onStart()
+        fun onCancel()
+        fun onComplete()
     }
 }
