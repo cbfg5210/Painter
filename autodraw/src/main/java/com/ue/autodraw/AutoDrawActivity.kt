@@ -67,7 +67,11 @@ class AutoDrawActivity : AppCompatActivity(),
             }
         }
         homeWatcher.startWatch()
+    }
 
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        
         DialogUtils.showOnceHintDialog(this,
                 R.string.auto_draw,
                 R.string.auto_draw_tip,
