@@ -10,7 +10,7 @@ class CrossFillStep
 /**
  * for CrossFillStep
  */
-(pelList: List<Pel>, pel: Pel, //初始色（若为白色，则undo的时候恢复成背景色；若为非白色，则undo的时候恢复成该色）
+(pelList: MutableList<Pel>, pel: Pel, //初始色（若为白色，则undo的时候恢复成背景色；若为非白色，则undo的时候恢复成该色）
  var initColor: Int, //填充色
  var fillColor: Int, //扫描线链表
  var scanLinesList: List<ScanLine>) : Step(pelList, pel)

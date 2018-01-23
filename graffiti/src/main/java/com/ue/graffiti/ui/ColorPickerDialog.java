@@ -14,7 +14,7 @@ import com.larswerkman.holocolorpicker.SaturationBar;
 import com.larswerkman.holocolorpicker.ValueBar;
 import com.ue.graffiti.R;
 import com.ue.graffiti.constant.SPKeys;
-import com.ue.graffiti.util.SPUtils;
+import com.ue.library.util.SPUtils;
 
 //调色板对话框
 public class ColorPickerDialog extends DialogFragment {
@@ -47,7 +47,7 @@ public class ColorPickerDialog extends DialogFragment {
         picker.addSaturationBar(saturationBar);
         picker.addValueBar(valueBar);
 
-        int lastColor = SPUtils.getInt(SPKeys.INSTANCE.getSP_PAINT_COLOR(), getResources().getColor(R.color.col_298ecb));
+        int lastColor = SPUtils.Companion.getInt(SPKeys.INSTANCE.getSP_PAINT_COLOR(), getResources().getColor(R.color.col_298ecb));
         picker.setColor(lastColor);
 
         contentView.findViewById(R.id.ivPickColor).setOnClickListener(v -> {

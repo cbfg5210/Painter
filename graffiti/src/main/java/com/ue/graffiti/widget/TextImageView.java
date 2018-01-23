@@ -171,7 +171,7 @@ public class TextImageView extends View {
 
     public void setContentAndCenterPoint(int contentId) {
         this.contentId = contentId;
-        TouchUtils.ensureBitmapRecycled(imageContent);
+        TouchUtils.INSTANCE.ensureBitmapRecycled(imageContent);
         this.imageContent = BitmapFactory.decodeResource(getContext().getResources(), contentId);
         centerPoint.set(textPoint.x + imageContent.getWidth() / 2, textPoint.y + imageContent.getHeight() / 2);
     }

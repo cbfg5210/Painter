@@ -90,9 +90,9 @@ public class TransformTouch extends Touch {
         // 敲定该图元
         mSimpleTouchListener.setSelectedPel(selectedPel = minDisPel);
         //计算选中图元的中心点
-        centerPoint.set(TouchUtils.calPelCenterPoint(selectedPel));
+        centerPoint.set(TouchUtils.INSTANCE.calPelCenterPoint(selectedPel));
         // 获取选中图元的初始matrix
-        savedMatrix.set(TouchUtils.calPelSavedMatrix(selectedPel));
+        savedMatrix.set(TouchUtils.INSTANCE.calPelSavedMatrix(selectedPel));
         //由已知信息构造该步骤
         //设置该步骤对应图元
         step = new TransformPelStep(pelList, clipRegion, selectedPel);
@@ -107,7 +107,7 @@ public class TransformTouch extends Touch {
     // 第二只手指按下
     @Override
     public void down2() {
-        oriDist = TouchUtils.distance(curPoint, secPoint);
+        oriDist = TouchUtils.INSTANCE.distance(curPoint, secPoint);
         if (oriDist > GestureFlags.INSTANCE.getMIN_ZOOM() && selectedPel != null) {
             // 距离小于50px才算是缩放
             takeOverSelectedPel();
@@ -142,7 +142,7 @@ public class TransformTouch extends Touch {
         }
         if (mode == GestureFlags.INSTANCE.getZOOM()) {
             // 缩放操作
-            float newDist = TouchUtils.distance(curPoint, secPoint);
+            float newDist = TouchUtils.INSTANCE.distance(curPoint, secPoint);
             //两指的垂直间距
             float dy = Math.abs(curPoint.y - secPoint.y);
             if (dy >= GestureFlags.INSTANCE.getMAX_DY()) {
@@ -179,7 +179,7 @@ public class TransformTouch extends Touch {
                 mode = GestureFlags.INSTANCE.getZOOM();
                 takeOverSelectedPel();
                 savedPel.getPath().set(selectedPel.getPath());
-                oriDist = TouchUtils.distance(curPoint, secPoint);
+                oriDist = TouchUtils.INSTANCE.distance(curPoint, secPoint);
                 return;
             }
             //>100仍然是正常旋转
@@ -228,7 +228,7 @@ public class TransformTouch extends Touch {
         //弧长
         float arc = (float) Math.sqrt(x * x + y * y);
         //半径
-        float radius = TouchUtils.distance(curPoint, secPoint) / 2;
+        float radius = TouchUtils.INSTANCE.distance(curPoint, secPoint) / 2;
 
         float degrees = (arc / radius) * (180 / 3.14f);
 
@@ -240,6 +240,6 @@ public class TransformTouch extends Touch {
         //起始变换因子为刚才的变换后因子
         savedMatrix.set(transMatrix);
         //重新计算图元中心点
-        centerPoint.set(TouchUtils.calPelCenterPoint(selectedPel));
+        centerPoint.set(TouchUtils.INSTANCE.calPelCenterPoint(selectedPel));
     }
 }

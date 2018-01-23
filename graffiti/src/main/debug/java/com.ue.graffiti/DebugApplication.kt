@@ -1,8 +1,7 @@
 package com.ue.graffiti
 
 import android.app.Application
-
-import com.ue.graffiti.util.SPUtils
+import com.ue.library.util.SPUtils
 
 /**
  * Created by hawk on 2018/1/23.

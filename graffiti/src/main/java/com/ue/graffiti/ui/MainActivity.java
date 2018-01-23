@@ -36,10 +36,10 @@ import com.ue.graffiti.touch.DrawPolygonTouch;
 import com.ue.graffiti.touch.KeepDrawingTouch;
 import com.ue.graffiti.touch.Touch;
 import com.ue.graffiti.touch.TransformTouch;
-import com.ue.graffiti.util.SPUtils;
 import com.ue.graffiti.util.StepUtils;
 import com.ue.graffiti.util.TouchUtils;
 import com.ue.graffiti.widget.CanvasView;
+import com.ue.library.util.SPUtils;
 
 
 public class MainActivity extends RxAppCompatActivity implements View.OnClickListener {
@@ -107,7 +107,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         ivToggleOptions.setSelected(true);
         curToolVi = btnDraw;
 
-        int lastColor = SPUtils.getInt(SPKeys.INSTANCE.getSP_PAINT_COLOR(), getResources().getColor(R.color.col_298ecb));
+        int lastColor = SPUtils.Companion.getInt(SPKeys.INSTANCE.getSP_PAINT_COLOR(), getResources().getColor(R.color.col_298ecb));
         btnColor.setTextColor(lastColor);
         cvGraffitiView.setPaintColor(lastColor);
 
@@ -369,7 +369,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         }
 
         cvGraffitiView.getTouch().setProcessing(true, getString(R.string.undoing));
-        StepUtils.toRedoUpdate(this, step, cvGraffitiView.getBackgroundBitmap(), cvGraffitiView.getCopyOfBackgroundBitmap(), () -> {
+        StepUtils.INSTANCE.toRedoUpdate(this, step, cvGraffitiView.getBackgroundBitmap(), cvGraffitiView.getCopyOfBackgroundBitmap(), () -> {
             if (step instanceof TransformPelStep) {
                 cvGraffitiView.setSelectedPel(null);
             }
@@ -387,7 +387,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
             return;
         }
         cvGraffitiView.getTouch().setProcessing(true, getString(R.string.redoing));
-        StepUtils.toUndoUpdate(this, step, cvGraffitiView.getBackgroundBitmap(), () -> {
+        StepUtils.INSTANCE.toUndoUpdate(this, step, cvGraffitiView.getBackgroundBitmap(), () -> {
             //重绘位图
             cvGraffitiView.updateSavedBitmap();
             cvGraffitiView.getTouch().setProcessing(false, null);
@@ -442,7 +442,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
             * */
             case R.id.btnColor:
                 DialogHelper.INSTANCE.showColorPickerDialog(MainActivity.this, color -> {
-                    SPUtils.putInt(SPKeys.INSTANCE.getSP_PAINT_COLOR(), color);
+                    SPUtils.Companion.putInt(SPKeys.INSTANCE.getSP_PAINT_COLOR(), color);
                     btnColor.setTextColor(color);
                     cvGraffitiView.setPaintColor(color);
                 });
@@ -533,7 +533,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
     private void onSwitchRotateZoom(int viewId, Pel selectedPel) {
         savedPel = new Pel();
         savedPel.getPath().set(selectedPel.getPath());
-        savedMatrix.set(TouchUtils.calPelSavedMatrix(savedPel));
+        savedMatrix.set(TouchUtils.INSTANCE.calPelSavedMatrix(savedPel));
 
         if (lastEditActionId == 0) {
             lastEditActionId = viewId;
@@ -550,17 +550,17 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
 
         switch (viewId) {
             case R.id.ivRotate:
-                centerPoint.set(TouchUtils.calPelCenterPoint(selectedPel));
+                centerPoint.set(TouchUtils.INSTANCE.calPelCenterPoint(selectedPel));
                 transMatrix.set(savedMatrix);
                 transMatrix.setRotate(10, centerPoint.x, centerPoint.y);
                 break;
             case R.id.ivZoomIn:
-                centerPoint.set(TouchUtils.calPelCenterPoint(selectedPel));
+                centerPoint.set(TouchUtils.INSTANCE.calPelCenterPoint(selectedPel));
                 transMatrix.set(savedMatrix);
                 transMatrix.postScale(1.1f, 1.1f, centerPoint.x, centerPoint.y);
                 break;
             case R.id.ivZoomOut:
-                centerPoint.set(TouchUtils.calPelCenterPoint(selectedPel));
+                centerPoint.set(TouchUtils.INSTANCE.calPelCenterPoint(selectedPel));
                 transMatrix.set(savedMatrix);
                 transMatrix.postScale(0.9f, 0.9f, centerPoint.x, centerPoint.y);
                 break;

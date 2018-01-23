@@ -16,8 +16,8 @@ import com.ue.graffiti.touch.DrawFreehandTouch
 import com.ue.graffiti.touch.Touch
 import com.ue.graffiti.touch.TransformTouch
 import com.ue.graffiti.util.PenUtils
-import com.ue.graffiti.util.SPUtils
 import com.ue.graffiti.util.TouchUtils
+import com.ue.library.util.SPUtils
 import java.util.*
 
 class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), SimpleTouchListener {
@@ -291,7 +291,7 @@ class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), 
         TouchUtils.ensureBitmapRecycled(originalBackgroundBitmap)
         originalBackgroundBitmap = backgroundBitmap!!.copy(Config.ARGB_8888, true)
 
-        TouchUtils.reprintFilledAreas(undoStack, backgroundBitmap)//填充区域重新打印
+        TouchUtils.reprintFilledAreas(undoStack, backgroundBitmap!!)//填充区域重新打印
         updateSavedBitmap()
     }
 
@@ -306,7 +306,7 @@ class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), 
         TouchUtils.ensureBitmapRecycled(originalBackgroundBitmap)
         originalBackgroundBitmap = backgroundBitmap!!.copy(Config.ARGB_8888, true)
         //填充区域重新打印
-        TouchUtils.reprintFilledAreas(undoStack, backgroundBitmap)
+        TouchUtils.reprintFilledAreas(undoStack, backgroundBitmap!!)
         updateSavedBitmap()
     }
 
@@ -318,7 +318,7 @@ class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), 
         TouchUtils.ensureBitmapRecycled(copyOfBackgroundBitmap)
         copyOfBackgroundBitmap = backgroundBitmap!!.copy(Config.ARGB_8888, true)
         //填充区域重新打印
-        TouchUtils.reprintFilledAreas(undoStack, backgroundBitmap)
+        TouchUtils.reprintFilledAreas(undoStack, backgroundBitmap!!)
         updateSavedBitmap()
     }
 
@@ -327,7 +327,7 @@ class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), 
         TouchUtils.ensureBitmapRecycled(backgroundBitmap)
         backgroundBitmap = copyOfBackgroundBitmap!!.copy(Config.ARGB_8888, true)
         //填充区域重新打印
-        TouchUtils.reprintFilledAreas(undoStack, backgroundBitmap)
+        TouchUtils.reprintFilledAreas(undoStack, backgroundBitmap!!)
         updateSavedBitmap()
     }
 

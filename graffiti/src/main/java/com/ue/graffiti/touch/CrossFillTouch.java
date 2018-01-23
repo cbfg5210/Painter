@@ -68,7 +68,7 @@ public class CrossFillTouch extends Touch {
         // 创建缓冲位图
         Bitmap bitmap = Bitmap.createBitmap(MAX_WIDTH, MAX_HEIGHT, Config.ARGB_8888);
         savedCanvas.setBitmap(bitmap);
-        TouchUtils.reprintFilledAreas(undoStack, bitmap);
+        TouchUtils.INSTANCE.reprintFilledAreas(undoStack, bitmap);
         // 获取pelList对应的迭代器头结点
         ListIterator<Pel> pelIterator = pelList.listIterator();
         while (pelIterator.hasNext()) {
@@ -106,7 +106,7 @@ public class CrossFillTouch extends Touch {
                 .subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread());
 
-        RxLifecycleUtils.bindUtilDestroy(getContext(), observable)
+        RxLifecycleUtils.INSTANCE.bindUtilDestroy(getContext(), observable)
                 .subscribe(o -> {
                     undoStack.push(new CrossFillStep(pelList, null, initColor, fillColor, scanLinesList));
                     updateSavedBitmap(true);

@@ -52,7 +52,7 @@ public class DrawPolygonTouch extends DrawTouch {
         PointF endPoint = new PointF();
         endPoint.set(curPoint);
 
-        if (TouchUtils.distance(beginPoint, endPoint) <= MAX_CIRCLE) {
+        if (TouchUtils.INSTANCE.distance(beginPoint, endPoint) <= MAX_CIRCLE) {
             newPel.getPath().set(lastPath);
             newPel.getPath().close();
             newPel.setClosure(true);

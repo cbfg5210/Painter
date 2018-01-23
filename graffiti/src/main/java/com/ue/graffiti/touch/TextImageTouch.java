@@ -62,7 +62,7 @@ public class TextImageTouch extends Touch {
     // 第二只手指按下
     @Override
     public void down2() {
-        oriDist = TouchUtils.distance(curPoint, secPoint);
+        oriDist = TouchUtils.INSTANCE.distance(curPoint, secPoint);
         if (oriDist > GestureFlags.INSTANCE.getMIN_ZOOM()) {
             // 距离小于50px才算是缩放
             mode = GestureFlags.INSTANCE.getZOOM();
@@ -92,7 +92,7 @@ public class TextImageTouch extends Touch {
         }
         if (mode == GestureFlags.INSTANCE.getZOOM()) {
             // 缩放操作
-            float newDist = TouchUtils.distance(curPoint, secPoint);
+            float newDist = TouchUtils.INSTANCE.distance(curPoint, secPoint);
             //两指的垂直间距
             if (Math.abs(curPoint.y - secPoint.y) >= GestureFlags.INSTANCE.getMAX_DY()) {
                 //判断是否需要转变为旋转模式
@@ -111,7 +111,7 @@ public class TextImageTouch extends Touch {
             if (Math.abs(curPoint.y - secPoint.y) < GestureFlags.INSTANCE.getMAX_DY()) {
                 //判断是否需要转变为缩放模式
                 mode = GestureFlags.INSTANCE.getZOOM();
-                oriDist = TouchUtils.distance(curPoint, secPoint);
+                oriDist = TouchUtils.INSTANCE.distance(curPoint, secPoint);
             } else {
                 //>100仍然是正常旋转
                 degree = (oridegree % 360) + degree();
@@ -147,7 +147,7 @@ public class TextImageTouch extends Touch {
         float y = curPoint.y - downPoint.y;
 
         float arc = (float) Math.sqrt(x * x + y * y);//弧长
-        float radius = TouchUtils.distance(curPoint, secPoint) / 2;//半径
+        float radius = TouchUtils.INSTANCE.distance(curPoint, secPoint) / 2;//半径
 
         float degrees = (arc / radius) * (180 / 3.14f);
 

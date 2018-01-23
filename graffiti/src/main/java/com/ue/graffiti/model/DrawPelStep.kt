@@ -5,7 +5,7 @@ package com.ue.graffiti.model
  */
 
 class DrawPelStep(//0:draw,1:copy,2:delete
-        var flag: Int, pelList: List<Pel>, pel: Pel) : Step(pelList, pel) {
+        var flag: Int, pelList: MutableList<Pel>, pel: Pel) : Step(pelList, pel) {
     //图元所在链表位置
     var location: Int = 0
 

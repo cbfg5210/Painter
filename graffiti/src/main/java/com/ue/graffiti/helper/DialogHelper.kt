@@ -15,8 +15,8 @@ import com.ue.graffiti.ui.ColorPickerDialog.OnColorPickerListener
 import com.ue.graffiti.ui.DrawPictureDialog
 import com.ue.graffiti.ui.DrawTextDialog
 import com.ue.graffiti.ui.PenDialog
-import com.ue.graffiti.util.SPUtils
 import com.ue.graffiti.widget.CanvasView
+import com.ue.library.util.SPUtils
 import kotlinx.android.synthetic.main.layout_check_box.view.*
 import kotlinx.android.synthetic.main.layout_input.view.*
 
