@@ -88,7 +88,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
 
         initViews();
 
-        DialogHelper.showOnceHintDialog(this, R.string.draw_gesture_title, R.string.draw_gesture_tip, R.string.got_it, SPKeys.INSTANCE.getSHOW_DRAW_GESTURE_HINT());
+        DialogHelper.INSTANCE.showOnceHintDialog(this, R.string.draw_gesture_title, R.string.draw_gesture_tip, R.string.got_it, SPKeys.INSTANCE.getSHOW_DRAW_GESTURE_HINT());
     }
 
     private void initViews() {
@@ -217,7 +217,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
     }
 
     private void onOpenDrawTextBtn(View v) {
-        DialogHelper.showDrawTextDialog(this, cvGraffitiView, (newPel, newBitmap) -> {
+        DialogHelper.INSTANCE.showDrawTextDialog(this, cvGraffitiView, (newPel, newBitmap) -> {
             //添加至文本总链表
             cvGraffitiView.addPel(newPel);
             //记录栈中信息
@@ -228,7 +228,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
     }
 
     private void onOpenDrawPictureBtn(View v) {
-        DialogHelper.showDrawPictureDialog(this, cvGraffitiView, (newPel, newBitmap) -> {
+        DialogHelper.INSTANCE.showDrawPictureDialog(this, cvGraffitiView, (newPel, newBitmap) -> {
             //添加至文本总链表
             cvGraffitiView.addPel(newPel);
             //记录栈中信息
@@ -425,8 +425,8 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
 
     @Override
     public void onBackPressed() {
-        DialogHelper.showExitDialog(this,
-                v -> DialogHelper.showInputDialog(this, getString(R.string.input_graffiti_name),
+        DialogHelper.INSTANCE.showExitDialog(this,
+                v -> DialogHelper.INSTANCE.showInputDialog(this, getString(R.string.input_graffiti_name),
                         result -> mMainPresenter.onSaveGraffitiClicked(cvGraffitiView.getSavedBitmap(), (String) result, vi -> finish())));
     }
 
@@ -441,17 +441,17 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
             * top menu listener
             * */
             case R.id.btnColor:
-                DialogHelper.showColorPickerDialog(MainActivity.this, color -> {
+                DialogHelper.INSTANCE.showColorPickerDialog(MainActivity.this, color -> {
                     SPUtils.putInt(SPKeys.INSTANCE.getSP_PAINT_COLOR(), color);
                     btnColor.setTextColor(color);
                     cvGraffitiView.setPaintColor(color);
                 });
                 break;
             case R.id.btnPen:
-                DialogHelper.showPenDialog(MainActivity.this, cvGraffitiView.getCurrentPaint());
+                DialogHelper.INSTANCE.showPenDialog(MainActivity.this, cvGraffitiView.getCurrentPaint());
                 break;
             case R.id.btnClear:
-                DialogHelper.showClearDialog(this, (dialog, which) -> {
+                DialogHelper.INSTANCE.showClearDialog(this, (dialog, which) -> {
                     //清空内部所有数据
                     cvGraffitiView.clearData();
                     //画布背景图标复位
@@ -461,7 +461,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
                 });
                 break;
             case R.id.btnSave:
-                DialogHelper.showInputDialog(this, getString(R.string.input_graffiti_name),
+                DialogHelper.INSTANCE.showInputDialog(this, getString(R.string.input_graffiti_name),
                         result -> mMainPresenter.onSaveGraffitiClicked(cvGraffitiView.getSavedBitmap(), (String) result, null));
                 break;
             /*

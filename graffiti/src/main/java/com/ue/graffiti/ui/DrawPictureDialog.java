@@ -196,7 +196,7 @@ public class DrawPictureDialog extends DialogFragment implements View.OnClickLis
     @Override
     public void onResume() {
         super.onResume();
-        DialogHelper.showOnceHintDialog(getContext(), R.string.image_gesture_title, R.string.image_gesture_tip, R.string.got_it, SPKeys.INSTANCE.getSHOW_IMAGE_GESTURE_HINT());
+        DialogHelper.INSTANCE.showOnceHintDialog(getContext(), R.string.image_gesture_title, R.string.image_gesture_tip, R.string.got_it, SPKeys.INSTANCE.getSHOW_IMAGE_GESTURE_HINT());
     }
 
     public interface OnDrawPictureListener {

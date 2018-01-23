@@ -31,7 +31,7 @@ public class KeepDrawingTouch extends Touch {
         savedCanvas.drawBitmap(startFlag.getBitmap(), downPoint.x, downPoint.y, null);
 
         String tip = "您确定以(" + (int) downPoint.x + "," + (int) downPoint.y + ")为起始点并开始重力绘图？";
-        DialogHelper.showSensorDrawingDialog(getContext(), tip, (dialog, which) -> {
+        DialogHelper.INSTANCE.showSensorDrawingDialog(getContext(), tip, (dialog, which) -> {
             if (mKeepDrawingTouchListener != null) {
                 mKeepDrawingTouchListener.onDownPoint(downPoint);
                 mKeepDrawingTouchListener.registerKeepDrawingSensor();

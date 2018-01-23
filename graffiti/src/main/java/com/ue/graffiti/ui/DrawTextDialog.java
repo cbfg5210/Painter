@@ -138,11 +138,11 @@ public class DrawTextDialog extends DialogFragment implements View.OnClickListen
     public void onResume() {
         super.onResume();
         demandContent();
-        DialogHelper.showOnceHintDialog(getContext(), R.string.text_gesture_title, R.string.text_gesture_tip, R.string.got_it, SPKeys.INSTANCE.getSHOW_TEXT_GESTURE_HINT());
+        DialogHelper.INSTANCE.showOnceHintDialog(getContext(), R.string.text_gesture_title, R.string.text_gesture_tip, R.string.got_it, SPKeys.INSTANCE.getSHOW_TEXT_GESTURE_HINT());
     }
 
     private void demandContent() {
-        DialogHelper.showInputDialog(getContext(), getString(R.string.input_text), getString(R.string.finger_graffiti), result -> {
+        DialogHelper.INSTANCE.showInputDialog(getContext(), getString(R.string.input_text), getString(R.string.finger_graffiti), result -> {
             drawTextVi.setTextContent((String) result);
             drawTextVi.invalidate();
         });
@@ -190,7 +190,7 @@ public class DrawTextDialog extends DialogFragment implements View.OnClickListen
                 demandContent();
                 break;
             case R.id.btnTextColor:
-                DialogHelper.showColorPickerDialog(getActivity(), color -> {
+                DialogHelper.INSTANCE.showColorPickerDialog(getActivity(), color -> {
                     paintColor = color;
                     drawTextVi.setTextColor(color);
                 });
