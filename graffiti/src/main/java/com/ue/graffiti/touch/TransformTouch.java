@@ -25,7 +25,7 @@ public class TransformTouch extends Touch {
     //重绘图元
     private Pel savedPel;
     // 当前操作类型
-    private int mode = GestureFlags.NONE;
+    private int mode = GestureFlags.INSTANCE.getNONE();
     // 缩放时两指最初放上时的距离
     private float oriDist;
     //平移偏移量
@@ -101,17 +101,17 @@ public class TransformTouch extends Touch {
 
         updateSavedBitmap(true);
 
-        mode = GestureFlags.DRAG;
+        mode = GestureFlags.INSTANCE.getDRAG();
     }
 
     // 第二只手指按下
     @Override
     public void down2() {
         oriDist = TouchUtils.distance(curPoint, secPoint);
-        if (oriDist > GestureFlags.MIN_ZOOM && selectedPel != null) {
+        if (oriDist > GestureFlags.INSTANCE.getMIN_ZOOM() && selectedPel != null) {
             // 距离小于50px才算是缩放
             takeOverSelectedPel();
-            mode = GestureFlags.ZOOM;
+            mode = GestureFlags.INSTANCE.getZOOM();
         }
     }
 
@@ -123,7 +123,7 @@ public class TransformTouch extends Touch {
         }
         // 获取move事件的发生位置
         // 前提是要选中了图元
-        if (mode == GestureFlags.DRAG) {
+        if (mode == GestureFlags.INSTANCE.getDRAG()) {
             // 平移操作
             dx = curPoint.x - downPoint.x;//计算距离
             dy = curPoint.y - downPoint.y;
@@ -140,21 +140,21 @@ public class TransformTouch extends Touch {
             selectedPel.region.setPath(selectedPel.path, clipRegion);
             return;
         }
-        if (mode == GestureFlags.ZOOM) {
+        if (mode == GestureFlags.INSTANCE.getZOOM()) {
             // 缩放操作
             float newDist = TouchUtils.distance(curPoint, secPoint);
             //两指的垂直间距
             float dy = Math.abs(curPoint.y - secPoint.y);
-            if (dy >= GestureFlags.MAX_DY) {
+            if (dy >= GestureFlags.INSTANCE.getMAX_DY()) {
                 //判断是否需要转变为旋转模式
                 //延续准备操作
-                mode = GestureFlags.ROTATE;
+                mode = GestureFlags.INSTANCE.getROTATE();
                 takeOverSelectedPel();
                 savedPel.path.set(selectedPel.path);
                 downPoint.set(curPoint);
                 return;
             }
-            if (newDist > GestureFlags.MIN_ZOOM) {
+            if (newDist > GestureFlags.INSTANCE.getMIN_ZOOM()) {
                 //<100仍然是正常缩放
                 float scale = newDist / oriDist;
 
@@ -170,13 +170,13 @@ public class TransformTouch extends Touch {
             }
             return;
         }
-        if (mode == GestureFlags.ROTATE) {
+        if (mode == GestureFlags.INSTANCE.getROTATE()) {
             // 旋转操作
             //两指的垂直间距
             float dy = Math.abs(curPoint.y - secPoint.y);
-            if (dy < GestureFlags.MAX_DY) {
+            if (dy < GestureFlags.INSTANCE.getMAX_DY()) {
                 //判断是否需要转变为缩放模式
-                mode = GestureFlags.ZOOM;
+                mode = GestureFlags.INSTANCE.getZOOM();
                 takeOverSelectedPel();
                 savedPel.path.set(selectedPel.path);
                 oriDist = TouchUtils.distance(curPoint, secPoint);
@@ -217,7 +217,7 @@ public class TransformTouch extends Touch {
                 savedPel.path.set(selectedPel.path);
             }
         }
-        mode = GestureFlags.NONE;
+        mode = GestureFlags.INSTANCE.getNONE();
     }
 
     // 旋转角度的计算

@@ -138,7 +138,7 @@ public class DrawTextDialog extends DialogFragment implements View.OnClickListen
     public void onResume() {
         super.onResume();
         demandContent();
-        DialogHelper.showOnceHintDialog(getContext(), R.string.text_gesture_title, R.string.text_gesture_tip, R.string.got_it, SPKeys.SHOW_TEXT_GESTURE_HINT);
+        DialogHelper.showOnceHintDialog(getContext(), R.string.text_gesture_title, R.string.text_gesture_tip, R.string.got_it, SPKeys.INSTANCE.getSHOW_TEXT_GESTURE_HINT());
     }
 
     private void demandContent() {

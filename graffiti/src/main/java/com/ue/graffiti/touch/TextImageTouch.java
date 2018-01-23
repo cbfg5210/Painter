@@ -8,7 +8,7 @@ import com.ue.graffiti.util.TouchUtils;
 
 public class TextImageTouch extends Touch {
     // 当前操作类型
-    private int mode = GestureFlags.NONE;
+    private int mode = GestureFlags.INSTANCE.getNONE();
     //平移偏移量
     private float dx, dy, oridx, oridy;
     // 缩放时两指最初放上时的距离
@@ -56,16 +56,16 @@ public class TextImageTouch extends Touch {
         // 获取down事件的发生位置
         frontPoint1.set(curPoint);
         downPoint.set(curPoint);
-        mode = GestureFlags.DRAG;
+        mode = GestureFlags.INSTANCE.getDRAG();
     }
 
     // 第二只手指按下
     @Override
     public void down2() {
         oriDist = TouchUtils.distance(curPoint, secPoint);
-        if (oriDist > GestureFlags.MIN_ZOOM) {
+        if (oriDist > GestureFlags.INSTANCE.getMIN_ZOOM()) {
             // 距离小于50px才算是缩放
-            mode = GestureFlags.ZOOM;
+            mode = GestureFlags.INSTANCE.getZOOM();
         }
     }
 
@@ -83,34 +83,34 @@ public class TextImageTouch extends Touch {
 
         frontPoint1.set(curPoint);
 
-        if (mode == GestureFlags.DRAG) {
+        if (mode == GestureFlags.INSTANCE.getDRAG()) {
             // 平移操作
             //计算距离
             dx = oridx + (curPoint.x - downPoint.x);
             dy = oridy + (curPoint.y - downPoint.y);
             return;
         }
-        if (mode == GestureFlags.ZOOM) {
+        if (mode == GestureFlags.INSTANCE.getZOOM()) {
             // 缩放操作
             float newDist = TouchUtils.distance(curPoint, secPoint);
             //两指的垂直间距
-            if (Math.abs(curPoint.y - secPoint.y) >= GestureFlags.MAX_DY) {
+            if (Math.abs(curPoint.y - secPoint.y) >= GestureFlags.INSTANCE.getMAX_DY()) {
                 //判断是否需要转变为旋转模式
                 //延续准备操作
-                mode = GestureFlags.ROTATE;
+                mode = GestureFlags.INSTANCE.getROTATE();
                 downPoint.set(curPoint);
-            } else if (newDist > GestureFlags.MIN_ZOOM) {
+            } else if (newDist > GestureFlags.INSTANCE.getMIN_ZOOM()) {
                 //<100仍然是正常缩放
                 scale = oriscale * (newDist / oriDist);
             }
             return;
         }
-        if (mode == GestureFlags.ROTATE) {
+        if (mode == GestureFlags.INSTANCE.getROTATE()) {
             // 旋转操作
             //两指的垂直间距
-            if (Math.abs(curPoint.y - secPoint.y) < GestureFlags.MAX_DY) {
+            if (Math.abs(curPoint.y - secPoint.y) < GestureFlags.INSTANCE.getMAX_DY()) {
                 //判断是否需要转变为缩放模式
-                mode = GestureFlags.ZOOM;
+                mode = GestureFlags.INSTANCE.getZOOM();
                 oriDist = TouchUtils.distance(curPoint, secPoint);
             } else {
                 //>100仍然是正常旋转
@@ -137,7 +137,7 @@ public class TextImageTouch extends Touch {
         oridy = dy;
         oriscale = scale;
         oridegree = degree;
-        mode = GestureFlags.NONE;
+        mode = GestureFlags.INSTANCE.getNONE();
     }
 
     // 旋转角度的计算

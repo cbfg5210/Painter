@@ -34,7 +34,7 @@ public class DrawTouch extends Touch {
         pelList.add(newPel);
         //2.包装好当前步骤 内的操作
         //将该“步”压入undo栈
-        undoStack.push(new DrawPelStep(DrawPelFlags.DRAW,pelList, newPel));
+        undoStack.push(new DrawPelStep(DrawPelFlags.INSTANCE.getDRAW(),pelList, newPel));
         //3.更新重绘位图
         //刚才画的图元失去焦点
         mSimpleTouchListener.setSelectedPel(selectedPel = null);

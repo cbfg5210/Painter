@@ -38,7 +38,7 @@ public class StepUtils {
                         step.curPel.paint.set(((FillPelStep) step).newPaint);
                     } else if (step instanceof DrawPelStep) {
                         DrawPelStep drawPelStep = (DrawPelStep) step;
-                        if (drawPelStep.flag == DrawPelFlags.DELETE) {
+                        if (drawPelStep.flag == DrawPelFlags.INSTANCE.getDELETE()) {
                             //删除链表对应索引位置图元
                             step.pelList.remove(drawPelStep.location);
                         } else {
@@ -75,7 +75,7 @@ public class StepUtils {
                         step.curPel.paint.set(((FillPelStep) step).oldPaint);
                     } else if (step instanceof DrawPelStep) {
                         DrawPelStep drawPelStep = (DrawPelStep) step;
-                        if (drawPelStep.flag == DrawPelFlags.DELETE) {
+                        if (drawPelStep.flag == DrawPelFlags.INSTANCE.getDELETE()) {
                             //更新图元链表数据
                             step.pelList.add(drawPelStep.location, step.curPel);
                         } else {

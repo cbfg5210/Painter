@@ -188,8 +188,8 @@ public class PenDialog extends DialogFragment implements OnSeekBarChangeListener
         int[] images = ResourceUtils.getImageArray(getContext(), R.array.penShapeImages);
         String[] names = getResources().getStringArray(R.array.penShapeNames);
 
-        lastShapeIndex = SPUtils.getInt(SPKeys.SP_PAINT_SHAPE_INDEX, 0);
-        lastEffectIndex = SPUtils.getInt(SPKeys.SP_PAINT_EFFECT_INDEX, 0);
+        lastShapeIndex = SPUtils.getInt(SPKeys.INSTANCE.getSP_PAINT_SHAPE_INDEX(), 0);
+        lastEffectIndex = SPUtils.getInt(SPKeys.INSTANCE.getSP_PAINT_EFFECT_INDEX(), 0);
 
         items.add(new PenCatTitleItem(getString(R.string.line_shape)));
 
@@ -217,10 +217,10 @@ public class PenDialog extends DialogFragment implements OnSeekBarChangeListener
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-        SPUtils.putInt(SPKeys.SP_PAINT_SIZE, paintStrokeSize);
-        SPUtils.putInt(SPKeys.SP_PAINT_SHAPE_INDEX, lastShapeIndex);
-        SPUtils.putInt(SPKeys.SP_PAINT_EFFECT_INDEX, lastEffectIndex);
-        SPUtils.putInt(SPKeys.SP_PAINT_SHAPE_IMAGE, lastShapeImage);
-        SPUtils.putInt(SPKeys.SP_PAINT_EFFECT_IMAGE, lastEffectImage);
+        SPUtils.putInt(SPKeys.INSTANCE.getSP_PAINT_SIZE(), paintStrokeSize);
+        SPUtils.putInt(SPKeys.INSTANCE.getSP_PAINT_SHAPE_INDEX(), lastShapeIndex);
+        SPUtils.putInt(SPKeys.INSTANCE.getSP_PAINT_EFFECT_INDEX(), lastEffectIndex);
+        SPUtils.putInt(SPKeys.INSTANCE.getSP_PAINT_SHAPE_IMAGE(), lastShapeImage);
+        SPUtils.putInt(SPKeys.INSTANCE.getSP_PAINT_EFFECT_IMAGE(), lastEffectImage);
     }
 }

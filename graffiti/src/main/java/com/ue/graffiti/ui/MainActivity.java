@@ -88,7 +88,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
 
         initViews();
 
-        DialogHelper.showOnceHintDialog(this, R.string.draw_gesture_title, R.string.draw_gesture_tip, R.string.got_it, SPKeys.SHOW_DRAW_GESTURE_HINT);
+        DialogHelper.showOnceHintDialog(this, R.string.draw_gesture_title, R.string.draw_gesture_tip, R.string.got_it, SPKeys.INSTANCE.getSHOW_DRAW_GESTURE_HINT());
     }
 
     private void initViews() {
@@ -107,7 +107,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         ivToggleOptions.setSelected(true);
         curToolVi = btnDraw;
 
-        int lastColor = SPUtils.getInt(SPKeys.SP_PAINT_COLOR, getResources().getColor(R.color.col_298ecb));
+        int lastColor = SPUtils.getInt(SPKeys.INSTANCE.getSP_PAINT_COLOR(), getResources().getColor(R.color.col_298ecb));
         btnColor.setTextColor(lastColor);
         cvGraffitiView.setPaintColor(lastColor);
 
@@ -221,7 +221,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
             //添加至文本总链表
             cvGraffitiView.addPel(newPel);
             //记录栈中信息
-            cvGraffitiView.pushUndoStack(new DrawPelStep(DrawPelFlags.DRAW, cvGraffitiView.getPelList(), newPel));
+            cvGraffitiView.pushUndoStack(new DrawPelStep(DrawPelFlags.INSTANCE.getDRAW(), cvGraffitiView.getPelList(), newPel));
             //更新画布
             cvGraffitiView.updateSavedBitmap();
         });
@@ -232,7 +232,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
             //添加至文本总链表
             cvGraffitiView.addPel(newPel);
             //记录栈中信息
-            cvGraffitiView.pushUndoStack(new DrawPelStep(DrawPelFlags.DRAW, cvGraffitiView.getPelList(), newPel));
+            cvGraffitiView.pushUndoStack(new DrawPelStep(DrawPelFlags.INSTANCE.getDRAW(), cvGraffitiView.getPelList(), newPel));
             //更新画布
             cvGraffitiView.updateSavedBitmap();
         });
@@ -244,14 +244,14 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         pel.region.setPath(pel.path, cvGraffitiView.getClipRegion());
 
         cvGraffitiView.addPel(pel);
-        cvGraffitiView.pushUndoStack(new DrawPelStep(DrawPelFlags.COPY, cvGraffitiView.getPelList(), pel));
+        cvGraffitiView.pushUndoStack(new DrawPelStep(DrawPelFlags.INSTANCE.getCOPY(), cvGraffitiView.getPelList(), pel));
 
         cvGraffitiView.setSelectedPel(null);
         cvGraffitiView.updateSavedBitmap();
     }
 
     private void onDeletePelClick(Pel selectedPel) {
-        cvGraffitiView.pushUndoStack(new DrawPelStep(DrawPelFlags.DELETE, cvGraffitiView.getPelList(), selectedPel));
+        cvGraffitiView.pushUndoStack(new DrawPelStep(DrawPelFlags.INSTANCE.getDELETE(), cvGraffitiView.getPelList(), selectedPel));
         cvGraffitiView.removePel(selectedPel);
 
         cvGraffitiView.setSelectedPel(null);
@@ -312,7 +312,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
 
         cvGraffitiView.addPel(newPel);
 
-        cvGraffitiView.pushUndoStack(new DrawPelStep(DrawPelFlags.DRAW, cvGraffitiView.getPelList(), newPel));
+        cvGraffitiView.pushUndoStack(new DrawPelStep(DrawPelFlags.INSTANCE.getDRAW(), cvGraffitiView.getPelList(), newPel));
 
         cvGraffitiView.setSelectedPel(null);
         cvGraffitiView.updateSavedBitmap();
@@ -442,7 +442,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
             * */
             case R.id.btnColor:
                 DialogHelper.showColorPickerDialog(MainActivity.this, color -> {
-                    SPUtils.putInt(SPKeys.SP_PAINT_COLOR, color);
+                    SPUtils.putInt(SPKeys.INSTANCE.getSP_PAINT_COLOR(), color);
                     btnColor.setTextColor(color);
                     cvGraffitiView.setPaintColor(color);
                 });

@@ -47,7 +47,7 @@ public class ColorPickerDialog extends DialogFragment {
         picker.addSaturationBar(saturationBar);
         picker.addValueBar(valueBar);
 
-        int lastColor = SPUtils.getInt(SPKeys.SP_PAINT_COLOR, getResources().getColor(R.color.col_298ecb));
+        int lastColor = SPUtils.getInt(SPKeys.INSTANCE.getSP_PAINT_COLOR(), getResources().getColor(R.color.col_298ecb));
         picker.setColor(lastColor);
 
         contentView.findViewById(R.id.ivPickColor).setOnClickListener(v -> {
