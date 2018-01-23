@@ -16,16 +16,16 @@ public class DrawLineTouch extends DrawTouch {
         newPel = new Pel();
         movePoint.set(curPoint);
 
-        newPel.path.moveTo(downPoint.x, downPoint.y);
-        newPel.path.lineTo(movePoint.x, movePoint.y);
-        newPel.path.lineTo(movePoint.x, movePoint.y + 1);
+        newPel.getPath().moveTo(downPoint.x, downPoint.y);
+        newPel.getPath().lineTo(movePoint.x, movePoint.y);
+        newPel.getPath().lineTo(movePoint.x, movePoint.y + 1);
 
         mSimpleTouchListener.setSelectedPel(selectedPel = newPel);
     }
 
     @Override
     public void up() {
-        newPel.closure = false;
+        newPel.setClosure(false);
         super.up();
     }
 }

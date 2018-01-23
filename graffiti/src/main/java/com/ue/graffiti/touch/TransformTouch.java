@@ -58,7 +58,7 @@ public class TransformTouch extends Touch {
         ListIterator<Pel> pelIterator = pelList.listIterator();
         while (pelIterator.hasNext()) {
             Pel pel = pelIterator.next();
-            Rect rect = (pel.region).getBounds();
+            Rect rect = (pel.getRegion()).getBounds();
 
             float leftDis = Math.abs(rect.left - downPoint.x);
             float rightDis = Math.abs(rect.right - downPoint.x);
@@ -97,7 +97,7 @@ public class TransformTouch extends Touch {
         //设置该步骤对应图元
         step = new TransformPelStep(pelList, clipRegion, selectedPel);
         // 原始选中图元所在位置记忆到零时图元中去
-        savedPel.path.set(selectedPel.path);
+        savedPel.getPath().set(selectedPel.getPath());
 
         updateSavedBitmap(true);
 
@@ -133,11 +133,11 @@ public class TransformTouch extends Touch {
             // 作用于平移变换因子
             transMatrix.postTranslate(dx, dy);
 
-            selectedPel.path.set(savedPel.path);
+            selectedPel.getPath().set(savedPel.getPath());
             // 作用于图元
-            selectedPel.path.transform(transMatrix);
+            selectedPel.getPath().transform(transMatrix);
             // 更新平移后路径所在区域
-            selectedPel.region.setPath(selectedPel.path, clipRegion);
+            selectedPel.getRegion().setPath(selectedPel.getPath(), clipRegion);
             return;
         }
         if (mode == GestureFlags.INSTANCE.getZOOM()) {
@@ -150,7 +150,7 @@ public class TransformTouch extends Touch {
                 //延续准备操作
                 mode = GestureFlags.INSTANCE.getROTATE();
                 takeOverSelectedPel();
-                savedPel.path.set(selectedPel.path);
+                savedPel.getPath().set(selectedPel.getPath());
                 downPoint.set(curPoint);
                 return;
             }
@@ -162,11 +162,11 @@ public class TransformTouch extends Touch {
                 // 作用于缩放变换因子
                 transMatrix.postScale(scale, scale, centerPoint.x, centerPoint.y);
 
-                selectedPel.path.set(savedPel.path);
+                selectedPel.getPath().set(savedPel.getPath());
                 // 作用于图元
-                selectedPel.path.transform(transMatrix);
+                selectedPel.getPath().transform(transMatrix);
                 // 更新平移后路径所在区域
-                selectedPel.region.setPath(selectedPel.path, clipRegion);
+                selectedPel.getRegion().setPath(selectedPel.getPath(), clipRegion);
             }
             return;
         }
@@ -178,7 +178,7 @@ public class TransformTouch extends Touch {
                 //判断是否需要转变为缩放模式
                 mode = GestureFlags.INSTANCE.getZOOM();
                 takeOverSelectedPel();
-                savedPel.path.set(selectedPel.path);
+                savedPel.getPath().set(selectedPel.getPath());
                 oriDist = TouchUtils.distance(curPoint, secPoint);
                 return;
             }
@@ -186,11 +186,11 @@ public class TransformTouch extends Touch {
             transMatrix.set(savedMatrix);
             transMatrix.setRotate(degree(), centerPoint.x, centerPoint.y);
 
-            selectedPel.path.set(savedPel.path);
+            selectedPel.getPath().set(savedPel.getPath());
             // 作用于图元
-            selectedPel.path.transform(transMatrix);
+            selectedPel.getPath().transform(transMatrix);
             // 更新平移后路径所在区域
-            selectedPel.region.setPath(selectedPel.path, clipRegion);
+            selectedPel.getRegion().setPath(selectedPel.getPath(), clipRegion);
             return;
         }
     }
@@ -214,7 +214,7 @@ public class TransformTouch extends Touch {
             // 敲定此次操作的最终区域
             if (selectedPel != null) {
                 //初始位置也同步更新
-                savedPel.path.set(selectedPel.path);
+                savedPel.getPath().set(selectedPel.getPath());
             }
         }
         mode = GestureFlags.INSTANCE.getNONE();

@@ -74,7 +74,7 @@ public class CrossFillTouch extends Touch {
         while (pelIterator.hasNext()) {
             Pel pel = pelIterator.next();
             if (!pel.equals(selectedPel)) {
-                savedCanvas.drawPath(pel.path, pel.paint);
+                savedCanvas.drawPath(pel.getPath(), pel.getPaint());
             }
         }
 

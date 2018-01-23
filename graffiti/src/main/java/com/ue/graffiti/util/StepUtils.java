@@ -35,20 +35,20 @@ public class StepUtils {
                     if (step instanceof CrossFillStep) {
                         undoCrossFillStep((CrossFillStep) step, backgroundBitmap);
                     } else if (step instanceof FillPelStep) {
-                        step.curPel.paint.set(((FillPelStep) step).newPaint);
+                        step.getCurPel().getPaint().set(((FillPelStep) step).getNewPaint());
                     } else if (step instanceof DrawPelStep) {
                         DrawPelStep drawPelStep = (DrawPelStep) step;
-                        if (drawPelStep.flag == DrawPelFlags.INSTANCE.getDELETE()) {
+                        if (drawPelStep.getFlag() == DrawPelFlags.INSTANCE.getDELETE()) {
                             //删除链表对应索引位置图元
-                            step.pelList.remove(drawPelStep.location);
+                            step.getPelList().remove(drawPelStep.getLocation());
                         } else {
                             //更新图元链表数据
-                            step.pelList.add(drawPelStep.location, step.curPel);
+                            step.getPelList().add(drawPelStep.getLocation(), step.getCurPel());
                         }
                     } else if (step instanceof TransformPelStep) {
                         TransformPelStep transformPelStep = (TransformPelStep) step;
-                        step.curPel.path.transform(transformPelStep.toUndoMatrix);
-                        step.curPel.region.setPath(step.curPel.path, transformPelStep.clipRegion);
+                        step.getCurPel().getPath().transform(transformPelStep.getToUndoMatrix());
+                        step.getCurPel().getRegion().setPath(step.getCurPel().getPath(), transformPelStep.getClipRegion());
                     }
                     e.onNext(1);
                     e.onComplete();
@@ -72,20 +72,20 @@ public class StepUtils {
                         //进度对话框处理填充耗时任务
                         redoFillStep((CrossFillStep) step, backgroundBitmap, copyOfBackgroundBitmap);
                     } else if (step instanceof FillPelStep) {
-                        step.curPel.paint.set(((FillPelStep) step).oldPaint);
+                        step.getCurPel().getPaint().set(((FillPelStep) step).getOldPaint());
                     } else if (step instanceof DrawPelStep) {
                         DrawPelStep drawPelStep = (DrawPelStep) step;
-                        if (drawPelStep.flag == DrawPelFlags.INSTANCE.getDELETE()) {
+                        if (drawPelStep.getFlag() == DrawPelFlags.INSTANCE.getDELETE()) {
                             //更新图元链表数据
-                            step.pelList.add(drawPelStep.location, step.curPel);
+                            step.getPelList().add(drawPelStep.getLocation(), step.getCurPel());
                         } else {
                             //删除链表对应索引位置图元
-                            step.pelList.remove(drawPelStep.location);
+                            step.getPelList().remove(drawPelStep.getLocation());
                         }
                     } else if (step instanceof TransformPelStep) {
                         TransformPelStep transformPelStep = (TransformPelStep) step;
-                        step.curPel.path.set(transformPelStep.savedPel.path);
-                        step.curPel.region.setPath(step.curPel.path, transformPelStep.clipRegion);
+                        step.getCurPel().getPath().set(transformPelStep.getSavedPel().getPath());
+                        step.getCurPel().getRegion().setPath(step.getCurPel().getPath(), transformPelStep.getClipRegion());
                     }
                     e.onNext(1);
                     e.onComplete();
@@ -110,9 +110,9 @@ public class StepUtils {
         Canvas backgroundCanvas = new Canvas();
         backgroundCanvas.setBitmap(backgroundBitmap);
         Paint paint = new Paint();
-        paint.setColor(step.fillColor);
+        paint.setColor(step.getFillColor());
         // 获取pelList对应的迭代器头结点
-        ListIterator<ScanLine> scanLineIterator = step.scanLinesList.listIterator();
+        ListIterator<ScanLine> scanLineIterator = step.getScanLinesList().listIterator();
         ScanLine scanLine;
         while (scanLineIterator.hasNext()) {
             scanLine = scanLineIterator.next();
@@ -124,8 +124,8 @@ public class StepUtils {
         //扫描线种子填充
         //设置填充还原色
         // 获取pelList对应的迭代器头结点
-        ListIterator<ScanLine> scanLineIterator = step.scanLinesList.listIterator();
-        if (step.initColor == Color.TRANSPARENT) {
+        ListIterator<ScanLine> scanLineIterator = step.getScanLinesList().listIterator();
+        if (step.getInitColor() == Color.TRANSPARENT) {
             //背景色填充
             ScanLine scanLine;
             while (scanLineIterator.hasNext()) {
@@ -142,7 +142,7 @@ public class StepUtils {
         Canvas backgroundCanvas = new Canvas();
         backgroundCanvas.setBitmap(backgroundBitmap);
         Paint paint = new Paint();
-        paint.setColor(step.initColor);
+        paint.setColor(step.getInitColor());
         while (scanLineIterator.hasNext()) {
             ScanLine scanLine = scanLineIterator.next();
             backgroundCanvas.drawLine(scanLine.from.x, scanLine.from.y, scanLine.to.x, scanLine.to.y, paint);
@@ -155,9 +155,9 @@ public class StepUtils {
         Canvas whiteCanvas = new Canvas();//构造画布
         whiteCanvas.setBitmap(bitmap);
         Paint paint = new Paint();
-        paint.setColor(step.fillColor);
+        paint.setColor(step.getFillColor());
 
-        ListIterator<ScanLine> scanlineIterator = step.scanLinesList.listIterator();// 获取pelList对应的迭代器头结点
+        ListIterator<ScanLine> scanlineIterator = step.getScanLinesList().listIterator();// 获取pelList对应的迭代器头结点
         while (scanlineIterator.hasNext()) {
             ScanLine scanLine = scanlineIterator.next();
             whiteCanvas.drawLine(scanLine.from.x, scanLine.from.y, scanLine.to.x, scanLine.to.y, paint);

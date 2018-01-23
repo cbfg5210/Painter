@@ -51,7 +51,7 @@ public class PictureDialog extends DialogFragment {
         PictureAdapter adapter = new PictureAdapter(pictureItems);
         adapter.setItemClickListener((position, pictureItem) -> {
             if (mPickPictureListener != null) {
-                mPickPictureListener.onPicturePicked(pictureItem.res);
+                mPickPictureListener.onPicturePicked(pictureItem.getRes());
             }
             dismiss();
         });

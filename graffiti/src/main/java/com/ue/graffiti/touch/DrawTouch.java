@@ -28,8 +28,8 @@ public class DrawTouch extends Touch {
     @Override
     public void up() {
         //敲定该图元的路径，区域，画笔,名称
-        newPel.region.setPath(newPel.path, clipRegion);
-        newPel.paint.set(mSimpleTouchListener.getCurrentPaint());
+        newPel.getRegion().setPath(newPel.getPath(), clipRegion);
+        newPel.getPaint().set(mSimpleTouchListener.getCurrentPaint());
         //1.将新画好的图元存入图元链表中
         pelList.add(newPel);
         //2.包装好当前步骤 内的操作

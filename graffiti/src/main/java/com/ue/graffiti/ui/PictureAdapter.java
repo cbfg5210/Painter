@@ -43,8 +43,8 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         PictureItem item = mPictureItems.get(position);
-        holder.tvPicture.setText(item.name);
-        holder.tvPicture.setCompoundDrawablesWithIntrinsicBounds(0, item.res, 0, 0);
+        holder.tvPicture.setText(item.getName());
+        holder.tvPicture.setCompoundDrawablesWithIntrinsicBounds(0, item.getRes(), 0, 0);
     }
 
     @Override

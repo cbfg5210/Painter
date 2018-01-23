@@ -214,7 +214,7 @@ class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), 
             val pel = pelIterator.next()
             //若是文本图元
             if (pel.text != null) {
-                val text = pel.text
+                val text = pel.text!!
                 savedCanvas.save()
                 savedCanvas.translate(text.transDx, text.transDy)
                 savedCanvas.scale(text.scale, text.scale, text.centerPoint.x, text.centerPoint.y)
@@ -224,7 +224,7 @@ class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), 
                 continue
             }
             if (pel.picture != null) {
-                val picture = pel.picture
+                val picture = pel.picture!!
                 savedCanvas.save()
                 savedCanvas.translate(picture.transDx, picture.transDy)
                 savedCanvas.scale(picture.scale, picture.scale, picture.centerPoint.x, picture.centerPoint.y)

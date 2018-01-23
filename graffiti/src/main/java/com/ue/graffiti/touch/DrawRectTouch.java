@@ -18,13 +18,13 @@ public class DrawRectTouch extends DrawTouch {
 
         newPel = new Pel();
         movePoint.set(curPoint);
-        newPel.path.addRect(new RectF(downPoint.x, downPoint.y, movePoint.x, movePoint.y), Path.Direction.CCW);
+        newPel.getPath().addRect(new RectF(downPoint.x, downPoint.y, movePoint.x, movePoint.y), Path.Direction.CCW);
         mSimpleTouchListener.setSelectedPel(selectedPel = newPel);
     }
 
     @Override
     public void up() {
-        newPel.closure = true;
+        newPel.setClosure(true);
         super.up();
     }
 }

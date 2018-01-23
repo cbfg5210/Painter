@@ -240,8 +240,8 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
 
     private void onCopyPelClick(Pel selectedPel) {
         Pel pel = (Pel) selectedPel.clone();
-        pel.path.offset(10, 10);
-        pel.region.setPath(pel.path, cvGraffitiView.getClipRegion());
+        pel.getPath().offset(10, 10);
+        pel.getRegion().setPath(pel.getPath(), cvGraffitiView.getClipRegion());
 
         cvGraffitiView.addPel(pel);
         cvGraffitiView.pushUndoStack(new DrawPelStep(DrawPelFlags.INSTANCE.getCOPY(), cvGraffitiView.getPelList(), pel));
@@ -307,8 +307,8 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
     private void completeKeepDrawing() {
         toggleSensor(false);
 
-        newPel.region.setPath(newPel.path, cvGraffitiView.getClipRegion());
-        newPel.paint.set(cvGraffitiView.getCurrentPaint());
+        newPel.getRegion().setPath(newPel.getPath(), cvGraffitiView.getClipRegion());
+        newPel.getPaint().set(cvGraffitiView.getCurrentPaint());
 
         cvGraffitiView.addPel(newPel);
 
@@ -320,9 +320,9 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
 
     private void registerKeepDrawingSensor() {
         newPel = new Pel();
-        newPel.closure = true;
+        newPel.setClosure(true);
         lastPoint.set(cvGraffitiView.getTouch().curPoint);
-        newPel.path.moveTo(lastPoint.x, lastPoint.y);
+        newPel.getPath().moveTo(lastPoint.x, lastPoint.y);
 
         toggleSensor(true);
     }
@@ -349,7 +349,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
                 float dy = event.values[1];
                 PointF nowPoint = new PointF(lastPoint.x + dx, lastPoint.y + dy);
 
-                newPel.path.quadTo(lastPoint.x, lastPoint.y, (lastPoint.x + nowPoint.x) / 2, (lastPoint.y + nowPoint.y) / 2);
+                newPel.getPath().quadTo(lastPoint.x, lastPoint.y, (lastPoint.x + nowPoint.x) / 2, (lastPoint.y + nowPoint.y) / 2);
                 lastPoint.set(nowPoint);
 
                 cvGraffitiView.setSelectedPel(newPel);
@@ -532,7 +532,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
 
     private void onSwitchRotateZoom(int viewId, Pel selectedPel) {
         savedPel = new Pel();
-        savedPel.path.set(selectedPel.path);
+        savedPel.getPath().set(selectedPel.getPath());
         savedMatrix.set(TouchUtils.calPelSavedMatrix(savedPel));
 
         if (lastEditActionId == 0) {
@@ -540,7 +540,7 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
         }
         if (lastEditActionId != viewId) {
             step = new TransformPelStep(cvGraffitiView.getPelList(), cvGraffitiView.getClipRegion(), selectedPel);
-            selectedPel.region.setPath(selectedPel.path, cvGraffitiView.getClipRegion());
+            selectedPel.getRegion().setPath(selectedPel.getPath(), cvGraffitiView.getClipRegion());
             ((TransformPelStep) step).setToUndoMatrix(transMatrix);
             cvGraffitiView.pushUndoStack(step);
             cvGraffitiView.updateSavedBitmap();
@@ -565,18 +565,18 @@ public class MainActivity extends RxAppCompatActivity implements View.OnClickLis
                 transMatrix.postScale(0.9f, 0.9f, centerPoint.x, centerPoint.y);
                 break;
         }
-        selectedPel.path.set(savedPel.path);
-        selectedPel.path.transform(transMatrix);
+        selectedPel.getPath().set(savedPel.getPath());
+        selectedPel.getPath().transform(transMatrix);
 
         cvGraffitiView.invalidate();
     }
 
     private void onFillPelClick(Pel selectedPel) {
-        Paint oldPaint = new Paint(selectedPel.paint);
-        selectedPel.paint.set(cvGraffitiView.getCurrentPaint());
-        selectedPel.paint.setStyle(selectedPel.closure ? Paint.Style.FILL : Paint.Style.STROKE);
+        Paint oldPaint = new Paint(selectedPel.getPaint());
+        selectedPel.getPaint().set(cvGraffitiView.getCurrentPaint());
+        selectedPel.getPaint().setStyle(selectedPel.getClosure() ? Paint.Style.FILL : Paint.Style.STROKE);
 
-        Paint newPaint = new Paint(selectedPel.paint);
+        Paint newPaint = new Paint(selectedPel.getPaint());
         cvGraffitiView.pushUndoStack(new FillPelStep(cvGraffitiView.getPelList(), selectedPel, oldPaint, newPaint));
 
         cvGraffitiView.setSelectedPel(null);

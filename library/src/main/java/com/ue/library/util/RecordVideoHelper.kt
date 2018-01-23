@@ -86,7 +86,7 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
     }
 
     fun startRecording() {
-        videoPath = "${Environment.getExternalStorageDirectory().path}${Constants.PATH_AUTO_DRAW}${SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis())}.mp4"
+        videoPath = "${Environment.getExternalStorageDirectory().getPath()}${Constants.PATH_AUTO_DRAW}${SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis())}.mp4"
         PermissionUtils.checkPermissions(activity,
                 PermissionUtils.REQ_PERM_READ_WRITE_STORAGE,
                 arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE),

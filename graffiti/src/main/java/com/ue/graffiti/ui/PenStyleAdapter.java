@@ -43,10 +43,10 @@ class PenStyleAdapter extends DelegationAdapter<Item> implements OnDelegateClick
                     continue;
                 }
                 PenShapeItem shapeItem = (PenShapeItem) item;
-                if (!shapeItem.isChecked) {
+                if (!shapeItem.isChecked()) {
                     continue;
                 }
-                if (shapeItem.flag == PenDialog.FLAG_SHAPE) {
+                if (shapeItem.getFlag() == PenDialog.FLAG_SHAPE) {
                     lastShapeIndex = i;
                 } else {
                     lastEffectIndex = i;
@@ -70,19 +70,19 @@ class PenStyleAdapter extends DelegationAdapter<Item> implements OnDelegateClick
         }
 
         PenShapeItem item = (PenShapeItem) getItems().get(position);
-        if (item.isChecked) {
+        if (item.isChecked()) {
             return;
         }
-        if (item.flag == PenDialog.FLAG_SHAPE) {
-            ((PenShapeItem) getItems().get(lastShapeIndex)).isChecked = false;
+        if (item.getFlag() == PenDialog.FLAG_SHAPE) {
+            ((PenShapeItem) getItems().get(lastShapeIndex)).setChecked(false);
             notifyItemChanged(lastShapeIndex, 0);
             lastShapeIndex = position;
         } else {
-            ((PenShapeItem) getItems().get(lastEffectIndex)).isChecked = false;
+            ((PenShapeItem) getItems().get(lastEffectIndex)).setChecked(false);
             notifyItemChanged(lastEffectIndex, 0);
             lastEffectIndex = position;
         }
-        item.isChecked = true;
+        item.setChecked(true);
         notifyItemChanged(position, 0);
 
         if (mDelegateClickListener != null) {
@@ -121,7 +121,7 @@ class PenStyleAdapter extends DelegationAdapter<Item> implements OnDelegateClick
 
             public void update(Object aItem) {
                 PenCatTitleItem item = (PenCatTitleItem) aItem;
-                tvPenCatTitle.setText(item.title);
+                tvPenCatTitle.setText(item.getTitle());
             }
         }
     }
@@ -157,9 +157,9 @@ class PenStyleAdapter extends DelegationAdapter<Item> implements OnDelegateClick
 
             public void update(Object aItem) {
                 PenShapeItem item = (PenShapeItem) aItem;
-                rbShapeName.setText(item.name);
-                rbShapeName.setCompoundDrawablesWithIntrinsicBounds(0, item.image, 0, 0);
-                rbShapeName.setChecked(item.isChecked);
+                rbShapeName.setText(item.getName());
+                rbShapeName.setCompoundDrawablesWithIntrinsicBounds(0, item.getImage(), 0, 0);
+                rbShapeName.setChecked(item.isChecked());
             }
         }
     }

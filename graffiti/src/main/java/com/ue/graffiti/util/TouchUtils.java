@@ -36,7 +36,7 @@ public class TouchUtils {
 
     public static Matrix calPelSavedMatrix(Pel selectedPel) {
         Matrix savedMatrix = new Matrix();
-        PathMeasure pathMeasure = new PathMeasure(selectedPel.path, true);// 将Path封装成PathMeasure，方便获取path内的matrix用
+        PathMeasure pathMeasure = new PathMeasure(selectedPel.getPath(), true);// 将Path封装成PathMeasure，方便获取path内的matrix用
         pathMeasure.getMatrix(pathMeasure.getLength(), savedMatrix, PathMeasure.POSITION_MATRIX_FLAG & PathMeasure.TANGENT_MATRIX_FLAG);
 
         return savedMatrix;
@@ -44,7 +44,7 @@ public class TouchUtils {
 
     public static PointF calPelCenterPoint(Pel selectedPel) {
         Rect boundRect = new Rect();
-        selectedPel.region.getBounds(boundRect);
+        selectedPel.getRegion().getBounds(boundRect);
 
         return new PointF((boundRect.right + boundRect.left) / 2, (boundRect.bottom + boundRect.top) / 2);
     }

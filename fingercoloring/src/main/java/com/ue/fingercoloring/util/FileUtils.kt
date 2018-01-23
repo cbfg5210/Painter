@@ -14,7 +14,7 @@ object FileUtils {
 
     fun obtainLocalImages(): List<LocalWork> {
         val localWorks = ArrayList<LocalWork>()
-        val path = Environment.getExternalStorageDirectory().path + Constants.FOLDER_WORKS
+        val path = Environment.getExternalStorageDirectory().getPath() + Constants.FOLDER_WORKS
         val f = File(path)
         if (f.listFiles() != null) {
             val file = f.listFiles()
@@ -35,7 +35,7 @@ object FileUtils {
     }
 
     fun deleteWork(workName: String): Boolean {
-        val path = Environment.getExternalStorageDirectory().path + Constants.FOLDER_WORKS + workName
+        val path = Environment.getExternalStorageDirectory().getPath() + Constants.FOLDER_WORKS + workName
         val file = File(path)
         return if (file.exists()) file.delete() else false
     }
@@ -43,7 +43,7 @@ object FileUtils {
     private fun getDropboxIMGSize(file: File): Float {
         val options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
-        BitmapFactory.decodeFile(file.path, options)
+        BitmapFactory.decodeFile(file.getPath(), options)
         val imageHeight = options.outHeight.toFloat()
         val imageWidth = options.outWidth.toFloat()
         return imageWidth / imageHeight

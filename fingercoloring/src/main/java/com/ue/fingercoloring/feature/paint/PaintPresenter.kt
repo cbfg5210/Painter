@@ -21,7 +21,7 @@ class PaintPresenter(private val mPaintActivity: AppCompatActivity) {
     fun saveImageLocally(bmp: Bitmap, paintName: String, listener: OnSaveImageListener) {
         Observable
                 .create(ObservableOnSubscribe<String> { e ->
-                    val path = Environment.getExternalStorageDirectory().path + Constants.FOLDER_WORKS
+                    val path = Environment.getExternalStorageDirectory().getPath() + Constants.FOLDER_WORKS
                     val dir = File(path)
                     if (!dir.exists()) dir.mkdirs()
 

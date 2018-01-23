@@ -32,15 +32,15 @@ public class DrawBesselTouch extends DrawTouch {
         super.move();
 
         movePoint.set(curPoint);
-        newPel.path.reset();
+        newPel.getPath().reset();
 
         if (!control) {
             //非拉伸贝塞尔曲线操作
-            newPel.path.moveTo(beginPoint.x, beginPoint.y);
-            newPel.path.cubicTo(beginPoint.x, beginPoint.y, beginPoint.x, beginPoint.y, movePoint.x, movePoint.y);
+            newPel.getPath().moveTo(beginPoint.x, beginPoint.y);
+            newPel.getPath().cubicTo(beginPoint.x, beginPoint.y, beginPoint.x, beginPoint.y, movePoint.x, movePoint.y);
         } else {
-            newPel.path.moveTo(beginPoint.x, beginPoint.y);
-            newPel.path.cubicTo(beginPoint.x, beginPoint.y, movePoint.x, movePoint.y, endPoint.x, endPoint.y);
+            newPel.getPath().moveTo(beginPoint.x, beginPoint.y);
+            newPel.getPath().cubicTo(beginPoint.x, beginPoint.y, movePoint.x, movePoint.y, endPoint.x, endPoint.y);
         }
 
         mSimpleTouchListener.setSelectedPel(selectedPel = newPel);
@@ -56,7 +56,7 @@ public class DrawBesselTouch extends DrawTouch {
             endPoint.set(upPoint);//记录落脚点
             control = true;
         } else {
-            newPel.closure = false;
+            newPel.setClosure(false);
             super.up(); //最终敲定
 
             control = false;

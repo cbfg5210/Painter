@@ -114,16 +114,16 @@ public class DrawTextDialog extends DialogFragment implements View.OnClickListen
             Pel pel = pelIterator.next();
 
             //若是文本图元
-            if (pel.text != null) {
-                Text text = pel.text;
+            if (pel.getText() != null) {
+                Text text = pel.getText();
                 savedCanvas.save();
                 savedCanvas.translate(text.getTransDx(), text.getTransDy());
                 savedCanvas.scale(text.getScale(), text.getScale(), text.getCenterPoint().x, text.getCenterPoint().y);
                 savedCanvas.rotate(text.getDegree(), text.getCenterPoint().x, text.getCenterPoint().y);
                 savedCanvas.drawText(text.getContent(), text.getBeginPoint().x, text.getBeginPoint().y, text.getPaint());
                 savedCanvas.restore();
-            } else if (pel.picture != null) {
-                Picture picture = pel.picture;
+            } else if (pel.getPicture() != null) {
+                Picture picture = pel.getPicture();
                 savedCanvas.save();
                 savedCanvas.translate(picture.getTransDx(), picture.getTransDy());
                 savedCanvas.scale(picture.getScale(), picture.getScale(), picture.getCenterPoint().x, picture.getCenterPoint().y);
@@ -202,7 +202,7 @@ public class DrawTextDialog extends DialogFragment implements View.OnClickListen
     public void onDrawTextOk(View v) {
         //构造该次的文本对象,并装入图元对象
         Pel newPel = new Pel();
-        newPel.text = drawTextVi.getText(paintColor);
+        newPel.setText(drawTextVi.getText(paintColor));
 
         drawPels();
         if (mDrawTextListener != null) {

@@ -116,16 +116,16 @@ public class DrawPictureDialog extends DialogFragment implements View.OnClickLis
             Pel pel = pelIterator.next();
 
             //若是文本图元
-            if (pel.text != null) {
-                Text text = pel.text;
+            if (pel.getText() != null) {
+                Text text = pel.getText();
                 savedCanvas.save();
                 savedCanvas.translate(text.getTransDx(), text.getTransDy());
                 savedCanvas.scale(text.getScale(), text.getScale(), text.getCenterPoint().x, text.getCenterPoint().y);
                 savedCanvas.rotate(text.getDegree(), text.getCenterPoint().x, text.getCenterPoint().y);
                 savedCanvas.drawText(text.getContent(), text.getBeginPoint().x, text.getBeginPoint().y, text.getPaint());
                 savedCanvas.restore();
-            } else if (pel.picture != null) {
-                Picture picture = pel.picture;
+            } else if (pel.getPicture() != null) {
+                Picture picture = pel.getPicture();
                 savedCanvas.save();
                 savedCanvas.translate(picture.getTransDx(), picture.getTransDy());
                 savedCanvas.scale(picture.getScale(), picture.getScale(), picture.getCenterPoint().x, picture.getCenterPoint().y);
@@ -134,7 +134,7 @@ public class DrawPictureDialog extends DialogFragment implements View.OnClickLis
                 savedCanvas.restore();
             }
 //            else if (!pel.equals(selectedPel))//若非选中的图元
-//                savedCanvas.drawPath(pel.path, pel.paint);
+//                savedCanvas.drawPath(pel.getPath(), pel.getPaint());
         }
     }
 
@@ -182,7 +182,7 @@ public class DrawPictureDialog extends DialogFragment implements View.OnClickLis
         //插入了图
         if (drawPictureVi.getImageContent() != null) {
             Pel newPel = new Pel();
-            newPel.picture = drawPictureVi.getPicture();
+            newPel.setPicture(drawPictureVi.getPicture());
 
             drawPels();
             if (mDrawPictureListener != null) {

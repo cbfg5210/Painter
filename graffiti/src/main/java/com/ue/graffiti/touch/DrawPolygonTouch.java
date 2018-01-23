@@ -29,8 +29,8 @@ public class DrawPolygonTouch extends DrawTouch {
         beginPoint.set(downPoint);
 
         newPel = new Pel();
-        newPel.path.moveTo(beginPoint.x, beginPoint.y);
-        lastPath.set(newPel.path);
+        newPel.getPath().moveTo(beginPoint.x, beginPoint.y);
+        lastPath.set(newPel.getPath());
 
         firstDown = false;
     }
@@ -41,8 +41,8 @@ public class DrawPolygonTouch extends DrawTouch {
 
         movePoint.set(curPoint);
 
-        newPel.path.set(lastPath);
-        newPel.path.lineTo(movePoint.x, movePoint.y);
+        newPel.getPath().set(lastPath);
+        newPel.getPath().lineTo(movePoint.x, movePoint.y);
 
         mSimpleTouchListener.setSelectedPel(selectedPel = newPel);
     }
@@ -53,13 +53,13 @@ public class DrawPolygonTouch extends DrawTouch {
         endPoint.set(curPoint);
 
         if (TouchUtils.distance(beginPoint, endPoint) <= MAX_CIRCLE) {
-            newPel.path.set(lastPath);
-            newPel.path.close();
-            newPel.closure = true;
+            newPel.getPath().set(lastPath);
+            newPel.getPath().close();
+            newPel.setClosure(true);
             super.up();
 
             firstDown = true;
         }
-        lastPath.set(newPel.path);
+        lastPath.set(newPel.getPath());
     }
 }

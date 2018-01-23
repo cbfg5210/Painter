@@ -54,7 +54,7 @@ public class PenDialog extends DialogFragment implements OnSeekBarChangeListener
     private PenStyleAdapter adapter;
 
     public void setCurrentPaint(Paint currentPaint) {
-        this.paint = currentPaint;
+        paint = currentPaint;
     }
 
     public static PenDialog newInstance() {
@@ -113,13 +113,13 @@ public class PenDialog extends DialogFragment implements OnSeekBarChangeListener
         @Override
         public void onClick(View view, int i) {
             PenShapeItem item = (PenShapeItem) adapter.getItems().get(i);
-            if (item.flag == FLAG_SHAPE) {
-                lastShapeImage = item.image;
-                lastShapeIndex = item.index;
+            if (item.getFlag() == FLAG_SHAPE) {
+                lastShapeImage = item.getImage();
+                lastShapeIndex = item.getIndex();
                 paint.setPathEffect(PenUtils.getPaintShapeByImage(lastShapeImage, penwidthSeekBar.getProgress(), matrix));
             } else {
-                lastEffectImage = item.image;
-                lastEffectIndex = item.index;
+                lastEffectImage = item.getImage();
+                lastEffectIndex = item.getIndex();
                 paint.setMaskFilter(PenUtils.getPaintEffectByImage(lastEffectImage));
             }
             // 刷新特效区域
@@ -195,8 +195,8 @@ public class PenDialog extends DialogFragment implements OnSeekBarChangeListener
 
         for (int i = 0, len = images.length; i < len; i++) {
             PenShapeItem item = new PenShapeItem(FLAG_SHAPE, images[i], names[i]);
-            item.index = i;
-            item.isChecked = lastShapeIndex == i;
+            item.setIndex(i);
+            item.setChecked(lastShapeIndex == i);
             items.add(item);
         }
 
@@ -206,8 +206,8 @@ public class PenDialog extends DialogFragment implements OnSeekBarChangeListener
 
         for (int i = 0, len = images.length; i < len; i++) {
             PenShapeItem item = new PenShapeItem(FLAG_EFFECT, images[i], names[i]);
-            item.index = i;
-            item.isChecked = lastEffectIndex == i;
+            item.setIndex(i);
+            item.setChecked(lastEffectIndex == i);
             items.add(item);
         }
 
