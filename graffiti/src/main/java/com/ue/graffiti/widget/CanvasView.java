@@ -31,6 +31,8 @@ import com.ue.graffiti.util.PenUtils;
 import com.ue.graffiti.util.SPUtils;
 import com.ue.graffiti.util.TouchUtils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -192,7 +194,8 @@ public class CanvasView extends View implements SimpleTouchListener {
         invalidate();
     }
 
-    public void updateSavedBitmap(Canvas canvas, Bitmap bitmap, List<Pel> pelList, Pel selectedPel, boolean isInvalidate) {
+    @Override
+    public void updateSavedBitmap(@NotNull Canvas canvas, @NotNull Bitmap bitmap, @NotNull List<? extends Pel> pelList, @NotNull Pel selectedPel, boolean isInvalidate) {
         //更新重绘背景位图用（当且仅当选择的图元有变化的时候才调用）
         //创建缓冲位图
         TouchUtils.ensureBitmapRecycled(bitmap);
@@ -214,9 +217,9 @@ public class CanvasView extends View implements SimpleTouchListener {
         updateSavedBitmap(savedCanvas, savedBitmap, pelList, selectedPel, true);
     }
 
-    private void drawPels(Canvas savedCanvas, List<Pel> pelList, Pel selectedPel) {
+    private void drawPels(Canvas savedCanvas, List<? extends Pel> pelList, Pel selectedPel) {
         // 获取pelList对应的迭代器头结点
-        ListIterator<Pel> pelIterator = pelList.listIterator();
+        ListIterator<? extends Pel> pelIterator = pelList.listIterator();
         while (pelIterator.hasNext()) {
             Pel pel = pelIterator.next();
             //若是文本图元
@@ -421,6 +424,10 @@ public class CanvasView extends View implements SimpleTouchListener {
         if (touch != null) {
             touch.setTouchListener(null, new SimpleTouchListener() {
                 @Override
+                public void updateSavedBitmap(@NotNull Canvas canvas, @NotNull Bitmap bitmap, @NotNull List<? extends Pel> pelList, @NotNull Pel selectedPel, boolean isInvalidate) {
+                }
+
+                @Override
                 public void invalidate() {
                 }
 
@@ -446,10 +453,6 @@ public class CanvasView extends View implements SimpleTouchListener {
                 @Override
                 public Paint getCurrentPaint() {
                     return new Paint();
-                }
-
-                @Override
-                public void updateSavedBitmap(Canvas canvas, Bitmap bitmap, List<Pel> pelList, Pel selectedPel, boolean isInvalidate) {
                 }
 
                 @Override
