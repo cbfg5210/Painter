@@ -18,6 +18,6 @@ interface SimpleTouchListener {
     fun getCurrentPaint(): Paint
     fun getContext(): Context
     fun invalidate()
-    fun setSelectedPel(pel: Pel)
-    fun updateSavedBitmap(canvas: Canvas, bitmap: Bitmap, pelList: List<Pel>, selectedPel: Pel, isInvalidate: Boolean)
+    fun setSelectedPel(pel: Pel?)
+    fun updateSavedBitmap(canvas: Canvas, bitmap: Bitmap?, pelList: List<Pel>, selectedPel: Pel?, isInvalidate: Boolean)
 }
