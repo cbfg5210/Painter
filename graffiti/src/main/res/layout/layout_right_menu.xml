@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/vgRightMenu"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|right"
+    android:orientation="vertical"
+    android:visibility="gone"
+    tools:visibility="visible">
+
+    <LinearLayout
+        android:id="@+id/vgEditOptions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/ivDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_corner"
+            android:src="@drawable/btn_deletepel_normal"/>
+
+        <ImageView
+            android:id="@+id/ivCopy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_corner"
+            android:src="@drawable/btn_copypel_normal"/>
+
+        <ImageView
+            android:id="@+id/ivRotate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_corner"
+            android:src="@drawable/btn_rotate_normal"/>
+
+        <ImageView
+            android:id="@+id/ivZoomIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_corner"
+            android:src="@drawable/btn_zoom_normal"/>
+
+        <ImageView
+            android:id="@+id/ivZoomOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_corner"
+            android:src="@drawable/btn_zoom_normal"/>
+
+        <ImageView
+            android:id="@+id/ivFill"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_corner"
+            android:src="@drawable/btn_fillpel_normal"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ivToggleOptions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/img_base_parent_normal"
+        android:src="@drawable/sel_expand_shrink_arrow"/>
+</LinearLayout>

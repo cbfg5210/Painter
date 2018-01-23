@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:gravity="bottom"
+    android:orientation="horizontal">
+
+    <!--undo-->
+    <ImageView
+        android:id="@+id/ivUndo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/selector_undo"/>
+    <!--redo-->
+    <ImageView
+        android:id="@+id/ivRedo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:src="@drawable/selector_redo"/>
+
+    <RadioGroup
+        android:id="@+id/vgBottomMenu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="6"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/btnDraw"
+            style="@style/GraffitiButton"
+            android:drawableTop="@drawable/sel_draw_pel"
+            android:text="@string/tools_bottomtitle_txt_openpelbar"/>
+
+        <View
+            style="@style/MenuSeparator"/>
+
+        <RadioButton
+            android:id="@+id/btnEdit"
+            style="@style/GraffitiButton"
+            android:drawableTop="@drawable/sel_edit_pel"
+            android:text="@string/tools_bottomtitle_txt_opentransbar"/>
+
+        <View
+            style="@style/MenuSeparator"/>
+
+        <RadioButton
+            android:id="@+id/btnFill"
+            style="@style/GraffitiButton"
+            android:drawableTop="@drawable/sel_fill_pel"
+            android:text="@string/tools_bottomtitle_txt_opencrossfill"/>
+
+        <View
+            style="@style/MenuSeparator"/>
+
+        <RadioButton
+            android:id="@+id/btnBg"
+            style="@style/GraffitiButton"
+            android:drawableTop="@drawable/btn_setbg_normal"
+            android:text="@string/tools_bottomtitle_txt_opencanvasbgbar"/>
+
+        <View
+            style="@style/MenuSeparator"/>
+
+        <RadioButton
+            android:id="@+id/btnText"
+            style="@style/GraffitiButton"
+            android:drawableTop="@drawable/btn_text_normal"
+            android:text="@string/text"/>
+
+        <View
+            style="@style/MenuSeparator"/>
+
+        <RadioButton
+            android:id="@+id/btnInsertPicture"
+            style="@style/GraffitiButton"
+            android:drawableTop="@drawable/btn_picture_normal"
+            android:text="@string/image"/>
+    </RadioGroup>
+</LinearLayout>

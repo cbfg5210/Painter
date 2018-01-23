@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <!--todo:后续可以建立系列的ViewGroup style,方便使用-->
+    <!--LinearLayout width:match,height:wrap,orientation:horizontal-->
+    <style name="LL_MWH">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="LL_MWV">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="GraffitiButton">
+        <item name="android:textSize">@dimen/font_size_12</item>
+        <item name="android:textColor">@color/sel_menu_text_color</item>
+        <item name="android:background">@color/col_384252</item>
+        <item name="android:paddingTop">@dimen/widget_size_4</item>
+        <item name="android:gravity">center</item>
+        <item name="android:button">@null</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:shadowColor">@color/col_181e2a</item>
+        <item name="android:shadowDy">1.0</item>
+        <item name="android:shadowRadius">1.0</item>
+        <item name="android:layout_weight">1.0</item>
+        <item name="android:paddingBottom">@dimen/widget_size_4</item>
+    </style>
+
+    <style name="MenuSeparator">
+        <item name="android:layout_width">1px</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/col_343d4d</item>
+    </style>
+
+    <style name="GraffitiButton2">
+        <item name="android:background">@drawable/selector_graffitibutton</item>
+        <item name="android:paddingTop">11dp</item>
+        <item name="android:layout_width">55dip</item>
+        <item name="android:layout_height">55dip</item>
+        <item name="android:shadowColor">#ff181e2a</item>
+        <item name="android:shadowDy">1.0</item>
+        <item name="android:shadowRadius">1.0</item>
+        <item name="android:drawablePadding">-40dp</item>
+    </style>
+
+    <style name="GraffitiButton3">
+        <item name="android:background">@drawable/selector_graffitibutton</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:layout_width">55dip</item>
+        <item name="android:layout_height">55dip</item>
+        <item name="android:shadowColor">#ff181e2a</item>
+        <item name="android:shadowDy">1.0</item>
+        <item name="android:shadowRadius">1.0</item>
+        <item name="android:drawablePadding">-40dp</item>
+    </style>
+
+    <style name="DrawTextButton">
+        <item name="android:textSize">@dimen/font_size_12</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:paddingLeft">40dp</item>
+        <item name="android:background">@drawable/selector_graffitibutton</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:shadowColor">#ff181e2a</item>
+        <item name="android:shadowDy">1.0</item>
+        <item name="android:shadowRadius">1.0</item>
+        <item name="android:drawablePadding">-35dp</item>
+    </style>
+
+    <style name="DrawPictureButton">
+        <item name="android:textSize">@dimen/font_size_12</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:paddingLeft">100dp</item>
+        <item name="android:background">@drawable/selector_graffitibutton</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:shadowColor">#ff181e2a</item>
+        <item name="android:shadowDy">1.0</item>
+        <item name="android:shadowRadius">1.0</item>
+        <item name="android:drawablePadding">-100dp</item>
+    </style>
+
+    <style name="GraffitiDialog">
+        <item name="android:windowBackground">@drawable/sha_bg_white_corner5</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="FullScreenDialog" parent="android:Theme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
+    <style name="NormalText">
+        <item name="android:textSize">@dimen/font_size_15</item>
+        <item name="android:textColor">@color/col_666666</item>
+    </style>
+
+    <style name="PenButton">
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/col_666666</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <color name="col_181e2a">#181e2a</color>
+</resources>

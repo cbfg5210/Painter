@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_popwin"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:id="@+id/vgPels"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/ivFreehand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_freehand_normal2"
+            android:src="@drawable/bg_highlight_frame"/>
+
+        <ImageView
+            android:id="@+id/ivRect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_rect_normal2"/>
+
+        <ImageView
+            android:id="@+id/ivBessel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_bessel_normal2"/>
+
+        <ImageView
+            android:id="@+id/ivOval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_oval_normal2"/>
+
+        <ImageView
+            android:id="@+id/ivLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_line_normal2"/>
+
+        <ImageView
+            android:id="@+id/ivBrokenLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_brokenline_normal2"/>
+
+        <ImageView
+            android:id="@+id/ivPolygon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_polygon_normal2"/>
+
+        <ImageView
+            android:id="@+id/ivKeepDrawing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_keepdrawing_normal2"/>
+    </LinearLayout>
+</HorizontalScrollView>

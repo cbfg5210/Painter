@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.ue.graffiti.widget.CanvasView
+        android:id="@+id/cvGraffitiView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bg_canvas0"/>
+
+    <!--编辑按钮的菜单列表-->
+    <include layout="@layout/layout_right_menu"/>
+    <!--顶部菜单选项-->
+    <include layout="@layout/layout_top_menu"/>
+    <!--底部菜单选项-->
+    <include layout="@layout/layout_bottom_menu"/>
+</FrameLayout>

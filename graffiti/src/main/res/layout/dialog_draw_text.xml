@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.ue.graffiti.widget.TextImageView
+        android:id="@+id/dtvTextCanvas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="@dimen/font_size_20"
+        app:type="text"/>
+
+    <LinearLayout
+        android:id="@+id/vgDrawTextTopMenu"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/widget_size_55"
+        android:background="@drawable/bg_processing_title"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCancel"
+            style="@style/GraffitiButton3"
+            android:drawableTop="@drawable/btn_refuse_normal"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/selector_graffitibutton"
+            android:gravity="center"
+            android:text="@string/insert_text"
+            android:textColor="@color/white"
+            android:textSize="@dimen/widget_size_20"/>
+
+        <Button
+            android:id="@+id/btnOk"
+            style="@style/GraffitiButton3"
+            android:drawableTop="@drawable/btn_sure_normal"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/vgDrawTextBottomMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnTextContent"
+            style="@style/DrawTextButton"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/btn_text_normal"
+            android:text="@string/content"/>
+
+        <Button
+            android:id="@+id/btnTextColor"
+            style="@style/DrawTextButton"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/btn_colorpicker_normal"
+            android:text="@string/color"/>
+    </LinearLayout>
+
+</FrameLayout>
