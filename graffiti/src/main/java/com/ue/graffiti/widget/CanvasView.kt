@@ -15,8 +15,10 @@ import com.ue.graffiti.model.Step
 import com.ue.graffiti.touch.DrawFreehandTouch
 import com.ue.graffiti.touch.Touch
 import com.ue.graffiti.touch.TransformTouch
-import com.ue.graffiti.util.PenUtils
-import com.ue.graffiti.util.TouchUtils
+import com.ue.graffiti.util.ensureBitmapRecycled
+import com.ue.graffiti.util.getPaintEffectByImage
+import com.ue.graffiti.util.getPaintShapeByImage
+import com.ue.graffiti.util.reprintFilledAreas
 import com.ue.library.util.SPUtils
 import java.util.*
 
@@ -123,8 +125,8 @@ class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), 
             strokeJoin = Paint.Join.ROUND
             color = lastColor
             strokeWidth = lastStrokeWidth.toFloat()
-            pathEffect = PenUtils.getPaintShapeByImage(lastShapeImage, 1, null)
-            maskFilter = PenUtils.getPaintEffectByImage(lastEffectImage)
+            pathEffect = getPaintShapeByImage(lastShapeImage, 1)
+            maskFilter = getPaintEffectByImage(lastEffectImage)
         }
 
         currentPaint = drawPelPaint
@@ -149,14 +151,14 @@ class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), 
         val backgroundDrawable = this.resources.getDrawable(R.drawable.bg_canvas0) as BitmapDrawable
         val scaledBitmap = Bitmap.createScaledBitmap(backgroundDrawable.bitmap, canvasWidth, canvasHeight, true)
 
-        TouchUtils.ensureBitmapRecycled(backgroundBitmap)
+        ensureBitmapRecycled(backgroundBitmap)
         backgroundBitmap = scaledBitmap.copy(Config.ARGB_8888, true)
-        TouchUtils.ensureBitmapRecycled(scaledBitmap)
+        ensureBitmapRecycled(scaledBitmap)
 
-        TouchUtils.ensureBitmapRecycled(copyOfBackgroundBitmap)
+        ensureBitmapRecycled(copyOfBackgroundBitmap)
         copyOfBackgroundBitmap = backgroundBitmap!!.copy(Config.ARGB_8888, true)
 
-        TouchUtils.ensureBitmapRecycled(originalBackgroundBitmap)
+        ensureBitmapRecycled(originalBackgroundBitmap)
         originalBackgroundBitmap = backgroundBitmap!!.copy(Config.ARGB_8888, true)
 
         cacheCanvas = Canvas()
@@ -185,7 +187,7 @@ class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), 
         var bitmap = bitmap
         //更新重绘背景位图用（当且仅当选择的图元有变化的时候才调用）
         //创建缓冲位图
-        TouchUtils.ensureBitmapRecycled(bitmap)
+        ensureBitmapRecycled(bitmap)
         //由画布背景创建缓冲位图
         bitmap = backgroundBitmap!!.copy(Bitmap.Config.ARGB_8888, true)
         //与画布建立联系
@@ -279,40 +281,40 @@ class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), 
         val backgroundDrawable = this.resources.getDrawable(id) as BitmapDrawable
         val offeredBitmap = backgroundDrawable.bitmap
 
-        TouchUtils.ensureBitmapRecycled(backgroundBitmap)
+        ensureBitmapRecycled(backgroundBitmap)
         backgroundBitmap = Bitmap.createScaledBitmap(offeredBitmap, canvasWidth, canvasHeight, true)
 
-        TouchUtils.ensureBitmapRecycled(copyOfBackgroundBitmap)
+        ensureBitmapRecycled(copyOfBackgroundBitmap)
         copyOfBackgroundBitmap = backgroundBitmap!!.copy(Config.ARGB_8888, true)
 
-        TouchUtils.ensureBitmapRecycled(originalBackgroundBitmap)
+        ensureBitmapRecycled(originalBackgroundBitmap)
         originalBackgroundBitmap = backgroundBitmap!!.copy(Config.ARGB_8888, true)
 
-        TouchUtils.reprintFilledAreas(undoStack, backgroundBitmap!!)//填充区域重新打印
+        reprintFilledAreas(undoStack, backgroundBitmap!!)//填充区域重新打印
         updateSavedBitmap()
     }
 
     fun setBackgroundBitmap(photo: Bitmap) {
         //以图库或拍照得到的背景图片换画布
-        TouchUtils.ensureBitmapRecycled(backgroundBitmap)
+        ensureBitmapRecycled(backgroundBitmap)
         backgroundBitmap = Bitmap.createScaledBitmap(photo, canvasWidth, canvasHeight, true)
 
-        TouchUtils.ensureBitmapRecycled(copyOfBackgroundBitmap)
+        ensureBitmapRecycled(copyOfBackgroundBitmap)
         copyOfBackgroundBitmap = backgroundBitmap!!.copy(Config.ARGB_8888, true)
 
-        TouchUtils.ensureBitmapRecycled(originalBackgroundBitmap)
+        ensureBitmapRecycled(originalBackgroundBitmap)
         originalBackgroundBitmap = backgroundBitmap!!.copy(Config.ARGB_8888, true)
         //填充区域重新打印
-        TouchUtils.reprintFilledAreas(undoStack, backgroundBitmap!!)
+        reprintFilledAreas(undoStack, backgroundBitmap!!)
         updateSavedBitmap()
     }
 
     fun setBackgroundBitmap() {
         //清空画布时将之前保存的副本背景作为重绘（去掉填充）
-        TouchUtils.ensureBitmapRecycled(backgroundBitmap)
+        ensureBitmapRecycled(backgroundBitmap)
         backgroundBitmap = copyOfBackgroundBitmap!!.copy(Config.ARGB_8888, true)
         //填充区域重新打印
-        TouchUtils.reprintFilledAreas(undoStack, backgroundBitmap!!)
+        reprintFilledAreas(undoStack, backgroundBitmap!!)
         updateSavedBitmap()
     }
 

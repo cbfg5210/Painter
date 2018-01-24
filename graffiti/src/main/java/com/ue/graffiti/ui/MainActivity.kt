@@ -28,8 +28,10 @@ import com.ue.graffiti.event.OnStepListener
 import com.ue.graffiti.helper.DialogHelper
 import com.ue.graffiti.model.*
 import com.ue.graffiti.touch.*
-import com.ue.graffiti.util.StepUtils
-import com.ue.graffiti.util.TouchUtils
+import com.ue.graffiti.util.calPelCenterPoint
+import com.ue.graffiti.util.calPelSavedMatrix
+import com.ue.graffiti.util.toRedoUpdate
+import com.ue.graffiti.util.toUndoUpdate
 import com.ue.library.util.SPUtils
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -145,9 +147,9 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
 
         mMainPresenter.setListenerForChildren(R.id.vgTopMenu, this)
         mMainPresenter.setListenerForChildren(R.id.vgBottomMenu, this)
-        mMainPresenter.setListenerForChildren(R.id.vgRightMenu, View.OnClickListener { v -> onSwitchEditMenuAction(v) }) 
-        
-        cvGraffitiView.setMultiTouchListener(object :OnMultiTouchListener{
+        mMainPresenter.setListenerForChildren(R.id.vgRightMenu, View.OnClickListener { v -> onSwitchEditMenuAction(v) })
+
+        cvGraffitiView.setMultiTouchListener(object : OnMultiTouchListener {
             override fun onMultiTouch() {
                 if (vgTopMenu.visibility == View.VISIBLE) {
                     closeTools()
@@ -233,7 +235,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
     }
 
     private fun onOpenDrawTextBtn(v: View) {
-        DialogHelper.showDrawTextDialog(this, cvGraffitiView, object:DrawTextDialog.OnDrawTextListener{
+        DialogHelper.showDrawTextDialog(this, cvGraffitiView, object : DrawTextDialog.OnDrawTextListener {
             override fun onTextDrew(newPel: Pel, newBitmap: Bitmap?) {
                 //添加至文本总链表
                 cvGraffitiView.addPel(newPel)
@@ -246,7 +248,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
     }
 
     private fun onOpenDrawPictureBtn(v: View) {
-        DialogHelper.showDrawPictureDialog(this, cvGraffitiView, object:DrawPictureDialog.OnDrawPictureListener{
+        DialogHelper.showDrawPictureDialog(this, cvGraffitiView, object : DrawPictureDialog.OnDrawPictureListener {
             override fun onPictureDrew(newPel: Pel, newBitmap: Bitmap?) {
                 //添加至文本总链表
                 cvGraffitiView.addPel(newPel)
@@ -358,7 +360,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
         val step = cvGraffitiView.popUndoStack() ?: return
 
         cvGraffitiView.touch!!.setProcessing(true, getString(R.string.undoing))
-        StepUtils.toRedoUpdate(this, step, cvGraffitiView.getBackgroundBitmap(), cvGraffitiView.getCopyOfBackgroundBitmap(), object:OnStepListener{
+        toRedoUpdate(this, step, cvGraffitiView.getBackgroundBitmap(), cvGraffitiView.getCopyOfBackgroundBitmap(), object : OnStepListener {
             override fun onComplete() {
                 if (step is TransformPelStep) {
                     cvGraffitiView.setSelectedPel(null)
@@ -375,7 +377,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
     private fun onRedoBtn(v: View) {
         val step = cvGraffitiView.popRedoStack() ?: return
         cvGraffitiView.touch!!.setProcessing(true, getString(R.string.redoing))
-        StepUtils.toUndoUpdate(this, step, cvGraffitiView.getBackgroundBitmap(),object:OnStepListener{
+        toUndoUpdate(this, step, cvGraffitiView.getBackgroundBitmap(), object : OnStepListener {
             override fun onComplete() {
                 //重绘位图
                 cvGraffitiView.updateSavedBitmap()
@@ -414,7 +416,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
 
     override fun onBackPressed() {
         DialogHelper.showExitDialog(this, View.OnClickListener {
-            DialogHelper.showInputDialog(this@MainActivity, getString(R.string.input_graffiti_name),object :OnSingleResultListener{
+            DialogHelper.showInputDialog(this@MainActivity, getString(R.string.input_graffiti_name), object : OnSingleResultListener {
                 override fun onResult(result: Any) {
                     mMainPresenter.onSaveGraffitiClicked(cvGraffitiView.savedBitmap!!, result as String, View.OnClickListener { finish() })
                 }
@@ -431,7 +433,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
         /*
             * top menu listener
             * */
-            R.id.btnColor -> DialogHelper.showColorPickerDialog(this@MainActivity, object :ColorPickerDialog.OnColorPickerListener{
+            R.id.btnColor -> DialogHelper.showColorPickerDialog(this@MainActivity, object : ColorPickerDialog.OnColorPickerListener {
                 override fun onColorPicked(color: Int) {
                     SPUtils.putInt(SPKeys.SP_PAINT_COLOR, color)
                     btnColor!!.setTextColor(color)
@@ -439,7 +441,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
                 }
             })
             R.id.btnPen -> DialogHelper.showPenDialog(this@MainActivity, cvGraffitiView.getCurrentPaint())
-            R.id.btnClear -> DialogHelper.showClearDialog(this, object :DialogInterface.OnClickListener{
+            R.id.btnClear -> DialogHelper.showClearDialog(this, object : DialogInterface.OnClickListener {
                 override fun onClick(dialog: DialogInterface?, which: Int) {
                     //清空内部所有数据
                     cvGraffitiView.clearData()
@@ -449,7 +451,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
                     cvGraffitiView.setBackgroundBitmap()
                 }
             })
-            R.id.btnSave -> DialogHelper.showInputDialog(this, getString(R.string.input_graffiti_name),object:OnSingleResultListener{
+            R.id.btnSave -> DialogHelper.showInputDialog(this, getString(R.string.input_graffiti_name), object : OnSingleResultListener {
                 override fun onResult(result: Any) {
                     mMainPresenter.onSaveGraffitiClicked(cvGraffitiView.savedBitmap!!, result as String, null)
                 }
@@ -499,7 +501,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
     private fun onSwitchRotateZoom(viewId: Int, selectedPel: Pel) {
         savedPel = Pel()
         savedPel!!.path.set(selectedPel.path)
-        savedMatrix.set(TouchUtils.calPelSavedMatrix(savedPel!!))
+        savedMatrix.set(calPelSavedMatrix(savedPel!!))
 
         if (lastEditActionId == 0) {
             lastEditActionId = viewId
@@ -516,17 +518,17 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
 
         when (viewId) {
             R.id.ivRotate -> {
-                centerPoint.set(TouchUtils.calPelCenterPoint(selectedPel))
+                centerPoint.set(calPelCenterPoint(selectedPel))
                 transMatrix.set(savedMatrix)
                 transMatrix.setRotate(10f, centerPoint.x, centerPoint.y)
             }
             R.id.ivZoomIn -> {
-                centerPoint.set(TouchUtils.calPelCenterPoint(selectedPel))
+                centerPoint.set(calPelCenterPoint(selectedPel))
                 transMatrix.set(savedMatrix)
                 transMatrix.postScale(1.1f, 1.1f, centerPoint.x, centerPoint.y)
             }
             R.id.ivZoomOut -> {
-                centerPoint.set(TouchUtils.calPelCenterPoint(selectedPel))
+                centerPoint.set(calPelCenterPoint(selectedPel))
                 transMatrix.set(savedMatrix)
                 transMatrix.postScale(0.9f, 0.9f, centerPoint.x, centerPoint.y)
             }

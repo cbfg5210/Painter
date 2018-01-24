@@ -17,8 +17,9 @@ import com.ue.graffiti.R
 import com.ue.graffiti.constant.SPKeys
 import com.ue.graffiti.model.PenCatTitleItem
 import com.ue.graffiti.model.PenShapeItem
-import com.ue.graffiti.util.PenUtils
-import com.ue.graffiti.util.ResourceUtils
+import com.ue.graffiti.util.getPaintEffectByImage
+import com.ue.graffiti.util.getPaintShapeByImage
+import com.ue.graffiti.util.getXmlImageArray
 import com.ue.graffiti.widget.PenEffectView
 import com.ue.library.util.SPUtils
 import kotlinx.android.synthetic.main.dialog_pen.view.*
@@ -49,11 +50,11 @@ class PenDialog : DialogFragment(), OnSeekBarChangeListener {
             if (item.flag == FLAG_SHAPE) {
                 lastShapeImage = item.image
                 lastShapeIndex = item.index
-                paint.pathEffect = PenUtils.getPaintShapeByImage(lastShapeImage, sbPenStroke.progress, matrix)
+                paint.pathEffect = getPaintShapeByImage(lastShapeImage, sbPenStroke.progress, matrix)
             } else {
                 lastEffectImage = item.image
                 lastEffectIndex = item.index
-                paint.maskFilter = PenUtils.getPaintEffectByImage(lastEffectImage)
+                paint.maskFilter = getPaintEffectByImage(lastEffectImage)
             }
             // 刷新特效区域
             pevPenEffect.invalidate()
@@ -63,7 +64,7 @@ class PenDialog : DialogFragment(), OnSeekBarChangeListener {
     private val penList: MutableList<Item>
         get() {
             val items = ArrayList<Item>()
-            var images = ResourceUtils.getImageArray(context, R.array.penShapeImages)
+            var images = context.getXmlImageArray(R.array.penShapeImages)
             var names = resources.getStringArray(R.array.penShapeNames)
 
             lastShapeIndex = SPUtils.getInt(SPKeys.SP_PAINT_SHAPE_INDEX, 0)
@@ -79,7 +80,7 @@ class PenDialog : DialogFragment(), OnSeekBarChangeListener {
             }
 
             items.add(PenCatTitleItem(getString(R.string.special_effect)))
-            images = ResourceUtils.getImageArray(context, R.array.penEffectImages)
+            images = context.getXmlImageArray(R.array.penEffectImages)
             names = resources.getStringArray(R.array.penEffectNames)
 
             images.indices.mapTo(items) {

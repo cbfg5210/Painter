@@ -2,9 +2,8 @@ package com.ue.graffiti.touch
 
 import android.graphics.Path
 import android.graphics.PointF
-
 import com.ue.graffiti.model.Pel
-import com.ue.graffiti.util.TouchUtils
+import com.ue.graffiti.util.distance
 import com.ue.graffiti.widget.CanvasView
 
 class DrawPolygonTouch(canvasView: CanvasView) : DrawTouch(canvasView) {
@@ -45,7 +44,7 @@ class DrawPolygonTouch(canvasView: CanvasView) : DrawTouch(canvasView) {
         val endPoint = PointF()
         endPoint.set(curPoint)
 
-        if (TouchUtils.distance(beginPoint, endPoint) <= MAX_CIRCLE) {
+        if (distance(beginPoint, endPoint) <= MAX_CIRCLE) {
             newPel.path.set(lastPath)
             newPel.path.close()
             newPel.closure = true

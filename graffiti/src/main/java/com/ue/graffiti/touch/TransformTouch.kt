@@ -5,7 +5,9 @@ import android.graphics.PointF
 import com.ue.graffiti.constant.GestureFlags
 import com.ue.graffiti.model.Pel
 import com.ue.graffiti.model.TransformPelStep
-import com.ue.graffiti.util.TouchUtils
+import com.ue.graffiti.util.calPelCenterPoint
+import com.ue.graffiti.util.calPelSavedMatrix
+import com.ue.graffiti.util.distance
 import com.ue.graffiti.widget.CanvasView
 
 //变换触摸类
@@ -86,9 +88,9 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
         selectedPel = minDisPel
         mSimpleTouchListener!!.setSelectedPel(selectedPel!!)
         //计算选中图元的中心点
-        centerPoint.set(TouchUtils.calPelCenterPoint(selectedPel!!))
+        centerPoint.set(calPelCenterPoint(selectedPel!!))
         // 获取选中图元的初始matrix
-        savedMatrix.set(TouchUtils.calPelSavedMatrix(selectedPel!!))
+        savedMatrix.set(calPelSavedMatrix(selectedPel!!))
         //由已知信息构造该步骤
         //设置该步骤对应图元
         step = TransformPelStep(pelList, clipRegion, selectedPel!!)
@@ -102,7 +104,7 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
 
     // 第二只手指按下
     public override fun down2() {
-        oriDist = TouchUtils.distance(curPoint, secPoint)
+        oriDist = distance(curPoint, secPoint)
         if (oriDist > GestureFlags.MIN_ZOOM && selectedPel != null) {
             // 距离小于50px才算是缩放
             takeOverSelectedPel()
@@ -136,7 +138,7 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
         }
         if (mode == GestureFlags.ZOOM) {
             // 缩放操作
-            val newDist = TouchUtils.distance(curPoint, secPoint)
+            val newDist = distance(curPoint, secPoint)
             //两指的垂直间距
             val dy = Math.abs(curPoint.y - secPoint.y)
             if (dy >= GestureFlags.MAX_DY) {
@@ -173,7 +175,7 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
                 mode = GestureFlags.ZOOM
                 takeOverSelectedPel()
                 savedPel.path.set(selectedPel!!.path)
-                oriDist = TouchUtils.distance(curPoint, secPoint)
+                oriDist = distance(curPoint, secPoint)
                 return
             }
             //>100仍然是正常旋转
@@ -221,7 +223,7 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
         //弧长
         val arc = Math.sqrt((x * x + y * y).toDouble()).toFloat()
         //半径
-        val radius = TouchUtils.distance(curPoint, secPoint) / 2
+        val radius = distance(curPoint, secPoint) / 2
 
         return arc / radius * (180 / 3.14f)
     }
@@ -231,6 +233,6 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
         //起始变换因子为刚才的变换后因子
         savedMatrix.set(transMatrix)
         //重新计算图元中心点
-        centerPoint.set(TouchUtils.calPelCenterPoint(selectedPel!!))
+        centerPoint.set(calPelCenterPoint(selectedPel!!))
     }
 }

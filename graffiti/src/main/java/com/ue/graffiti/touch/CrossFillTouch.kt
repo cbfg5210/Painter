@@ -4,8 +4,8 @@ import android.graphics.*
 import android.graphics.Bitmap.Config
 import com.ue.graffiti.R
 import com.ue.graffiti.model.CrossFillStep
-import com.ue.graffiti.util.RxLifecycleUtils
-import com.ue.graffiti.util.TouchUtils
+import com.ue.graffiti.util.bindUtilDestroy
+import com.ue.graffiti.util.reprintFilledAreas
 import com.ue.graffiti.widget.CanvasView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -57,7 +57,7 @@ class CrossFillTouch(canvasView: CanvasView) : Touch(canvasView) {
         // 创建缓冲位图
         val bitmap = Bitmap.createBitmap(MAX_WIDTH, MAX_HEIGHT, Config.ARGB_8888)
         savedCanvas.setBitmap(bitmap)
-        TouchUtils.reprintFilledAreas(undoStack, bitmap)
+        reprintFilledAreas(undoStack, bitmap)
         // 获取pelList对应的迭代器头结点
         val pelIterator = pelList.listIterator()
         while (pelIterator.hasNext()) {
@@ -85,7 +85,7 @@ class CrossFillTouch(canvasView: CanvasView) : Touch(canvasView) {
 
     // 填充操作线程的实现类
     private fun doFillAction() {
-        val observable = Observable
+        Observable
                 .create<Any> { e ->
                     fill()
                     e.onNext(1)
@@ -93,9 +93,8 @@ class CrossFillTouch(canvasView: CanvasView) : Touch(canvasView) {
                 }
                 .subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread())
-
-        RxLifecycleUtils.bindUtilDestroy(context, observable)
-                .subscribe { o ->
+                .bindUtilDestroy(context)
+                .subscribe {
                     undoStack.push(CrossFillStep(pelList, null, initColor, fillColor, scanLinesList!!))
                     updateSavedBitmap(true)
                     isProcessing = false

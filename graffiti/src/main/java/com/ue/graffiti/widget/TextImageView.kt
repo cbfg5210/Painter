@@ -10,7 +10,7 @@ import com.ue.graffiti.event.BarSensorListener
 import com.ue.graffiti.model.Picture
 import com.ue.graffiti.model.Text
 import com.ue.graffiti.touch.TextImageTouch
-import com.ue.graffiti.util.TouchUtils
+import com.ue.graffiti.util.ensureBitmapRecycled
 
 class TextImageView : View {
     private var savedBitmap: Bitmap? = null
@@ -154,7 +154,7 @@ class TextImageView : View {
 
     fun setContentAndCenterPoint(contentId: Int) {
         this.contentId = contentId
-        TouchUtils.ensureBitmapRecycled(imageContent)
+        ensureBitmapRecycled(imageContent)
         this.imageContent = BitmapFactory.decodeResource(context.resources, contentId)
         centerPoint.set(textPoint.x + imageContent!!.width / 2, textPoint.y + imageContent!!.height / 2)
     }

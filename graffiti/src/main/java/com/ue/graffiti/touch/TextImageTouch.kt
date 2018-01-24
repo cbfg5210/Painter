@@ -1,10 +1,9 @@
 package com.ue.graffiti.touch
 
 import android.graphics.PointF
-
 import com.ue.graffiti.constant.GestureFlags
 import com.ue.graffiti.event.BarSensorListener
-import com.ue.graffiti.util.TouchUtils
+import com.ue.graffiti.util.distance
 
 class TextImageTouch(isText: Boolean, canvasWidth: Int, canvasHeight: Int) : Touch(null) {
     // 当前操作类型
@@ -74,7 +73,7 @@ class TextImageTouch(isText: Boolean, canvasWidth: Int, canvasHeight: Int) : Tou
 
     // 第二只手指按下
     public override fun down2() {
-        oriDist = TouchUtils.distance(curPoint, secPoint)
+        oriDist = distance(curPoint, secPoint)
         if (oriDist > GestureFlags.MIN_ZOOM) {
             // 距离小于50px才算是缩放
             mode = GestureFlags.ZOOM
@@ -103,7 +102,7 @@ class TextImageTouch(isText: Boolean, canvasWidth: Int, canvasHeight: Int) : Tou
         }
         if (mode == GestureFlags.ZOOM) {
             // 缩放操作
-            val newDist = TouchUtils.distance(curPoint, secPoint)
+            val newDist = distance(curPoint, secPoint)
             //两指的垂直间距
             if (Math.abs(curPoint.y - secPoint.y) >= GestureFlags.MAX_DY) {
                 //判断是否需要转变为旋转模式
@@ -122,7 +121,7 @@ class TextImageTouch(isText: Boolean, canvasWidth: Int, canvasHeight: Int) : Tou
             if (Math.abs(curPoint.y - secPoint.y) < GestureFlags.MAX_DY) {
                 //判断是否需要转变为缩放模式
                 mode = GestureFlags.ZOOM
-                oriDist = TouchUtils.distance(curPoint, secPoint)
+                oriDist = distance(curPoint, secPoint)
             } else {
                 //>100仍然是正常旋转
                 degree = oridegree % 360 + degree()
@@ -157,7 +156,7 @@ class TextImageTouch(isText: Boolean, canvasWidth: Int, canvasHeight: Int) : Tou
         val y = curPoint.y - downPoint.y
 
         val arc = Math.sqrt((x * x + y * y).toDouble()).toFloat()//弧长
-        val radius = TouchUtils.distance(curPoint, secPoint) / 2//半径
+        val radius = distance(curPoint, secPoint) / 2//半径
 
         return arc / radius * (180 / 3.14f)
     }
