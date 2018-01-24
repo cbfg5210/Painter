@@ -152,12 +152,13 @@ class CrossFillTouch(canvasView: CanvasView) : Touch(canvasView) {
             while (x > 0) {
                 index = width * y + x
                 curColor = pixels!![index]
-                if (curColor != oldColor || curColor == fillColor) {
+                if (curColor == oldColor && curColor != fillColor) {
+                    whiteBitmap!!.setPixel(x, y, fillColor)
+                    pixels!![index] = fillColor
+                    x--
+                } else {
                     break
                 }
-                whiteBitmap!!.setPixel(x, y, fillColor)
-                pixels!![index] = fillColor
-                x--
             }
 
             xLeft = x + 1
@@ -166,12 +167,13 @@ class CrossFillTouch(canvasView: CanvasView) : Touch(canvasView) {
             while (x < width) {
                 index = width * y + x
                 curColor = pixels!![index]
-                if (curColor != oldColor || curColor == fillColor) {
+                if (curColor == oldColor && curColor != fillColor) {
+                    whiteBitmap!!.setPixel(x, y, fillColor)
+                    pixels!![index] = fillColor
+                    x++
+                } else {
                     break
                 }
-                whiteBitmap!!.setPixel(x, y, fillColor)
-                pixels!![index] = fillColor
-                x++
             }
             xRight = x - 1
 
@@ -197,15 +199,17 @@ class CrossFillTouch(canvasView: CanvasView) : Touch(canvasView) {
         var x = XLeft + 1
         while (x <= XRight) {
             pflag = false
+
             while (true) {
                 curColor = pixels!![width * y + x]
-                if (curColor != oldColor || x < XRight && curColor == fillColor) {
+                if (curColor == oldColor && x < XRight && curColor != fillColor) {
+                    if (!pflag) {
+                        pflag = true
+                    }
+                    x++
+                } else {
                     break
                 }
-                if (!pflag) {
-                    pflag = true
-                }
-                x++
             }
 
             if (pflag) {
