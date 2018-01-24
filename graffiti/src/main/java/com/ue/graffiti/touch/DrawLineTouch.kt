@@ -16,7 +16,7 @@ class DrawLineTouch(canvasView: CanvasView) : DrawTouch(canvasView) {
         newPel.path.lineTo(movePoint.x, movePoint.y + 1)
 
         selectedPel = newPel
-        mSimpleTouchListener.setSelectedPel(selectedPel)
+        mSimpleTouchListener!!.setSelectedPel(selectedPel)
     }
 
     override fun up() {

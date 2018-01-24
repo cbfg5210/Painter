@@ -77,7 +77,7 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
             //超过阈值未选中
             //同步CanvasView中当前选中的图元
             selectedPel = null
-            mSimpleTouchListener.setSelectedPel(selectedPel)
+            mSimpleTouchListener!!.setSelectedPel(selectedPel!!)
 
             updateSavedBitmap(true)
             return
@@ -85,16 +85,16 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
         // 圆域扩展到最大是否有选中任何图元
         // 敲定该图元
         selectedPel = minDisPel
-        mSimpleTouchListener.setSelectedPel(selectedPel)
+        mSimpleTouchListener!!.setSelectedPel(selectedPel!!)
         //计算选中图元的中心点
-        centerPoint.set(TouchUtils.calPelCenterPoint(selectedPel))
+        centerPoint.set(TouchUtils.calPelCenterPoint(selectedPel!!))
         // 获取选中图元的初始matrix
-        savedMatrix.set(TouchUtils.calPelSavedMatrix(selectedPel))
+        savedMatrix.set(TouchUtils.calPelSavedMatrix(selectedPel!!))
         //由已知信息构造该步骤
         //设置该步骤对应图元
-        step = TransformPelStep(pelList, clipRegion, selectedPel)
+        step = TransformPelStep(pelList, clipRegion, selectedPel!!)
         // 原始选中图元所在位置记忆到零时图元中去
-        savedPel.path.set(selectedPel.path)
+        savedPel.path.set(selectedPel!!.path)
 
         updateSavedBitmap(true)
 
@@ -104,7 +104,7 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
     // 第二只手指按下
     public override fun down2() {
         oriDist = TouchUtils.distance(curPoint, secPoint)
-        if (oriDist > GestureFlags.MIN_ZOOM && selectedPel != null) {
+        if (oriDist > GestureFlags.MIN_ZOOM && selectedPel!! != null) {
             // 距离小于50px才算是缩放
             takeOverSelectedPel()
             mode = GestureFlags.ZOOM
@@ -113,7 +113,7 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
 
     // 手指移动
     override fun move() {
-        if (selectedPel == null) {
+        if (selectedPel!! == null) {
             return
         }
         // 获取move事件的发生位置
@@ -128,11 +128,11 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
             // 作用于平移变换因子
             transMatrix.postTranslate(dx, dy)
 
-            selectedPel.path.set(savedPel.path)
+            selectedPel!!.path.set(savedPel.path)
             // 作用于图元
-            selectedPel.path.transform(transMatrix)
+            selectedPel!!.path.transform(transMatrix)
             // 更新平移后路径所在区域
-            selectedPel.region.setPath(selectedPel.path, clipRegion)
+            selectedPel!!.region.setPath(selectedPel!!.path, clipRegion)
             return
         }
         if (mode == GestureFlags.ZOOM) {
@@ -145,7 +145,7 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
                 //延续准备操作
                 mode = GestureFlags.ROTATE
                 takeOverSelectedPel()
-                savedPel.path.set(selectedPel.path)
+                savedPel.path.set(selectedPel!!.path)
                 downPoint.set(curPoint)
                 return
             }
@@ -157,11 +157,11 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
                 // 作用于缩放变换因子
                 transMatrix.postScale(scale, scale, centerPoint.x, centerPoint.y)
 
-                selectedPel.path.set(savedPel.path)
+                selectedPel!!.path.set(savedPel.path)
                 // 作用于图元
-                selectedPel.path.transform(transMatrix)
+                selectedPel!!.path.transform(transMatrix)
                 // 更新平移后路径所在区域
-                selectedPel.region.setPath(selectedPel.path, clipRegion)
+                selectedPel!!.region.setPath(selectedPel!!.path, clipRegion)
             }
             return
         }
@@ -173,7 +173,7 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
                 //判断是否需要转变为缩放模式
                 mode = GestureFlags.ZOOM
                 takeOverSelectedPel()
-                savedPel.path.set(selectedPel.path)
+                savedPel.path.set(selectedPel!!.path)
                 oriDist = TouchUtils.distance(curPoint, secPoint)
                 return
             }
@@ -181,11 +181,11 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
             transMatrix.set(savedMatrix)
             transMatrix.setRotate(degree(), centerPoint.x, centerPoint.y)
 
-            selectedPel.path.set(savedPel.path)
+            selectedPel!!.path.set(savedPel.path)
             // 作用于图元
-            selectedPel.path.transform(transMatrix)
+            selectedPel!!.path.transform(transMatrix)
             // 更新平移后路径所在区域
-            selectedPel.region.setPath(selectedPel.path, clipRegion)
+            selectedPel!!.region.setPath(selectedPel!!.path, clipRegion)
             return
         }
     }
@@ -206,9 +206,9 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
             undoStack.push(step)
 
             // 敲定此次操作的最终区域
-            if (selectedPel != null) {
+            if (selectedPel!! != null) {
                 //初始位置也同步更新
-                savedPel.path.set(selectedPel.path)
+                savedPel.path.set(selectedPel!!.path)
             }
         }
         mode = GestureFlags.NONE
@@ -232,6 +232,6 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
         //起始变换因子为刚才的变换后因子
         savedMatrix.set(transMatrix)
         //重新计算图元中心点
-        centerPoint.set(TouchUtils.calPelCenterPoint(selectedPel))
+        centerPoint.set(TouchUtils.calPelCenterPoint(selectedPel!!))
     }
 }

@@ -110,11 +110,11 @@ class CrossFillTouch(canvasView: CanvasView) : Touch(canvasView) {
         // 将当前有非白色背景的缓冲位图转换成白色背景的
         whiteBitmap = createWhiteBitmap()
         // 获取当前背景图片
-        backgroundBitmap = mSimpleTouchListener.getBackgroundBitmap()
-        copyOfBackgroundBitmap = mSimpleTouchListener.getCopyOfBackgroundBitmap()
+        backgroundBitmap = mSimpleTouchListener!!.getBackgroundBitmap()
+        copyOfBackgroundBitmap = mSimpleTouchListener!!.getCopyOfBackgroundBitmap()
         backgroundCanvas.setBitmap(backgroundBitmap)
         // 获得填充颜色
-        fillColor = mSimpleTouchListener.getCurrentPaint().color
+        fillColor = mSimpleTouchListener!!.getCurrentPaint().color
         // 该点虚拟初始颜色
         oldColor = whiteBitmap!!.getPixel(curPoint.x.toInt(), curPoint.y.toInt())
         initColor = backgroundBitmap!!.getPixel(curPoint.x.toInt(), curPoint.y.toInt())

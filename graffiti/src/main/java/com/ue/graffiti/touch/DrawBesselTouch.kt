@@ -35,7 +35,7 @@ class DrawBesselTouch(canvasView: CanvasView) : DrawTouch(canvasView) {
         }
 
         selectedPel = newPel
-        mSimpleTouchListener.setSelectedPel(selectedPel)
+        mSimpleTouchListener!!.setSelectedPel(selectedPel)
     }
 
     override fun up() {

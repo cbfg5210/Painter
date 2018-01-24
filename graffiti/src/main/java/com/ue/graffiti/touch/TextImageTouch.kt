@@ -162,11 +162,11 @@ class TextImageTouch(isText: Boolean, canvasWidth: Int, canvasHeight: Int) : Tou
         return arc / radius * (180 / 3.14f)
     }
 
-    fun setCurPoint(point: PointF) {
+    fun setCurrentPoint(point: PointF) {
         curPoint.set(point)
     }
 
-    fun setSecPoint(point: PointF) {
+    fun setSecondPoint(point: PointF) {
         secPoint.set(point)
     }
 

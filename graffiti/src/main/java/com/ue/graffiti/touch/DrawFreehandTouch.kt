@@ -23,7 +23,7 @@ class DrawFreehandTouch(canvasView: CanvasView) : DrawTouch(canvasView) {
         newPel.path.quadTo(lastPoint.x, lastPoint.y, (lastPoint.x + movePoint.x) / 2, (lastPoint.y + movePoint.y) / 2)
         lastPoint.set(movePoint)
         selectedPel = newPel
-        mSimpleTouchListener.setSelectedPel(selectedPel)
+        mSimpleTouchListener!!.setSelectedPel(selectedPel)
     }
 
     override fun up() {

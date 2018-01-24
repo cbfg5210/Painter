@@ -38,7 +38,7 @@ class DrawPolygonTouch(canvasView: CanvasView) : DrawTouch(canvasView) {
         newPel.path.lineTo(movePoint.x, movePoint.y)
 
         selectedPel = newPel
-        mSimpleTouchListener.setSelectedPel(selectedPel)
+        mSimpleTouchListener!!.setSelectedPel(selectedPel)
     }
 
     override fun up() {

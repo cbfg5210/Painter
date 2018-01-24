@@ -15,7 +15,7 @@ class DrawRectTouch(canvasView: CanvasView) : DrawTouch(canvasView) {
         movePoint.set(curPoint)
         newPel.path.addRect(RectF(downPoint.x, downPoint.y, movePoint.x, movePoint.y), Path.Direction.CCW)
         selectedPel = newPel
-        mSimpleTouchListener.setSelectedPel(selectedPel)
+        mSimpleTouchListener!!.setSelectedPel(selectedPel)
     }
 
     override fun up() {

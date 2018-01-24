@@ -99,8 +99,8 @@ class TextImageView @JvmOverloads constructor(context: Context, attrs: Attribute
 
     //触摸事件
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        touch!!.setCurPoint(PointF(event.getX(0), event.getY(0)))
-        touch!!.setSecPoint(if (event.pointerCount > 1) PointF(event.getX(1), event.getY(1)) else PointF(1f, 1f))
+        touch!!.setCurrentPoint(PointF(event.getX(0), event.getY(0)))
+        touch!!.setSecondPoint(if (event.pointerCount > 1) PointF(event.getX(1), event.getY(1)) else PointF(1f, 1f))
 
         val actionMasked = event.actionMasked
         when (actionMasked) {

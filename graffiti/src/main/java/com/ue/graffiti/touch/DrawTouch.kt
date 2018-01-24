@@ -21,7 +21,7 @@ open class DrawTouch protected constructor(canvasView: CanvasView) : Touch(canva
     override fun up() {
         //敲定该图元的路径，区域，画笔,名称
         newPel!!.region.setPath(newPel!!.path, clipRegion)
-        newPel!!.paint.set(mSimpleTouchListener.getCurrentPaint())
+        newPel!!.paint.set(mSimpleTouchListener!!.getCurrentPaint())
         //1.将新画好的图元存入图元链表中
         pelList.add(newPel)
         //2.包装好当前步骤 内的操作
@@ -30,7 +30,7 @@ open class DrawTouch protected constructor(canvasView: CanvasView) : Touch(canva
         //3.更新重绘位图
         //刚才画的图元失去焦点
         selectedPel = null
-        mSimpleTouchListener.setSelectedPel(selectedPel)
+        mSimpleTouchListener!!.setSelectedPel(selectedPel)
         //重绘位图
         updateSavedBitmap(true)
     }

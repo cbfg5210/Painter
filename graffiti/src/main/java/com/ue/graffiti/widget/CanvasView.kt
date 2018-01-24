@@ -66,7 +66,7 @@ class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), 
             field = childTouch
             touch!!.setTouchListener(this, this)
             if (mMultiTouchListener != null) {
-                touch!!.setMultiTouchListener(mMultiTouchListener)
+                touch!!.setMultiTouchListener(mMultiTouchListener!!)
             }
         }
     private var cacheCanvas: Canvas? = null
@@ -83,9 +83,7 @@ class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), 
 
     fun setMultiTouchListener(multiTouchListener: OnMultiTouchListener) {
         mMultiTouchListener = multiTouchListener
-        if (this.touch != null) {
-            this.touch!!.setMultiTouchListener(multiTouchListener)
-        }
+        this.touch?.setMultiTouchListener(multiTouchListener)
     }
 
     override fun isSensorRegistered(): Boolean {
