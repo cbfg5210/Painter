@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/vgRightMenu"
     android:layout_width="wrap_content"
@@ -49,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/selector_corner"
-            android:src="@drawable/btn_zoom_normal"/>
+            app:srcCompat="@drawable/svg_zoom_out"/>
 
         <ImageView
             android:id="@+id/ivFill"
