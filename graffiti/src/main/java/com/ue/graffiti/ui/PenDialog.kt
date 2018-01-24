@@ -70,31 +70,22 @@ class PenDialog : DialogFragment(), OnSeekBarChangeListener {
             lastEffectIndex = SPUtils.getInt(SPKeys.SP_PAINT_EFFECT_INDEX, 0)
 
             items.add(PenCatTitleItem(getString(R.string.line_shape)))
-
-            run {
-                var i = 0
-                val len = images.size
-                while (i < len) {
-                    val item = PenShapeItem(FLAG_SHAPE, images[i], names[i])
-                    item.index = i
-                    item.isChecked = lastShapeIndex == i
-                    items.add(item)
-                    i++
-                }
+            for (i in images.indices) {
+                val item = PenShapeItem(FLAG_SHAPE, images[i], names[i])
+                item.index = i
+                item.isChecked = lastShapeIndex == i
+                items.add(item)
             }
 
             items.add(PenCatTitleItem(getString(R.string.special_effect)))
             images = ResourceUtils.getImageArray(context, R.array.penEffectImages)
             names = resources.getStringArray(R.array.penEffectNames)
 
-            var i = 0
-            val len = images.size
-            while (i < len) {
+            for (i in images.indices) {
                 val item = PenShapeItem(FLAG_EFFECT, images[i], names[i])
                 item.index = i
                 item.isChecked = lastEffectIndex == i
                 items.add(item)
-                i++
             }
 
             return items

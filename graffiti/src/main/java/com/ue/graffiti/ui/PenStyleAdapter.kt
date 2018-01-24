@@ -54,7 +54,7 @@ internal class PenStyleAdapter(activity: Activity, items: MutableList<Item>?) : 
                 i++
             }
 
-            items.addAll(items)
+            this.items.addAll(items)
         }
 
         val delegate = PenItemDelegate(activity)

@@ -14,6 +14,9 @@ public class T {
                 AnimationUtils.loadAnimation(context, R.anim.topappear),
                 AnimationUtils.loadAnimation(context, R.anim.downappear)
         };
+        int[]as=new int[4];
+        for(int i=0;i<as.length;i++){
 
+        }
     }
 }
