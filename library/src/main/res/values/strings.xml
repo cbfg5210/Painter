@@ -3,4 +3,8 @@
     <string name="dont_show_next_time">下次不再显示</string>
     <string name="no_recording_perms">录制取消：没有授予录制相关权限</string>
     <string name="share_to">分享到</string>
+    <string name="name_conflict">该名称已存在，是否覆盖？</string>
+    <string name="cover">覆盖</string>
+    <string name="cancel">取消</string>
+    <string name="save_error_reason">保存出错：%s</string>
 </resources>

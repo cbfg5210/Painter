@@ -1,6 +1,5 @@
 package com.ue.graffiti.ui
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
@@ -22,6 +21,9 @@ import com.ue.graffiti.touch.*
 import com.ue.graffiti.util.loadToggleMenuAnimations
 import com.ue.graffiti.util.toast
 import com.ue.graffiti.widget.CanvasView
+import com.ue.library.constant.Constants
+import com.ue.library.util.FileUtils
+import com.ue.library.util.PermissionUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -166,25 +168,23 @@ class MainPresenter(private val mMainActivity: MainActivity) {
             mMainActivity.toast(R.string.save_error_null)
             return
         }
-        val path = Environment.getExternalStorageDirectory().path + BASE_PATH
-        var file = File(path)
-        if (!file.exists()) {
-            file.mkdirs()
-        }
-        val savedPath = "$path/$workName.png"
-        file = File(savedPath)
-        if (!file.exists()) {
-            saveGraffiti(savedBitmap, savedPath, saveListener)
-            return
-        }
-        //询问用户是否覆盖提示框
-        AlertDialog.Builder(mMainActivity)
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .setMessage(R.string.name_conflict)
-                .setPositiveButton(R.string.cover) { _, _ -> saveGraffiti(savedBitmap, savedPath, saveListener) }
-                .setNegativeButton(R.string.cancel, null)
-                .create()
-                .show()
+
+        PermissionUtils.checkReadWriteStoragePerms(mMainActivity,
+                mMainActivity.getString(R.string.save_error_no_perm),
+                object : PermissionUtils.SimplePermissionListener {
+                    override fun onSucceed(requestCode: Int, grantPermissions: List<String>) {
+                        val path = Environment.getExternalStorageDirectory().path + Constants.PATH_GRAFFITI
+                        FileUtils.saveImageLocally(mMainActivity, savedBitmap, path, "$workName.png", object : FileUtils.OnSaveImageListener {
+                            override fun onSaved(path: String) {
+                                if (TextUtils.isEmpty(path)) {
+                                    mMainActivity.toast(R.string.save_error)
+                                } else {
+                                    mMainActivity.toast(mMainActivity.getString(R.string.save_to, path))
+                                }
+                            }
+                        })
+                    }
+                })
     }
 
     private fun saveGraffiti(bitmap: Bitmap, savedPath: String, saveListener: View.OnClickListener?) {
@@ -195,7 +195,7 @@ class MainPresenter(private val mMainActivity: MainActivity) {
             mMainActivity.toast(mMainActivity.getString(R.string.save_to, savedPath))
             saveListener?.onClick(null)
         } catch (e: Exception) {
-            mMainActivity.toast(mMainActivity.getString(R.string.save_error, e.message))
+            mMainActivity.toast(mMainActivity.getString(R.string.save_error_reason, e.message))
         } finally {
             if (fileOutputStream == null) {
                 return

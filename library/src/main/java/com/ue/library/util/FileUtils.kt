@@ -1,8 +1,10 @@
 package com.ue.library.util
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
+import com.ue.library.R
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -19,23 +21,22 @@ object FileUtils {
         Observable
                 .create(ObservableOnSubscribe<String> { e ->
                     val dir = File(path)
+                    if (dir.exists() && !dir.isDirectory) {
+                        dir.delete()
+                    }
                     if (!dir.exists()) dir.mkdirs()
 
                     val file = File(dir, imgName)
-                    var out: FileOutputStream? = null
-                    try {
-                        out = FileOutputStream(file)
-                        // bmp is your Bitmap instance
-                        bmp.compress(Bitmap.CompressFormat.PNG, 100, out)
-                        out.close()
-                        e.onNext(path + imgName)
-                    } catch (exp: Exception) {
-                        e.onNext("")
-                    } finally {
-                        try {
-                            out?.close()
-                        } catch (e1: IOException) {
-                        }
+                    if (file.exists()) {
+                        //询问用户是否覆盖提示框
+                        AlertDialog.Builder(context)
+                                .setMessage(R.string.name_conflict)
+                                .setPositiveButton(R.string.cover) { _, _ -> e.onNext(saveImage(file, bmp, path, imgName)) }
+                                .setNegativeButton(R.string.cancel, null)
+                                .create()
+                                .show()
+                    } else {
+                        e.onNext(saveImage(file, bmp, path, imgName))
                     }
                 })
                 .subscribeOn(Schedulers.single())
@@ -45,6 +46,26 @@ object FileUtils {
                         listener.onSaved(s)
                     }
                 })
+    }
+
+    private fun saveImage(file: File, bmp: Bitmap, path: String, imgName: String): String {
+        var out: FileOutputStream? = null
+        var finalPath = ""
+        try {
+            out = FileOutputStream(file)
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, out)
+            finalPath = path + imgName
+            out.close()
+        } catch (exp: Exception) {
+        } finally {
+            if (out != null) {
+                try {
+                    out?.close()
+                } catch (e1: IOException) {
+                }
+            }
+        }
+        return finalPath
     }
 
     interface OnSaveImageListener {
