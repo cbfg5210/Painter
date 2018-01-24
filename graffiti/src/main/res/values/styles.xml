@@ -38,9 +38,15 @@
         <item name="android:paddingBottom">@dimen/widget_size_4</item>
     </style>
 
+    <style name="MenuPanel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/widget_size_50</item>
+    </style>
+
     <style name="MenuSeparator">
         <item name="android:layout_width">1px</item>
-        <item name="android:layout_height">@dimen/widget_size_10</item>
+        <item name="android:layout_height">@dimen/widget_size_15</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:background">@color/col_343d4d</item>
     </style>
@@ -68,7 +74,7 @@
         <item name="android:textColor">@color/col_666666</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:padding">2dp</item>
+        <item name="android:padding">@dimen/widget_size_2</item>
         <item name="android:layout_weight">1</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
