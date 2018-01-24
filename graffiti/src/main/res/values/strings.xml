@@ -98,4 +98,6 @@
     <string name="image">插图</string>
     <string name="insert_picture">插入图片</string>
     <string name="gallery">图库</string>
+    <string name="shake_to_draw">摆动手机画图吧</string>
+    <string name="begin_sensor_draw">您确定以(%d,%d)为起始点并开始重力绘图？</string>
 </resources>

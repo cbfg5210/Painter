@@ -16,11 +16,11 @@ import android.view.animation.Animation
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupWindow
-import android.widget.Toast
 import com.trello.rxlifecycle2.android.ActivityEvent
 import com.ue.graffiti.R
 import com.ue.graffiti.touch.*
 import com.ue.graffiti.util.loadToggleMenuAnimations
+import com.ue.graffiti.util.toast
 import com.ue.graffiti.widget.CanvasView
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
@@ -163,7 +163,7 @@ class MainPresenter(private val mMainActivity: MainActivity) {
 
     fun onSaveGraffitiClicked(savedBitmap: Bitmap, workName: String, saveListener: View.OnClickListener?) {
         if (TextUtils.isEmpty(workName)) {
-            Toast.makeText(mMainActivity, mMainActivity.getString(R.string.save_error_null), Toast.LENGTH_SHORT).show()
+            mMainActivity.toast(R.string.save_error_null)
             return
         }
         val path = Environment.getExternalStorageDirectory().path + BASE_PATH
@@ -192,10 +192,10 @@ class MainPresenter(private val mMainActivity: MainActivity) {
         try {
             fileOutputStream = FileOutputStream(savedPath)
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
-            Toast.makeText(mMainActivity, mMainActivity.getString(R.string.save_to, savedPath), Toast.LENGTH_SHORT).show()
+            mMainActivity.toast(mMainActivity.getString(R.string.save_to, savedPath))
             saveListener?.onClick(null)
         } catch (e: Exception) {
-            Toast.makeText(mMainActivity, mMainActivity.getString(R.string.save_error, e.message), Toast.LENGTH_SHORT).show()
+            mMainActivity.toast(mMainActivity.getString(R.string.save_error, e.message))
         } finally {
             if (fileOutputStream == null) {
                 return

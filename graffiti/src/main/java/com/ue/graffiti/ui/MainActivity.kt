@@ -28,10 +28,7 @@ import com.ue.graffiti.event.OnStepListener
 import com.ue.graffiti.helper.DialogHelper
 import com.ue.graffiti.model.*
 import com.ue.graffiti.touch.*
-import com.ue.graffiti.util.calPelCenterPoint
-import com.ue.graffiti.util.calPelSavedMatrix
-import com.ue.graffiti.util.toRedoUpdate
-import com.ue.graffiti.util.toUndoUpdate
+import com.ue.graffiti.util.*
 import com.ue.library.util.SPUtils
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -191,7 +188,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
         if (pelTouch !is KeepDrawingTouch) {
             return
         }
-        pelTouch.setKeepDrawingListener(object : KeepDrawingTouch.KeepDrawingTouchListener {
+        pelTouch.keepDrawingTouchListener = object : KeepDrawingTouch.KeepDrawingTouchListener {
             override fun onDownPoint(downPoint: PointF) {
                 lastPoint.set(downPoint)
             }
@@ -199,7 +196,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
             override fun registerKeepDrawingSensor() {
                 this@MainActivity.registerKeepDrawingSensor()
             }
-        })
+        }
     }
 
     private fun toggleMenuVisibility(isVisible: Boolean) {
@@ -222,7 +219,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
         curToolVi = v
         closeTools()
 
-        if (curToolVi!!.id == R.id.btnEdit) {
+        if (v.id == R.id.btnEdit) {
             val leftAppearAnim = AnimationUtils.loadAnimation(this, R.anim.leftappear)
             vgRightMenu.visibility = View.VISIBLE
             ivToggleOptions.visibility = View.VISIBLE
@@ -326,15 +323,15 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
     private fun completeKeepDrawing() {
         toggleSensor(false)
 
-        newPel!!.region.setPath(newPel!!.path, cvGraffitiView.clipRegion)
-        newPel!!.paint.set(cvGraffitiView.getCurrentPaint())
+        newPel!!.apply {
+            region.setPath(path, cvGraffitiView.clipRegion)
+            paint.set(cvGraffitiView.getCurrentPaint())
 
-        cvGraffitiView.addPel(newPel!!)
-
-        cvGraffitiView.pushUndoStack(DrawPelStep(DrawPelFlags.DRAW, cvGraffitiView.getPelList(), newPel!!))
-
-        cvGraffitiView.setSelectedPel(null)
-        cvGraffitiView.updateSavedBitmap()
+            cvGraffitiView.addPel(this)
+            cvGraffitiView.pushUndoStack(DrawPelStep(DrawPelFlags.DRAW, cvGraffitiView.getPelList(), this))
+            cvGraffitiView.setSelectedPel(null)
+            cvGraffitiView.updateSavedBitmap()
+        }
     }
 
     private fun registerKeepDrawingSensor() {
@@ -484,7 +481,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
         }
         val selectedPel = cvGraffitiView.getSelectedPel()
         if (selectedPel == null) {
-            Toast.makeText(this@MainActivity, R.string.select_pel_first, Toast.LENGTH_LONG).show()
+            toast(R.string.select_pel_first, Toast.LENGTH_LONG)
             return
         }
         when (viewId) {
@@ -560,7 +557,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
      */
     private fun prepareToggleSwitchMenuAction(view: View): Boolean {
         if (cvGraffitiView.touch!!.isProcessing) {
-            Toast.makeText(this, getString(R.string.task_processing), Toast.LENGTH_SHORT).show()
+            toast(getString(R.string.task_processing))
             return false
         }
         if (cvGraffitiView.isSensorRegistered()) {
