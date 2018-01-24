@@ -157,7 +157,12 @@ public class CrossFillTouch extends Touch {
             x = tmp.x;
             y = tmp.y;
 
-            while (x > 0 && (curColor = pixels[index = width * y + x]) == oldColor && curColor != fillColor) {
+            while (x > 0) {
+                index = width * y + x;
+                curColor = pixels[index];
+                if (curColor != oldColor || curColor == fillColor) {
+                    break;
+                }
                 whiteBitmap.setPixel(x, y, fillColor);
                 pixels[index] = fillColor;
                 x--;
@@ -166,7 +171,12 @@ public class CrossFillTouch extends Touch {
             xLeft = x + 1;
             x = tmp.x + 1;
 
-            while (x < width && (curColor = pixels[index = width * y + x]) == oldColor && curColor != fillColor) {
+            while (x < width) {
+                index = width * y + x;
+                curColor = pixels[index];
+                if (curColor != oldColor || curColor == fillColor) {
+                    break;
+                }
                 whiteBitmap.setPixel(x, y, fillColor);
                 pixels[index] = fillColor;
                 x++;
