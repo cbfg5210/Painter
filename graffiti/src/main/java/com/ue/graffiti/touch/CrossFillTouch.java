@@ -201,12 +201,15 @@ public class CrossFillTouch extends Touch {
 
     private void findNewSeedInline(int XLeft, int XRight, int y, Paint paint) {
         Point p;
-        Boolean pflag;
+        boolean pflag;
         int x = XLeft + 1;
         while (x <= XRight) {
             pflag = false;
-
-            while ((curColor = pixels[width * y + x]) == oldColor && x < XRight && curColor != fillColor) {
+            while (true) {
+                curColor = pixels[width * y + x];
+                if (curColor != oldColor || x < XRight && curColor == fillColor) {
+                    break;
+                }
                 if (!pflag) {
                     pflag = true;
                 }
@@ -214,7 +217,13 @@ public class CrossFillTouch extends Touch {
             }
 
             if (pflag) {
-                p = ((x == XRight) && (curColor = pixels[width * y + x]) == oldColor && curColor != fillColor) ? new Point(x, y) : new Point(x - 1, y);
+                p = new Point(x - 1, y);
+                if (x == XRight) {
+                    curColor = pixels[width * y + x];
+                    if (curColor == oldColor && curColor != fillColor) {
+                        p = new Point(x, y);
+                    }
+                }
                 pointStack.push(p);
             }
 
