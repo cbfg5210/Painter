@@ -67,7 +67,7 @@ class TextImageView @JvmOverloads constructor(context: Context, attrs: Attribute
 
         touch = TextImageTouch(true, canvasWidth, canvasHeight)
         if (mBarSensorListener != null) {
-            touch!!.setBarSensorListener(mBarSensorListener)
+            touch!!.setBarSensorListener(mBarSensorListener!!)
         }
 
         drawTextPaint!!.color = paintColor
@@ -86,7 +86,7 @@ class TextImageView @JvmOverloads constructor(context: Context, attrs: Attribute
 
         touch = TextImageTouch(false, canvasWidth, canvasHeight)
         if (mBarSensorListener != null) {
-            touch!!.setBarSensorListener(mBarSensorListener)
+            touch!!.setBarSensorListener(mBarSensorListener!!)
         }
     }
 
