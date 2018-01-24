@@ -15,12 +15,12 @@ import java.util.*
 class CrossFillTouch(canvasView: CanvasView) : Touch(canvasView) {
     private val originPoint: Point
     // 当前填充色
-    private var fillColor: Int = 0
+    private var fillColor = 0
     // 虚拟初始颜色
-    private var oldColor: Int = 0
+    private var oldColor = 0
     // 实际初始颜色
-    private var initColor: Int = 0
-    private var curColor: Int = 0
+    private var initColor = 0
+    private var curColor = 0
     private var pixels: IntArray? = null
     // 源粒子栈
     private val pointStack: Stack<Point>
@@ -36,8 +36,8 @@ class CrossFillTouch(canvasView: CanvasView) : Touch(canvasView) {
     // 填充画笔
     private val fillPaint: Paint
     // 位图宽高
-    private var width: Int = 0
-    private var height: Int = 0
+    private var width = 0
+    private var height = 0
     // 扫描线链表
     private var scanLinesList: MutableList<ScanLine>? = null
 

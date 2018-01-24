@@ -39,8 +39,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : RxAppCompatActivity(), View.OnClickListener {
     private lateinit var vgTopMenu: View
     private lateinit var vgBottomMenu: RadioGroup
-    private lateinit var btnUndo: View
-    private lateinit var btnRedo: View
+    private lateinit var ivUndo: View
+    private lateinit var ivRedo: View
     private lateinit var btnDraw: Button
     private lateinit var vgRightMenu: View
     private lateinit var ivToggleOptions: View
@@ -55,8 +55,8 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
 
     private val lastPoint = PointF()
     private var newPel: Pel? = null
-    private var sensorManager: SensorManager? = null
-    private var responseCount: Int = 0
+    private lateinit var sensorManager: SensorManager
+    private var responseCount = 0
 
     private lateinit var mMainPresenter: MainPresenter
 
@@ -65,7 +65,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
     private var savedPel: Pel? = null
     private var step: Step? = null
     private val centerPoint = PointF()
-    private var lastEditActionId: Int = 0
+    private var lastEditActionId = 0
 
     //单手操作传感器监听者
     private val singleHandSensorEventListener = object : SensorEventListener {
@@ -107,8 +107,8 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
         btnDraw = findViewById(R.id.btnDraw)
         vgTopMenu = findViewById(R.id.vgTopMenu)
         vgBottomMenu = findViewById(R.id.vgBottomMenu)
-        btnUndo = findViewById(R.id.ivUndo)
-        btnRedo = findViewById(R.id.ivRedo)
+        ivUndo = findViewById(R.id.ivUndo)
+        ivRedo = findViewById(R.id.ivRedo)
         vgRightMenu = findViewById(R.id.vgRightMenu)
         ivToggleOptions = findViewById(R.id.ivToggleOptions)
         vgEditOptions = findViewById(R.id.vgEditOptions)
@@ -142,8 +142,8 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
     }
 
     private fun setListeners() {
-        btnUndo.setOnClickListener(this)
-        btnRedo.setOnClickListener(this)
+        ivUndo.setOnClickListener(this)
+        ivRedo.setOnClickListener(this)
 
         mMainPresenter.setListenerForChildren(R.id.vgTopMenu, this)
         mMainPresenter.setListenerForChildren(R.id.vgBottomMenu, this)
@@ -162,8 +162,8 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
     }
 
     private fun openTools() {
-        if (vgRightMenu!!.visibility == View.VISIBLE) {
-            vgRightMenu!!.visibility = View.GONE
+        if (vgRightMenu.visibility == View.VISIBLE) {
+            vgRightMenu.visibility = View.GONE
         }
         toggleMenuVisibility(true)
     }
@@ -204,17 +204,17 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
 
     private fun toggleMenuVisibility(isVisible: Boolean) {
         val visibility = if (isVisible) View.VISIBLE else View.GONE
-        val animations = mMainPresenter.getToggleAnimations(isVisible)!!
+        val animations = mMainPresenter.getToggleAnimations(isVisible)
 
-        btnRedo.startAnimation(animations[0])
+        ivRedo.startAnimation(animations[0])
         vgTopMenu.startAnimation(animations[1])
-        btnUndo.startAnimation(animations[2])
+        ivUndo.startAnimation(animations[2])
         vgBottomMenu.startAnimation(animations[3])
 
         vgBottomMenu.visibility = visibility
         vgTopMenu.visibility = visibility
-        btnUndo.visibility = visibility
-        btnRedo.visibility = visibility
+        ivUndo.visibility = visibility
+        ivRedo.visibility = visibility
     }
 
     private fun onOpenTransBarBtn(v: View) {
@@ -224,9 +224,9 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
 
         if (curToolVi!!.id == R.id.btnEdit) {
             val leftAppearAnim = AnimationUtils.loadAnimation(this, R.anim.leftappear)
-            vgRightMenu!!.visibility = View.VISIBLE
+            vgRightMenu.visibility = View.VISIBLE
             ivToggleOptions.visibility = View.VISIBLE
-            vgRightMenu!!.startAnimation(leftAppearAnim)
+            vgRightMenu.startAnimation(leftAppearAnim)
         }
 
         toggleSensor(false)
@@ -286,7 +286,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
         curPelVi = v
 
         val fatherDrawable = resources.getDrawable(mMainPresenter.getDrawRes(v.id))
-        btnDraw!!.setCompoundDrawablesWithIntrinsicBounds(null, fatherDrawable, null, null)
+        btnDraw.setCompoundDrawablesWithIntrinsicBounds(null, fatherDrawable, null, null)
     }
 
     private fun updateCanvasBgAndIcons(v: View?) {
@@ -302,7 +302,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
 
     //确保未画完的图元能够真正敲定
     private fun ensurePelFinished() {
-        val selectedPel = cvGraffitiView.getSelectedPel() ?: return
+        cvGraffitiView.getSelectedPel() ?: return
         val touch = cvGraffitiView.touch
         if (touch is DrawBesselTouch) {
             touch.control = true
@@ -338,8 +338,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
     }
 
     private fun registerKeepDrawingSensor() {
-        newPel = Pel()
-        newPel!!.closure = true
+        newPel = Pel().apply { closure = true }
         lastPoint.set(cvGraffitiView.touch!!.curPoint)
         newPel!!.path.moveTo(lastPoint.x, lastPoint.y)
 
@@ -347,11 +346,9 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
     }
 
     private fun toggleSensor(open: Boolean) {
-        if (open) {
-            val sensor = sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-            sensorManager!!.registerListener(singleHandSensorEventListener, sensor, SensorManager.SENSOR_DELAY_GAME)
-        } else {
-            sensorManager!!.unregisterListener(singleHandSensorEventListener)
+        sensorManager.apply {
+            if (open) registerListener(singleHandSensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME)
+            else unregisterListener(singleHandSensorEventListener)
         }
         cvGraffitiView.setSensorRegistered(open)
     }
@@ -499,8 +496,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
     }
 
     private fun onSwitchRotateZoom(viewId: Int, selectedPel: Pel) {
-        savedPel = Pel()
-        savedPel!!.path.set(selectedPel.path)
+        savedPel = Pel().apply { path.set(selectedPel.path) }
         savedMatrix.set(calPelSavedMatrix(savedPel!!))
 
         if (lastEditActionId == 0) {
@@ -552,9 +548,9 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
     }
 
     private fun onOpenTransChildren() {
-        val isEditOptionsVisible = vgEditOptions!!.visibility == View.GONE
+        val isEditOptionsVisible = vgEditOptions.visibility == View.GONE
         ivToggleOptions.isSelected = isEditOptionsVisible
-        vgEditOptions!!.visibility = if (isEditOptionsVisible) View.VISIBLE else View.GONE
+        vgEditOptions.visibility = if (isEditOptionsVisible) View.VISIBLE else View.GONE
     }
 
     /**

@@ -8,43 +8,32 @@ import android.view.View
 import android.view.ViewGroup
 import com.ue.graffiti.R
 import com.ue.graffiti.model.PictureItem
+import com.ue.graffiti.util.getXmlImageArray
 import java.util.*
 
 class PictureDialog : DialogFragment() {
+    var pickPictureListener: OnPickPictureListener? = null
 
-    private var mPickPictureListener: OnPickPictureListener? = null
-
-    fun setPickPictureListener(pickPictureListener: OnPickPictureListener) {
-        mPickPictureListener = pickPictureListener
-    }
-
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater!!.inflate(R.layout.dialog_picture, null)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val rootView = inflater.inflate(R.layout.dialog_picture, null)
 
         val rvPictures = rootView as RecyclerView
         rvPictures.setHasFixedSize(true)
 
-        val resources = resources
         val pictureNameArray = resources.getStringArray(R.array.pictureNameArray)
-        val pictureResArrayTa = resources.obtainTypedArray(R.array.pictureResArray)
+        val pictureResArray = context.getXmlImageArray(R.array.pictureResArray)
 
         val pictureItems = ArrayList<PictureItem>(pictureNameArray.size)
-        var i = 0
-        val len = pictureNameArray.size
-        while (i < len) {
-            pictureItems.add(PictureItem(pictureNameArray[i], pictureResArrayTa.getResourceId(i, -1)))
-            i++
-        }
-        pictureResArrayTa.recycle()
+        pictureNameArray.indices.mapTo(pictureItems) { PictureItem(pictureNameArray[it], pictureResArray[it]) }
 
-        val adapter = PictureAdapter(pictureItems)
-        adapter.setItemClickListener(object : PictureAdapter.OnPictureItemListener {
-            override fun onItemClick(position: Int, pictureItem: PictureItem) {
-                mPickPictureListener?.onPicturePicked(pictureItem.res)
-                dismiss()
+        rvPictures.adapter = PictureAdapter(pictureItems).apply {
+            itemClickListener = object : PictureAdapter.OnPictureItemListener {
+                override fun onItemClick(position: Int, pictureItem: PictureItem) {
+                    pickPictureListener?.onPicturePicked(pictureItem.res)
+                    dismiss()
+                }
             }
-        })
-        rvPictures.adapter = adapter
+        }
 
         return rootView
     }
@@ -54,11 +43,8 @@ class PictureDialog : DialogFragment() {
     }
 
     companion object {
-
         fun newInstance(): PictureDialog {
-            val dialog = PictureDialog()
-            dialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.GraffitiDialog)
-            return dialog
+            return PictureDialog().apply { setStyle(DialogFragment.STYLE_NO_TITLE, R.style.GraffitiDialog) }
         }
     }
 }

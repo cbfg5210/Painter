@@ -96,4 +96,6 @@
     <string name="image_gesture_tip">两指水平方向收伸可以缩放图片，垂直方向收伸可以旋转图片；手指按住平移可以移动图片。</string>
     <string name="text">文字</string>
     <string name="image">插图</string>
+    <string name="insert_picture">插入图片</string>
+    <string name="gallery">图库</string>
 </resources>

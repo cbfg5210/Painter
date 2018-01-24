@@ -7,20 +7,20 @@
     android:orientation="vertical">
 
     <com.ue.graffiti.widget.TextImageView
-        android:id="@+id/drawpicture_canvas"
+        android:id="@+id/tivCanvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:type="image"/>
 
     <LinearLayout
-        android:id="@+id/drawpicture_toptoolbar"
+        android:id="@+id/vgTopToolbar"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:background="@drawable/bg_processing_title"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/drawpicture_refuse"
+            android:id="@+id/btnCancel"
             style="@style/GraffitiButton3"
             android:drawableTop="@drawable/btn_refuse_normal"/>
 
@@ -33,30 +33,30 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="插入图片"
+                android:text="@string/insert_picture"
                 android:textColor="@color/white"
                 android:textSize="20sp"/>
         </LinearLayout>
 
         <Button
-            android:id="@+id/drawpicture_sure"
+            android:id="@+id/btnInsertPicture"
             style="@style/GraffitiButton3"
             android:drawableTop="@drawable/btn_sure_normal"/>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/drawpicture_downtoolbar"
+        android:id="@+id/vgDownToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/drawpicture_select"
+            android:id="@+id/btnSelectPicture"
             style="@style/DrawPictureButton"
             android:layout_width="match_parent"
             android:drawableLeft="@drawable/btn_picture_normal"
-            android:text="图库"/>
+            android:text="@string/gallery"/>
     </LinearLayout>
 
 </RelativeLayout>

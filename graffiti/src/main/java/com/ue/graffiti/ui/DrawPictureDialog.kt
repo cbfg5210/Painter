@@ -7,81 +7,81 @@ import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
+import android.view.animation.Animation
 import com.ue.graffiti.R
 import com.ue.graffiti.constant.SPKeys
 import com.ue.graffiti.event.BarSensorListener
 import com.ue.graffiti.helper.DialogHelper
 import com.ue.graffiti.model.Pel
+import com.ue.graffiti.util.loadDrawTextImageAnimations
 import com.ue.graffiti.widget.CanvasView
 import com.ue.graffiti.widget.TextImageView
+import kotlinx.android.synthetic.main.dialog_draw_picture.view.*
 
 /**
  * Created by hawk on 2018/1/15.
  */
 
 class DrawPictureDialog : DialogFragment(), View.OnClickListener {
-    private var pelList: List<Pel>? = null
+    private lateinit var pelList: List<Pel>
     // 当前重绘位图
-    private var savedBitmap: Bitmap? = null
+    private lateinit var savedBitmap: Bitmap
     //重绘画布
-    private var savedCanvas: Canvas? = null
-    private var drawPictureVi: TextImageView? = null
-    private var topToolbar: View? = null
-    private var downToolbar: View? = null
+    private lateinit var savedCanvas: Canvas
+    private lateinit var tivCanvas: TextImageView
+    private lateinit var vgTopToolbar: View
+    private lateinit var vgDownToolbar: View
     //调色板对话框
     private lateinit var pictureDialog: PictureDialog
 
-    private var mDrawPictureListener: OnDrawPictureListener? = null
-    private var canvasWidth: Int = 0
-    private var canvasHeight: Int = 0
+    var drawPictureListener: OnDrawPictureListener? = null
+    private var canvasWidth = 0
+    private var canvasHeight = 0
 
-    fun setDrawPictureListener(drawPictureListener: OnDrawPictureListener) {
-        mDrawPictureListener = drawPictureListener
-    }
+    //显示动画：上、下
+    private var showAnimations: Array<Animation>? = null
+    //隐藏动画：上、下
+    private var hideAnimations: Array<Animation>? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val contentView = LayoutInflater.from(context).inflate(R.layout.dialog_draw_picture, null)
-        drawPictureVi = contentView.findViewById(R.id.drawpicture_canvas)
-        drawPictureVi!!.setBarSensorListener(object : BarSensorListener {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val contentView = inflater.inflate(R.layout.dialog_draw_picture, null)
+        tivCanvas = contentView.tivCanvas
+        tivCanvas.barSensorListener = object : BarSensorListener {
             override fun isTopToolbarVisible(): Boolean {
-                return topToolbar!!.visibility == View.VISIBLE
+                return vgTopToolbar.visibility == View.VISIBLE
             }
 
             override fun openTools() {
-                this@DrawPictureDialog.openTools()
+                toggleMenuVisibility(true)
             }
 
             override fun closeTools() {
-                this@DrawPictureDialog.closeTools()
+                toggleMenuVisibility(false)
             }
-        })
+        }
 
         pictureDialog = PictureDialog.newInstance()
-        pictureDialog.setPickPictureListener(object : PictureDialog.OnPickPictureListener {
+        pictureDialog.pickPictureListener = object : PictureDialog.OnPickPictureListener {
             override fun onPicturePicked(contentId: Int) {
                 //重置插图位置、缩放、旋转信息
-                drawPictureVi!!.touch!!.clear()
+                tivCanvas.touch?.clear()
                 //传入插图信息
-                drawPictureVi!!.setContentAndCenterPoint(contentId)
-                drawPictureVi!!.invalidate()
+                tivCanvas.setContentAndCenterPoint(contentId)
+                tivCanvas.invalidate()
             }
-        })
+        }
 
-        topToolbar = contentView.findViewById(R.id.drawpicture_toptoolbar)
-        downToolbar = contentView.findViewById(R.id.drawpicture_downtoolbar)
+        vgTopToolbar = contentView.vgTopToolbar
+        vgDownToolbar = contentView.vgDownToolbar
 
-        contentView.findViewById<View>(R.id.drawpicture_refuse).setOnClickListener(this)
-        contentView.findViewById<View>(R.id.drawpicture_sure).setOnClickListener(this)
-        contentView.findViewById<View>(R.id.drawpicture_select).setOnClickListener(this)
+        contentView.btnCancel.setOnClickListener(this)
+        contentView.btnInsertPicture.setOnClickListener(this)
+        contentView.btnSelectPicture.setOnClickListener(this)
 
         savedCanvas = Canvas()
-        if (savedBitmap != null) {
-            savedCanvas!!.setBitmap(savedBitmap) //与画布建立联系
-            drawPels()
-
-            drawPictureVi!!.setBitmap(savedBitmap!!, canvasWidth, canvasHeight)
-        }
+        savedCanvas.setBitmap(savedBitmap) //与画布建立联系
+        drawPels()
+        tivCanvas.setBitmap(savedBitmap, canvasWidth, canvasHeight)
         return contentView
     }
 
@@ -94,79 +94,71 @@ class DrawPictureDialog : DialogFragment(), View.OnClickListener {
 
     fun drawPels() {
         // 获取pelList对应的迭代器头结点
-        val pelIterator = pelList!!.listIterator()
+        val pelIterator = pelList.listIterator()
         while (pelIterator.hasNext()) {
             val pel = pelIterator.next()
-
             //若是文本图元
             if (pel.text != null) {
                 val text = pel.text
-                savedCanvas!!.save()
-                savedCanvas!!.translate(text!!.transDx, text.transDy)
-                savedCanvas!!.scale(text.scale, text.scale, text.centerPoint.x, text.centerPoint.y)
-                savedCanvas!!.rotate(text.degree, text.centerPoint.x, text.centerPoint.y)
-                savedCanvas!!.drawText(text.content, text.beginPoint.x, text.beginPoint.y, text.paint)
-                savedCanvas!!.restore()
+                savedCanvas.save()
+                savedCanvas.translate(text!!.transDx, text.transDy)
+                savedCanvas.scale(text.scale, text.scale, text.centerPoint.x, text.centerPoint.y)
+                savedCanvas.rotate(text.degree, text.centerPoint.x, text.centerPoint.y)
+                savedCanvas.drawText(text.content, text.beginPoint.x, text.beginPoint.y, text.paint)
+                savedCanvas.restore()
             } else if (pel.picture != null) {
                 val picture = pel.picture
-                savedCanvas!!.save()
-                savedCanvas!!.translate(picture!!.transDx, picture.transDy)
-                savedCanvas!!.scale(picture.scale, picture.scale, picture.centerPoint.x, picture.centerPoint.y)
-                savedCanvas!!.rotate(picture.degree, picture.centerPoint.x, picture.centerPoint.y)
-                savedCanvas!!.drawBitmap(picture.createContent(context)!!, picture.beginPoint.x, picture.beginPoint.y, null)
-                savedCanvas!!.restore()
+                savedCanvas.save()
+                savedCanvas.translate(picture!!.transDx, picture.transDy)
+                savedCanvas.scale(picture.scale, picture.scale, picture.centerPoint.x, picture.centerPoint.y)
+                savedCanvas.rotate(picture.degree, picture.centerPoint.x, picture.centerPoint.y)
+                savedCanvas.drawBitmap(picture.createContent(context)!!, picture.beginPoint.x, picture.beginPoint.y, null)
+                savedCanvas.restore()
             }
-            //            else if (!pel.equals(selectedPel))//若非选中的图元
-            //                savedCanvas.drawPath(pel.getPath(), pel.getPaint());
         }
     }
 
-    //关闭工具箱
-    private fun closeTools() {
-        val downDisappearAnim = AnimationUtils.loadAnimation(context, R.anim.downdisappear)
-        val topDisappearAnim = AnimationUtils.loadAnimation(context, R.anim.topdisappear)
+    private fun toggleMenuVisibility(isVisible: Boolean) {
+        val visibility = if (isVisible) View.VISIBLE else View.GONE
+        val animations = getToggleAnimations(isVisible)
 
-        downToolbar!!.startAnimation(downDisappearAnim)
-        topToolbar!!.startAnimation(topDisappearAnim)
+        vgTopToolbar.startAnimation(animations[0])
+        vgDownToolbar.startAnimation(animations[1])
 
-        downToolbar!!.visibility = View.GONE
-        topToolbar!!.visibility = View.GONE
+        vgDownToolbar.visibility = visibility
+        vgTopToolbar.visibility = visibility
     }
 
-    //打开工具箱
-    private fun openTools() {
-        val downAppearAnim = AnimationUtils.loadAnimation(context, R.anim.downappear)
-        val topAppearAnim = AnimationUtils.loadAnimation(context, R.anim.topappear)
-
-        downToolbar!!.startAnimation(downAppearAnim)
-        topToolbar!!.startAnimation(topAppearAnim)
-
-        downToolbar!!.visibility = View.VISIBLE
-        topToolbar!!.visibility = View.VISIBLE
+    private fun getToggleAnimations(isVisible: Boolean): Array<Animation> {
+        return if (isVisible) {
+            if (showAnimations == null) {
+                showAnimations = loadDrawTextImageAnimations(context, isVisible)
+            }
+            showAnimations!!
+        } else {
+            if (hideAnimations == null) {
+                hideAnimations = loadDrawTextImageAnimations(context, isVisible)
+            }
+            hideAnimations!!
+        }
     }
 
     override fun onClick(v: View) {
         val viewId = v.id
         when (viewId) {
-            R.id.drawpicture_refuse -> dismiss()
-            R.id.drawpicture_sure -> onDrawPictureOkBtn(v)
-            R.id.drawpicture_select -> pictureDialog.show(childFragmentManager, "")
-        }
-    }
-
-    fun onDrawPictureOkBtn(v: View) {
-        //插入了图
-        if (drawPictureVi!!.imageContent != null) {
-            val newPel = Pel()
-            newPel.picture = drawPictureVi!!.picture
-
-            drawPels()
-            if (mDrawPictureListener != null) {
-                mDrawPictureListener!!.onPictureDrew(newPel, savedBitmap)
+            R.id.btnCancel -> dismiss()
+            R.id.btnSelectPicture -> pictureDialog.show(childFragmentManager, "")
+            R.id.btnInsertPicture -> {
+                //插入了图
+                if (tivCanvas.imageContent != null) {
+                    val newPel = Pel().apply { picture = tivCanvas.picture }
+                    drawPels()
+                    drawPictureListener?.onPictureDrew(newPel, savedBitmap)
+                }
+                //结束该活动
+                dismiss()
             }
         }
-        //结束该活动
-        dismiss()
     }
 
     override fun onResume() {
@@ -179,11 +171,8 @@ class DrawPictureDialog : DialogFragment(), View.OnClickListener {
     }
 
     companion object {
-
         fun newInstance(): DrawPictureDialog {
-            val dialog = DrawPictureDialog()
-            dialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialog)
-            return dialog
+            return DrawPictureDialog().apply { setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialog) }
         }
     }
 }

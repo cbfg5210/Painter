@@ -22,7 +22,7 @@ import android.widget.SeekBar
 class ColorPickerSeekBar : SeekBar, SeekBar.OnSeekBarChangeListener {
 
     private var mOnColorSeekbarChangeListener: OnColorSeekBarChangeListener? = null
-    var color: Int = 0
+    var color = 0
         private set
 
     fun setOnColorSeekbarChangeListener(listener: OnColorSeekBarChangeListener) {

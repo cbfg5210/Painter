@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <com.ue.graffiti.widget.TextImageView
-        android:id="@+id/dtvTextCanvas"
+        android:id="@+id/tivCanvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textSize="@dimen/font_size_20"
@@ -36,7 +36,7 @@
             android:textSize="@dimen/widget_size_20"/>
 
         <Button
-            android:id="@+id/btnOk"
+            android:id="@+id/btnInsertText"
             style="@style/GraffitiButton3"
             android:drawableTop="@drawable/btn_sure_normal"/>
     </LinearLayout>

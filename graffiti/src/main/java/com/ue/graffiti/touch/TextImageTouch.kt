@@ -9,20 +9,20 @@ class TextImageTouch(isText: Boolean, canvasWidth: Int, canvasHeight: Int) : Tou
     // 当前操作类型
     private var mode = GestureFlags.NONE
     //平移偏移量
-    var dx=0f
+    var dx = 0f
         private set
-    var dy=0f
+    var dy = 0f
         private set
-    private var oridx=0f
-    private var oridy=0f
+    private var oridx = 0f
+    private var oridy = 0f
     // 缩放时两指最初放上时的距离
-    var scale=0f
+    var scale = 0f
         private set
-    private var oriscale=0f
+    private var oriscale = 0f
     //旋转量
-    var degree=0f
+    var degree = 0f
         private set
-    private var oridegree=0f
+    private var oridegree = 0f
     lateinit var centerPoint: PointF
     lateinit var textPoint: PointF
 
@@ -31,15 +31,11 @@ class TextImageTouch(isText: Boolean, canvasWidth: Int, canvasHeight: Int) : Tou
 
     private val downPoint: PointF
     // 缩放时两指最初放上时的距离
-    private var oriDist=0f
+    private var oriDist = 0f
     //整个触摸过程在x和y方向上的偏移总量
-    private var dis=0f
+    private var dis = 0f
 
-    private var mBarSensorListener: BarSensorListener? = null
-
-    fun setBarSensorListener(barSensorListener: BarSensorListener) {
-        mBarSensorListener = barSensorListener
-    }
+    var barSensorListener: BarSensorListener? = null
 
     init {
         downPoint = PointF()
@@ -135,8 +131,8 @@ class TextImageTouch(isText: Boolean, canvasWidth: Int, canvasHeight: Int) : Tou
         //改变文字的坐标
         if (dis < 10f) {
             dis = 0f
-            if (mBarSensorListener != null) {
-                mBarSensorListener!!.openTools()
+            if (barSensorListener != null) {
+                barSensorListener!!.openTools()
             }
             return
         }

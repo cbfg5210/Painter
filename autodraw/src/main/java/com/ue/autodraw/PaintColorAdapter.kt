@@ -19,7 +19,7 @@ class PaintColorAdapter(private val bgs: IntArray) : RecyclerView.Adapter<PaintC
         private val SP_PAINT_COLOR_INDEX = "sp_paint_color_index"
     }
 
-    private var lastSelectedIndex: Int = 0
+    private var lastSelectedIndex = 0
     private var selectedIndex: Int
 
     var itemListener: AdapterView.OnItemClickListener? = null

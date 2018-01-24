@@ -60,14 +60,14 @@ class ColorPicker : View {
 
     private var colorWheelBitmap: Bitmap? = null
 
-    private var valueSliderWidth: Int = 0
-    private var innerPadding: Int = 0
-    private var outerPadding: Int = 0
+    private var valueSliderWidth = 0
+    private var innerPadding = 0
+    private var outerPadding = 0
 
-    private var arrowPointerSize: Int = 0
-    private var outerWheelRadius: Int = 0
-    private var innerWheelRadius: Int = 0
-    private var colorWheelRadius: Int = 0
+    private var arrowPointerSize = 0
+    private var outerWheelRadius = 0
+    private var innerWheelRadius = 0
+    private var colorWheelRadius = 0
 
     private var gradientRotationMatrix: Matrix? = null
 

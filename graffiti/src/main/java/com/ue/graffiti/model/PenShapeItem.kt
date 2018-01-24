@@ -8,6 +8,6 @@ import com.ue.adapterdelegate.Item
 
 class PenShapeItem(var flag: Int, var image: Int, var name: String) : Item {
     //多type RecyclerView中有作用
-    var index: Int = 0
+    var index = 0
     var isChecked: Boolean = false
 }

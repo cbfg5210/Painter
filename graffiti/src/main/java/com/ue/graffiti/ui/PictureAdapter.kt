@@ -15,20 +15,13 @@ import kotlinx.android.synthetic.main.item_picture.view.*
  */
 
 internal class PictureAdapter(private val mPictureItems: List<PictureItem>?) : RecyclerView.Adapter<PictureAdapter.ViewHolder>() {
-    private var mItemClickListener: OnPictureItemListener? = null
-
-    fun setItemClickListener(itemClickListener: OnPictureItemListener) {
-        mItemClickListener = itemClickListener
-    }
+    var itemClickListener: OnPictureItemListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_picture, parent, false)
         val holder = ViewHolder(itemView)
-        itemView.setOnClickListener { v ->
-            if (mItemClickListener != null) {
-                val position = holder.adapterPosition
-                mItemClickListener!!.onItemClick(position, mPictureItems!![position])
-            }
+        itemView.setOnClickListener {
+            itemClickListener?.onItemClick(holder.adapterPosition, mPictureItems!![holder.adapterPosition])
         }
         return holder
     }

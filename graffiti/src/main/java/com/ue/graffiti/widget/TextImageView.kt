@@ -15,20 +15,18 @@ import com.ue.graffiti.util.ensureBitmapRecycled
 class TextImageView : View {
     private var savedBitmap: Bitmap? = null
     lateinit var touch: TextImageTouch
-        private set
     //文字坐标
     private lateinit var textPoint: PointF
     //文字中心
     private lateinit var centerPoint: PointF
 
-    private var contentId: Int = 0
+    private var contentId = 0
     var imageContent: Bitmap? = null
-        private set
 
     private lateinit var drawTextPaint: Paint
     private var textContent = ""
 
-    private var mBarSensorListener: BarSensorListener? = null
+    var barSensorListener: BarSensorListener? = null
     //0:text,1:image
     private val type: Int
 
@@ -46,18 +44,15 @@ class TextImageView : View {
         ta.recycle()
         if (type == 0) {
             //text
-            drawTextPaint = Paint()
-            drawTextPaint.textSize = 50f
-            drawTextPaint.typeface = Typeface.DEFAULT_BOLD
+            drawTextPaint = Paint().apply {
+                textSize = 50f
+                typeface = Typeface.DEFAULT_BOLD
+            }
         } else {
             //image
             textPoint = PointF()
             centerPoint = PointF()
         }
-    }
-
-    fun setBarSensorListener(barSensorListener: BarSensorListener) {
-        mBarSensorListener = barSensorListener
     }
 
     fun setTextColor(color: Int) {
@@ -69,9 +64,7 @@ class TextImageView : View {
         this.savedBitmap = Bitmap.createScaledBitmap(savedBitmap, canvasWidth, canvasHeight, true)
 
         touch = TextImageTouch(true, canvasWidth, canvasHeight)
-        if (mBarSensorListener != null) {
-            touch.setBarSensorListener(mBarSensorListener!!)
-        }
+        touch.barSensorListener = barSensorListener
 
         drawTextPaint.color = paintColor
 
@@ -88,9 +81,7 @@ class TextImageView : View {
         centerPoint.set(textPoint)
 
         touch = TextImageTouch(false, canvasWidth, canvasHeight)
-        if (mBarSensorListener != null) {
-            touch.setBarSensorListener(mBarSensorListener!!)
-        }
+        touch.barSensorListener = barSensorListener
     }
 
     fun getText(paintColor: Int): Text {
@@ -109,8 +100,8 @@ class TextImageView : View {
         when (actionMasked) {
         // 第一只手指按下
             MotionEvent.ACTION_DOWN -> {
-                if (mBarSensorListener != null && mBarSensorListener!!.isTopToolbarVisible()) {
-                    mBarSensorListener!!.closeTools()
+                if (barSensorListener != null && barSensorListener!!.isTopToolbarVisible()) {
+                    barSensorListener!!.closeTools()
                     touch.setDis(java.lang.Float.MAX_VALUE)
                 }
                 touch.down1()
@@ -119,7 +110,7 @@ class TextImageView : View {
                 // 第二个手指按下
                 touch.down2()
             MotionEvent.ACTION_MOVE -> touch.move()
-                // 第一只手指抬起
+        // 第一只手指抬起
             MotionEvent.ACTION_UP,
                 //第二只手抬起
             MotionEvent.ACTION_POINTER_UP -> touch.up()
@@ -142,9 +133,9 @@ class TextImageView : View {
             canvas.drawText(textContent, textPoint.x, textPoint.y, drawTextPaint)
             return
         }
-        //image
         if (imageContent != null) {
-            canvas.drawBitmap(imageContent!!, textPoint.x, textPoint.y, null)
+            //image
+            canvas.drawBitmap(imageContent, textPoint.x, textPoint.y, null)
         }
     }
 

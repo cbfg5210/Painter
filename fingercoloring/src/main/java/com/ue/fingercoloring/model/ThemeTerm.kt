@@ -5,7 +5,7 @@ package com.ue.fingercoloring.model
  */
 
 class ThemeTerm {
-    var id: Int = 0
+    var id = 0
     var name: String? = null
     var image: String? = null
     var images: List<String>? = null

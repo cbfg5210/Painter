@@ -23,7 +23,6 @@ import com.ue.graffiti.util.getXmlImageArray
 import com.ue.graffiti.widget.PenEffectView
 import com.ue.library.util.SPUtils
 import kotlinx.android.synthetic.main.dialog_pen.view.*
-import java.util.*
 
 //调色板对话框
 class PenDialog : DialogFragment(), OnSeekBarChangeListener {
@@ -63,36 +62,30 @@ class PenDialog : DialogFragment(), OnSeekBarChangeListener {
 
     private val penList: MutableList<Item>
         get() {
-            val items = ArrayList<Item>()
-            var images = context.getXmlImageArray(R.array.penShapeImages)
-            var names = resources.getStringArray(R.array.penShapeNames)
-
             lastShapeIndex = SPUtils.getInt(SPKeys.SP_PAINT_SHAPE_INDEX, 0)
             lastEffectIndex = SPUtils.getInt(SPKeys.SP_PAINT_EFFECT_INDEX, 0)
 
-            items.add(PenCatTitleItem(getString(R.string.line_shape)))
-            images.indices.mapTo(items) {
-                PenShapeItem(FLAG_SHAPE, images[it], names[it])
-                        .apply {
-                            index = it
-                            isChecked = lastShapeIndex == it
-                        }
+            return ArrayList<Item>().apply {
+                add(PenCatTitleItem(getString(R.string.line_shape)))
+                addAll(getPenShapes(FLAG_SHAPE, R.array.penShapeImages, R.array.penShapeNames, lastShapeIndex))
+                add(PenCatTitleItem(getString(R.string.special_effect)))
+                addAll(getPenShapes(FLAG_EFFECT, R.array.penEffectImages, R.array.penEffectNames, lastEffectIndex))
             }
-
-            items.add(PenCatTitleItem(getString(R.string.special_effect)))
-            images = context.getXmlImageArray(R.array.penEffectImages)
-            names = resources.getStringArray(R.array.penEffectNames)
-
-            images.indices.mapTo(items) {
-                PenShapeItem(FLAG_EFFECT, images[it], names[it])
-                        .apply {
-                            index = it
-                            isChecked = lastEffectIndex == it
-                        }
-            }
-
-            return items
         }
+
+    private fun getPenShapes(flag: Int, imageArrayId: Int, nameArrayId: Int, lastIndex: Int): ArrayList<Item> {
+        val images = context.getXmlImageArray(imageArrayId)
+        val names = resources.getStringArray(nameArrayId)
+
+        return images.indices
+                .mapTo(ArrayList<Item>(images.size)) {
+                    PenShapeItem(flag, images[it], names[it])
+                            .apply {
+                                index = it
+                                isChecked = lastIndex == it
+                            }
+                }
+    }
 
     fun setCurrentPaint(currentPaint: Paint) {
         paint = currentPaint
@@ -124,7 +117,7 @@ class PenDialog : DialogFragment(), OnSeekBarChangeListener {
         * init effect list
         * */
         gAdapter = PenStyleAdapter(activity, penList)
-        gAdapter.setDelegateClickListener(penShapeListener)
+        gAdapter.delegateClickListener = penShapeListener
 
         contentView.rvPenStyles.apply {
             setHasFixedSize(true)
@@ -153,36 +146,42 @@ class PenDialog : DialogFragment(), OnSeekBarChangeListener {
         //更新粗细文本
         tvPenStroke.text = Integer.toString(paintStrokeSize)
         //对于PathDashPathEffect特效要特殊处理
-        when (lastShapeImage) {
-            R.drawable.ic_line_oval -> {
-                //椭圆
-                val p = Path()
-                p.addOval(RectF(0f, 0f, paintStrokeSize.toFloat(), paintStrokeSize.toFloat()), Path.Direction.CCW)
-                paint.pathEffect = PathDashPathEffect(p, (paintStrokeSize + 10).toFloat(), 0f, PathDashPathEffect.Style.ROTATE)
+        paint.apply {
+            when (lastShapeImage) {
+            //椭圆
+                R.drawable.ic_line_oval -> {
+                    val p = Path().apply {
+                        addOval(RectF(0f, 0f, paintStrokeSize.toFloat(), paintStrokeSize.toFloat()), Path.Direction.CCW)
+                    }
+                    pathEffect = PathDashPathEffect(p, (paintStrokeSize + 10).toFloat(), 0f, PathDashPathEffect.Style.ROTATE)
+                }
+            //正方形
+                R.drawable.ic_line_rect -> {
+                    val p = Path().apply {
+                        addRect(RectF(0f, 0f, paintStrokeSize.toFloat(), paintStrokeSize.toFloat()), Path.Direction.CCW)
+                    }
+                    pathEffect = PathDashPathEffect(p, (paintStrokeSize + 10).toFloat(), 0f, PathDashPathEffect.Style.ROTATE)
+                }
+            //毛笔
+                R.drawable.ic_line_brush -> {
+                    val p = Path().apply {
+                        addRect(RectF(0f, 0f, paintStrokeSize.toFloat(), paintStrokeSize.toFloat()), Path.Direction.CCW)
+                        transform(matrix)
+                    }
+                    pathEffect = PathDashPathEffect(p, 2f, 0f, PathDashPathEffect.Style.TRANSLATE)
+                }
+            //马克笔
+                R.drawable.ic_line_mark_pen -> {
+                    val p = Path().apply {
+                        addArc(RectF(0f, 0f, (paintStrokeSize + 4).toFloat(), (paintStrokeSize + 4).toFloat()), -90f, 90f)
+                        addArc(RectF(0f, 0f, (paintStrokeSize + 4).toFloat(), (paintStrokeSize + 4).toFloat()), 90f, -90f)
+                    }
+                    pathEffect = PathDashPathEffect(p, 2f, 0f, PathDashPathEffect.Style.TRANSLATE)
+                }
             }
-            R.drawable.ic_line_rect -> {
-                //正方形
-                val p = Path()
-                p.addRect(RectF(0f, 0f, paintStrokeSize.toFloat(), paintStrokeSize.toFloat()), Path.Direction.CCW)
-                paint.pathEffect = PathDashPathEffect(p, (paintStrokeSize + 10).toFloat(), 0f, PathDashPathEffect.Style.ROTATE)
-            }
-            R.drawable.ic_line_brush -> {
-                //毛笔
-                val p = Path()
-                p.addRect(RectF(0f, 0f, paintStrokeSize.toFloat(), paintStrokeSize.toFloat()), Path.Direction.CCW)
-                p.transform(matrix)
-                paint.pathEffect = PathDashPathEffect(p, 2f, 0f, PathDashPathEffect.Style.TRANSLATE)
-            }
-            R.drawable.ic_line_mark_pen -> {
-                //马克笔
-                val p = Path()
-                p.addArc(RectF(0f, 0f, (paintStrokeSize + 4).toFloat(), (paintStrokeSize + 4).toFloat()), -90f, 90f)
-                p.addArc(RectF(0f, 0f, (paintStrokeSize + 4).toFloat(), (paintStrokeSize + 4).toFloat()), 90f, -90f)
-                paint.pathEffect = PathDashPathEffect(p, 2f, 0f, PathDashPathEffect.Style.TRANSLATE)
-            }
+            //改变粗细
+            strokeWidth = paintStrokeSize.toFloat()
         }
-        //改变粗细
-        paint.strokeWidth = paintStrokeSize.toFloat()
         // 更新示意view
         pevPenEffect.invalidate()
     }

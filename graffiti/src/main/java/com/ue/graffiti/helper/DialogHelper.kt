@@ -33,7 +33,7 @@ object DialogHelper {
         if (colorPickerDialog.isAdded) {
             return
         }
-        colorPickerDialog.setColorPickerListener(colorPickerListener)
+        colorPickerDialog.colorPickerListener = colorPickerListener
         colorPickerDialog.show(fragmentManager, tag)
     }
 
@@ -71,13 +71,8 @@ object DialogHelper {
         val fragmentManager = activity.supportFragmentManager
         val tag = DrawPictureDialog::class.java.simpleName
         val fragment = fragmentManager.findFragmentByTag(tag)
-        val dialog: DrawPictureDialog
-        if (fragment == null) {
-            dialog = DrawPictureDialog.newInstance()
-            dialog.setDrawPictureListener(drawPictureListener)
-        } else {
-            dialog = fragment as DrawPictureDialog
-        }
+        val dialog = fragment as? DrawPictureDialog
+                ?: DrawPictureDialog.newInstance().apply { this.drawPictureListener = drawPictureListener }
         dialog.setGraffitiInfo(cvGraffitiView)
         if (dialog.isAdded) {
             return

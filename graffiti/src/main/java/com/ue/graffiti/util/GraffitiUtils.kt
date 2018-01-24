@@ -2,6 +2,8 @@ package com.ue.graffiti.util
 
 import android.content.Context
 import android.graphics.*
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import com.ue.graffiti.R
 import com.ue.graffiti.constant.DrawPelFlags
 import com.ue.graffiti.event.OnStepListener
@@ -229,3 +231,29 @@ fun fillInWhiteBitmap(step: CrossFillStep, bitmap: Bitmap) {
     }
 }
 /*step utils*/
+
+/*
+* load animation utils
+* */
+fun loadDrawTextImageAnimations(context: Context, isVisible: Boolean): Array<Animation> {
+    return if (isVisible) arrayOf(
+            AnimationUtils.loadAnimation(context, R.anim.topappear),
+            AnimationUtils.loadAnimation(context, R.anim.downappear))
+    else arrayOf(
+            AnimationUtils.loadAnimation(context, R.anim.topdisappear),
+            AnimationUtils.loadAnimation(context, R.anim.downdisappear))
+}
+
+fun loadToggleMenuAnimations(context: Context, isShown: Boolean): Array<Animation> {
+    return if (isShown)
+        arrayOf(AnimationUtils.loadAnimation(context, R.anim.leftappear),
+                AnimationUtils.loadAnimation(context, R.anim.topappear),
+                AnimationUtils.loadAnimation(context, R.anim.rightappear),
+                AnimationUtils.loadAnimation(context, R.anim.downappear))
+    else arrayOf(AnimationUtils.loadAnimation(context, R.anim.leftdisappear),
+            AnimationUtils.loadAnimation(context, R.anim.topdisappear),
+            AnimationUtils.loadAnimation(context, R.anim.rightdisappear),
+            AnimationUtils.loadAnimation(context, R.anim.downdisappear))
+}
+
+/*load animation utils*/

@@ -16,18 +16,14 @@ class PaintAdapter(private val bgs: IntArray) : RecyclerView.Adapter<PaintAdapte
         private val SP_PAINT_INDEX = "sp_paint_index"
     }
 
-    private var lastSelectedIndex: Int = 0
-    private var selectedIndex: Int
+    private var lastSelectedIndex = 0
+    private var selectedIndex = SPUtils.getInt(SP_PAINT_INDEX, 0)
 
     var itemListener: AdapterView.OnItemClickListener? = null
         set(value) {
             field = value
             field?.onItemClick(null, null, bgs[selectedIndex], 0)
         }
-
-    init {
-        selectedIndex = SPUtils.getInt(SP_PAINT_INDEX, 0)
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_paint, parent, false)
@@ -48,8 +44,10 @@ class PaintAdapter(private val bgs: IntArray) : RecyclerView.Adapter<PaintAdapte
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.sivPaint.isSelected = selectedIndex == position
-        holder.sivPaint.setImageResource(bgs[position])
+        holder.sivPaint.apply {
+            isSelected = selectedIndex == position
+            setImageResource(bgs[position])
+        }
     }
 
     override fun getItemCount(): Int {

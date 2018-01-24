@@ -35,7 +35,7 @@ class ColourImageView : AppCompatImageView {
     private var attacher: MPhotoViewAttacher? = null
 
     private var mColor = -0xff432c
-    private var stackSize: Int = 0
+    private var stackSize = 0
 
     private var mDisposable: Disposable? = null
 
