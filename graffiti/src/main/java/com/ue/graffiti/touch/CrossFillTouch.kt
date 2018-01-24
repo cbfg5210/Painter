@@ -152,13 +152,12 @@ class CrossFillTouch(canvasView: CanvasView) : Touch(canvasView) {
             while (x > 0) {
                 index = width * y + x
                 curColor = pixels!![index]
-                if (curColor == oldColor && curColor != fillColor) {
-                    whiteBitmap!!.setPixel(x, y, fillColor)
-                    pixels!![index] = fillColor
-                    x--
-                } else {
-                    break
+                if (curColor != oldColor || curColor == fillColor) {
+                    break;
                 }
+                whiteBitmap!!.setPixel(x, y, fillColor)
+                pixels!![index] = fillColor
+                x--
             }
 
             xLeft = x + 1
@@ -167,13 +166,12 @@ class CrossFillTouch(canvasView: CanvasView) : Touch(canvasView) {
             while (x < width) {
                 index = width * y + x
                 curColor = pixels!![index]
-                if (curColor == oldColor && curColor != fillColor) {
-                    whiteBitmap!!.setPixel(x, y, fillColor)
-                    pixels!![index] = fillColor
-                    x++
-                } else {
-                    break
+                if (curColor != oldColor || curColor == fillColor) {
+                    break;
                 }
+                whiteBitmap!!.setPixel(x, y, fillColor)
+                pixels!![index] = fillColor
+                x++
             }
             xRight = x - 1
 
@@ -202,14 +200,13 @@ class CrossFillTouch(canvasView: CanvasView) : Touch(canvasView) {
 
             while (true) {
                 curColor = pixels!![width * y + x]
-                if (curColor == oldColor && x < XRight && curColor != fillColor) {
-                    if (!pflag) {
-                        pflag = true
-                    }
-                    x++
-                } else {
-                    break
+                if (curColor != oldColor || x >= XRight || curColor == fillColor) {
+                    break;
                 }
+                if (!pflag) {
+                    pflag = true
+                }
+                x++
             }
 
             if (pflag) {
@@ -240,13 +237,8 @@ class CrossFillTouch(canvasView: CanvasView) : Touch(canvasView) {
     inner class ScanLine internal constructor() {
         // 扫描线类
         // 起始点
-        var from: Point
+        var from: Point = Point()
         // 终止点
-        var to: Point
-
-        init {
-            from = Point()
-            to = Point()
-        }
+        var to: Point = Point()
     }
 }
