@@ -22,8 +22,8 @@ public class DrawBesselTouch extends DrawTouch {
 
         if (!control) {
             //非拉伸曲线操作表明是新图元的开端
-            beginPoint.set(downPoint); //记录起点
-            newPel = new Pel();
+            beginPoint.set(getDownPoint()); //记录起点
+            setNewPel(new Pel());
         }
     }
 
@@ -31,19 +31,19 @@ public class DrawBesselTouch extends DrawTouch {
     public void move() {
         super.move();
 
-        movePoint.set(curPoint);
-        newPel.getPath().reset();
+        getMovePoint().set(curPoint);
+        getNewPel().getPath().reset();
 
         if (!control) {
             //非拉伸贝塞尔曲线操作
-            newPel.getPath().moveTo(beginPoint.x, beginPoint.y);
-            newPel.getPath().cubicTo(beginPoint.x, beginPoint.y, beginPoint.x, beginPoint.y, movePoint.x, movePoint.y);
+            getNewPel().getPath().moveTo(beginPoint.x, beginPoint.y);
+            getNewPel().getPath().cubicTo(beginPoint.x, beginPoint.y, beginPoint.x, beginPoint.y, getMovePoint().x, getMovePoint().y);
         } else {
-            newPel.getPath().moveTo(beginPoint.x, beginPoint.y);
-            newPel.getPath().cubicTo(beginPoint.x, beginPoint.y, movePoint.x, movePoint.y, endPoint.x, endPoint.y);
+            getNewPel().getPath().moveTo(beginPoint.x, beginPoint.y);
+            getNewPel().getPath().cubicTo(beginPoint.x, beginPoint.y, getMovePoint().x, getMovePoint().y, endPoint.x, endPoint.y);
         }
 
-        mSimpleTouchListener.setSelectedPel(selectedPel = newPel);
+        mSimpleTouchListener.setSelectedPel(selectedPel = getNewPel());
     }
 
     @Override
@@ -56,7 +56,7 @@ public class DrawBesselTouch extends DrawTouch {
             endPoint.set(upPoint);//记录落脚点
             control = true;
         } else {
-            newPel.setClosure(false);
+            getNewPel().setClosure(false);
             super.up(); //最终敲定
 
             control = false;
