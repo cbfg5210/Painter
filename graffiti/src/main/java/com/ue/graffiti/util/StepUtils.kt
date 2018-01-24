@@ -27,18 +27,18 @@ object StepUtils {
                     if (step is CrossFillStep) {
                         undoCrossFillStep(step, backgroundBitmap)
                     } else if (step is FillPelStep) {
-                        step.curPel.paint.set(step.newPaint)
+                        step.curPel!!.paint.set(step.newPaint)
                     } else if (step is DrawPelStep) {
                         if (step.flag == DrawPelFlags.DELETE) {
                             //删除链表对应索引位置图元
                             step.pelList.removeAt(step.location)
                         } else {
                             //更新图元链表数据
-                            step.pelList.add(step.location, step.curPel)
+                            step.pelList.add(step.location, step.curPel!!)
                         }
                     } else if (step is TransformPelStep) {
-                        step.curPel.path.transform(step.toUndoMatrix)
-                        step.curPel.region.setPath(step.curPel.path, step.clipRegion)
+                        step.curPel!!.path.transform(step.toUndoMatrix)
+                        step.curPel!!.region.setPath(step.curPel!!.path, step.clipRegion)
                     }
                     e.onNext(1)
                     e.onComplete()
@@ -60,18 +60,18 @@ object StepUtils {
                         //进度对话框处理填充耗时任务
                         redoFillStep(step, backgroundBitmap, copyOfBackgroundBitmap)
                     } else if (step is FillPelStep) {
-                        step.curPel.paint.set(step.oldPaint)
+                        step.curPel!!.paint.set(step.oldPaint)
                     } else if (step is DrawPelStep) {
                         if (step.flag == DrawPelFlags.DELETE) {
                             //更新图元链表数据
-                            step.pelList.add(step.location, step.curPel)
+                            step.pelList.add(step.location, step.curPel!!)
                         } else {
                             //删除链表对应索引位置图元
                             step.pelList.removeAt(step.location)
                         }
                     } else if (step is TransformPelStep) {
-                        step.curPel.path.set(step.savedPel.path)
-                        step.curPel.region.setPath(step.curPel.path, step.clipRegion)
+                        step.curPel!!.path.set(step.savedPel.path)
+                        step.curPel!!.region.setPath(step.curPel!!.path, step.clipRegion)
                     }
                     e.onNext(1)
                     e.onComplete()

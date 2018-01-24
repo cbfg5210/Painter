@@ -9,13 +9,8 @@ import android.graphics.Region
 
 class TransformPelStep(pelList: MutableList<Pel>, var clipRegion: Region, pel: Pel) : Step(pelList, pel) {
     //变换前的matrix
-    var toUndoMatrix: Matrix
-    var savedPel: Pel
-
-    init {
-        toUndoMatrix = Matrix()
-        savedPel = curPel.clone()
-    }
+    var toUndoMatrix: Matrix = Matrix()
+    var savedPel: Pel = curPel!!.clone()
 
     fun setUndoMatrix(matrix: Matrix) {
         toUndoMatrix.set(matrix)

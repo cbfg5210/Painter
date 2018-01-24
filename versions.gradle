@@ -4,7 +4,7 @@
  **/
 ext.deps = [:]
 def versions = [:]
-versions.arch = hasProperty("ARCH_VERSION") ? getProperty("ARCH_VERSION") : "1.0.0-alpha9"
+versions.arch = "1.0.0-alpha9"
 versions.support = "26.1.0"
 versions.constraintLayout = "1.0.2"
 versions.rxjava2 = "2.1.3"
@@ -14,7 +14,7 @@ versions.picasso = "2.5.2"
 versions.gson = "2.8.2"
 versions.recyclerAdapterDelegate = "0.8"
 versions.androidGradlePlugin = "3.0.1"
-versions.kotlin = "1.2.10"
+versions.kotlin = "1.2.20"
 versions.androidMavenPlugin = "1.5"
 versions.butterknife = "8.5.1"
 versions.eventbus = "3.0.0"

@@ -254,7 +254,7 @@ class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), 
         animPelPaint.pathEffect = effect
     }
 
-    fun getPelList(): List<Pel> {
+    fun getPelList(): MutableList<Pel> {
         return pelList
     }
 

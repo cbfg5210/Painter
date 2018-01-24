@@ -5,4 +5,4 @@ package com.ue.graffiti.model
  */
 // 图元链表
 //最早放入undo的图元
-open class Step(var pelList: MutableList<Pel>, var curPel: Pel)
+open class Step(var pelList: MutableList<Pel>, var curPel: Pel?)
