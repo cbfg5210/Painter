@@ -23,7 +23,7 @@ import java.util.*
 class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), SimpleTouchListener {
     // 图元平移缩放
     // 动画画笔（变换相位用）
-    private var phase: Float = 0.toFloat()
+    private var phase = 0f
     // 动画效果画笔
     private val animPelPaint: Paint
     // 画画用的画笔
@@ -110,30 +110,31 @@ class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), 
         //初始化为自由手绘操作
         touch = DrawFreehandTouch(this)
 
-        drawPelPaint = Paint(Paint.DITHER_FLAG)
-        drawPelPaint.style = Paint.Style.STROKE
-        drawPelPaint.strokeCap = Paint.Cap.ROUND
-        drawPelPaint.isAntiAlias = true
-        drawPelPaint.isDither = true
-        drawPelPaint.strokeJoin = Paint.Join.ROUND
-
         val lastColor = SPUtils.getInt(SPKeys.SP_PAINT_COLOR, resources.getColor(R.color.col_298ecb))
         val lastStrokeWidth = SPUtils.getInt(SPKeys.SP_PAINT_SIZE, 1)
         val lastShapeImage = SPUtils.getInt(SPKeys.SP_PAINT_SHAPE_IMAGE, R.drawable.ic_line_solid)
         val lastEffectImage = SPUtils.getInt(SPKeys.SP_PAINT_EFFECT_IMAGE, R.drawable.ic_effect_solid)
 
-        drawPelPaint.color = lastColor
-        drawPelPaint.strokeWidth = lastStrokeWidth.toFloat()
-        drawPelPaint.pathEffect = PenUtils.getPaintShapeByImage(lastShapeImage, 1, null)
-        drawPelPaint.maskFilter = PenUtils.getPaintEffectByImage(lastEffectImage)
+        drawPelPaint = Paint(Paint.DITHER_FLAG).apply {
+            style = Paint.Style.STROKE
+            strokeCap = Paint.Cap.ROUND
+            isAntiAlias = true
+            isDither = true
+            strokeJoin = Paint.Join.ROUND
+            color = lastColor
+            strokeWidth = lastStrokeWidth.toFloat()
+            pathEffect = PenUtils.getPaintShapeByImage(lastShapeImage, 1, null)
+            maskFilter = PenUtils.getPaintEffectByImage(lastEffectImage)
+        }
 
         currentPaint = drawPelPaint
         animPelPaint = Paint(drawPelPaint)
         drawPicturePaint = Paint()
 
-        drawTextPaint = Paint()
-        drawTextPaint.color = drawPelPaint.color
-        drawTextPaint.textSize = 50f
+        drawTextPaint = Paint().apply {
+            color = drawPelPaint.color
+            textSize = 50f
+        }
 
         initBitmap()
         updateSavedBitmap()
@@ -143,7 +144,7 @@ class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), 
         return currentPaint
     }
 
-    fun initBitmap() {
+    private fun initBitmap() {
         clipRegion.set(Rect(0, 0, canvasWidth, canvasHeight))
         val backgroundDrawable = this.resources.getDrawable(R.drawable.bg_canvas0) as BitmapDrawable
         val scaledBitmap = Bitmap.createScaledBitmap(backgroundDrawable.bitmap, canvasWidth, canvasHeight, true)
@@ -166,10 +167,8 @@ class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), 
     override fun onDraw(canvas: Canvas) {
         // 画其余图元
         canvas.drawBitmap(savedBitmap!!, 0f, 0f, Paint())
+        selectedPel ?: return
 
-        if (selectedPel == null) {
-            return
-        }
         if (this.touch !is TransformTouch) {
             //画图状态不产生动态画笔效果
             canvas.drawPath(selectedPel!!.path, drawPelPaint)
@@ -308,18 +307,6 @@ class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), 
         updateSavedBitmap()
     }
 
-    fun setProcessedBitmap(imgPro: Bitmap) {
-        //设置处理后的图片作为背景
-        TouchUtils.ensureBitmapRecycled(backgroundBitmap)
-        backgroundBitmap = Bitmap.createScaledBitmap(imgPro, canvasWidth, canvasHeight, true)
-
-        TouchUtils.ensureBitmapRecycled(copyOfBackgroundBitmap)
-        copyOfBackgroundBitmap = backgroundBitmap!!.copy(Config.ARGB_8888, true)
-        //填充区域重新打印
-        TouchUtils.reprintFilledAreas(undoStack, backgroundBitmap!!)
-        updateSavedBitmap()
-    }
-
     fun setBackgroundBitmap() {
         //清空画布时将之前保存的副本背景作为重绘（去掉填充）
         TouchUtils.ensureBitmapRecycled(backgroundBitmap)
@@ -334,7 +321,7 @@ class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), 
         undoStack.clear()
         redoStack.clear()
         //若有选中的图元失去焦点
-        setSelectedPel(null!!)
+        setSelectedPel(null)
     }
 
     fun clearRedoStack() {
@@ -369,34 +356,34 @@ class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), 
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        if (this.touch != null) {
-            this.touch!!.setTouchListener(null, object : SimpleTouchListener {
-                override fun updateSavedBitmap(canvas: Canvas, bitmap: Bitmap?, pelList: List<Pel>, selectedPel: Pel?, isInvalidate: Boolean) {}
+        touch ?: return
 
-                override fun invalidate() {}
+        this.touch!!.setTouchListener(null, object : SimpleTouchListener {
+            override fun updateSavedBitmap(canvas: Canvas, bitmap: Bitmap?, pelList: List<Pel>, selectedPel: Pel?, isInvalidate: Boolean) {}
 
-                override fun isSensorRegistered(): Boolean {
-                    return true
-                }
+            override fun invalidate() {}
 
-                override fun getBackgroundBitmap(): Bitmap {
-                    return Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888)
-                }
+            override fun isSensorRegistered(): Boolean {
+                return true
+            }
 
-                override fun getCopyOfBackgroundBitmap(): Bitmap {
-                    return Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888)
-                }
+            override fun getBackgroundBitmap(): Bitmap {
+                return Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888)
+            }
 
-                override fun setSelectedPel(pel: Pel?) {}
+            override fun getCopyOfBackgroundBitmap(): Bitmap {
+                return Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888)
+            }
 
-                override fun getCurrentPaint(): Paint {
-                    return Paint()
-                }
+            override fun setSelectedPel(pel: Pel?) {}
 
-                override fun getContext(): Context {
-                    return getContext().applicationContext
-                }
-            })
-        }
+            override fun getCurrentPaint(): Paint {
+                return Paint()
+            }
+
+            override fun getContext(): Context {
+                return getContext().applicationContext
+            }
+        })
     }
 }

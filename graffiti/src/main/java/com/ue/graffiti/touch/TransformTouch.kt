@@ -23,10 +23,10 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
     // 当前操作类型
     private var mode = GestureFlags.NONE
     // 缩放时两指最初放上时的距离
-    private var oriDist: Float = 0.toFloat()
+    private var oriDist=0f
     //平移偏移量
-    private var dx: Float = 0.toFloat()
-    private var dy: Float = 0.toFloat()
+    private var dx=0f
+    private var dy=0f
 
     private var step: TransformPelStep? = null
 

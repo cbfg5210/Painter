@@ -10,20 +10,20 @@ class TextImageTouch(isText: Boolean, canvasWidth: Int, canvasHeight: Int) : Tou
     // 当前操作类型
     private var mode = GestureFlags.NONE
     //平移偏移量
-    var dx: Float = 0.toFloat()
+    var dx=0f
         private set
-    var dy: Float = 0.toFloat()
+    var dy=0f
         private set
-    private var oridx: Float = 0.toFloat()
-    private var oridy: Float = 0.toFloat()
+    private var oridx=0f
+    private var oridy=0f
     // 缩放时两指最初放上时的距离
-    var scale: Float = 0.toFloat()
+    var scale=0f
         private set
-    private var oriscale: Float = 0.toFloat()
+    private var oriscale=0f
     //旋转量
-    var degree: Float = 0.toFloat()
+    var degree=0f
         private set
-    private var oridegree: Float = 0.toFloat()
+    private var oridegree=0f
     lateinit var centerPoint: PointF
     lateinit var textPoint: PointF
 
@@ -32,9 +32,9 @@ class TextImageTouch(isText: Boolean, canvasWidth: Int, canvasHeight: Int) : Tou
 
     private val downPoint: PointF
     // 缩放时两指最初放上时的距离
-    private var oriDist: Float = 0.toFloat()
+    private var oriDist=0f
     //整个触摸过程在x和y方向上的偏移总量
-    private var dis: Float = 0.toFloat()
+    private var dis=0f
 
     private var mBarSensorListener: BarSensorListener? = null
 
