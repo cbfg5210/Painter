@@ -247,8 +247,4 @@ class MainPresenter(private val mMainActivity: MainActivity) {
     interface OnPickPelListener {
         fun onPelPick(v: View, pelTouch: Touch?)
     }
-
-    companion object {
-        private val BASE_PATH = "/painter/graffiti"
-    }
 }
