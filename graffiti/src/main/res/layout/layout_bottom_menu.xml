@@ -75,7 +75,7 @@
             style="@style/MenuSeparator"/>
 
         <RadioButton
-            android:id="@+id/btnInsertPicture"
+            android:id="@+id/ivInsertPicture"
             style="@style/GraffitiButton"
             android:drawableTop="@drawable/btn_picture_normal"
             android:text="@string/image"/>

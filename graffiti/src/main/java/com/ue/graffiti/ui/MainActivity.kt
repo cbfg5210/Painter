@@ -461,7 +461,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
             }
             R.id.btnBg -> mMainPresenter.showCanvasBgsPopupWindow(vgBottomMenu)
             R.id.btnText -> onOpenDrawTextBtn(v)
-            R.id.btnInsertPicture -> onOpenDrawPictureBtn(v)
+            R.id.ivInsertPicture -> onOpenDrawPictureBtn(v)
         /**
          * other listener:undo,redo,extend
          */

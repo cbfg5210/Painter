@@ -67,10 +67,10 @@ class DrawTextDialog : DialogFragment(), View.OnClickListener {
         vgDrawTextTopMenu = contentView.vgDrawTextTopMenu
         vgDrawTextBottomMenu = contentView.vgDrawTextBottomMenu
 
-        contentView.btnCancel.setOnClickListener(this)
-        contentView.btnInsertText.setOnClickListener(this)
-        contentView.btnTextContent.setOnClickListener(this)
-        contentView.btnTextColor.setOnClickListener(this)
+        contentView.ivCancel.setOnClickListener(this)
+        contentView.ivInsertText.setOnClickListener(this)
+        contentView.tvTextContent.setOnClickListener(this)
+        contentView.tvTextColor.setOnClickListener(this)
 
         savedCanvas = Canvas()
         //与画布建立联系
@@ -159,16 +159,16 @@ class DrawTextDialog : DialogFragment(), View.OnClickListener {
     override fun onClick(v: View) {
         val viewId = v.id
         when (viewId) {
-            R.id.btnCancel -> dismiss()
-            R.id.btnTextContent -> demandContent()
-            R.id.btnInsertText -> {
+            R.id.ivCancel -> dismiss()
+            R.id.tvTextContent -> demandContent()
+            R.id.ivInsertText -> {
                 //构造该次的文本对象,并装入图元对象
                 drawPels()
                 mDrawTextListener?.onTextDrew(Pel().apply { text = tivCanvas.getText(paintColor) }, savedBitmap)
                 //结束该活动
                 dismiss()
             }
-            R.id.btnTextColor -> DialogHelper.showColorPickerDialog(activity, object : ColorPickerDialog.OnColorPickerListener {
+            R.id.tvTextColor -> DialogHelper.showColorPickerDialog(activity, object : ColorPickerDialog.OnColorPickerListener {
                 override fun onColorPicked(color: Int) {
                     paintColor = color
                     tivCanvas.setTextColor(color)

@@ -72,11 +72,11 @@ class DrawPictureDialog : DialogFragment(), View.OnClickListener {
         }
 
         vgTopToolbar = contentView.vgTopToolbar
-        vgDownToolbar = contentView.vgDownToolbar
+        vgDownToolbar = contentView.tvSelectPicture
 
-        contentView.btnCancel.setOnClickListener(this)
-        contentView.btnInsertPicture.setOnClickListener(this)
-        contentView.btnSelectPicture.setOnClickListener(this)
+        contentView.ivCancel.setOnClickListener(this)
+        contentView.ivInsertPicture.setOnClickListener(this)
+        contentView.tvSelectPicture.setOnClickListener(this)
 
         savedCanvas = Canvas()
         savedCanvas.setBitmap(savedBitmap) //与画布建立联系
@@ -146,9 +146,9 @@ class DrawPictureDialog : DialogFragment(), View.OnClickListener {
     override fun onClick(v: View) {
         val viewId = v.id
         when (viewId) {
-            R.id.btnCancel -> dismiss()
-            R.id.btnSelectPicture -> pictureDialog.show(childFragmentManager, "")
-            R.id.btnInsertPicture -> {
+            R.id.ivCancel -> dismiss()
+            R.id.tvSelectPicture -> pictureDialog.show(childFragmentManager, "")
+            R.id.ivInsertPicture -> {
                 //插入了图
                 if (tivCanvas.imageContent != null) {
                     val newPel = Pel().apply { picture = tivCanvas.picture }

@@ -40,56 +40,9 @@
 
     <style name="MenuSeparator">
         <item name="android:layout_width">1px</item>
-        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_height">@dimen/widget_size_10</item>
+        <item name="android:layout_gravity">center_vertical</item>
         <item name="android:background">@color/col_343d4d</item>
-    </style>
-
-    <style name="GraffitiButton2">
-        <item name="android:background">@drawable/selector_graffitibutton</item>
-        <item name="android:paddingTop">11dp</item>
-        <item name="android:layout_width">55dip</item>
-        <item name="android:layout_height">55dip</item>
-        <item name="android:shadowColor">#ff181e2a</item>
-        <item name="android:shadowDy">1.0</item>
-        <item name="android:shadowRadius">1.0</item>
-        <item name="android:drawablePadding">-40dp</item>
-    </style>
-
-    <style name="GraffitiButton3">
-        <item name="android:background">@drawable/selector_graffitibutton</item>
-        <item name="android:paddingTop">14dp</item>
-        <item name="android:layout_width">55dip</item>
-        <item name="android:layout_height">55dip</item>
-        <item name="android:shadowColor">#ff181e2a</item>
-        <item name="android:shadowDy">1.0</item>
-        <item name="android:shadowRadius">1.0</item>
-        <item name="android:drawablePadding">-40dp</item>
-    </style>
-
-    <style name="DrawTextButton">
-        <item name="android:textSize">@dimen/font_size_12</item>
-        <item name="android:textColor">#FFFFFF</item>
-        <item name="android:paddingLeft">40dp</item>
-        <item name="android:background">@drawable/selector_graffitibutton</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:shadowColor">#ff181e2a</item>
-        <item name="android:shadowDy">1.0</item>
-        <item name="android:shadowRadius">1.0</item>
-        <item name="android:drawablePadding">-35dp</item>
-    </style>
-
-    <style name="DrawPictureButton">
-        <item name="android:textSize">@dimen/font_size_12</item>
-        <item name="android:textColor">#FFFFFF</item>
-        <item name="android:paddingLeft">100dp</item>
-        <item name="android:background">@drawable/selector_graffitibutton</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:shadowColor">#ff181e2a</item>
-        <item name="android:shadowDy">1.0</item>
-        <item name="android:shadowRadius">1.0</item>
-        <item name="android:drawablePadding">-100dp</item>
     </style>
 
     <style name="GraffitiDialog">
@@ -119,6 +72,4 @@
         <item name="android:layout_weight">1</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
-
-    <color name="col_181e2a">#181e2a</color>
 </resources>
