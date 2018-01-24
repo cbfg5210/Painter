@@ -112,7 +112,18 @@
         <item>礼物</item>
         <item>鲜花</item>
         <item>水滴</item>
-        <item>照相机</item>
+        <item>手机</item>
+        <item>白纸</item>
+        <item>客车</item>
+        <item>便签</item>
+        <item>报纸</item>
+        <item>电脑</item>
+        <item>五角星</item>
+        <item>画框</item>
+        <item>铅笔</item>
+        <item>人</item>
+        <item>爱心</item>
+        <item>音符</item>
         <item>钥匙</item>
         <item>字符</item>
         <item>雨伞</item>
@@ -125,10 +136,6 @@
         <item>奖杯</item>
         <item>对话</item>
         <item>地铁</item>
-        <item>手机</item>
-        <item>白纸</item>
-        <item>便签</item>
-        <item>客车</item>
         <item>听筒</item>
         <item>地球</item>
         <item>定位</item>
@@ -141,15 +148,11 @@
         <item>飞机</item>
         <item>公文包</item>
         <item>出租车</item>
-        <item>画板</item>
-        <item>报纸</item>
-        <item>电脑</item>
-        <item>五角星</item>
-        <item>画框</item>
         <item>画笔</item>
         <item>卡车</item>
         <item>轮船</item>
         <item>平板</item>
+        <item>照相机</item>
         <item>沙漏</item>
         <item>收音机</item>
         <item>手柄</item>
@@ -158,11 +161,6 @@
         <item>折线</item>
         <item>折纸</item>
         <item>门</item>
-        <item>摩托车</item>
-        <item>铅笔</item>
-        <item>人</item>
-        <item>爱心</item>
-        <item>音符</item>
         <item>帽子</item>
         <item>内存卡</item>
         <item>扑克牌</item>
@@ -175,6 +173,8 @@
         <item>工具</item>
         <item>相片</item>
         <item>油漆桶</item>
+        <item>画板</item>
+        <item>摩托车</item>
         <item>麦克风</item>
     </array>
 </resources>
