@@ -31,7 +31,6 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
     private var step: TransformPelStep? = null
 
     init {
-
         savedMatrix = Matrix()
         transMatrix = Matrix()
 
@@ -77,7 +76,7 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
             //超过阈值未选中
             //同步CanvasView中当前选中的图元
             selectedPel = null
-            mSimpleTouchListener!!.setSelectedPel(selectedPel!!)
+            mSimpleTouchListener!!.setSelectedPel(selectedPel)
 
             updateSavedBitmap(true)
             return
@@ -104,7 +103,7 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
     // 第二只手指按下
     public override fun down2() {
         oriDist = TouchUtils.distance(curPoint, secPoint)
-        if (oriDist > GestureFlags.MIN_ZOOM && selectedPel!! != null) {
+        if (oriDist > GestureFlags.MIN_ZOOM && selectedPel != null) {
             // 距离小于50px才算是缩放
             takeOverSelectedPel()
             mode = GestureFlags.ZOOM
@@ -113,7 +112,7 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
 
     // 手指移动
     override fun move() {
-        if (selectedPel!! == null) {
+        if (selectedPel == null) {
             return
         }
         // 获取move事件的发生位置
@@ -206,7 +205,7 @@ class TransformTouch(canvasView: CanvasView) : Touch(canvasView) {
             undoStack.push(step)
 
             // 敲定此次操作的最终区域
-            if (selectedPel!! != null) {
+            if (selectedPel != null) {
                 //初始位置也同步更新
                 savedPel.path.set(selectedPel!!.path)
             }
