@@ -23,15 +23,12 @@ import com.ue.graffiti.util.toast
 import com.ue.graffiti.widget.CanvasView
 import com.ue.library.constant.Constants
 import com.ue.library.util.FileUtils
-import com.ue.library.util.PermissionUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.io.File
 import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.IOException
 
 /**
  * Created by hawk on 2018/1/16.
@@ -163,49 +160,13 @@ class MainPresenter(private val mMainActivity: MainActivity) {
         }
     }
 
-    fun onSaveGraffitiClicked(savedBitmap: Bitmap, workName: String, saveListener: View.OnClickListener?) {
+    fun onSaveGraffitiClicked(savedBitmap: Bitmap, workName: String, saveListener: FileUtils.OnSaveImageListener?) {
         if (TextUtils.isEmpty(workName)) {
             mMainActivity.toast(R.string.save_error_null)
             return
         }
-
-        PermissionUtils.checkReadWriteStoragePerms(mMainActivity,
-                mMainActivity.getString(R.string.save_error_no_perm),
-                object : PermissionUtils.SimplePermissionListener {
-                    override fun onSucceed(requestCode: Int, grantPermissions: List<String>) {
-                        val path = Environment.getExternalStorageDirectory().path + Constants.PATH_GRAFFITI
-                        FileUtils.saveImageLocally(mMainActivity, savedBitmap, path, "$workName.png", object : FileUtils.OnSaveImageListener {
-                            override fun onSaved(path: String) {
-                                if (TextUtils.isEmpty(path)) {
-                                    mMainActivity.toast(R.string.save_error)
-                                } else {
-                                    mMainActivity.toast(mMainActivity.getString(R.string.save_to, path))
-                                }
-                            }
-                        })
-                    }
-                })
-    }
-
-    private fun saveGraffiti(bitmap: Bitmap, savedPath: String, saveListener: View.OnClickListener?) {
-        var fileOutputStream: FileOutputStream? = null
-        try {
-            fileOutputStream = FileOutputStream(savedPath)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
-            mMainActivity.toast(mMainActivity.getString(R.string.save_to, savedPath))
-            saveListener?.onClick(null)
-        } catch (e: Exception) {
-            mMainActivity.toast(mMainActivity.getString(R.string.save_error_reason, e.message))
-        } finally {
-            if (fileOutputStream == null) {
-                return
-            }
-            try {
-                fileOutputStream.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
+        val path = Environment.getExternalStorageDirectory().path + Constants.PATH_GRAFFITI
+        FileUtils.saveImageLocally(mMainActivity, savedBitmap, path, workName, saveListener)
     }
 
     fun loadPictureFromIntent(data: Intent, canvasWidth: Int, canvasHeight: Int): Observable<Bitmap> {

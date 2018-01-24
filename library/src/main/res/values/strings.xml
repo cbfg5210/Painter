@@ -7,4 +7,6 @@
     <string name="cover">覆盖</string>
     <string name="cancel">取消</string>
     <string name="save_error_reason">保存出错：%s</string>
+    <string name="save_to">图片已保存到：%s</string>
+    <string name="save_error_no_perm">保存失败：请先开启外部存储权限。</string>
 </resources>

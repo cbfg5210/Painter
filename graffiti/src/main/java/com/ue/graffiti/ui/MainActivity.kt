@@ -29,6 +29,7 @@ import com.ue.graffiti.helper.DialogHelper
 import com.ue.graffiti.model.*
 import com.ue.graffiti.touch.*
 import com.ue.graffiti.util.*
+import com.ue.library.util.FileUtils
 import com.ue.library.util.SPUtils
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -412,7 +413,11 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
         DialogHelper.showExitDialog(this, View.OnClickListener {
             DialogHelper.showInputDialog(this@MainActivity, getString(R.string.input_graffiti_name), object : OnSingleResultListener {
                 override fun onResult(result: Any) {
-                    mMainPresenter.onSaveGraffitiClicked(cvGraffitiView.savedBitmap!!, result as String, View.OnClickListener { finish() })
+                    mMainPresenter.onSaveGraffitiClicked(cvGraffitiView.savedBitmap!!, result as String, object : FileUtils.OnSaveImageListener {
+                        override fun onSaved(path: String) {
+                            finish()
+                        }
+                    })
                 }
             })
         })
