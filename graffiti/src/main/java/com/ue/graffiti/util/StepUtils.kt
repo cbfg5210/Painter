@@ -17,28 +17,22 @@ import io.reactivex.schedulers.Schedulers
 /**
  * Created by hawk on 2018/1/16.
  */
-
 object StepUtils {
-
     //进undo栈时对List中图元的更新（子类覆写）
     fun toUndoUpdate(context: Context, step: Step, backgroundBitmap: Bitmap, stepListener: OnStepListener?): Disposable {
         val observable = Observable
                 .create<Any> { e ->
-                    if (step is CrossFillStep) {
-                        undoCrossFillStep(step, backgroundBitmap)
-                    } else if (step is FillPelStep) {
-                        step.curPel!!.paint.set(step.newPaint)
-                    } else if (step is DrawPelStep) {
-                        if (step.flag == DrawPelFlags.DELETE) {
-                            //删除链表对应索引位置图元
-                            step.pelList.removeAt(step.location)
-                        } else {
-                            //更新图元链表数据
-                            step.pelList.add(step.location, step.curPel!!)
+                    step.apply {
+                        when (this) {
+                            is CrossFillStep -> undoCrossFillStep(this, backgroundBitmap)
+                            is FillPelStep -> curPel!!.paint.set(newPaint)
+                        //删除链表对应索引位置图元-//更新图元链表数据
+                            is DrawPelStep -> if (flag == DrawPelFlags.DELETE) pelList.removeAt(location) else pelList.add(location, step.curPel!!)
+                            is TransformPelStep -> {
+                                curPel!!.path.transform(toUndoMatrix)
+                                curPel!!.region.setPath(curPel!!.path, clipRegion)
+                            }
                         }
-                    } else if (step is TransformPelStep) {
-                        step.curPel!!.path.transform(step.toUndoMatrix)
-                        step.curPel!!.region.setPath(step.curPel!!.path, step.clipRegion)
                     }
                     e.onNext(1)
                     e.onComplete()
@@ -56,22 +50,18 @@ object StepUtils {
     fun toRedoUpdate(context: Context, step: Step, backgroundBitmap: Bitmap, copyOfBackgroundBitmap: Bitmap, stepListener: OnStepListener?): Disposable {
         val observable = Observable
                 .create<Any> { e ->
-                    if (step is CrossFillStep) {
+                    step.apply {
+                        when (this) {
                         //进度对话框处理填充耗时任务
-                        redoFillStep(step, backgroundBitmap, copyOfBackgroundBitmap)
-                    } else if (step is FillPelStep) {
-                        step.curPel!!.paint.set(step.oldPaint)
-                    } else if (step is DrawPelStep) {
-                        if (step.flag == DrawPelFlags.DELETE) {
-                            //更新图元链表数据
-                            step.pelList.add(step.location, step.curPel!!)
-                        } else {
-                            //删除链表对应索引位置图元
-                            step.pelList.removeAt(step.location)
+                            is CrossFillStep -> redoFillStep(this, backgroundBitmap, copyOfBackgroundBitmap)
+                            is FillPelStep -> curPel!!.paint.set(oldPaint)
+                        //更新图元链表数据-//删除链表对应索引位置图元
+                            is DrawPelStep -> if (flag == DrawPelFlags.DELETE) pelList.add(location, curPel!!) else pelList.removeAt(location)
+                            is TransformPelStep -> {
+                                curPel!!.path.set(savedPel.path)
+                                curPel!!.region.setPath(curPel!!.path, clipRegion)
+                            }
                         }
-                    } else if (step is TransformPelStep) {
-                        step.curPel!!.path.set(step.savedPel.path)
-                        step.curPel!!.region.setPath(step.curPel!!.path, step.clipRegion)
                     }
                     e.onNext(1)
                     e.onComplete()
@@ -91,10 +81,8 @@ object StepUtils {
     //重做填充线程
     private fun undoCrossFillStep(step: CrossFillStep, backgroundBitmap: Bitmap) {
         //设置重做填充颜色
-        val backgroundCanvas = Canvas()
-        backgroundCanvas.setBitmap(backgroundBitmap)
-        val paint = Paint()
-        paint.color = step.fillColor
+        val backgroundCanvas = Canvas().apply { setBitmap(backgroundBitmap) }
+        val paint = Paint().apply { color = step.fillColor }
         // 获取pelList对应的迭代器头结点
         val scanLineIterator = step.scanLinesList.listIterator()
         var scanLine: ScanLine
@@ -126,10 +114,8 @@ object StepUtils {
             return
         }
         //用上一次的颜色填充
-        val backgroundCanvas = Canvas()
-        backgroundCanvas.setBitmap(backgroundBitmap)
-        val paint = Paint()
-        paint.color = step.initColor
+        val backgroundCanvas = Canvas().apply { setBitmap(backgroundBitmap) }
+        val paint = Paint().apply { color = step.initColor }
         while (scanLineIterator.hasNext()) {
             val scanLine = scanLineIterator.next()
             backgroundCanvas.drawLine(scanLine.from.x.toFloat(), scanLine.from.y.toFloat(), scanLine.to.x.toFloat(), scanLine.to.y.toFloat(), paint)
@@ -139,14 +125,13 @@ object StepUtils {
     //填充到白底位图上
     fun fillInWhiteBitmap(step: CrossFillStep, bitmap: Bitmap) {
         //设置重做填充颜色
-        val whiteCanvas = Canvas()//构造画布
-        whiteCanvas.setBitmap(bitmap)
-        val paint = Paint()
-        paint.color = step.fillColor
-
-        val scanlineIterator = step.scanLinesList.listIterator()// 获取pelList对应的迭代器头结点
-        while (scanlineIterator.hasNext()) {
-            val scanLine = scanlineIterator.next()
+        //构造画布
+        val whiteCanvas = Canvas().apply { setBitmap(bitmap) }
+        val paint = Paint().apply { color = step.fillColor }
+        // 获取pelList对应的迭代器头结点
+        val scanLineIterator = step.scanLinesList.listIterator()
+        while (scanLineIterator.hasNext()) {
+            val scanLine = scanLineIterator.next()
             whiteCanvas.drawLine(scanLine.from.x.toFloat(), scanLine.from.y.toFloat(), scanLine.to.x.toFloat(), scanLine.to.y.toFloat(), paint)
         }
     }

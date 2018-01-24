@@ -13,24 +13,20 @@ import java.util.*
 object TouchUtils {
     // 填充区域重新打印
     fun reprintFilledAreas(undoStack: Stack<Step>, bitmap: Bitmap) {
-        for (step in undoStack) {
-            // 若为填充步骤
-            if (step is CrossFillStep) {
-                StepUtils.fillInWhiteBitmap(step, bitmap)
-            }
-        }
+        // 若为填充步骤
+        undoStack.filterIsInstance<CrossFillStep>()
+                .forEach { StepUtils.fillInWhiteBitmap(it, bitmap) }
     }
 
     fun ensureBitmapRecycled(bitmap: Bitmap?) {
         //确保传入位图已经回收
-        if (bitmap != null && !bitmap.isRecycled) {
-            bitmap.recycle()
-        }
+        bitmap?.recycle()
     }
 
     fun calPelSavedMatrix(selectedPel: Pel): Matrix {
         val savedMatrix = Matrix()
-        val pathMeasure = PathMeasure(selectedPel.path, true)// 将Path封装成PathMeasure，方便获取path内的matrix用
+        // 将Path封装成PathMeasure，方便获取path内的matrix用
+        val pathMeasure = PathMeasure(selectedPel.path, true)
         pathMeasure.getMatrix(pathMeasure.length, savedMatrix, PathMeasure.POSITION_MATRIX_FLAG and PathMeasure.TANGENT_MATRIX_FLAG)
 
         return savedMatrix

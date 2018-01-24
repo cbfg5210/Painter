@@ -16,7 +16,7 @@ public class T {
         };
         int[]as=new int[4];
         for(int i=0;i<as.length;i++){
-
+            as[i]=i;
         }
     }
 }
