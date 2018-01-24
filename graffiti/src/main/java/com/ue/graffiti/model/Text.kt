@@ -6,19 +6,11 @@ import android.graphics.Typeface
 
 class Text(val content: String, val transDx: Float, val transDy: Float, val scale: Float,
            val degree: Float, centerPoint: PointF, beginPoint: PointF, paintColor: Int) {
-    val centerPoint: PointF
-    val beginPoint: PointF
-    val paint: Paint
-
-    init {
-        this.centerPoint = PointF()
-        this.centerPoint.set(centerPoint)
-        this.beginPoint = PointF()
-        this.beginPoint.set(beginPoint)
-        paint = Paint()
-        //        paint.setColor(DrawTouch.getCurPaint().getColor());
-        paint.color = paintColor
-        paint.textSize = 50f
-        paint.typeface = Typeface.DEFAULT_BOLD
+    val centerPoint = PointF().apply { set(centerPoint) }
+    val beginPoint = PointF().apply { set(beginPoint) }
+    val paint = Paint().apply {
+        color = paintColor
+        textSize = 50f
+        typeface = Typeface.DEFAULT_BOLD
     }
 }

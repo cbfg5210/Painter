@@ -7,11 +7,7 @@ import android.graphics.Paint
  */
 
 class FillPelStep(pelList: MutableList<Pel>, pel: Pel, oldPaint: Paint, newPaint: Paint) : Step(pelList, pel) {
-    var oldPaint: Paint
-    var newPaint: Paint
+    var oldPaint: Paint = Paint(oldPaint)
+    var newPaint: Paint = Paint(newPaint)
 
-    init {
-        this.oldPaint = Paint(oldPaint)
-        this.newPaint = Paint(newPaint)
-    }
 }
