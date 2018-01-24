@@ -29,7 +29,7 @@ object DialogHelper {
         val fragmentManager = activity.supportFragmentManager
         val tag = ColorPickerDialog::class.java.simpleName
         val fragment = fragmentManager.findFragmentByTag(tag)
-        val colorPickerDialog = if (fragment == null) ColorPickerDialog.newInstance() else fragment as ColorPickerDialog
+        val colorPickerDialog = fragment as? ColorPickerDialog ?: ColorPickerDialog.newInstance()
         if (colorPickerDialog.isAdded) {
             return
         }
@@ -41,7 +41,7 @@ object DialogHelper {
         val fragmentManager = activity.supportFragmentManager
         val tag = PenDialog::class.java.simpleName
         val fragment = fragmentManager.findFragmentByTag(tag)
-        val penDialog = if (fragment == null) PenDialog.newInstance() else fragment as PenDialog
+        val penDialog = fragment as? PenDialog ?: PenDialog.newInstance()
         if (penDialog.isAdded) {
             return
         }
