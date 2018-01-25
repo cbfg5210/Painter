@@ -34,7 +34,7 @@ import java.io.FileInputStream
  * Created by hawk on 2018/1/16.
  */
 
-class MainPresenter(private val mMainActivity: MainActivity) {
+class MainPresenter(private val mGraffitiActivity: GraffitiActivity) {
     private var pelsPopupWindow: PopupWindow? = null
     private var canvasBgsPopupWindow: PopupWindow? = null
     //四个方向的显示动画：左、上、右、下
@@ -45,12 +45,12 @@ class MainPresenter(private val mMainActivity: MainActivity) {
     fun getToggleAnimations(isShown: Boolean): Array<Animation> {
         return if (isShown) {
             if (showAnimations == null) {
-                showAnimations = loadToggleMenuAnimations(mMainActivity, isShown)
+                showAnimations = loadToggleMenuAnimations(mGraffitiActivity, isShown)
             }
             showAnimations!!
         } else {
             if (hideAnimations == null) {
-                hideAnimations = loadToggleMenuAnimations(mMainActivity, isShown)
+                hideAnimations = loadToggleMenuAnimations(mGraffitiActivity, isShown)
             }
             hideAnimations!!
         }
@@ -61,7 +61,7 @@ class MainPresenter(private val mMainActivity: MainActivity) {
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(File(Environment.getExternalStorageDirectory(), "temp.jpg")))
         intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.name)
         intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, Configuration.ORIENTATION_LANDSCAPE)
-        mMainActivity.startActivityForResult(intent, REQUEST_CODE_GRAPH)
+        mGraffitiActivity.startActivityForResult(intent, REQUEST_CODE_GRAPH)
     }
 
     fun showPelsPopupWindow(vgBottomMenu: View) {
@@ -87,7 +87,7 @@ class MainPresenter(private val mMainActivity: MainActivity) {
     }
 
     fun initPelsPopupWindow(layoutRes: Int, groupId: Int, cvGraffitiView: CanvasView, pickPelListener: OnPickPelListener): ImageView {
-        val layoutView = mMainActivity.layoutInflater.inflate(layoutRes, null)
+        val layoutView = mGraffitiActivity.layoutInflater.inflate(layoutRes, null)
         pelsPopupWindow = initPopupWindow(layoutView, groupId, View.OnClickListener { v -> pickPelListener.onPelPick(v, getPelTouchByViewId(v.id, cvGraffitiView)) })
         return layoutView.findViewById(R.id.ivFreehand)
     }
@@ -107,17 +107,17 @@ class MainPresenter(private val mMainActivity: MainActivity) {
     }
 
     fun initCanvasBgsPopupWindow(layoutRes: Int, groupId: Int, clickListener: View.OnClickListener): ImageView {
-        val layoutView = mMainActivity.layoutInflater.inflate(layoutRes, null)
+        val layoutView = mGraffitiActivity.layoutInflater.inflate(layoutRes, null)
         canvasBgsPopupWindow = initPopupWindow(layoutView, groupId, View.OnClickListener { v ->
             clickListener.onClick(v)
             if (v.id == R.id.btnCanvasBg8) {
                 val intent = Intent(Intent.ACTION_PICK, null)
-                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, MainActivity.IMAGE_UNSPECIFIED)
-                mMainActivity.startActivityForResult(intent, MainActivity.REQUEST_CODE_PICTURE)
+                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, GraffitiActivity.IMAGE_UNSPECIFIED)
+                mGraffitiActivity.startActivityForResult(intent, GraffitiActivity.REQUEST_CODE_PICTURE)
                 return@OnClickListener
             }
             if (v.id == R.id.btnCanvasBg9) {
-                capturePhoto(MainActivity.REQUEST_CODE_GRAPH)
+                capturePhoto(GraffitiActivity.REQUEST_CODE_GRAPH)
                 return@OnClickListener
             }
         })
@@ -162,11 +162,11 @@ class MainPresenter(private val mMainActivity: MainActivity) {
 
     fun onSaveGraffitiClicked(savedBitmap: Bitmap, workName: String, saveListener: FileUtils.OnSaveImageListener?) {
         if (TextUtils.isEmpty(workName)) {
-            mMainActivity.toast(R.string.gr_save_error_null)
+            mGraffitiActivity.toast(R.string.gr_save_error_null)
             return
         }
         val path = Environment.getExternalStorageDirectory().path + Constants.PATH_GRAFFITI
-        FileUtils.saveImageLocally(mMainActivity, savedBitmap, path, workName, saveListener)
+        FileUtils.saveImageLocally(mGraffitiActivity, savedBitmap, path, workName, saveListener)
     }
 
     fun loadPictureFromIntent(data: Intent, canvasWidth: Int, canvasHeight: Int): Observable<Bitmap> {
@@ -184,7 +184,7 @@ class MainPresenter(private val mMainActivity: MainActivity) {
                     } catch (exp: Exception) {
                         val uri = data.data
                         val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
-                        val cursor = mMainActivity.contentResolver.query(uri!!, filePathColumn, null, null, null)
+                        val cursor = mGraffitiActivity.contentResolver.query(uri!!, filePathColumn, null, null, null)
                         cursor!!.moveToFirst()
                         val columnIndex = cursor.getColumnIndex(filePathColumn[0])
                         val picturePath = cursor.getString(columnIndex)
@@ -205,7 +205,7 @@ class MainPresenter(private val mMainActivity: MainActivity) {
                 })
                 .subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(mMainActivity.bindUntilEvent(ActivityEvent.DESTROY))
+                .compose(mGraffitiActivity.bindUntilEvent(ActivityEvent.DESTROY))
     }
 
     fun loadCapturePhoto(): Observable<Bitmap> {
@@ -230,7 +230,7 @@ class MainPresenter(private val mMainActivity: MainActivity) {
                 })
                 .subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread())
-                .compose(mMainActivity.bindUntilEvent(ActivityEvent.DESTROY))
+                .compose(mGraffitiActivity.bindUntilEvent(ActivityEvent.DESTROY))
     }
 
     interface OnPickPelListener {

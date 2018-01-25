@@ -31,12 +31,12 @@ import com.ue.graffiti.util.*
 import com.ue.library.util.FileUtils
 import com.ue.library.util.IntentUtils
 import com.ue.library.util.SPUtils
-import kotlinx.android.synthetic.main.gr_activity_main.*
+import kotlinx.android.synthetic.main.gr_activity_graffiti.*
 import kotlinx.android.synthetic.main.gr_layout_bottom_menu.*
 import kotlinx.android.synthetic.main.gr_layout_right_menu.*
 import kotlinx.android.synthetic.main.gr_layout_top_menu.*
 
-class MainActivity : RxAppCompatActivity(), View.OnClickListener {
+class GraffitiActivity : RxAppCompatActivity(), View.OnClickListener {
     private lateinit var curToolVi: View
     private lateinit var curPelVi: ImageView
     private lateinit var curCanvasBgVi: ImageView
@@ -84,7 +84,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.gr_activity_main)
+        setContentView(R.layout.gr_activity_graffiti)
 
         mMainPresenter = MainPresenter(this)
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -186,7 +186,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
             }
 
             override fun registerKeepDrawingSensor() {
-                this@MainActivity.registerKeepDrawingSensor()
+                this@GraffitiActivity.registerKeepDrawingSensor()
             }
         }
     }
@@ -428,9 +428,9 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
         /*
             * top menu listener
             * */
-            R.id.tvPen -> DialogHelper.showPenDialog(this@MainActivity, cvGraffitiView.getCurrentPaint())
+            R.id.tvPen -> DialogHelper.showPenDialog(this@GraffitiActivity, cvGraffitiView.getCurrentPaint())
             R.id.tvSave -> saveGraffiti()
-            R.id.tvColor -> DialogHelper.showColorPickerDialog(this@MainActivity, object : ColorPickerDialog.OnColorPickerListener {
+            R.id.tvColor -> DialogHelper.showColorPickerDialog(this@GraffitiActivity, object : ColorPickerDialog.OnColorPickerListener {
                 override fun onColorPicked(color: Int) {
                     SPUtils.putInt(SPKeys.SP_PAINT_COLOR, color)
                     tvColor.setTextColor(color)
@@ -448,7 +448,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
             R.id.tvShare -> saveGraffiti(object : FileUtils.OnSaveImageListener {
                 override fun onSaved(path: String) {
                     IntentUtils.shareImage(
-                            this@MainActivity,
+                            this@GraffitiActivity,
                             getString(R.string.app_name),
                             getString(R.string.gr_share_work_app_module_link, getString(R.string.app_name), getString(R.string.gr_module_name), getString(R.string.gr_download_link)),
                             path)

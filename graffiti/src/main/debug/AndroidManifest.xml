@@ -21,7 +21,7 @@
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.ue.graffiti.ui.MainActivity"
+            android:name="com.ue.graffiti.ui.GraffitiActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/gr_finger_graffiti"
             android:screenOrientation="portrait">
