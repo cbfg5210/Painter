@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ue.painter.SquareLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/vgModule"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/widget_size_10">
+
+    <ImageView
+        android:id="@+id/ivModuleImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:src="@mipmap/ic_launcher"/>
+
+    <TextView
+        android:id="@+id/tvModuleName"
+        style="@style/TV_c666666_s15"
+        android:layout_marginTop="@dimen/widget_size_5"
+        tools:text="Coloring"/>
+
+    <TextView
+        android:id="@+id/tvModuleSlogan"
+        style="@style/TV_c666666_s15"
+        android:layout_marginTop="@dimen/widget_size_10"
+        tools:text="click to start coloring"/>
+</com.ue.painter.SquareLinearLayout>

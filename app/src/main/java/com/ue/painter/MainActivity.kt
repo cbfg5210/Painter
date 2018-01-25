@@ -2,27 +2,26 @@ package com.ue.painter
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.View
+import com.youth.banner.BannerConfig
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        btnAutoDraw.setOnClickListener(this)
-        btnFingerColoring.setOnClickListener(this)
-        btnGraffiti.setOnClickListener(this)
-        btnPixelPaint.setOnClickListener(this)
-    }
+        val images = arrayListOf(R.mipmap.a, R.mipmap.b, R.mipmap.c, R.mipmap.d, R.mipmap.e)
+        val titles = arrayListOf("aaaaaaa", "bbbbbbbbbbb", "cccccccccccc", "dddddddddddddd", "eeeeeee")
 
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.btnAutoDraw -> ModuleRouter.startAutoDraw(this)
-            R.id.btnFingerColoring -> ModuleRouter.startFingerColoring(this)
-            R.id.btnGraffiti -> ModuleRouter.startGraffiti(this)
-            R.id.btnPixelPaint -> ModuleRouter.startPixelPaint(this)
-        }
+        //默认是CIRCLE_INDICATOR
+        banner.setImages(images)
+                .setBannerTitles(titles)
+                .setImageLoader(PicassoImageLoader())
+                .setBannerStyle(BannerConfig.NUM_INDICATOR_TITLE)
+                .start()
+
+        rvModules.setHasFixedSize(true)
+        rvModules.adapter = ModuleAdapter()
     }
 }

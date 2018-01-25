@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="au_module_name">轮廓临摹</string>
     <string name="au_save_draw_picture">保存临摹结果图片</string>
     <string name="au_save_draw_video">保存临摹过程视频</string>
@@ -32,4 +32,5 @@
     <string name="au_preview">预览</string>
     <string name="au_cancel">取消</string>
     <string name="au_auto_draw_tip">欢迎使用轮廓临摹功能，点击画布即可开始/取消图片临摹，您可以通过设置菜单设置相关参数，通过分享菜单进行图片或视频的保存及分享</string>
+    <string name="app_name" tools:ignore="ResourceName">轮廓临摹</string>
 </resources>

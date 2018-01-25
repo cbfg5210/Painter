@@ -40,6 +40,8 @@ dependencies {
     implementation deps.kotlinJre
     implementation deps.support.app_compat
     implementation deps.support.constraintLayout
+    implementation deps.support.recyclerview
+
     implementation project(':library')
     if (!isRunAlone.toBoolean()) {
         implementation project(':autodraw')
@@ -47,4 +49,6 @@ dependencies {
         implementation project(':graffiti')
         implementation project(':pixelpaint')
     }
+
+    implementation 'com.youth.banner:banner:1.4.10'
 }

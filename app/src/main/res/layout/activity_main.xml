@@ -5,35 +5,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
     tools:context="com.ue.painter.MainActivity">
 
-    <Button
-        android:id="@+id/btnAutoDraw"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="AutoDraw"/>
+    <com.youth.banner.Banner
+        android:id="@+id/banner"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/widget_size_200"/>
 
-    <Button
-        android:id="@+id/btnFingerColoring"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="FingerColoring"/>
-
-    <Button
-        android:id="@+id/btnGraffiti"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Graffiti"/>
-
-    <Button
-        android:id="@+id/btnPixelPaint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="PixelPaint"/>
-
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvModules"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layoutManager="android.support.v7.widget.GridLayoutManager"
+        app:spanCount="2"
+        tools:listitem="@layout/item_module"/>
 </LinearLayout>

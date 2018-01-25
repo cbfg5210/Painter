@@ -15,10 +15,13 @@ import com.ue.library.event.SimpleTarget
  */
 
 object PicassoUtils {
-    fun displayImage(context: Context, iv: ImageView, imageUrl: String) {
-        Picasso.with(context)
-                .load(imageUrl)
-                .into(iv)
+
+    fun displayImage(context: Context, iv: ImageView, imageUrl: Any) {
+        if (imageUrl is Int) {
+            Picasso.with(context).load(imageUrl).into(iv)
+        } else if (imageUrl is String) {
+            Picasso.with(context).load(imageUrl).into(iv)
+        }
     }
 
     fun displayImage(context: Context, iv: ImageView, imageUrl: String, picassoListener: Target) {
@@ -32,7 +35,7 @@ object PicassoUtils {
             }
 
             override fun onBitmapFailed(errorDrawable: Drawable?) {
-                if ( context is Activity && context.isFinishing) {
+                if (context is Activity && context.isFinishing) {
                     return
                 }
                 if (errorDrawable != null) iv.setImageDrawable(errorDrawable)
