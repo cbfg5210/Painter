@@ -1,7 +1,4 @@
 <resources>
-    <!-- Base application theme. -->
-    <style name="co_AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"/>
-
     <style name="co_MyDialogPop" parent="@android:style/Theme.Dialog">
         <item name="android:windowAnimationStyle">@style/co_MyDialogAnimationPop</item>
     </style>
@@ -9,12 +6,6 @@
     <style name="co_MyDialogAnimationPop">
         <item name="android:windowEnterAnimation">@anim/co_pop_show_overshoot</item>
         <item name="android:windowExitAnimation">@anim/co_pop_dismiss_interpolator</item>
-    </style>
-
-    <style name="co_Theme.AppCompat.Light.Dialog.NoActionBar" parent="@style/Theme.AppCompat.Light.Dialog">
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-        <item name="android:windowContentOverlay">@null</item>
     </style>
 
     <style name="co_PaintTvStyle">

@@ -44,7 +44,7 @@ class PictureDialog : DialogFragment() {
 
     companion object {
         fun newInstance(): PictureDialog {
-            return PictureDialog().apply { setStyle(DialogFragment.STYLE_NO_TITLE, R.style.GraffitiDialog) }
+            return PictureDialog().apply { setStyle(DialogFragment.STYLE_NO_TITLE, R.style.gr_GraffitiDialog) }
         }
     }
 }

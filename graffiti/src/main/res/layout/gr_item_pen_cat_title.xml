@@ -9,12 +9,12 @@
 
     <TextView
         android:id="@+id/tvPenCatTitle"
-        style="@style/NormalText"
+        style="@style/TV_c666666_s15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:textColor="@color/col_298ecb"
-        tools:text="@string/dialog_pen_txt_shape"/>
+        tools:text="title"/>
 
     <View
         android:layout_width="match_parent"

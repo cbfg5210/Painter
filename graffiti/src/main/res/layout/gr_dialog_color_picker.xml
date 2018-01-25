@@ -18,9 +18,7 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/NormalText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/TV_c666666_s15"
             android:text="@string/gr_alpha"/>
 
         <com.larswerkman.holocolorpicker.OpacityBar
@@ -37,9 +35,7 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/NormalText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/TV_c666666_s15"
             android:text="@string/gr__saturation"/>
 
         <com.larswerkman.holocolorpicker.SaturationBar
@@ -56,9 +52,7 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/NormalText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/TV_c666666_s15"
             android:text="@string/gr_deepness"/>
 
         <com.larswerkman.holocolorpicker.ValueBar

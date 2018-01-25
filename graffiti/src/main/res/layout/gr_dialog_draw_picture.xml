@@ -22,7 +22,7 @@
 
         <ImageView
             android:id="@+id/ivCancel"
-            style="@style/GraffitiButton"
+            style="@style/gr_GraffitiButton"
             android:src="@drawable/btn_refuse_normal"/>
 
         <TextView
@@ -36,13 +36,13 @@
 
         <ImageView
             android:id="@+id/rbImage"
-            style="@style/GraffitiButton"
+            style="@style/gr_GraffitiButton"
             android:src="@drawable/btn_sure_normal"/>
     </LinearLayout>
 
     <TextView
         android:id="@+id/tvSelectPicture"
-        style="@style/GraffitiButton"
+        style="@style/gr_GraffitiButton"
         android:layout_width="match_parent"
         android:layout_gravity="bottom"
         android:drawableTop="@drawable/btn_picture_normal"

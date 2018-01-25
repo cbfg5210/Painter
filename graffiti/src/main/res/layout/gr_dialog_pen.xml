@@ -22,9 +22,7 @@
         android:orientation="horizontal">
 
         <TextView
-            style="@style/NormalText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/TV_c666666_s15"
             android:gravity="center"
             android:paddingLeft="@dimen/widget_size_10"
             android:paddingRight="@dimen/widget_size_10"
@@ -43,9 +41,7 @@
 
         <TextView
             android:id="@+id/tvPenStroke"
-            style="@style/NormalText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/TV_c666666_s15"
             android:gravity="center"
             android:paddingLeft="@dimen/widget_size_10"
             android:paddingRight="@dimen/widget_size_10"

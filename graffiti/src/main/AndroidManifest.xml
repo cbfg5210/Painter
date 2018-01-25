@@ -4,11 +4,11 @@
     <application
         android:icon="@android:drawable/alert_dark_frame"
         android:label="@string/gr_module_name"
-        android:screenOrientation="portrait"
-        android:theme="@style/AppTheme">
+        android:screenOrientation="portrait">
         <activity
             android:name="com.ue.graffiti.ui.GraffitiActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/FullScreenTheme"/>
     </application>
 </manifest>

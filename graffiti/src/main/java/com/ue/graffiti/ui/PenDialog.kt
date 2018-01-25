@@ -205,7 +205,7 @@ class PenDialog : DialogFragment(), OnSeekBarChangeListener {
         val FLAG_EFFECT = 1
 
         fun newInstance(): PenDialog {
-            return PenDialog().apply { setStyle(DialogFragment.STYLE_NO_TITLE, R.style.GraffitiDialog) }
+            return PenDialog().apply { setStyle(DialogFragment.STYLE_NO_TITLE, R.style.gr_GraffitiDialog) }
         }
     }
 }

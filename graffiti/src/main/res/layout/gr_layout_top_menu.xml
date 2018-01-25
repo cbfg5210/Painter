@@ -8,40 +8,40 @@
 
     <TextView
         android:id="@+id/tvColor"
-        style="@style/GraffitiButton"
+        style="@style/gr_GraffitiButton"
         android:drawableTop="@drawable/btn_colorpicker_normal"
         android:text="@string/gr_color"
         android:textColor="#ff298ecb"/>
 
-    <View style="@style/MenuSeparator"/>
+    <View style="@style/gr_MenuSeparator"/>
 
     <TextView
         android:id="@+id/tvPen"
-        style="@style/GraffitiButton"
+        style="@style/gr_GraffitiButton"
         android:drawableTop="@drawable/btn_pen_normal"
         android:text="@string/gr_pen"/>
 
-    <View style="@style/MenuSeparator"/>
+    <View style="@style/gr_MenuSeparator"/>
 
     <TextView
         android:id="@+id/tvClear"
-        style="@style/GraffitiButton"
+        style="@style/gr_GraffitiButton"
         android:drawableTop="@drawable/btn_clear_normal"
         android:text="@string/gr_clear"/>
 
-    <View style="@style/MenuSeparator"/>
+    <View style="@style/gr_MenuSeparator"/>
 
     <TextView
         android:id="@+id/tvSave"
-        style="@style/GraffitiButton"
+        style="@style/gr_GraffitiButton"
         android:drawableTop="@drawable/btn_save_normal"
         android:text="@string/gr_save"/>
 
-    <View style="@style/MenuSeparator"/>
+    <View style="@style/gr_MenuSeparator"/>
 
     <TextView
         android:id="@+id/tvShare"
-        style="@style/GraffitiButton"
+        style="@style/gr_GraffitiButton"
         android:layout_height="match_parent"
         android:drawablePadding="@dimen/widget_size_4"
         android:drawableTop="@drawable/gr_svg_share_wrapper"
