@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:id="@+id/rgTabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/widget_size_10"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/widget_size_20"
+        android:paddingRight="@dimen/widget_size_20">
+
+        <RadioButton
+            android:id="@+id/rbTabThemes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/co_sel_bg_tab_left"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="@dimen/widget_size_10"
+            android:text="@string/co_theme_list"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_size_16"/>
+
+        <RadioButton
+            android:id="@+id/rbTabWorks"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/co_sel_bg_tab_right"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="@dimen/widget_size_10"
+            android:text="@string/co_my_works"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_size_16"/>
+    </RadioGroup>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="@dimen/widget_size_330"
+    android:orientation="vertical"
+    android:padding="@dimen/widget_size_15">
+
+    <EditText
+        android:id="@+id/addeditwords"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/co_add_edit_words_hint"
+        android:maxEms="20"
+        android:singleLine="true"
+        android:textSize="@dimen/font_size_12"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/widget_size_15"
+        android:text="@string/co_text_size"/>
+
+    <RadioGroup
+        android:id="@+id/radiogroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/widget_size_2"
+        android:checkedButton="@+id/small"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@id/small"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/co_sel_textsize_box"
+            android:button="@null"
+            android:gravity="center"
+            android:text="@string/co_small"
+            android:textColor="@drawable/co_sel_text_color"/>
+
+        <RadioButton
+            android:id="@+id/middle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/widget_size_10"
+            android:layout_weight="1"
+            android:background="@drawable/co_sel_textsize_box"
+            android:button="@null"
+            android:gravity="center"
+            android:text="@string/co_middle"
+            android:textColor="@drawable/co_sel_text_color"/>
+
+        <RadioButton
+            android:id="@+id/large"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/widget_size_10"
+            android:layout_weight="1"
+            android:background="@drawable/co_sel_textsize_box"
+            android:button="@null"
+            android:gravity="center"
+            android:text="@string/co_large"
+            android:textColor="@drawable/co_sel_text_color"/>
+
+        <RadioButton
+            android:id="@+id/huge"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/widget_size_10"
+            android:layout_weight="1"
+            android:background="@drawable/co_sel_textsize_box"
+            android:button="@null"
+            android:gravity="center"
+            android:minHeight="@dimen/widget_size_40"
+            android:text="@string/co_huge"
+            android:textColor="@drawable/co_sel_text_color"/>
+
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/widget_size_15"
+        android:text="@string/co_text_color"/>
+
+    <com.ue.coloring.widget.ColorPickerSeekBar
+        android:id="@+id/cpPaletteColorPicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/widget_size_2"/>
+
+</LinearLayout>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="co_paintColors">
+        <item>@color/col_be0472</item>
+        <item>@color/col_ed008c</item>
+        <item>@color/col_f94cb2</item>
+        <item>@color/col_0154a4</item>
+        <item>@color/col_0083cb</item>
+        <item>@color/col_19c1f2</item>
+        <item>@color/col_4cb848</item>
+        <item>@color/col_a3f345</item>
+        <item>@color/col_c4d72d</item>
+        <item>@color/col_ff7e00</item>
+        <item>@color/col_ffae00</item>
+        <item>@color/col_ffcc00</item>
+        <item>@color/col_cdc527</item>
+        <item>@color/col_f8de2c</item>
+        <item>@color/col_fdf87c</item>
+        <item>@color/col_cc0000</item>
+        <item>@color/col_ff2a2a</item>
+        <item>@color/col_fc637c</item>
+        <item>@color/col_f7aec2</item>
+        <item>@color/col_fac9c4</item>
+    </array>
+
+    <array name="co_defPickedColors">
+        <item>@color/col_cdc527</item>
+        <item>@color/col_f8de2c</item>
+        <item>@color/col_fdf87c</item>
+        <item>@color/col_cc0000</item>
+        <item>@color/col_ff2a2a</item>
+        <item>@color/col_fc637c</item>
+        <item>@color/col_f7aec2</item>
+        <item>@color/col_fac9c4</item>
+    </array>
+</resources>

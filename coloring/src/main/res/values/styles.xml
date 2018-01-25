@@ -1,0 +1,76 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="co_AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"/>
+
+    <style name="co_MyDialogPop" parent="@android:style/Theme.Dialog">
+        <item name="android:windowAnimationStyle">@style/co_MyDialogAnimationPop</item>
+    </style>
+
+    <style name="co_MyDialogAnimationPop">
+        <item name="android:windowEnterAnimation">@anim/co_pop_show_overshoot</item>
+        <item name="android:windowExitAnimation">@anim/co_pop_dismiss_interpolator</item>
+    </style>
+
+    <style name="co_Theme.AppCompat.Light.Dialog.NoActionBar" parent="@style/Theme.AppCompat.Light.Dialog">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="co_PaintTvStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:drawablePadding">@dimen/widget_size_5</item>
+        <item name="android:padding">@dimen/widget_size_10</item>
+        <item name="android:textColor">@drawable/co_sel_textcolor_white_gray</item>
+        <item name="android:textSize">@dimen/font_size_12</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="co_PaintRadioBtnStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:drawablePadding">@dimen/widget_size_2</item>
+        <item name="android:textColor">@color/col_aaaaaa</item>
+        <item name="android:textSize">@dimen/font_size_12</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="co_PaintSecondTvStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:drawablePadding">@dimen/widget_size_2</item>
+        <item name="android:textColor">@color/col_aaaaaa</item>
+        <item name="android:textSize">@dimen/font_size_12</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="co_AdvancePaintTvStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:drawablePadding">@dimen/widget_size_5</item>
+        <item name="android:padding">@dimen/widget_size_10</item>
+        <item name="android:textColor">#cc000000</item>
+        <item name="android:textSize">@dimen/font_size_14</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="co_TipDialogTheme" parent="@android:style/Theme.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimAmount">0</item>
+        <item name="android:windowTitleStyle">@null</item>
+        <!--<item name="android:colorBackgroundCacheHint">@null</item>-->
+        <!--<item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>-->
+        <!--<item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>-->
+        <item name="android:gravity">center</item>
+    </style>
+</resources>

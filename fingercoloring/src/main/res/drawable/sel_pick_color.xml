@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/svg_pick_color_checked_wrapper" android:state_selected="true"/>
-    <item android:drawable="@drawable/svg_pick_color_normal_wrapper"/>
-</selector>
