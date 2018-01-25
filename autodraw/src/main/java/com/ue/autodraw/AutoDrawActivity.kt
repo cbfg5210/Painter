@@ -44,7 +44,7 @@ class AutoDrawActivity : AppCompatActivity(),
         setContentView(R.layout.au_activity_auto_draw)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = getString(R.string.au_auto_draw)
+        supportActionBar?.title = getString(R.string.au_module_name)
 
         rgTabs.check(R.id.rbTabObject)
 
@@ -73,7 +73,7 @@ class AutoDrawActivity : AppCompatActivity(),
         super.onPostCreate(savedInstanceState)
 
         DialogUtils.showOnceHintDialog(this,
-                R.string.au_auto_draw,
+                R.string.au_module_name,
                 R.string.au_auto_draw_tip,
                 R.string.au_got_it,
                 null,

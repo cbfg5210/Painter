@@ -68,6 +68,6 @@
     <string name="gr_save_error_no_perm">保存失败：请先开启外部存储权限。</string>
     <string name="gr_share">分享</string>
     <string name="gr_share_work_app_module_link">我在%s-%s完成了一个作品，快来看一下吧！(下载链接:%s)</string>
-    <string name="gr_module_graffiti">指尖涂鸦</string>
+    <string name="gr_module_name">指尖涂鸦</string>
     <string name="gr_download_link">http://app.mi.com/details?id=com.ue.painter</string>
 </resources>

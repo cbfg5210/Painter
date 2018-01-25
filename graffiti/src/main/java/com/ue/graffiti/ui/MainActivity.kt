@@ -450,7 +450,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
                     IntentUtils.shareImage(
                             this@MainActivity,
                             getString(R.string.app_name),
-                            getString(R.string.gr_share_work_app_module_link, getString(R.string.app_name), getString(R.string.gr_module_graffiti), getString(R.string.gr_download_link)),
+                            getString(R.string.gr_share_work_app_module_link, getString(R.string.app_name), getString(R.string.gr_module_name), getString(R.string.gr_download_link)),
                             path)
                 }
             })

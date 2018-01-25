@@ -55,10 +55,7 @@ dependencies {
     implementation deps.kotlinJre
     implementation deps.support.app_compat
     implementation deps.support.recyclerview
-
     implementation project(':library')
-    implementation project(':resource')
-
     implementation deps.rxjava2
     implementation deps.rxAndroid
     implementation deps.picasso
