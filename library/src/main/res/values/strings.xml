@@ -1,11 +1,11 @@
 <resources>
-    <string name="gr_dont_show_next_time">下次不再显示</string>
+    <string name="dont_show_next_time">下次不再显示</string>
     <string name="no_recording_perms">录制取消：没有授予录制相关权限</string>
     <string name="share_to">分享到</string>
-    <string name="gr_name_conflict">该名称已存在，是否覆盖？</string>
-    <string name="gr_cover">覆盖</string>
-    <string name="gr_cancel">取消</string>
-    <string name="gr_save_error_reason">保存出错：%s</string>
-    <string name="gr_save_to">图片已保存到：%s</string>
-    <string name="gr_save_error_no_perm">保存失败：请先开启外部存储权限。</string>
+    <string name="name_conflict">该名称已存在，是否覆盖？</string>
+    <string name="cover">覆盖</string>
+    <string name="cancel">取消</string>
+    <string name="save_error_reason">保存出错：%s</string>
+    <string name="save_to">图片已保存到：%s</string>
+    <string name="save_error_no_perm">保存失败：请先开启外部存储权限。</string>
 </resources>

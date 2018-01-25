@@ -84,8 +84,8 @@ object DialogHelper {
         AlertDialog.Builder(activity)
                 .setTitle(R.string.gr_exit)
                 .setMessage(R.string.gr_exit_tip)
-                .setPositiveButton(R.string.gr_cancel, null)
-                .setNegativeButton(R.string.gr_exit_save) { _, _ -> saveListener.onClick(null) }
+                .setPositiveButton(R.string.gr_exit_save) { _, _ -> saveListener.onClick(null) }
+                .setNegativeButton(R.string.gr_cancel, null)
                 .setNeutralButton(R.string.gr_exit_not_save) { _, _ -> activity.finish() }
                 .create()
                 .show()
