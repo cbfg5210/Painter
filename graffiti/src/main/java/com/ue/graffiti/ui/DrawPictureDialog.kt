@@ -75,7 +75,7 @@ class DrawPictureDialog : DialogFragment(), View.OnClickListener {
         vgDownToolbar = contentView.tvSelectPicture
 
         contentView.ivCancel.setOnClickListener(this)
-        contentView.ivInsertPicture.setOnClickListener(this)
+        contentView.rbImage.setOnClickListener(this)
         contentView.tvSelectPicture.setOnClickListener(this)
 
         savedCanvas = Canvas()
@@ -148,7 +148,7 @@ class DrawPictureDialog : DialogFragment(), View.OnClickListener {
         when (viewId) {
             R.id.ivCancel -> dismiss()
             R.id.tvSelectPicture -> pictureDialog.show(childFragmentManager, "")
-            R.id.ivInsertPicture -> {
+            R.id.rbImage -> {
                 //插入了图
                 if (tivCanvas.imageContent != null) {
                     val newPel = Pel().apply { picture = tivCanvas.picture }

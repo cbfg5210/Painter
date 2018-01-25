@@ -233,17 +233,6 @@ class MainPresenter(private val mMainActivity: MainActivity) {
                 .compose(mMainActivity.bindUntilEvent(ActivityEvent.DESTROY))
     }
 
-    fun setListenerForChildren(parentId: Int, listener: View.OnClickListener) {
-        val viewGroup = mMainActivity.findViewById<ViewGroup>(parentId)
-        val count = viewGroup.childCount
-        var child: View
-        for (i in 0 until count) {
-            child = viewGroup.getChildAt(i)
-            if (child is ViewGroup) setListenerForChildren(child.getId(), listener)
-            else viewGroup.getChildAt(i).setOnClickListener(listener)
-        }
-    }
-
     interface OnPickPelListener {
         fun onPelPick(v: View, pelTouch: Touch?)
     }

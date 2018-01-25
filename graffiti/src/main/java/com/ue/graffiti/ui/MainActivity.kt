@@ -14,9 +14,7 @@ import android.hardware.SensorManager
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.Button
 import android.widget.ImageView
-import android.widget.RadioGroup
 import android.widget.Toast
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.ue.graffiti.R
@@ -32,24 +30,15 @@ import com.ue.graffiti.util.*
 import com.ue.library.util.FileUtils
 import com.ue.library.util.SPUtils
 import kotlinx.android.synthetic.main.activity_main.*
-
+import kotlinx.android.synthetic.main.layout_bottom_menu.*
+import kotlinx.android.synthetic.main.layout_right_menu.*
+import kotlinx.android.synthetic.main.layout_top_menu.*
 
 class MainActivity : RxAppCompatActivity(), View.OnClickListener {
-    private lateinit var vgTopMenu: View
-    private lateinit var vgBottomMenu: RadioGroup
-    private lateinit var ivUndo: View
-    private lateinit var ivRedo: View
-    private lateinit var btnDraw: Button
-    private lateinit var vgRightMenu: View
-    private lateinit var ivToggleOptions: View
-    private lateinit var vgEditOptions: View
-
-    private lateinit var btnColor: Button
-
-    private var curToolVi: View? = null
-    private var curPelVi: ImageView? = null
-    private var curCanvasBgVi: ImageView? = null
-    private var whiteCanvasBgVi: ImageView? = null
+    private lateinit var curToolVi: View
+    private lateinit var curPelVi: ImageView
+    private lateinit var curCanvasBgVi: ImageView
+    private lateinit var whiteCanvasBgVi: ImageView
 
     private val lastPoint = PointF()
     private var newPel: Pel? = null
@@ -68,7 +57,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
     //单手操作传感器监听者
     private val singleHandSensorEventListener = object : SensorEventListener {
         override fun onSensorChanged(event: SensorEvent) {
-            if (curToolVi!!.id != R.id.btnDraw) {
+            if (curToolVi.id != R.id.rbDraw) {
                 return
             }
             //单手加速度作图
@@ -102,22 +91,12 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
     }
 
     private fun initViews() {
-        btnDraw = findViewById(R.id.btnDraw)
-        vgTopMenu = findViewById(R.id.vgTopMenu)
-        vgBottomMenu = findViewById(R.id.vgBottomMenu)
-        ivUndo = findViewById(R.id.ivUndo)
-        ivRedo = findViewById(R.id.ivRedo)
-        vgRightMenu = findViewById(R.id.vgRightMenu)
-        ivToggleOptions = findViewById(R.id.ivToggleOptions)
-        vgEditOptions = findViewById(R.id.vgEditOptions)
-        btnColor = findViewById(R.id.btnColor)
-
-        vgBottomMenu.check(R.id.btnDraw)
+        rgDrawOptions.check(R.id.rbDraw)
         ivToggleOptions.isSelected = true
-        curToolVi = btnDraw
+        curToolVi = rbDraw
 
         val lastColor = SPUtils.getInt(SPKeys.SP_PAINT_COLOR, resources.getColor(R.color.col_298ecb))
-        btnColor!!.setTextColor(lastColor)
+        tvColor.setTextColor(lastColor)
         cvGraffitiView.paintColor = lastColor
 
         whiteCanvasBgVi = mMainPresenter.initCanvasBgsPopupWindow(R.layout.popup_canvas_bgs, R.id.vgCanvasBgs, object : View.OnClickListener {
@@ -140,12 +119,14 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
     }
 
     private fun setListeners() {
-        ivUndo.setOnClickListener(this)
-        ivRedo.setOnClickListener(this)
-
-        mMainPresenter.setListenerForChildren(R.id.vgTopMenu, this)
-        mMainPresenter.setListenerForChildren(R.id.vgBottomMenu, this)
-        mMainPresenter.setListenerForChildren(R.id.vgRightMenu, View.OnClickListener { v -> onSwitchEditMenuAction(v) })
+        setListenerForViews(intArrayOf(
+                R.id.tvColor, R.id.tvPen, R.id.tvClear, R.id.tvSave, R.id.tvShare,
+                R.id.ivUndo, R.id.ivRedo,
+                R.id.rbDraw, R.id.rbEdit, R.id.rbFill, R.id.rbBg, R.id.rbText, R.id.rbImage),
+                this)
+        setListenerForViews(intArrayOf(
+                R.id.ivDelete, R.id.ivCopy, R.id.ivRotate, R.id.ivZoomIn, R.id.ivZoomOut, R.id.ivFill, R.id.ivToggleOptions),
+                View.OnClickListener { v -> onSwitchEditMenuAction(v) })
 
         cvGraffitiView.setMultiTouchListener(object : OnMultiTouchListener {
             override fun onMultiTouch() {
@@ -157,6 +138,12 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
                 openTools()
             }
         })
+    }
+
+    private fun setListenerForViews(viewIds: IntArray, listener: View.OnClickListener) {
+        for (i in viewIds.indices) {
+            findViewById<View>(viewIds[i]).setOnClickListener(listener)
+        }
     }
 
     private fun openTools() {
@@ -179,7 +166,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
 
         curToolVi = v
 
-        val pelTouch = mMainPresenter.getPelTouchByViewId(curPelVi!!.id, cvGraffitiView)
+        val pelTouch = mMainPresenter.getPelTouchByViewId(curPelVi.id, cvGraffitiView)
         registerKeepDrawingSensor(pelTouch)
 
         cvGraffitiView.touch = pelTouch
@@ -204,15 +191,11 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
         val visibility = if (isVisible) View.VISIBLE else View.GONE
         val animations = mMainPresenter.getToggleAnimations(isVisible)
 
-        ivRedo.startAnimation(animations[0])
         vgTopMenu.startAnimation(animations[1])
-        ivUndo.startAnimation(animations[2])
         vgBottomMenu.startAnimation(animations[3])
 
         vgBottomMenu.visibility = visibility
         vgTopMenu.visibility = visibility
-        ivUndo.visibility = visibility
-        ivRedo.visibility = visibility
     }
 
     private fun onOpenTransBarBtn(v: View) {
@@ -220,7 +203,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
         curToolVi = v
         closeTools()
 
-        if (v.id == R.id.btnEdit) {
+        if (v.id == R.id.rbEdit) {
             val leftAppearAnim = AnimationUtils.loadAnimation(this, R.anim.leftappear)
             vgRightMenu.visibility = View.VISIBLE
             ivToggleOptions.visibility = View.VISIBLE
@@ -279,20 +262,20 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
     }
 
     private fun updatePelBarIcons(v: ImageView) {
-        curPelVi!!.setImageDrawable(null)
+        curPelVi.setImageDrawable(null)
         v.setImageResource(R.drawable.bg_highlight_frame)
         curPelVi = v
 
         val fatherDrawable = resources.getDrawable(mMainPresenter.getDrawRes(v.id))
-        btnDraw.setCompoundDrawablesWithIntrinsicBounds(null, fatherDrawable, null, null)
+        rbDraw.setCompoundDrawablesWithIntrinsicBounds(null, fatherDrawable, null, null)
     }
 
-    private fun updateCanvasBgAndIcons(v: View?) {
-        curCanvasBgVi!!.setImageDrawable(null)
-        curCanvasBgVi = v as ImageView?
-        curCanvasBgVi!!.setImageResource(R.drawable.bg_highlight_frame)
+    private fun updateCanvasBgAndIcons(v: View) {
+        curCanvasBgVi.setImageDrawable(null)
+        curCanvasBgVi = v as ImageView
+        curCanvasBgVi.setImageResource(R.drawable.bg_highlight_frame)
 
-        val backgroundDrawable = mMainPresenter.getBgSelectedRes(v!!.id)
+        val backgroundDrawable = mMainPresenter.getBgSelectedRes(v.id)
         if (backgroundDrawable != 0) {
             cvGraffitiView.setBackgroundBitmap(backgroundDrawable)
         }
@@ -432,15 +415,15 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
         /*
             * top menu listener
             * */
-            R.id.btnColor -> DialogHelper.showColorPickerDialog(this@MainActivity, object : ColorPickerDialog.OnColorPickerListener {
+            R.id.tvColor -> DialogHelper.showColorPickerDialog(this@MainActivity, object : ColorPickerDialog.OnColorPickerListener {
                 override fun onColorPicked(color: Int) {
                     SPUtils.putInt(SPKeys.SP_PAINT_COLOR, color)
-                    btnColor!!.setTextColor(color)
+                    tvColor.setTextColor(color)
                     cvGraffitiView.paintColor = color
                 }
             })
-            R.id.btnPen -> DialogHelper.showPenDialog(this@MainActivity, cvGraffitiView.getCurrentPaint())
-            R.id.btnClear -> DialogHelper.showClearDialog(this, object : DialogInterface.OnClickListener {
+            R.id.tvPen -> DialogHelper.showPenDialog(this@MainActivity, cvGraffitiView.getCurrentPaint())
+            R.id.tvClear -> DialogHelper.showClearDialog(this, object : DialogInterface.OnClickListener {
                 override fun onClick(dialog: DialogInterface?, which: Int) {
                     //清空内部所有数据
                     cvGraffitiView.clearData()
@@ -450,23 +433,26 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
                     cvGraffitiView.setBackgroundBitmap()
                 }
             })
-            R.id.btnSave -> DialogHelper.showInputDialog(this, getString(R.string.input_graffiti_name), object : OnSingleResultListener {
+            R.id.tvSave -> DialogHelper.showInputDialog(this, getString(R.string.input_graffiti_name), object : OnSingleResultListener {
                 override fun onResult(result: Any) {
                     mMainPresenter.onSaveGraffitiClicked(cvGraffitiView.savedBitmap!!, result as String, null)
                 }
             })
+            R.id.tvShare -> {
+                toast("share")
+            }
         /*
-            * bottom menu listener
-            * */
-            R.id.btnDraw -> onOpenPelBarBtn(v)
-            R.id.btnEdit -> onOpenTransBarBtn(v)
-            R.id.btnFill -> {
+        * bottom menu listener
+        * */
+            R.id.rbDraw -> onOpenPelBarBtn(v)
+            R.id.rbEdit -> onOpenTransBarBtn(v)
+            R.id.rbFill -> {
                 curToolVi = v
                 cvGraffitiView.touch = CrossFillTouch(cvGraffitiView)
             }
-            R.id.btnBg -> mMainPresenter.showCanvasBgsPopupWindow(vgBottomMenu)
-            R.id.btnText -> onOpenDrawTextBtn(v)
-            R.id.ivInsertPicture -> onOpenDrawPictureBtn(v)
+            R.id.rbBg -> mMainPresenter.showCanvasBgsPopupWindow(vgBottomMenu)
+            R.id.rbText -> onOpenDrawTextBtn(v)
+            R.id.rbImage -> onOpenDrawPictureBtn(v)
         /**
          * other listener:undo,redo,extend
          */
@@ -570,7 +556,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
             completeKeepDrawing()
         }
         val viewId = view.id
-        if (viewId != R.id.btnDraw && viewId != R.id.btnBg) {
+        if (viewId != R.id.rbDraw && viewId != R.id.rbBg) {
             //点击的不是弹窗按钮则隐藏弹窗
             mMainPresenter.dismissPopupWindows()
         }

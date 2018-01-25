@@ -102,4 +102,5 @@
     <string name="shake_to_draw">摆动手机画图吧</string>
     <string name="begin_sensor_draw">您确定以(%d,%d)为起始点并开始重力绘图？</string>
     <string name="save_error_no_perm">保存失败：请先开启外部存储权限。</string>
+    <string name="share">分享</string>
 </resources>

@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/vgBottomMenu"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
@@ -26,14 +27,14 @@
         app:srcCompat="@drawable/sel_redo"/>
 
     <RadioGroup
-        android:id="@+id/vgBottomMenu"
+        android:id="@+id/rgDrawOptions"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="6"
         android:orientation="horizontal">
 
         <RadioButton
-            android:id="@+id/btnDraw"
+            android:id="@+id/rbDraw"
             style="@style/GraffitiButton"
             android:drawableTop="@drawable/sel_draw_pel"
             android:text="@string/tools_bottomtitle_txt_openpelbar"/>
@@ -42,7 +43,7 @@
             style="@style/MenuSeparator"/>
 
         <RadioButton
-            android:id="@+id/btnEdit"
+            android:id="@+id/rbEdit"
             style="@style/GraffitiButton"
             android:drawableTop="@drawable/sel_edit_pel"
             android:text="@string/tools_bottomtitle_txt_opentransbar"/>
@@ -51,7 +52,7 @@
             style="@style/MenuSeparator"/>
 
         <RadioButton
-            android:id="@+id/btnFill"
+            android:id="@+id/rbFill"
             style="@style/GraffitiButton"
             android:drawableTop="@drawable/sel_fill_pel"
             android:text="@string/tools_bottomtitle_txt_opencrossfill"/>
@@ -60,7 +61,7 @@
             style="@style/MenuSeparator"/>
 
         <RadioButton
-            android:id="@+id/btnBg"
+            android:id="@+id/rbBg"
             style="@style/GraffitiButton"
             android:drawableTop="@drawable/btn_setbg_normal"
             android:text="@string/tools_bottomtitle_txt_opencanvasbgbar"/>
@@ -69,7 +70,7 @@
             style="@style/MenuSeparator"/>
 
         <RadioButton
-            android:id="@+id/btnText"
+            android:id="@+id/rbText"
             style="@style/GraffitiButton"
             android:drawableTop="@drawable/btn_text_normal"
             android:text="@string/text"/>
@@ -78,7 +79,7 @@
             style="@style/MenuSeparator"/>
 
         <RadioButton
-            android:id="@+id/ivInsertPicture"
+            android:id="@+id/rbImage"
             style="@style/GraffitiButton"
             android:drawableTop="@drawable/btn_picture_normal"
             android:text="@string/image"/>

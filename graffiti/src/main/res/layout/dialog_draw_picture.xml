@@ -35,7 +35,7 @@
             android:textSize="20sp"/>
 
         <ImageView
-            android:id="@+id/ivInsertPicture"
+            android:id="@+id/rbImage"
             style="@style/GraffitiButton"
             android:src="@drawable/btn_sure_normal"/>
     </LinearLayout>

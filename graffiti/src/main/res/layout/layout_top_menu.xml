@@ -6,37 +6,45 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/btnColor"
+    <TextView
+        android:id="@+id/tvColor"
         style="@style/GraffitiButton"
         android:drawableTop="@drawable/btn_colorpicker_normal"
         android:text="@string/tools_toptitle_txt_color"
         android:textColor="#ff298ecb"/>
 
-    <View
-        style="@style/MenuSeparator"/>
+    <View style="@style/MenuSeparator"/>
 
-    <Button
-        android:id="@+id/btnPen"
+    <TextView
+        android:id="@+id/tvPen"
         style="@style/GraffitiButton"
         android:drawableTop="@drawable/btn_pen_normal"
         android:text="@string/tools_toptitle_txt_pen"/>
 
-    <View
-        style="@style/MenuSeparator"/>
+    <View style="@style/MenuSeparator"/>
 
-    <Button
-        android:id="@+id/btnClear"
+    <TextView
+        android:id="@+id/tvClear"
         style="@style/GraffitiButton"
         android:drawableTop="@drawable/btn_clear_normal"
         android:text="@string/tools_toptitle_txt_clear"/>
 
-    <View
-        style="@style/MenuSeparator"/>
+    <View style="@style/MenuSeparator"/>
 
-    <Button
-        android:id="@+id/btnSave"
+    <TextView
+        android:id="@+id/tvSave"
         style="@style/GraffitiButton"
         android:drawableTop="@drawable/btn_save_normal"
         android:text="@string/tools_toptitle_txt_save"/>
+
+    <View style="@style/MenuSeparator"/>
+
+    <TextView
+        android:id="@+id/tvShare"
+        style="@style/GraffitiButton"
+        android:layout_height="match_parent"
+        android:drawablePadding="@dimen/widget_size_4"
+        android:drawableTop="@drawable/svg_share"
+        android:paddingTop="@dimen/widget_size_8"
+        android:text="@string/share"/>
 </LinearLayout>
