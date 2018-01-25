@@ -44,7 +44,7 @@
         style="@style/GraffitiButton"
         android:layout_height="match_parent"
         android:drawablePadding="@dimen/widget_size_4"
-        android:drawableTop="@drawable/svg_share"
+        android:drawableTop="@drawable/svg_share_wrapper"
         android:paddingTop="@dimen/widget_size_8"
         android:text="@string/share"/>
 </LinearLayout>
