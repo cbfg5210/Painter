@@ -449,8 +449,8 @@ class GraffitiActivity : RxAppCompatActivity(), View.OnClickListener {
                 override fun onSaved(path: String) {
                     IntentUtils.shareImage(
                             this@GraffitiActivity,
-                            getString(R.string.app_name),
-                            getString(R.string.gr_share_work_app_module_link, getString(R.string.app_name), getString(R.string.gr_module_name), getString(R.string.gr_download_link)),
+                            getString(R.string.gr_module_name),
+                            getString(R.string.gr_share_work_app_module_link, getString(R.string.gr_module_name), getString(R.string.gr_module_name), getString(R.string.gr_download_link)),
                             path)
                 }
             })

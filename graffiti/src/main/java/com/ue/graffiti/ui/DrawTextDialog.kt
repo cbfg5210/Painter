@@ -123,7 +123,7 @@ class DrawTextDialog : DialogFragment(), View.OnClickListener {
     }
 
     private fun demandContent() {
-        DialogHelper.showInputDialog(context, getString(R.string.gr_input_text), getString(R.string.gr_finger_graffiti), object : OnSingleResultListener {
+        DialogHelper.showInputDialog(context, getString(R.string.gr_input_text), getString(R.string.gr_module_name), object : OnSingleResultListener {
             override fun onResult(result: Any) {
                 tivCanvas.setTextContent(result as String)
                 tivCanvas.invalidate()

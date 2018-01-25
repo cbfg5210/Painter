@@ -43,7 +43,7 @@ dependencies {
     implementation project(':library')
     if (!isRunAlone.toBoolean()) {
         implementation project(':autodraw')
-        implementation project(':fingercoloring')
+        implementation project(':coloring')
         implementation project(':graffiti')
         implementation project(':pixelpaint')
     }
