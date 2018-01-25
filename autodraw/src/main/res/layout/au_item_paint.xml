@@ -6,6 +6,6 @@
     android:layout_width="@dimen/widget_size_40"
     android:layout_height="@dimen/widget_size_40"
     android:layout_margin="@dimen/widget_size_5"
-    android:background="@drawable/sel_bg_paint_color"
+    android:background="@drawable/au_sel_bg_paint_color"
     android:padding="@dimen/widget_size_5"
     tools:src="@mipmap/ic_launcher"/>

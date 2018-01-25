@@ -3,12 +3,12 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/actionShare"
-        android:icon="@drawable/lay_svg_share_white"
-        android:title="@string/share"
+        android:icon="@drawable/au_svg_share_wrapper"
+        android:title="@string/au_share"
         app:showAsAction="always"/>
     <item
         android:id="@+id/actionSettings"
-        android:icon="@drawable/svg_settings"
-        android:title="@string/settings"
+        android:icon="@drawable/au_svg_settings"
+        android:title="@string/au_settings"
         app:showAsAction="always"/>
 </menu>

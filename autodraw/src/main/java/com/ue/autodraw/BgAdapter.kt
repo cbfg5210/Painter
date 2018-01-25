@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import com.ue.library.util.ImageLoaderUtils
-import kotlinx.android.synthetic.main.item_bg.view.*
+import kotlinx.android.synthetic.main.au_item_bg.view.*
 
 /**
  * Created by hawk on 2018/1/10.
@@ -18,7 +18,7 @@ class BgAdapter(context: Context, private val bgs: IntArray) : RecyclerView.Adap
     var itemListener: AdapterView.OnItemClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_bg, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.au_item_bg, parent, false)
         val holder = ViewHolder(itemView)
         itemView.setOnClickListener { v ->
             itemListener?.onItemClick(null, v, bgs[holder.adapterPosition], 0)

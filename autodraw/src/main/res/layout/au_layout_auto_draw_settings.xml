@@ -16,11 +16,11 @@
         android:paddingRight="@dimen/widget_size_5"
         android:paddingTop="@dimen/widget_size_5">
         <!--临摹对象-->
-        <LinearLayout style="@style/AutoDrawSettingVg">
+        <LinearLayout style="@style/au_AutoDrawSettingVg">
 
             <TextView
-                style="@style/AutoDrawSettingTv"
-                android:text="@string/outline_object"/>
+                style="@style/au_AutoDrawSettingTv"
+                android:text="@string/au_outline_object"/>
 
             <ImageView
                 android:id="@+id/ivObjectView"
@@ -31,13 +31,13 @@
         </LinearLayout>
         <!--背景-->
         <LinearLayout
-            style="@style/AutoDrawSettingVg"
+            style="@style/au_AutoDrawSettingVg"
             android:layout_gravity="right|top"
             android:layout_marginTop="0dp">
 
             <TextView
-                style="@style/AutoDrawSettingTv"
-                android:text="@string/background"/>
+                style="@style/au_AutoDrawSettingTv"
+                android:text="@string/au_background"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvBgOptions"
@@ -48,17 +48,17 @@
                 android:scrollbars="none"
                 app:layoutManager="android.support.v7.widget.GridLayoutManager"
                 app:spanCount="2"
-                tools:listitem="@layout/item_bg"/>
+                tools:listitem="@layout/au_item_bg"/>
         </LinearLayout>
         <!--画笔-->
         <LinearLayout
-            style="@style/AutoDrawSettingVg"
+            style="@style/au_AutoDrawSettingVg"
             android:layout_gravity="right|top"
             android:layout_marginTop="0dp">
 
             <TextView
-                style="@style/AutoDrawSettingTv"
-                android:text="@string/paint"/>
+                style="@style/au_AutoDrawSettingTv"
+                android:text="@string/au_paint"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvPaintOptions"
@@ -72,13 +72,13 @@
         </LinearLayout>
         <!--颜料-->
         <LinearLayout
-            style="@style/AutoDrawSettingVg"
+            style="@style/au_AutoDrawSettingVg"
             android:layout_gravity="right|top"
             android:layout_marginTop="0dp">
 
             <TextView
-                style="@style/AutoDrawSettingTv"
-                android:text="@string/paint_color"/>
+                style="@style/au_AutoDrawSettingTv"
+                android:text="@string/au_paint_color"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvPaintColorOptions"
@@ -89,16 +89,16 @@
                 android:scrollbars="none"
                 app:layoutManager="android.support.v7.widget.GridLayoutManager"
                 app:spanCount="3"
-                tools:listitem="@layout/item_paint_color"/>
+                tools:listitem="@layout/au_item_paint_color"/>
         </LinearLayout>
         <!--线条粗细-->
         <LinearLayout
-            style="@style/AutoDrawSettingVg"
+            style="@style/au_AutoDrawSettingVg"
             android:layout_gravity="right|center_vertical">
 
             <TextView
-                style="@style/AutoDrawSettingTv"
-                android:text="@string/line_px"/>
+                style="@style/au_AutoDrawSettingTv"
+                android:text="@string/au_line_px"/>
 
             <com.ue.autodraw.NumberSelectorView
                 android:id="@+id/nsLineThickness"
@@ -111,12 +111,12 @@
         </LinearLayout>
         <!--延时-->
         <LinearLayout
-            style="@style/AutoDrawSettingVg"
+            style="@style/au_AutoDrawSettingVg"
             android:layout_gravity="right|center_vertical">
 
             <TextView
-                style="@style/AutoDrawSettingTv"
-                android:text="@string/speed_delay_ms"/>
+                style="@style/au_AutoDrawSettingTv"
+                android:text="@string/au_speed_delay_ms"/>
 
             <com.ue.autodraw.NumberSelectorView
                 android:id="@+id/nsDelaySpeed"
@@ -137,32 +137,32 @@
 
         <RadioButton
             android:id="@+id/rbTabObject"
-            style="@style/AutoDrawTab"
-            android:text="@string/outline_object"/>
+            style="@style/au_AutoDrawTab"
+            android:text="@string/au_outline_object"/>
 
         <RadioButton
             android:id="@+id/rbTabBackground"
-            style="@style/AutoDrawTab"
-            android:text="@string/background"/>
+            style="@style/au_AutoDrawTab"
+            android:text="@string/au_background"/>
 
         <RadioButton
             android:id="@+id/rbTabPaint"
-            style="@style/AutoDrawTab"
-            android:text="@string/paint"/>
+            style="@style/au_AutoDrawTab"
+            android:text="@string/au_paint"/>
 
         <RadioButton
             android:id="@+id/rbTabPaintColor"
-            style="@style/AutoDrawTab"
-            android:text="@string/paint_color"/>
+            style="@style/au_AutoDrawTab"
+            android:text="@string/au_paint_color"/>
 
         <RadioButton
             android:id="@+id/rbTabLine"
-            style="@style/AutoDrawTab"
-            android:text="@string/line"/>
+            style="@style/au_AutoDrawTab"
+            android:text="@string/au_line"/>
 
         <RadioButton
             android:id="@+id/rbTabSpeed"
-            style="@style/AutoDrawTab"
-            android:text="@string/speed_delay"/>
+            style="@style/au_AutoDrawTab"
+            android:text="@string/au_speed_delay"/>
     </RadioGroup>
 </LinearLayout>

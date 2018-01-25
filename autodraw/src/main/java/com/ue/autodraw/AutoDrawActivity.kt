@@ -17,8 +17,8 @@ import com.ue.library.event.HomeWatcher
 import com.ue.library.util.*
 import com.ue.library.widget.LoadingDialog
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.activity_auto_draw.*
-import kotlinx.android.synthetic.main.layout_auto_draw_settings.*
+import kotlinx.android.synthetic.main.au_activity_auto_draw.*
+import kotlinx.android.synthetic.main.au_layout_auto_draw_settings.*
 
 class AutoDrawActivity : AppCompatActivity(),
         View.OnClickListener,
@@ -41,10 +41,10 @@ class AutoDrawActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_auto_draw)
+        setContentView(R.layout.au_activity_auto_draw)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = getString(R.string.auto_draw)
+        supportActionBar?.title = getString(R.string.au_auto_draw)
 
         rgTabs.check(R.id.rbTabObject)
 
@@ -55,7 +55,7 @@ class AutoDrawActivity : AppCompatActivity(),
 
         val outlineObjPath = SPUtils.getString(SP_OUTLINE_OBJ_PATH, "")
         if (TextUtils.isEmpty(outlineObjPath)) {
-            loadPhoto(R.drawable.test)
+            loadPhoto(R.mipmap.test)
         } else {
             loadPhoto(outlineObjPath!!)
         }
@@ -73,9 +73,9 @@ class AutoDrawActivity : AppCompatActivity(),
         super.onPostCreate(savedInstanceState)
 
         DialogUtils.showOnceHintDialog(this,
-                R.string.auto_draw,
-                R.string.auto_draw_tip,
-                R.string.got_it,
+                R.string.au_auto_draw,
+                R.string.au_auto_draw_tip,
+                R.string.au_got_it,
                 null,
                 SP_OUTLINE_TIP_VISIBLE)
     }
@@ -103,7 +103,7 @@ class AutoDrawActivity : AppCompatActivity(),
                 if (recordVideoHelper != null && recordVideoHelper!!.isRecording) {
                     recordVideoHelper!!.cancelRecording()
                 } else {
-                    Toast.makeText(this@AutoDrawActivity, R.string.cancel_draw, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@AutoDrawActivity, R.string.au_cancel_draw, Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -129,15 +129,15 @@ class AutoDrawActivity : AppCompatActivity(),
         rvBgOptions.adapter = bgAdapter
 
         val paintAdapter = PaintAdapter(intArrayOf(
-                R.drawable.svg_pencil, R.drawable.svg_fountain_pen,
-                R.drawable.svg_blush, R.drawable.svg_feather))
+                R.drawable.au_svg_pencil, R.drawable.au_svg_fountain_pen,
+                R.drawable.au_svg_blush, R.drawable.au_svg_feather))
         paintAdapter.itemListener = AdapterView.OnItemClickListener { _, _, imgRes, _ ->
             advOutline.setPaintBitmapRes(imgRes)
         }
         rvPaintOptions.setHasFixedSize(true)
         rvPaintOptions.adapter = paintAdapter
 
-        val paintColorAdapter = PaintColorAdapter(resources.getIntArray(R.array.PaintColorOptions))
+        val paintColorAdapter = PaintColorAdapter(resources.getIntArray(R.array.au_paintColorOptions))
         paintColorAdapter.itemListener = AdapterView.OnItemClickListener { _, _, paintColor, _ ->
             advOutline.setPaintColor(paintColor)
         }
@@ -157,12 +157,12 @@ class AutoDrawActivity : AppCompatActivity(),
     private fun onShareDrawVideoClick() {
         vgShare.visibility = View.GONE
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            Toast.makeText(this, R.string.cannot_share_video_version, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.au_cannot_share_video_version, Toast.LENGTH_SHORT).show()
             return
         }
         readyThenDraw = false
         if (!advOutline.isCanSave) {
-            loadingDialog.showLoading(supportFragmentManager, getString(R.string.is_preparing))
+            loadingDialog.showLoading(supportFragmentManager, getString(R.string.au_is_preparing))
             return
         }
         recordDrawVideo()
@@ -172,7 +172,7 @@ class AutoDrawActivity : AppCompatActivity(),
         vgShare.visibility = View.GONE
         readyThenDraw = true
         if (!advOutline.isCanSave) {
-            Toast.makeText(this, R.string.no_outline_to_save, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.au_no_outline_to_save, Toast.LENGTH_SHORT).show()
             return
         }
         advOutline.saveOutlinePicture(object : FileUtils.OnSaveImageListener {
@@ -192,14 +192,14 @@ class AutoDrawActivity : AppCompatActivity(),
             return
         }
         if (!advOutline.isReadyToDraw) {
-            loadingDialog.showLoading(supportFragmentManager, getString(R.string.is_preparing))
+            loadingDialog.showLoading(supportFragmentManager, getString(R.string.au_is_preparing))
             return
         }
         if (advOutline.isDrawing) {
             advOutline.stopDrawing()
             if (recordVideoHelper != null && recordVideoHelper!!.isRecording) {
                 recordVideoHelper!!.cancelRecording()
-                Toast.makeText(this, R.string.cancel_record_video, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.au_cancel_record_video, Toast.LENGTH_SHORT).show()
             }
             return
         }
@@ -211,9 +211,9 @@ class AutoDrawActivity : AppCompatActivity(),
      */
     private fun recordDrawVideo() {
         DialogUtils.showOnceHintDialog(this,
-                R.string.record_draw_video_title,
-                R.string.record_draw_video_tip,
-                R.string.got_it,
+                R.string.au_record_draw_video_title,
+                R.string.au_record_draw_video_tip,
+                R.string.au_got_it,
                 View.OnClickListener {
                     if (recordVideoHelper == null) initRecordVideoHelper()
                     advOutline.resetCanvas(true)
@@ -230,11 +230,11 @@ class AutoDrawActivity : AppCompatActivity(),
             }
 
             override fun onCancel() {
-                Toast.makeText(this@AutoDrawActivity, R.string.cancel_record_video, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@AutoDrawActivity, R.string.au_cancel_record_video, Toast.LENGTH_SHORT).show()
             }
 
             override fun onComplete(videoPath: String) {
-                Toast.makeText(this@AutoDrawActivity, R.string.complete_recording, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@AutoDrawActivity, R.string.au_complete_recording, Toast.LENGTH_SHORT).show()
                 ShareVideoDialog.newInstance(videoPath).show(supportFragmentManager, "")
             }
         }
@@ -255,7 +255,7 @@ class AutoDrawActivity : AppCompatActivity(),
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_auto_draw, menu)
+        menuInflater.inflate(R.menu.au_menu_auto_draw, menu)
         return true
     }
 
@@ -281,7 +281,7 @@ class AutoDrawActivity : AppCompatActivity(),
     * */
     private fun loadPhoto(photo: Any) {
         readyThenDraw = true
-        ImageLoaderUtils.display(this, ivObjectView, photo, R.drawable.test,
+        ImageLoaderUtils.display(this, ivObjectView, photo, R.mipmap.test,
                 object : ImageLoaderUtils.ImageLoaderCallback {
                     override fun onBitmapLoaded(bitmap: Bitmap) {
                         advOutline.setOutlineObject(bitmap)
@@ -297,10 +297,10 @@ class AutoDrawActivity : AppCompatActivity(),
 
     private fun pickPhoto() {
         PermissionUtils.checkReadWriteStoragePerms(this,
-                getString(R.string.no_read_storage_perm),
+                getString(R.string.au_no_read_storage_perm),
                 object : PermissionUtils.SimplePermissionListener {
                     override fun onSucceed(requestCode: Int, grantPermissions: List<String>) {
-                        startActivityForResult(Intent.createChooser(Intent(Intent.ACTION_GET_CONTENT).setType("image/*"), getString(R.string.choose_photo)), REQ_PICK_PHOTO)
+                        startActivityForResult(Intent.createChooser(Intent(Intent.ACTION_GET_CONTENT).setType("image/*"), getString(R.string.au_choose_photo)), REQ_PICK_PHOTO)
                     }
                 }
         )

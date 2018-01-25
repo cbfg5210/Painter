@@ -23,16 +23,16 @@
 
         <TextView
             android:id="@+id/tvShareDrawPicture"
-            style="@style/AutoDrawTab"
+            style="@style/au_AutoDrawTab"
             android:background="?attr/selectableItemBackground"
-            android:text="@string/share_draw_picture"/>
+            android:text="@string/au_share_draw_picture"/>
 
         <TextView
             android:id="@+id/tvShareDrawVideo"
-            style="@style/AutoDrawTab"
+            style="@style/au_AutoDrawTab"
             android:background="?attr/selectableItemBackground"
-            android:text="@string/share_draw_video"/>
+            android:text="@string/au_share_draw_video"/>
     </LinearLayout>
     <!--设置-->
-    <include layout="@layout/layout_auto_draw_settings"/>
+    <include layout="@layout/au_layout_auto_draw_settings"/>
 </FrameLayout>

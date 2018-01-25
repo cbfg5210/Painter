@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import com.ue.library.util.SPUtils
-import kotlinx.android.synthetic.main.item_paint_color.view.*
+import kotlinx.android.synthetic.main.au_item_paint_color.view.*
 
 /**
  * Created by hawk on 2018/1/10.
@@ -37,7 +37,7 @@ class PaintColorAdapter(private val bgs: IntArray) : RecyclerView.Adapter<PaintC
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_paint_color, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.au_item_paint_color, parent, false)
         val holder = ViewHolder(itemView)
         itemView.setOnClickListener { v ->
             if (selectedIndex == holder.adapterPosition) {

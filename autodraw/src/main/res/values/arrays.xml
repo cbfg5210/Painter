@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <array name="PaintColorOptions">
+    <array name="au_paintColorOptions">
         <item>@color/black</item>
         <item>@color/col_f44336</item>
         <item>@color/col_e91e63</item>

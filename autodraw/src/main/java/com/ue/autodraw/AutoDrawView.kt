@@ -64,7 +64,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
 
     init {
-        setPaintBitmapRes(R.drawable.svg_pencil)
+        setPaintBitmapRes(R.drawable.au_svg_pencil)
         holder.addCallback(this)
     }
 
@@ -205,7 +205,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
         if (!isCanSave) return
 
         PermissionUtils.checkReadWriteStoragePerms(context,
-                context.getString(R.string.no_read_storage_perm),
+                context.getString(R.string.au_no_read_storage_perm),
                 object : PermissionUtils.SimplePermissionListener {
                     override fun onSucceed(requestCode: Int, grantPermissions: List<String>) {
                         val path = Environment.getExternalStorageDirectory().getPath() + Constants.PATH_AUTO_DRAW

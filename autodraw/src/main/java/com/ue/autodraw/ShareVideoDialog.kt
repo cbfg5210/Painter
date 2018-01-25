@@ -32,11 +32,11 @@ class ShareVideoDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val shareDialog = AlertDialog.Builder(context)
-                .setTitle(R.string.share_draw_video)
-                .setMessage(R.string.share_draw_video_tip)
-                .setPositiveButton(R.string.share, null)
-                .setNegativeButton(R.string.preview, null)
-                .setNeutralButton(R.string.cancel, null)
+                .setTitle(R.string.au_share_draw_video)
+                .setMessage(R.string.au_share_draw_video_tip)
+                .setPositiveButton(R.string.au_share, null)
+                .setNegativeButton(R.string.au_preview, null)
+                .setNeutralButton(R.string.au_cancel, null)
                 .create()
         shareDialog.setCanceledOnTouchOutside(false)
         shareDialog.setCancelable(false)

@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import com.ue.library.util.SPUtils
-import kotlinx.android.synthetic.main.item_paint.view.*
+import kotlinx.android.synthetic.main.au_item_paint.view.*
 
 /**
  * Created by hawk on 2018/1/10.
@@ -26,7 +26,7 @@ class PaintAdapter(private val bgs: IntArray) : RecyclerView.Adapter<PaintAdapte
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_paint, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.au_item_paint, parent, false)
         val holder = ViewHolder(itemView)
         itemView.setOnClickListener { v ->
             if (selectedIndex == holder.adapterPosition) {

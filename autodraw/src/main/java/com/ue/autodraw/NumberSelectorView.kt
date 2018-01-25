@@ -8,7 +8,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
 import com.ue.library.util.SPUtils
-import kotlinx.android.synthetic.main.view_number_selector.view.*
+import kotlinx.android.synthetic.main.au_view_number_selector.view.*
 
 /**
  * Created by hawk on 2018/1/11.
@@ -31,7 +31,7 @@ class NumberSelectorView : LinearLayout, View.OnClickListener {
         if (!TextUtils.isEmpty(spKey)) {
             numberValue = SPUtils.getInt(spKey!!, 0)
         }
-        View.inflate(context, R.layout.view_number_selector, this)
+        View.inflate(context, R.layout.au_view_number_selector, this)
     }
 
     override fun onDetachedFromWindow() {

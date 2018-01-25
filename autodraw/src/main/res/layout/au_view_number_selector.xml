@@ -13,7 +13,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        app:srcCompat="@drawable/svg_sub"/>
+        app:srcCompat="@drawable/au_svg_sub"/>
 
     <EditText
         android:id="@+id/etNumber"
@@ -31,5 +31,5 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        app:srcCompat="@drawable/svg_add"/>
+        app:srcCompat="@drawable/au_svg_add"/>
 </merge>

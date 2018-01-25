@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AutoDrawTab">
-        <item name="android:background">@drawable/sel_bg_auto_draw_tab</item>
+    <style name="au_AutoDrawTab">
+        <item name="android:background">@drawable/au_sel_bg_auto_draw_tab</item>
         <item name="android:paddingTop">@dimen/widget_size_10</item>
         <item name="android:paddingBottom">@dimen/widget_size_10</item>
         <item name="android:paddingLeft">@dimen/widget_size_20</item>
@@ -15,17 +15,17 @@
         <item name="android:button">@null</item>
     </style>
 
-    <style name="AutoDrawSettingVg">
+    <style name="au_AutoDrawSettingVg">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/sp_bg_setting_detail</item>
+        <item name="android:background">@drawable/au_sp_bg_setting_detail</item>
         <item name="android:orientation">vertical</item>
         <item name="android:padding">@dimen/widget_size_5</item>
         <item name="android:layout_gravity">right</item>
     </style>
 
-    <style name="AutoDrawSettingTv">
+    <style name="au_AutoDrawSettingTv">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_height">wrap_content</item>

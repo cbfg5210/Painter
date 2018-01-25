@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools"
+           tools:ignore="ResourceName">
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="col_eeeeee">#eeeeee</color>
