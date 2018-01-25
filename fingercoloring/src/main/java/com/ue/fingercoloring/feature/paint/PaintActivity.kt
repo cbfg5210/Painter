@@ -247,8 +247,7 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
                             this@PaintActivity,
                             getString(R.string.app_name),
                             getString(R.string.sharemywork) + getString(R.string.sharecontent),
-                            path,
-                            getString(R.string.pleaseselect))
+                            path)
                 else if (saveFlag == FLAG_EFFECT)
                     showEffectDialog(path)
             }

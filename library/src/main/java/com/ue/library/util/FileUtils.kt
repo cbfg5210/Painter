@@ -1,6 +1,5 @@
 package com.ue.library.util
 
-import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.widget.Toast
@@ -31,25 +30,15 @@ object FileUtils {
         }
         if (!dir.exists()) dir.mkdirs()
 
-        val file = File(dir, imgName)
-        if (!file.exists()) {
-            saveImage(context, file, bmp, path, imgName, listener)
-            return
-        }
-        //询问用户是否覆盖提示框
-        AlertDialog.Builder(context)
-                .setMessage(R.string.name_conflict)
-                .setPositiveButton(R.string.cover) { _, _ -> saveImage(context, file, bmp, path, imgName, listener) }
-                .setNegativeButton(R.string.cancel, null)
-                .create()
-                .show()
+        saveImage(context, bmp, path, imgName, listener)
+        return
     }
 
-    private fun saveImage(context: Context, file: File, bmp: Bitmap, path: String, imgName: String, listener: OnSaveImageListener?) {
+    private fun saveImage(context: Context, bmp: Bitmap, path: String, imgName: String, listener: OnSaveImageListener?) {
         var out: FileOutputStream? = null
         var finalPath = ""
         try {
-            out = FileOutputStream(file)
+            out = FileOutputStream(File(path, imgName))
             bmp.compress(Bitmap.CompressFormat.PNG, 100, out)
             finalPath = path + imgName
             Toast.makeText(context, context.getString(R.string.save_to, finalPath), Toast.LENGTH_LONG).show()

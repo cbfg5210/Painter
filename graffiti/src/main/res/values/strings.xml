@@ -103,4 +103,7 @@
     <string name="begin_sensor_draw">您确定以(%d,%d)为起始点并开始重力绘图？</string>
     <string name="save_error_no_perm">保存失败：请先开启外部存储权限。</string>
     <string name="share">分享</string>
+    <string name="share_work_app_module_link">我在%s-%s完成了一个作品，快来看一下吧！(下载链接:%s)</string>
+    <string name="module_graffiti">指尖涂鸦</string>
+    <string name="download_link">http://app.mi.com/details?id=com.ue.painter</string>
 </resources>

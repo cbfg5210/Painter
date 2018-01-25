@@ -12,6 +12,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
@@ -28,6 +29,7 @@ import com.ue.graffiti.model.*
 import com.ue.graffiti.touch.*
 import com.ue.graffiti.util.*
 import com.ue.library.util.FileUtils
+import com.ue.library.util.IntentUtils
 import com.ue.library.util.SPUtils
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_bottom_menu.*
@@ -53,6 +55,8 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
     private var step: Step? = null
     private val centerPoint = PointF()
     private var lastEditActionId = 0
+
+    private var graffitiName = ""
 
     //单手操作传感器监听者
     private val singleHandSensorEventListener = object : SensorEventListener {
@@ -394,15 +398,24 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
 
     override fun onBackPressed() {
         DialogHelper.showExitDialog(this, View.OnClickListener {
-            DialogHelper.showInputDialog(this@MainActivity, getString(R.string.input_graffiti_name), object : OnSingleResultListener {
-                override fun onResult(result: Any) {
-                    mMainPresenter.onSaveGraffitiClicked(cvGraffitiView.savedBitmap!!, result as String, object : FileUtils.OnSaveImageListener {
-                        override fun onSaved(path: String) {
-                            finish()
-                        }
-                    })
+            saveGraffiti(object : FileUtils.OnSaveImageListener {
+                override fun onSaved(path: String) {
+                    finish()
                 }
             })
+        })
+    }
+
+    private fun saveGraffiti(saveListener: FileUtils.OnSaveImageListener? = null) {
+        if (!TextUtils.isEmpty(graffitiName)) {
+            mMainPresenter.onSaveGraffitiClicked(cvGraffitiView.savedBitmap!!, graffitiName, saveListener)
+            return
+        }
+        DialogHelper.showInputDialog(this, getString(R.string.input_graffiti_name), object : OnSingleResultListener {
+            override fun onResult(result: Any) {
+                graffitiName = result as String
+                mMainPresenter.onSaveGraffitiClicked(cvGraffitiView.savedBitmap!!, graffitiName, saveListener)
+            }
         })
     }
 
@@ -415,6 +428,8 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
         /*
             * top menu listener
             * */
+            R.id.tvPen -> DialogHelper.showPenDialog(this@MainActivity, cvGraffitiView.getCurrentPaint())
+            R.id.tvSave -> saveGraffiti()
             R.id.tvColor -> DialogHelper.showColorPickerDialog(this@MainActivity, object : ColorPickerDialog.OnColorPickerListener {
                 override fun onColorPicked(color: Int) {
                     SPUtils.putInt(SPKeys.SP_PAINT_COLOR, color)
@@ -422,25 +437,23 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
                     cvGraffitiView.paintColor = color
                 }
             })
-            R.id.tvPen -> DialogHelper.showPenDialog(this@MainActivity, cvGraffitiView.getCurrentPaint())
-            R.id.tvClear -> DialogHelper.showClearDialog(this, object : DialogInterface.OnClickListener {
-                override fun onClick(dialog: DialogInterface?, which: Int) {
-                    //清空内部所有数据
-                    cvGraffitiView.clearData()
-                    //画布背景图标复位
-                    updateCanvasBgAndIcons(whiteCanvasBgVi)
-                    //清除填充过颜色的地方
-                    cvGraffitiView.setBackgroundBitmap()
+            R.id.tvClear -> DialogHelper.showClearDialog(this, DialogInterface.OnClickListener { _, _ ->
+                //清空内部所有数据
+                cvGraffitiView.clearData()
+                //画布背景图标复位
+                updateCanvasBgAndIcons(whiteCanvasBgVi)
+                //清除填充过颜色的地方
+                cvGraffitiView.setBackgroundBitmap()
+            })
+            R.id.tvShare -> saveGraffiti(object : FileUtils.OnSaveImageListener {
+                override fun onSaved(path: String) {
+                    IntentUtils.shareImage(
+                            this@MainActivity,
+                            getString(R.string.app_name),
+                            getString(R.string.share_work_app_module_link, getString(R.string.app_name), getString(R.string.module_graffiti), getString(R.string.download_link)),
+                            path)
                 }
             })
-            R.id.tvSave -> DialogHelper.showInputDialog(this, getString(R.string.input_graffiti_name), object : OnSingleResultListener {
-                override fun onResult(result: Any) {
-                    mMainPresenter.onSaveGraffitiClicked(cvGraffitiView.savedBitmap!!, result as String, null)
-                }
-            })
-            R.id.tvShare -> {
-                toast("share")
-            }
         /*
         * bottom menu listener
         * */
