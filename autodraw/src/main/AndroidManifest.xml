@@ -3,8 +3,11 @@
           package="com.ue.autodraw">
 
     <application>
-        <activity android:name=".AutoDrawActivity">
-        </activity>
+        <activity
+            android:name=".AutoDrawActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
