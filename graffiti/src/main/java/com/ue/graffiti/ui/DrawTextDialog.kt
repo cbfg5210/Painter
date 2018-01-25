@@ -17,7 +17,7 @@ import com.ue.graffiti.model.Pel
 import com.ue.graffiti.util.loadDrawTextImageAnimations
 import com.ue.graffiti.widget.CanvasView
 import com.ue.graffiti.widget.TextImageView
-import kotlinx.android.synthetic.main.dialog_draw_text.view.*
+import kotlinx.android.synthetic.main.gr_dialog_draw_text.view.*
 
 /**
  * Created by hawk on 2018/1/15.
@@ -48,7 +48,7 @@ class DrawTextDialog : DialogFragment(), View.OnClickListener {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val contentView = LayoutInflater.from(context).inflate(R.layout.dialog_draw_text, null)
+        val contentView = LayoutInflater.from(context).inflate(R.layout.gr_dialog_draw_text, null)
         tivCanvas = contentView.tivCanvas
         tivCanvas.barSensorListener = object : BarSensorListener {
             override fun isTopToolbarVisible(): Boolean {
@@ -119,11 +119,11 @@ class DrawTextDialog : DialogFragment(), View.OnClickListener {
     override fun onResume() {
         super.onResume()
         demandContent()
-        DialogHelper.showOnceHintDialog(context, R.string.text_gesture_title, R.string.text_gesture_tip, R.string.got_it, SPKeys.SHOW_TEXT_GESTURE_HINT)
+        DialogHelper.showOnceHintDialog(context, R.string.gr_text_gesture_title, R.string.gr_text_gesture_tip, R.string.gr_got_it, SPKeys.SHOW_TEXT_GESTURE_HINT)
     }
 
     private fun demandContent() {
-        DialogHelper.showInputDialog(context, getString(R.string.input_text), getString(R.string.finger_graffiti), object : OnSingleResultListener {
+        DialogHelper.showInputDialog(context, getString(R.string.gr_input_text), getString(R.string.gr_finger_graffiti), object : OnSingleResultListener {
             override fun onResult(result: Any) {
                 tivCanvas.setTextContent(result as String)
                 tivCanvas.invalidate()

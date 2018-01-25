@@ -8,7 +8,7 @@ import android.widget.TextView
 
 import com.ue.graffiti.R
 import com.ue.graffiti.model.PictureItem
-import kotlinx.android.synthetic.main.item_picture.view.*
+import kotlinx.android.synthetic.main.gr_item_picture.view.*
 
 /**
  * Created by hawk on 2018/1/16.
@@ -18,7 +18,7 @@ internal class PictureAdapter(private val mPictureItems: List<PictureItem>?) : R
     var itemClickListener: OnPictureItemListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_picture, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.gr_item_picture, parent, false)
         val holder = ViewHolder(itemView)
         itemView.setOnClickListener {
             itemClickListener?.onItemClick(holder.adapterPosition, mPictureItems!![holder.adapterPosition])

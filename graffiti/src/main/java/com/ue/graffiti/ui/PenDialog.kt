@@ -22,7 +22,7 @@ import com.ue.graffiti.util.getPaintShapeByImage
 import com.ue.graffiti.util.getXmlImageArray
 import com.ue.graffiti.widget.PenEffectView
 import com.ue.library.util.SPUtils
-import kotlinx.android.synthetic.main.dialog_pen.view.*
+import kotlinx.android.synthetic.main.gr_dialog_pen.view.*
 
 //调色板对话框
 class PenDialog : DialogFragment(), OnSeekBarChangeListener {
@@ -66,10 +66,10 @@ class PenDialog : DialogFragment(), OnSeekBarChangeListener {
             lastEffectIndex = SPUtils.getInt(SPKeys.SP_PAINT_EFFECT_INDEX, 0)
 
             return ArrayList<Item>().apply {
-                add(PenCatTitleItem(getString(R.string.line_shape)))
-                addAll(getPenShapes(FLAG_SHAPE, R.array.penShapeImages, R.array.penShapeNames, lastShapeIndex))
-                add(PenCatTitleItem(getString(R.string.special_effect)))
-                addAll(getPenShapes(FLAG_EFFECT, R.array.penEffectImages, R.array.penEffectNames, lastEffectIndex))
+                add(PenCatTitleItem(getString(R.string.gr_line_shape)))
+                addAll(getPenShapes(FLAG_SHAPE, R.array.gr_penShapeImages, R.array.gr_penShapeNames, lastShapeIndex))
+                add(PenCatTitleItem(getString(R.string.gr_special_effect)))
+                addAll(getPenShapes(FLAG_EFFECT, R.array.gr_penEffectImages, R.array.gr_penEffectNames, lastEffectIndex))
             }
         }
 
@@ -92,7 +92,7 @@ class PenDialog : DialogFragment(), OnSeekBarChangeListener {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val contentView = inflater.inflate(R.layout.dialog_pen, null)
+        val contentView = inflater.inflate(R.layout.gr_dialog_pen, null)
 
         pevPenEffect = contentView.pevPenEffect
         pevPenEffect.setPaint(paint)

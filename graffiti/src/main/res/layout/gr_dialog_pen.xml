@@ -28,7 +28,7 @@
             android:gravity="center"
             android:paddingLeft="@dimen/widget_size_10"
             android:paddingRight="@dimen/widget_size_10"
-            android:text="@string/dialog_pen_txt_width"
+            android:text="@string/gr_stroke"
             android:textColor="@color/col_298ecb"/>
 
         <SeekBar
@@ -38,7 +38,7 @@
             android:layout_weight="1"
             android:max="100"
             android:progress="2"
-            android:progressDrawable="@drawable/seekbar_penwidth"
+            android:progressDrawable="@drawable/gr_seekbar_penwidth"
             android:thumb="@drawable/thumb_penwidth_normal"/>
 
         <TextView
@@ -49,7 +49,7 @@
             android:gravity="center"
             android:paddingLeft="@dimen/widget_size_10"
             android:paddingRight="@dimen/widget_size_10"
-            android:text="@string/dialog_pen_txt_initialwidth"
+            android:text="1"
             android:textColor="@color/col_298ecb"/>
     </LinearLayout>
 
@@ -67,5 +67,5 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/widget_size_10"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/selector_ok"/>
+        android:src="@drawable/gr_selector_ok"/>
 </LinearLayout>

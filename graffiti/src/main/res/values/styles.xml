@@ -24,7 +24,7 @@
 
     <style name="GraffitiButton">
         <item name="android:textSize">@dimen/font_size_12</item>
-        <item name="android:textColor">@color/sel_menu_text_color</item>
+        <item name="android:textColor">@color/gr_sel_menu_text_color</item>
         <item name="android:background">@color/col_384252</item>
         <item name="android:paddingTop">@dimen/widget_size_4</item>
         <item name="android:gravity">center</item>
@@ -52,7 +52,7 @@
     </style>
 
     <style name="GraffitiDialog">
-        <item name="android:windowBackground">@drawable/sha_bg_white_corner5</item>
+        <item name="android:windowBackground">@drawable/gr_sha_bg_white_corner5</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>

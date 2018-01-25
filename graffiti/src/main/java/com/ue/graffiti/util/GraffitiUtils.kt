@@ -237,23 +237,23 @@ fun fillInWhiteBitmap(step: CrossFillStep, bitmap: Bitmap) {
 * */
 fun loadDrawTextImageAnimations(context: Context, isVisible: Boolean): Array<Animation> {
     return if (isVisible) arrayOf(
-            AnimationUtils.loadAnimation(context, R.anim.topappear),
-            AnimationUtils.loadAnimation(context, R.anim.downappear))
+            AnimationUtils.loadAnimation(context, R.anim.gr_top_appear),
+            AnimationUtils.loadAnimation(context, R.anim.gr_down_appear))
     else arrayOf(
-            AnimationUtils.loadAnimation(context, R.anim.topdisappear),
-            AnimationUtils.loadAnimation(context, R.anim.downdisappear))
+            AnimationUtils.loadAnimation(context, R.anim.gr_top_disappear),
+            AnimationUtils.loadAnimation(context, R.anim.gr_down_disappear))
 }
 
 fun loadToggleMenuAnimations(context: Context, isShown: Boolean): Array<Animation> {
     return if (isShown)
-        arrayOf(AnimationUtils.loadAnimation(context, R.anim.leftappear),
-                AnimationUtils.loadAnimation(context, R.anim.topappear),
-                AnimationUtils.loadAnimation(context, R.anim.rightappear),
-                AnimationUtils.loadAnimation(context, R.anim.downappear))
-    else arrayOf(AnimationUtils.loadAnimation(context, R.anim.leftdisappear),
-            AnimationUtils.loadAnimation(context, R.anim.topdisappear),
-            AnimationUtils.loadAnimation(context, R.anim.rightdisappear),
-            AnimationUtils.loadAnimation(context, R.anim.downdisappear))
+        arrayOf(AnimationUtils.loadAnimation(context, R.anim.gr_left_appear),
+                AnimationUtils.loadAnimation(context, R.anim.gr_top_appear),
+                AnimationUtils.loadAnimation(context, R.anim.gr_right_appear),
+                AnimationUtils.loadAnimation(context, R.anim.gr_down_appear))
+    else arrayOf(AnimationUtils.loadAnimation(context, R.anim.gr_left_disappear),
+            AnimationUtils.loadAnimation(context, R.anim.gr_top_disappear),
+            AnimationUtils.loadAnimation(context, R.anim.gr_right_disappear),
+            AnimationUtils.loadAnimation(context, R.anim.gr_down_disappear))
 }
 
 /*load animation utils*/

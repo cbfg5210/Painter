@@ -31,10 +31,10 @@ import com.ue.graffiti.util.*
 import com.ue.library.util.FileUtils
 import com.ue.library.util.IntentUtils
 import com.ue.library.util.SPUtils
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.layout_bottom_menu.*
-import kotlinx.android.synthetic.main.layout_right_menu.*
-import kotlinx.android.synthetic.main.layout_top_menu.*
+import kotlinx.android.synthetic.main.gr_activity_main.*
+import kotlinx.android.synthetic.main.gr_layout_bottom_menu.*
+import kotlinx.android.synthetic.main.gr_layout_right_menu.*
+import kotlinx.android.synthetic.main.gr_layout_top_menu.*
 
 class MainActivity : RxAppCompatActivity(), View.OnClickListener {
     private lateinit var curToolVi: View
@@ -84,14 +84,14 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.gr_activity_main)
 
         mMainPresenter = MainPresenter(this)
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
         initViews()
 
-        DialogHelper.showOnceHintDialog(this, R.string.draw_gesture_title, R.string.draw_gesture_tip, R.string.got_it, SPKeys.SHOW_DRAW_GESTURE_HINT)
+        DialogHelper.showOnceHintDialog(this, R.string.gr_draw_gesture_title, R.string.gr_draw_gesture_tip, R.string.gr_got_it, SPKeys.SHOW_DRAW_GESTURE_HINT)
     }
 
     private fun initViews() {
@@ -103,14 +103,14 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
         tvColor.setTextColor(lastColor)
         cvGraffitiView.paintColor = lastColor
 
-        whiteCanvasBgVi = mMainPresenter.initCanvasBgsPopupWindow(R.layout.popup_canvas_bgs, R.id.vgCanvasBgs, object : View.OnClickListener {
+        whiteCanvasBgVi = mMainPresenter.initCanvasBgsPopupWindow(R.layout.gr_popup_canvas_bgs, R.id.vgCanvasBgs, object : View.OnClickListener {
             override fun onClick(v: View?) {
                 updateCanvasBgAndIcons(v as ImageView)
             }
         })
 
         curCanvasBgVi = whiteCanvasBgVi
-        curPelVi = mMainPresenter.initPelsPopupWindow(R.layout.popup_pels, R.id.vgPels, cvGraffitiView, object : MainPresenter.OnPickPelListener {
+        curPelVi = mMainPresenter.initPelsPopupWindow(R.layout.gr_popup_pels, R.id.vgPels, cvGraffitiView, object : MainPresenter.OnPickPelListener {
             override fun onPelPick(v: View, pelTouch: Touch?) {
                 mMainPresenter.dismissPopupWindows()
                 updatePelBarIcons(v as ImageView)
@@ -208,7 +208,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
         closeTools()
 
         if (v.id == R.id.rbEdit) {
-            val leftAppearAnim = AnimationUtils.loadAnimation(this, R.anim.leftappear)
+            val leftAppearAnim = AnimationUtils.loadAnimation(this, R.anim.gr_left_appear)
             vgRightMenu.visibility = View.VISIBLE
             ivToggleOptions.visibility = View.VISIBLE
             vgRightMenu.startAnimation(leftAppearAnim)
@@ -341,7 +341,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
     private fun onUndoBtn(v: View) {
         val step = cvGraffitiView.popUndoStack() ?: return
 
-        cvGraffitiView.touch!!.setProcessing(true, getString(R.string.undoing))
+        cvGraffitiView.touch!!.setProcessing(true, getString(R.string.gr_undoing))
         toRedoUpdate(this, step, cvGraffitiView.getBackgroundBitmap(), cvGraffitiView.getCopyOfBackgroundBitmap(), object : OnStepListener {
             override fun onComplete() {
                 if (step is TransformPelStep) {
@@ -358,7 +358,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
 
     private fun onRedoBtn(v: View) {
         val step = cvGraffitiView.popRedoStack() ?: return
-        cvGraffitiView.touch!!.setProcessing(true, getString(R.string.redoing))
+        cvGraffitiView.touch!!.setProcessing(true, getString(R.string.gr_redoing))
         toUndoUpdate(this, step, cvGraffitiView.getBackgroundBitmap(), object : OnStepListener {
             override fun onComplete() {
                 //重绘位图
@@ -375,7 +375,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
         }
         // 触发拍照模式的“确定”、“取消”、“返键”按钮后
         if (requestCode == REQUEST_CODE_GRAPH) {
-            cvGraffitiView.touch!!.setProcessing(true, getString(R.string.loading))
+            cvGraffitiView.touch!!.setProcessing(true, getString(R.string.gr_loading))
             mMainPresenter.loadCapturePhoto()
                     .subscribe { bitmap ->
                         cvGraffitiView.touch!!.setProcessing(false, null)
@@ -385,7 +385,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
         }
         // 触发图库模式的“选择”、“返键”按钮后
         if (requestCode == REQUEST_CODE_PICTURE) {
-            cvGraffitiView.touch!!.setProcessing(true, getString(R.string.loading))
+            cvGraffitiView.touch!!.setProcessing(true, getString(R.string.gr_loading))
             mMainPresenter.loadPictureFromIntent(data, cvGraffitiView.canvasWidth, cvGraffitiView.canvasHeight)
                     .subscribe { bitmap ->
                         cvGraffitiView.touch!!.setProcessing(false, null)
@@ -411,7 +411,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
             mMainPresenter.onSaveGraffitiClicked(cvGraffitiView.savedBitmap!!, graffitiName, saveListener)
             return
         }
-        DialogHelper.showInputDialog(this, getString(R.string.input_graffiti_name), object : OnSingleResultListener {
+        DialogHelper.showInputDialog(this, getString(R.string.gr_input_graffiti_name), object : OnSingleResultListener {
             override fun onResult(result: Any) {
                 graffitiName = result as String
                 mMainPresenter.onSaveGraffitiClicked(cvGraffitiView.savedBitmap!!, graffitiName, saveListener)
@@ -450,7 +450,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
                     IntentUtils.shareImage(
                             this@MainActivity,
                             getString(R.string.app_name),
-                            getString(R.string.share_work_app_module_link, getString(R.string.app_name), getString(R.string.module_graffiti), getString(R.string.download_link)),
+                            getString(R.string.gr_share_work_app_module_link, getString(R.string.app_name), getString(R.string.gr_module_graffiti), getString(R.string.gr_download_link)),
                             path)
                 }
             })
@@ -485,7 +485,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
         }
         val selectedPel = cvGraffitiView.getSelectedPel()
         if (selectedPel == null) {
-            toast(R.string.select_pel_first, Toast.LENGTH_LONG)
+            toast(R.string.gr_select_pel_first, Toast.LENGTH_LONG)
             return
         }
         when (viewId) {
@@ -561,7 +561,7 @@ class MainActivity : RxAppCompatActivity(), View.OnClickListener {
      */
     private fun prepareToggleSwitchMenuAction(view: View): Boolean {
         if (cvGraffitiView.touch!!.isProcessing) {
-            toast(getString(R.string.task_processing))
+            toast(getString(R.string.gr_task_processing))
             return false
         }
         if (cvGraffitiView.isSensorRegistered()) {

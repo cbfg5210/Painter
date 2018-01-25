@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <array name="penShapeImages">
+    <array name="gr_penShapeImages">
         <item>@drawable/ic_line_solid</item>
         <item>@drawable/ic_line_dashed</item>
         <item>@drawable/ic_line_dotted</item>
@@ -11,32 +11,32 @@
         <item>@drawable/ic_line_mark_pen</item>
     </array>
 
-    <array name="penShapeNames">
-        <item>@string/line_solid</item>
-        <item>@string/line_dashed</item>
-        <item>@string/line_dotted</item>
-        <item>@string/line_lighting</item>
-        <item>@string/line_oval</item>
-        <item>@string/line_rect</item>
-        <item>@string/line_brush</item>
-        <item>@string/line_mark_pen</item>
+    <array name="gr_penShapeNames">
+        <item>@string/gr_line_solid</item>
+        <item>@string/gr_line_dashed</item>
+        <item>@string/gr_line_dotted</item>
+        <item>@string/gr_line_lighting</item>
+        <item>@string/gr_line_oval</item>
+        <item>@string/gr_line_rect</item>
+        <item>@string/gr_line_brush</item>
+        <item>@string/gr_line_mark_pen</item>
     </array>
 
-    <array name="penEffectImages">
+    <array name="gr_penEffectImages">
         <item>@drawable/ic_effect_solid</item>
         <item>@drawable/ic_effect_blur</item>
         <item>@drawable/ic_effect_hollow</item>
         <item>@drawable/ic_effect_relievo</item>
     </array>
 
-    <array name="penEffectNames">
-        <item>@string/effect_solid</item>
-        <item>@string/effect_blur</item>
-        <item>@string/effect_hollow</item>
-        <item>@string/effect_relievo</item>
+    <array name="gr_penEffectNames">
+        <item>@string/gr_effect_solid</item>
+        <item>@string/gr_effect_blur</item>
+        <item>@string/gr_effect_hollow</item>
+        <item>@string/gr_effect_relievo</item>
     </array>
 
-    <array name="pictureResArray">
+    <array name="gr_pictureResArray">
         <item>@drawable/pic_caihong</item>
         <item>@drawable/pic_liwu</item>
         <item>@drawable/pic_xianhua</item>
@@ -107,7 +107,7 @@
         <item>@drawable/pic_maikefeng</item>
     </array>
 
-    <array name="pictureNameArray">
+    <array name="gr_pictureNameArray">
         <item>彩虹</item>
         <item>礼物</item>
         <item>鲜花</item>

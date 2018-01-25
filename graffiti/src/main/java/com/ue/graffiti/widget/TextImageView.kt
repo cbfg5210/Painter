@@ -39,8 +39,8 @@ class TextImageView : View {
     constructor(context: Context) : this(context, null, 0)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        val ta = context.obtainStyledAttributes(attrs, R.styleable.TextImageView)
-        type = ta.getInt(R.styleable.TextImageView_type, 0)
+        val ta = context.obtainStyledAttributes(attrs, R.styleable.gr_TextImageView)
+        type = ta.getInt(R.styleable.gr_TextImageView_gr_type, 0)
         ta.recycle()
         if (type == 0) {
             //text

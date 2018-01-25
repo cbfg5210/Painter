@@ -11,9 +11,9 @@
         android:src="@drawable/bg_canvas0"/>
 
     <!--编辑按钮的菜单列表-->
-    <include layout="@layout/layout_right_menu"/>
+    <include layout="@layout/gr_layout_right_menu"/>
     <!--顶部菜单选项-->
-    <include layout="@layout/layout_top_menu"/>
+    <include layout="@layout/gr_layout_top_menu"/>
     <!--底部菜单选项-->
-    <include layout="@layout/layout_bottom_menu"/>
+    <include layout="@layout/gr_layout_bottom_menu"/>
 </FrameLayout>

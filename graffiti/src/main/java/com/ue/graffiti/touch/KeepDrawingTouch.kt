@@ -20,13 +20,13 @@ class KeepDrawingTouch(canvasView: CanvasView) : Touch(canvasView) {
         val startFlag = context.resources.getDrawable(R.drawable.img_startflag) as BitmapDrawable
         savedCanvas.drawBitmap(startFlag.bitmap, downPoint.x, downPoint.y, null)
 
-        val tip = context.getString(R.string.begin_sensor_draw, downPoint.x.toInt(), downPoint.y.toInt())
+        val tip = context.getString(R.string.gr_begin_sensor_draw, downPoint.x.toInt(), downPoint.y.toInt())
         DialogHelper.showSensorDrawingDialog(context, tip, DialogInterface.OnClickListener { _, _ ->
             keepDrawingTouchListener?.apply {
                 onDownPoint(downPoint)
                 registerKeepDrawingSensor()
             }
-            context.toast(R.string.shake_to_draw)
+            context.toast(R.string.gr_shake_to_draw)
         })
     }
 

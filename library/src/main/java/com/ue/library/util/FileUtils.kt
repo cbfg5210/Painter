@@ -15,7 +15,7 @@ object FileUtils {
 
     fun saveImageLocally(context: Context, bmp: Bitmap, path: String, workName: String, listener: OnSaveImageListener? = null) {
         PermissionUtils.checkReadWriteStoragePerms(context,
-                context.getString(R.string.save_error_no_perm),
+                context.getString(R.string.gr_save_error_no_perm),
                 object : PermissionUtils.SimplePermissionListener {
                     override fun onSucceed(requestCode: Int, grantPermissions: List<String>) {
                         goSaveImage(context, bmp, path, "$workName.png", listener)
@@ -41,9 +41,9 @@ object FileUtils {
             out = FileOutputStream(File(path, imgName))
             bmp.compress(Bitmap.CompressFormat.PNG, 100, out)
             finalPath = path + imgName
-            Toast.makeText(context, context.getString(R.string.save_to, finalPath), Toast.LENGTH_LONG).show()
+            Toast.makeText(context, context.getString(R.string.gr_save_to, finalPath), Toast.LENGTH_LONG).show()
         } catch (exp: Exception) {
-            Toast.makeText(context, context.getString(R.string.save_error_reason, exp.message), Toast.LENGTH_LONG).show()
+            Toast.makeText(context, context.getString(R.string.gr_save_error_reason, exp.message), Toast.LENGTH_LONG).show()
         } finally {
             try {
                 out?.close()

@@ -9,7 +9,7 @@
     android:button="@null"
     android:drawablePadding="@dimen/widget_size_2"
     android:gravity="center"
-    android:textColor="@color/sel_shape_text_color"
+    android:textColor="@color/gr_sel_shape_text_color"
     android:textSize="@dimen/widget_size_10"
     tools:drawableTop="@drawable/ic_line_solid"
     tools:text="test"/>

@@ -75,7 +75,7 @@ class CrossFillTouch(canvasView: CanvasView) : Touch(canvasView) {
         if (curPoint.x < MAX_WIDTH && curPoint.x > 0 && curPoint.y < MAX_HEIGHT && curPoint.y > 0) {
             // 进度对话框处理填充耗时任务
             isProcessing = true
-            showProgressDialog(context.getString(R.string.is_filling_color))
+            showProgressDialog(context.getString(R.string.gr_is_filling_color))
             // 线性填充线链表（链表元素为填充直线的起始坐标点）
             scanLinesList = LinkedList()
 

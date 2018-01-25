@@ -10,7 +10,7 @@ import com.larswerkman.holocolorpicker.ColorPicker
 import com.ue.graffiti.R
 import com.ue.graffiti.constant.SPKeys
 import com.ue.library.util.SPUtils
-import kotlinx.android.synthetic.main.dialog_color_picker.view.*
+import kotlinx.android.synthetic.main.gr_dialog_color_picker.view.*
 
 //调色板对话框
 class ColorPickerDialog : DialogFragment() {
@@ -19,7 +19,7 @@ class ColorPickerDialog : DialogFragment() {
     var colorPickerListener: OnColorPickerListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val contentView = inflater.inflate(R.layout.dialog_color_picker, null)
+        val contentView = inflater.inflate(R.layout.gr_dialog_color_picker, null)
         //找到实例对象
         picker = contentView.cpColorPicker
         //使环形取色器和拖动条建立关系

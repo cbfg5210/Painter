@@ -15,13 +15,13 @@ class PictureDialog : DialogFragment() {
     var pickPictureListener: OnPickPictureListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.dialog_picture, null)
+        val rootView = inflater.inflate(R.layout.gr_dialog_picture, null)
 
         val rvPictures = rootView as RecyclerView
         rvPictures.setHasFixedSize(true)
 
-        val pictureNameArray = resources.getStringArray(R.array.pictureNameArray)
-        val pictureResArray = context.getXmlImageArray(R.array.pictureResArray)
+        val pictureNameArray = resources.getStringArray(R.array.gr_pictureNameArray)
+        val pictureResArray = context.getXmlImageArray(R.array.gr_pictureResArray)
 
         val pictureItems = ArrayList<PictureItem>(pictureNameArray.size)
         pictureNameArray.indices.mapTo(pictureItems) { PictureItem(pictureNameArray[it], pictureResArray[it]) }

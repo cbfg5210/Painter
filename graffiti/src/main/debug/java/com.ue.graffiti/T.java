@@ -11,8 +11,8 @@ import android.view.animation.AnimationUtils;
 public class T {
     private void a(Context context){
         Animation[]a=new Animation[]{
-                AnimationUtils.loadAnimation(context, R.anim.topappear),
-                AnimationUtils.loadAnimation(context, R.anim.downappear)
+                AnimationUtils.loadAnimation(context, R.anim.gr_top_appear),
+                AnimationUtils.loadAnimation(context, R.anim.gr_down_appear)
         };
         int[]ass=new int[4];
         int b=4;

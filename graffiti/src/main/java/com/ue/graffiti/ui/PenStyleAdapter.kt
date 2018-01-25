@@ -11,8 +11,8 @@ import com.ue.graffiti.R
 import com.ue.graffiti.base.BaseViewHolder
 import com.ue.graffiti.model.PenCatTitleItem
 import com.ue.graffiti.model.PenShapeItem
-import kotlinx.android.synthetic.main.item_pen_cat_title.view.*
-import kotlinx.android.synthetic.main.item_pen_shape.view.*
+import kotlinx.android.synthetic.main.gr_item_pen_cat_title.view.*
+import kotlinx.android.synthetic.main.gr_item_pen_shape.view.*
 
 /**
  * Created by hawk on 2018/1/17.
@@ -73,7 +73,7 @@ internal class PenStyleAdapter(activity: Activity, items: MutableList<Item>?) : 
         delegateClickListener?.onClick(view, position)
     }
 
-    private class PenTitleItemDelegate(activity: Activity) : BaseAdapterDelegate<Item>(activity, R.layout.item_pen_cat_title) {
+    private class PenTitleItemDelegate(activity: Activity) : BaseAdapterDelegate<Item>(activity, R.layout.gr_item_pen_cat_title) {
 
         override fun onCreateViewHolder(itemView: View): RecyclerView.ViewHolder {
             return ViewHolder(itemView)
@@ -97,7 +97,7 @@ internal class PenStyleAdapter(activity: Activity, items: MutableList<Item>?) : 
         }
     }
 
-    private class PenItemDelegate(activity: Activity) : BaseAdapterDelegate<Item>(activity, R.layout.item_pen_shape) {
+    private class PenItemDelegate(activity: Activity) : BaseAdapterDelegate<Item>(activity, R.layout.gr_item_pen_shape) {
 
         override fun onCreateViewHolder(itemView: View): RecyclerView.ViewHolder {
             return ViewHolder(itemView)

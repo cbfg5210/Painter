@@ -134,14 +134,14 @@ class MainPresenter(private val mMainActivity: MainActivity) {
 
     fun getDrawRes(viewId: Int): Int {
         return when (viewId) {
-            R.id.ivBessel -> R.drawable.sel_pel_bessel
-            R.id.ivBrokenLine -> R.drawable.sel_pel_broken_line
-            R.id.ivFreehand -> R.drawable.sel_pel_free_hand
-            R.id.ivLine -> R.drawable.sel_pel_line
-            R.id.ivOval -> R.drawable.sel_pel_oval
-            R.id.ivPolygon -> R.drawable.sel_pel_polygon
-            R.id.ivRect -> R.drawable.sel_pel_rect
-            R.id.ivKeepDrawing -> R.drawable.sel_pel_keep_drawing
+            R.id.ivBessel -> R.drawable.gr_sel_pel_bessel
+            R.id.ivBrokenLine -> R.drawable.gr_sel_pel_broken_line
+            R.id.ivFreehand -> R.drawable.gr_sel_pel_free_hand
+            R.id.ivLine -> R.drawable.gr_sel_pel_line
+            R.id.ivOval -> R.drawable.gr_sel_pel_oval
+            R.id.ivPolygon -> R.drawable.gr_sel_pel_polygon
+            R.id.ivRect -> R.drawable.gr_sel_pel_rect
+            R.id.ivKeepDrawing -> R.drawable.gr_sel_pel_keep_drawing
             else -> 0
         }
     }
@@ -162,7 +162,7 @@ class MainPresenter(private val mMainActivity: MainActivity) {
 
     fun onSaveGraffitiClicked(savedBitmap: Bitmap, workName: String, saveListener: FileUtils.OnSaveImageListener?) {
         if (TextUtils.isEmpty(workName)) {
-            mMainActivity.toast(R.string.save_error_null)
+            mMainActivity.toast(R.string.gr_save_error_null)
             return
         }
         val path = Environment.getExternalStorageDirectory().path + Constants.PATH_GRAFFITI

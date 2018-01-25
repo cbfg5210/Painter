@@ -21,42 +21,42 @@
             android:id="@+id/ivDelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/selector_corner"
+            android:background="@drawable/gr_selector_corner"
             android:src="@drawable/btn_deletepel_normal"/>
 
         <ImageView
             android:id="@+id/ivCopy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/selector_corner"
+            android:background="@drawable/gr_selector_corner"
             android:src="@drawable/btn_copypel_normal"/>
 
         <ImageView
             android:id="@+id/ivRotate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/selector_corner"
+            android:background="@drawable/gr_selector_corner"
             android:src="@drawable/btn_rotate_normal"/>
 
         <ImageView
             android:id="@+id/ivZoomIn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/selector_corner"
+            android:background="@drawable/gr_selector_corner"
             android:src="@drawable/btn_zoom_normal"/>
 
         <ImageView
             android:id="@+id/ivZoomOut"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/selector_corner"
-            app:srcCompat="@drawable/svg_zoom_out"/>
+            android:background="@drawable/gr_selector_corner"
+            app:srcCompat="@drawable/gr_svg_zoom_out"/>
 
         <ImageView
             android:id="@+id/ivFill"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/selector_corner"
+            android:background="@drawable/gr_selector_corner"
             android:src="@drawable/btn_fillpel_normal"/>
     </LinearLayout>
 
@@ -65,5 +65,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/img_base_parent_normal"
-        android:src="@drawable/sel_expand_shrink_arrow"/>
+        android:src="@drawable/gr_sel_expand_shrink_arrow"/>
 </LinearLayout>

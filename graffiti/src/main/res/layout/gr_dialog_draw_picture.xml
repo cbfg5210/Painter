@@ -9,11 +9,10 @@
         android:id="@+id/tivCanvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textSize="@dimen/font_size_20"
-        app:type="text"/>
+        app:gr_type="image"/>
 
     <LinearLayout
-        android:id="@+id/vgDrawTextTopMenu"
+        android:id="@+id/vgTopToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/col_384252"
@@ -29,41 +28,25 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/insert_text"
+            android:text="@string/gr_insert_picture"
             android:textColor="@color/white"
-            android:textSize="@dimen/widget_size_20"/>
+            android:textSize="20sp"/>
 
         <ImageView
-            android:id="@+id/ivInsertText"
+            android:id="@+id/rbImage"
             style="@style/GraffitiButton"
             android:src="@drawable/btn_sure_normal"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/vgDrawTextBottomMenu"
+    <TextView
+        android:id="@+id/tvSelectPicture"
+        style="@style/GraffitiButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/col_384252"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/tvTextContent"
-            style="@style/GraffitiButton"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/btn_text_normal"
-            android:text="@string/content"/>
-
-        <TextView
-            android:id="@+id/tvTextColor"
-            style="@style/GraffitiButton"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/btn_colorpicker_normal"
-            android:text="@string/color"/>
-    </LinearLayout>
+        android:drawableTop="@drawable/btn_picture_normal"
+        android:gravity="center"
+        android:text="@string/gr_gallery"/>
 
 </FrameLayout>

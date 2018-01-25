@@ -10,5 +10,5 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/widget_size_30"
         android:gravity="center"
-        android:text="@string/dont_show_next_time"/>
+        android:text="@string/gr_dont_show_next_time"/>
 </FrameLayout>

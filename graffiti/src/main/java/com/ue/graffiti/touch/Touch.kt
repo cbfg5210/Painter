@@ -128,7 +128,7 @@ open class Touch(canvasView: CanvasView?) : View.OnTouchListener {
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
         if (isProcessing) {
-            showProgressDialog(v.context.getString(R.string.is_processing))
+            showProgressDialog(v.context.getString(R.string.gr_is_processing))
             return true
         }
         //非传感器模式才响应屏幕

@@ -16,7 +16,7 @@ import com.ue.graffiti.model.Pel
 import com.ue.graffiti.util.loadDrawTextImageAnimations
 import com.ue.graffiti.widget.CanvasView
 import com.ue.graffiti.widget.TextImageView
-import kotlinx.android.synthetic.main.dialog_draw_picture.view.*
+import kotlinx.android.synthetic.main.gr_dialog_draw_picture.view.*
 
 /**
  * Created by hawk on 2018/1/15.
@@ -44,7 +44,7 @@ class DrawPictureDialog : DialogFragment(), View.OnClickListener {
     private var hideAnimations: Array<Animation>? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val contentView = inflater.inflate(R.layout.dialog_draw_picture, null)
+        val contentView = inflater.inflate(R.layout.gr_dialog_draw_picture, null)
         tivCanvas = contentView.tivCanvas
         tivCanvas.barSensorListener = object : BarSensorListener {
             override fun isTopToolbarVisible(): Boolean {
@@ -163,7 +163,7 @@ class DrawPictureDialog : DialogFragment(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        DialogHelper.showOnceHintDialog(context, R.string.image_gesture_title, R.string.image_gesture_tip, R.string.got_it, SPKeys.SHOW_IMAGE_GESTURE_HINT)
+        DialogHelper.showOnceHintDialog(context, R.string.gr_image_gesture_title, R.string.gr_image_gesture_tip, R.string.gr_got_it, SPKeys.SHOW_IMAGE_GESTURE_HINT)
     }
 
     interface OnDrawPictureListener {

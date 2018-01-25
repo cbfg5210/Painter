@@ -17,8 +17,8 @@ import com.ue.graffiti.ui.DrawTextDialog
 import com.ue.graffiti.ui.PenDialog
 import com.ue.graffiti.widget.CanvasView
 import com.ue.library.util.SPUtils
-import kotlinx.android.synthetic.main.layout_check_box.view.*
-import kotlinx.android.synthetic.main.layout_input.view.*
+import kotlinx.android.synthetic.main.gr_layout_check_box.view.*
+import kotlinx.android.synthetic.main.gr_layout_input.view.*
 
 /**
  * Created by hawk on 2018/1/17.
@@ -82,11 +82,11 @@ object DialogHelper {
 
     fun showExitDialog(activity: Activity, saveListener: View.OnClickListener) {
         AlertDialog.Builder(activity)
-                .setTitle(R.string.exit)
-                .setMessage(R.string.exit_tip)
-                .setPositiveButton(R.string.cancel, null)
-                .setNegativeButton(R.string.exit_save) { _, _ -> saveListener.onClick(null) }
-                .setNeutralButton(R.string.exit_not_save) { _, _ -> activity.finish() }
+                .setTitle(R.string.gr_exit)
+                .setMessage(R.string.gr_exit_tip)
+                .setPositiveButton(R.string.gr_cancel, null)
+                .setNegativeButton(R.string.gr_exit_save) { _, _ -> saveListener.onClick(null) }
+                .setNeutralButton(R.string.gr_exit_not_save) { _, _ -> activity.finish() }
                 .create()
                 .show()
     }
@@ -96,24 +96,23 @@ object DialogHelper {
     }
 
     fun showInputDialog(context: Context, tip: String, defText: String?, singleResultListener: OnSingleResultListener) {
-        val contentView = LayoutInflater.from(context).inflate(R.layout.layout_input, null)
+        val contentView = LayoutInflater.from(context).inflate(R.layout.gr_layout_input, null)
         val editTxt = contentView.etInput
         editTxt.setText(defText)
         AlertDialog.Builder(context)
                 .setTitle(tip)
                 .setView(contentView)
-                .setPositiveButton(R.string.ok) { _, _ -> singleResultListener.onResult(editTxt.text.toString()) }
-                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.gr_ok) { _, _ -> singleResultListener.onResult(editTxt.text.toString()) }
+                .setNegativeButton(R.string.gr_cancel, null)
                 .create()
                 .show()
     }
 
     fun showClearDialog(context: Context, okListener: DialogInterface.OnClickListener) {
         AlertDialog.Builder(context)
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .setMessage(R.string.ensure_clear)
-                .setPositiveButton(R.string.ok, okListener)
-                .setNegativeButton(R.string.cancel, null)
+                .setMessage(R.string.gr_ensure_clear)
+                .setPositiveButton(R.string.gr_ok, okListener)
+                .setNegativeButton(R.string.gr_cancel, null)
                 .create()
                 .show()
     }
@@ -122,8 +121,8 @@ object DialogHelper {
         //实例化确认对话框
         AlertDialog.Builder(context)
                 .setMessage(tip)
-                .setPositiveButton(R.string.ok, okListener)
-                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.gr_ok, okListener)
+                .setNegativeButton(R.string.gr_cancel, null)
                 .create()
                 .show()
     }
@@ -133,7 +132,7 @@ object DialogHelper {
         if (!showHint) {
             return
         }
-        val checkBoxLayout = LayoutInflater.from(context).inflate(R.layout.layout_check_box, null)
+        val checkBoxLayout = LayoutInflater.from(context).inflate(R.layout.gr_layout_check_box, null)
         AlertDialog.Builder(context)
                 .setTitle(titleRes)
                 .setMessage(hintRes)

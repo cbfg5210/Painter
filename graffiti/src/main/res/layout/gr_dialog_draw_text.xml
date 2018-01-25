@@ -9,10 +9,11 @@
         android:id="@+id/tivCanvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:type="image"/>
+        android:textSize="@dimen/font_size_20"
+        app:gr_type="text"/>
 
     <LinearLayout
-        android:id="@+id/vgTopToolbar"
+        android:id="@+id/vgDrawTextTopMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/col_384252"
@@ -28,25 +29,41 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/insert_picture"
+            android:text="@string/gr_insert_text"
             android:textColor="@color/white"
-            android:textSize="20sp"/>
+            android:textSize="@dimen/widget_size_20"/>
 
         <ImageView
-            android:id="@+id/rbImage"
+            android:id="@+id/ivInsertText"
             style="@style/GraffitiButton"
             android:src="@drawable/btn_sure_normal"/>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvSelectPicture"
-        style="@style/GraffitiButton"
+    <LinearLayout
+        android:id="@+id/vgDrawTextBottomMenu"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:drawableTop="@drawable/btn_picture_normal"
-        android:gravity="center"
-        android:text="@string/gallery"/>
+        android:background="@color/col_384252"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvTextContent"
+            style="@style/GraffitiButton"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/btn_text_normal"
+            android:text="@string/gr_content"/>
+
+        <TextView
+            android:id="@+id/tvTextColor"
+            style="@style/GraffitiButton"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/btn_colorpicker_normal"
+            android:text="@string/gr_color"/>
+    </LinearLayout>
 
 </FrameLayout>
