@@ -20,9 +20,7 @@ class BgAdapter(context: Context, private val bgs: IntArray) : RecyclerView.Adap
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.au_item_bg, parent, false)
         val holder = ViewHolder(itemView)
-        itemView.setOnClickListener { v ->
-            itemListener?.onItemClick(null, v, bgs[holder.adapterPosition], 0)
-        }
+        itemView.setOnClickListener { itemListener?.onItemClick(null, it, bgs[holder.adapterPosition], 0) }
         return holder
     }
 
@@ -35,6 +33,6 @@ class BgAdapter(context: Context, private val bgs: IntArray) : RecyclerView.Adap
     }
 
     class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val sivBg = itemView.sivBg!!
+        val sivBg = itemView.sivBg
     }
 }

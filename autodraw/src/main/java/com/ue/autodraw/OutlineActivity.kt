@@ -12,7 +12,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.RadioGroup
-import android.widget.Toast
 import com.ue.library.event.HomeWatcher
 import com.ue.library.event.SimplePermissionListener
 import com.ue.library.util.*
@@ -104,7 +103,7 @@ class OutlineActivity : AppCompatActivity(),
                 if (recordVideoHelper != null && recordVideoHelper!!.isRecording) {
                     recordVideoHelper!!.cancelRecording()
                 } else {
-                    Toast.makeText(this@OutlineActivity, R.string.au_cancel_draw, Toast.LENGTH_SHORT).show()
+                    toast(R.string.au_cancel_draw)
                 }
             }
 
@@ -147,7 +146,7 @@ class OutlineActivity : AppCompatActivity(),
     private fun onShareDrawVideoClick() {
         vgShare.visibility = View.GONE
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            Toast.makeText(this, R.string.au_cannot_share_video_version, Toast.LENGTH_SHORT).show()
+            toast( R.string.au_cannot_share_video_version)
             return
         }
         readyThenDraw = false
@@ -162,7 +161,7 @@ class OutlineActivity : AppCompatActivity(),
         vgShare.visibility = View.GONE
         readyThenDraw = true
         if (!advOutline.isCanSave) {
-            Toast.makeText(this, R.string.au_no_outline_to_save, Toast.LENGTH_SHORT).show()
+            toast( R.string.au_no_outline_to_save)
             return
         }
         advOutline.saveOutlinePicture(object : FileUtils.OnSaveImageListener {
@@ -189,7 +188,7 @@ class OutlineActivity : AppCompatActivity(),
             advOutline.stopDrawing()
             if (recordVideoHelper != null && recordVideoHelper!!.isRecording) {
                 recordVideoHelper!!.cancelRecording()
-                Toast.makeText(this, R.string.au_cancel_record_video, Toast.LENGTH_SHORT).show()
+                toast( R.string.au_cancel_record_video)
             }
             return
         }
@@ -220,11 +219,11 @@ class OutlineActivity : AppCompatActivity(),
             }
 
             override fun onCancel() {
-                Toast.makeText(this@OutlineActivity, R.string.au_cancel_record_video, Toast.LENGTH_SHORT).show()
+                toast( R.string.au_cancel_record_video)
             }
 
             override fun onComplete(videoPath: String) {
-                Toast.makeText(this@OutlineActivity, R.string.au_complete_recording, Toast.LENGTH_SHORT).show()
+                toast( R.string.au_complete_recording)
                 ShareVideoDialog.newInstance(videoPath).show(supportFragmentManager, "")
             }
         }
