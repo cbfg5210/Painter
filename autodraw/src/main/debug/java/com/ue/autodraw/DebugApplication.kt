@@ -1,4 +1,4 @@
-package autodraw
+package com.ue.autodraw
 
 import android.app.Application
 import android.support.v7.app.AppCompatDelegate

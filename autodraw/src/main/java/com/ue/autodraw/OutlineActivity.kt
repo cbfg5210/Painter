@@ -35,8 +35,8 @@ class OutlineActivity : AppCompatActivity(),
     private var disposable: Disposable? = null
     private lateinit var loadingDialog: LoadingDialog
     private var recordVideoHelper: RecordVideoHelper? = null
-
-    private var readyThenDraw = true//when ready,true:draw,false:record
+    //when ready,true:draw,false:record
+    private var readyThenDraw = true
     private lateinit var homeWatcher: HomeWatcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +44,6 @@ class OutlineActivity : AppCompatActivity(),
         setContentView(R.layout.au_activity_outline)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = getString(R.string.au_module_name)
 
         rgTabs.check(R.id.rbTabObject)
 
@@ -53,20 +52,18 @@ class OutlineActivity : AppCompatActivity(),
 
         loadingDialog = LoadingDialog.newInstance()
 
-        val outlineObjPath = SPUtils.getString(SP_OUTLINE_OBJ_PATH, "")
-        if (TextUtils.isEmpty(outlineObjPath)) {
-            loadPhoto(R.mipmap.test)
-        } else {
-            loadPhoto(outlineObjPath!!)
-        }
+        val outlineObjPath = SPUtils.getString(SP_OUTLINE_OBJ_PATH)
+        if (TextUtils.isEmpty(outlineObjPath)) loadPhoto(R.mipmap.test)
+        else loadPhoto(outlineObjPath)
 
-        homeWatcher = HomeWatcher(this)
-        homeWatcher.homeListener = object : HomeWatcher.OnHomePressedListener {
-            override fun onHomePressed() {
-                advOutline.stopDrawing()
+        homeWatcher = HomeWatcher(this).apply {
+            homeListener = object : HomeWatcher.OnHomePressedListener {
+                override fun onHomePressed() {
+                    advOutline.stopDrawing()
+                }
             }
+            startWatch()
         }
-        homeWatcher.startWatch()
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -100,11 +97,14 @@ class OutlineActivity : AppCompatActivity(),
             }
 
             override fun onStop() {
-                if (recordVideoHelper != null && recordVideoHelper!!.isRecording) {
-                    recordVideoHelper!!.cancelRecording()
-                } else {
-                    toast(R.string.au_cancel_draw)
+                var goOn = true
+                recordVideoHelper?.apply {
+                    if (isRecording) {
+                        goOn = false
+                        cancelRecording()
+                    }
                 }
+                if (goOn) toast(R.string.au_cancel_draw)
             }
 
             override fun onComplete() {
@@ -146,7 +146,7 @@ class OutlineActivity : AppCompatActivity(),
     private fun onShareDrawVideoClick() {
         vgShare.visibility = View.GONE
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            toast( R.string.au_cannot_share_video_version)
+            toast(R.string.au_cannot_share_video_version)
             return
         }
         readyThenDraw = false
@@ -161,7 +161,7 @@ class OutlineActivity : AppCompatActivity(),
         vgShare.visibility = View.GONE
         readyThenDraw = true
         if (!advOutline.isCanSave) {
-            toast( R.string.au_no_outline_to_save)
+            toast(R.string.au_no_outline_to_save)
             return
         }
         advOutline.saveOutlinePicture(object : FileUtils.OnSaveImageListener {
@@ -186,9 +186,11 @@ class OutlineActivity : AppCompatActivity(),
         }
         if (advOutline.isDrawing) {
             advOutline.stopDrawing()
-            if (recordVideoHelper != null && recordVideoHelper!!.isRecording) {
-                recordVideoHelper!!.cancelRecording()
-                toast( R.string.au_cancel_record_video)
+            recordVideoHelper?.apply {
+                if (isRecording) {
+                    cancelRecording()
+                    toast(R.string.au_cancel_record_video)
+                }
             }
             return
         }
@@ -212,19 +214,20 @@ class OutlineActivity : AppCompatActivity(),
     }
 
     private fun initRecordVideoHelper() {
-        recordVideoHelper = RecordVideoHelper(this)
-        recordVideoHelper!!.recordVideoListener = object : RecordVideoHelper.RecordVideoListener {
-            override fun onStart() {
-                advOutline.startDrawing()
-            }
+        recordVideoHelper = RecordVideoHelper(this).apply {
+            recordVideoListener = object : RecordVideoHelper.RecordVideoListener {
+                override fun onStart() {
+                    advOutline.startDrawing()
+                }
 
-            override fun onCancel() {
-                toast( R.string.au_cancel_record_video)
-            }
+                override fun onCancel() {
+                    toast(R.string.au_cancel_record_video)
+                }
 
-            override fun onComplete(videoPath: String) {
-                toast( R.string.au_complete_recording)
-                ShareVideoDialog.newInstance(videoPath).show(supportFragmentManager, "")
+                override fun onComplete(videoPath: String) {
+                    toast(R.string.au_complete_recording)
+                    ShareVideoDialog.newInstance(videoPath).show(supportFragmentManager, "")
+                }
             }
         }
     }
@@ -236,10 +239,9 @@ class OutlineActivity : AppCompatActivity(),
     }
 
     override fun onNumberChanged(view: View, number: Int) {
-        if (view.id == R.id.nsLineThickness) {
-            advOutline.setLineThickness(number)
-        } else {
-            advOutline.setDelaySpeed(number)
+        advOutline.apply {
+            if (view.id == R.id.nsLineThickness) setLineThickness(number)
+            else setDelaySpeed(number)
         }
     }
 
@@ -249,7 +251,8 @@ class OutlineActivity : AppCompatActivity(),
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        val itemId = item.itemId
+        when (itemId) {
             android.R.id.home -> onBackPressed()
             R.id.actionSettings -> {
                 advOutline.stopDrawing()

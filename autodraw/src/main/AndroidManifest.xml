@@ -6,6 +6,7 @@
         <activity
             android:name=".OutlineActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:label="@string/au_module_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
     </application>
