@@ -202,7 +202,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
                 object : SimplePermissionListener() {
                     override fun onSucceed(requestCode: Int, grantPermissions: MutableList<String>) {
                         val path = "${Environment.getExternalStorageDirectory().path}${Constants.PATH_OUTLINE}"
-                        FileUtils.saveImageLocally(context, mTmpBm!!, path, "$bitmapName.png", saveListener, showToast)
+                        FileUtils.saveImageLocally(context, mTmpBm!!, path, bitmapName, saveListener, showToast)
                     }
                 })
     }
