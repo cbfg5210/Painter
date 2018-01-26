@@ -39,7 +39,6 @@ dependencies {
 
     implementation deps.kotlinJre
     implementation deps.support.app_compat
-    implementation deps.support.constraintLayout
     implementation deps.support.recyclerview
 
     implementation project(':library')
@@ -51,4 +50,8 @@ dependencies {
     }
 
     implementation 'com.youth.banner:banner:1.4.10'
+    implementation deps.rxjava2
+    implementation deps.rxAndroid
+    implementation deps.rxLifecycle.lib
+    implementation deps.rxLifecycle.components
 }

@@ -9,7 +9,6 @@ import android.util.AttributeSet
 import com.ue.coloring.constant.SPKeys
 import com.ue.coloring.event.OnDrawLineListener
 import com.ue.coloring.util.SizedStack
-import com.ue.library.util.RxJavaUtils
 import com.ue.library.util.SPUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe

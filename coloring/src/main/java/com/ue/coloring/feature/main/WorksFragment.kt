@@ -13,7 +13,6 @@ import com.ue.fingercoloring.R
 import com.ue.coloring.model.LocalWork
 import com.ue.coloring.util.FileUtils
 import com.ue.coloring.widget.TimeLineDecoration
-import com.ue.library.util.RxJavaUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers

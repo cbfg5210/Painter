@@ -19,7 +19,7 @@ import com.ue.graffiti.model.PenCatTitleItem
 import com.ue.graffiti.model.PenShapeItem
 import com.ue.graffiti.util.getPaintEffectByImage
 import com.ue.graffiti.util.getPaintShapeByImage
-import com.ue.graffiti.util.getXmlImageArray
+import com.ue.library.util.getXmlImageArray
 import com.ue.graffiti.widget.PenEffectView
 import com.ue.library.util.SPUtils
 import kotlinx.android.synthetic.main.gr_dialog_pen.view.*

@@ -1,15 +1,12 @@
 package com.ue.painter
 
-import android.content.Intent
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.ue.autodraw.AutoDrawActivity
-import com.ue.coloring.feature.main.MainListActivity
-import com.ue.graffiti.ui.GraffitiActivity
 import com.ue.library.util.PicassoUtils
+import com.ue.painter.model.ModuleItem
 import kotlinx.android.synthetic.main.item_module.view.*
 
 /**
@@ -24,10 +21,10 @@ class ModuleAdapter() : RecyclerView.Adapter<ModuleAdapter.ViewHolder>() {
     }
 
     private val modules = arrayOf(
-            Module(OUTLINE, R.mipmap.ic_launcher, "aa", "aaaaa"),
-            Module(COLORING, R.mipmap.ic_launcher, "bb", "aaaaa"),
-            Module(GRAFFITI, R.mipmap.ic_launcher, "cc", "aaaaa"),
-            Module(PIXEL, R.mipmap.ic_launcher, "dd", "aaaaa"))
+            ModuleItem(OUTLINE, R.mipmap.ic_launcher, "aa", "aaaaa"),
+            ModuleItem(COLORING, R.mipmap.ic_launcher, "bb", "aaaaa"),
+            ModuleItem(GRAFFITI, R.mipmap.ic_launcher, "cc", "aaaaa"),
+            ModuleItem(PIXEL, R.mipmap.ic_launcher, "dd", "aaaaa"))
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_module, parent, false)
@@ -35,10 +32,10 @@ class ModuleAdapter() : RecyclerView.Adapter<ModuleAdapter.ViewHolder>() {
         itemView.setOnClickListener({ v ->
             val flag = modules[holder.adapterPosition].flag
             when (flag) {
-                OUTLINE -> v.context.startActivity(Intent(parent.context, AutoDrawActivity::class.java))
-                COLORING -> v.context.startActivity(Intent(parent.context, MainListActivity::class.java))
-                GRAFFITI -> v.context.startActivity(Intent(parent.context, GraffitiActivity::class.java))
-                PIXEL -> Intent()
+//                OUTLINE -> v.context.startActivity(Intent(parent.context, AutoDrawActivity::class.java))
+//                COLORING -> v.context.startActivity(Intent(parent.context, MainListActivity::class.java))
+//                GRAFFITI -> v.context.startActivity(Intent(parent.context, GraffitiActivity::class.java))
+//                PIXEL -> Intent()
             }
         })
         return holder
@@ -58,7 +55,7 @@ class ModuleAdapter() : RecyclerView.Adapter<ModuleAdapter.ViewHolder>() {
         private val tvModuleName = itemView.tvModuleName!!
         private val tvModuleSlogan = itemView.tvModuleSlogan!!
 
-        fun update(module: Module) {
+        fun update(module: ModuleItem) {
             PicassoUtils.displayImage(itemView.context, ivModuleImage, module.image)
             tvModuleName.text = module.name
             tvModuleSlogan.text = module.slogan

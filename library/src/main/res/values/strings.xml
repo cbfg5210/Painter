@@ -8,4 +8,8 @@
     <string name="save_error_reason">保存出错：%s</string>
     <string name="save_to">图片已保存到：%s</string>
     <string name="save_error_no_perm">保存失败：请先开启外部存储权限。</string>
+    <string name="module_coloring">指尖填图</string>
+    <string name="module_outline">轮廓临摹</string>
+    <string name="module_graffiti">指尖涂鸦</string>
+    <string name="module_pixel">像素画</string>
 </resources>

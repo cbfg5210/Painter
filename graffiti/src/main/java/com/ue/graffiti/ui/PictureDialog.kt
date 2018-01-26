@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.ue.graffiti.R
 import com.ue.graffiti.model.PictureItem
-import com.ue.graffiti.util.getXmlImageArray
+import com.ue.library.util.getXmlImageArray
 import java.util.*
 
 class PictureDialog : DialogFragment() {

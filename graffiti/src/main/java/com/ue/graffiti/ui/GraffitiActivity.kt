@@ -31,6 +31,7 @@ import com.ue.graffiti.util.*
 import com.ue.library.util.FileUtils
 import com.ue.library.util.IntentUtils
 import com.ue.library.util.SPUtils
+import com.ue.library.util.toast
 import kotlinx.android.synthetic.main.gr_activity_graffiti.*
 import kotlinx.android.synthetic.main.gr_layout_bottom_menu.*
 import kotlinx.android.synthetic.main.gr_layout_right_menu.*

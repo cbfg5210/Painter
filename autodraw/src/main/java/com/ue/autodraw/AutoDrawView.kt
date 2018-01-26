@@ -10,7 +10,6 @@ import com.ue.library.constant.Constants
 import com.ue.library.util.BitmapUtils
 import com.ue.library.util.FileUtils
 import com.ue.library.util.PermissionUtils
-import com.ue.library.util.RxJavaUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -208,7 +207,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
                 context.getString(R.string.au_no_read_storage_perm),
                 object : PermissionUtils.SimplePermissionListener {
                     override fun onSucceed(requestCode: Int, grantPermissions: List<String>) {
-                        val path = Environment.getExternalStorageDirectory().getPath() + Constants.PATH_AUTO_DRAW
+                        val path = Environment.getExternalStorageDirectory().getPath() + Constants.PATH_OUTLINE
                         FileUtils.saveImageLocally(context, mTmpBm!!, path, "$bitmapName.png", saveListener)
                     }
                 })

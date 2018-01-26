@@ -4,7 +4,7 @@ import android.graphics.*
 import android.graphics.Bitmap.Config
 import com.ue.graffiti.R
 import com.ue.graffiti.model.CrossFillStep
-import com.ue.graffiti.util.bindUtilDestroy
+import com.ue.library.util.bindUtilDestroy
 import com.ue.graffiti.util.reprintFilledAreas
 import com.ue.graffiti.widget.CanvasView
 import io.reactivex.Observable

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Painter</string>
+    <string name="recent_works_display">最近作品展示</string>
 </resources>

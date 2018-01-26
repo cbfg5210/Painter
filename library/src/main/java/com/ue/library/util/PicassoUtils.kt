@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
-
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import com.ue.library.event.SimpleTarget
@@ -16,11 +15,11 @@ import com.ue.library.event.SimpleTarget
 
 object PicassoUtils {
 
-    fun displayImage(context: Context, iv: ImageView, imageUrl: Any) {
-        if (imageUrl is Int) {
-            Picasso.with(context).load(imageUrl).into(iv)
-        } else if (imageUrl is String) {
-            Picasso.with(context).load(imageUrl).into(iv)
+    fun displayImage(context: Context, iv: ImageView, image: Any) {
+        if (image is Int) {
+            Picasso.with(context).load(image).into(iv)
+        } else if (image is String) {
+            Picasso.with(context).load(image).into(iv)
         }
     }
 

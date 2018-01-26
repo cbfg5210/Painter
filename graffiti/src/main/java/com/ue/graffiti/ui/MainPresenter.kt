@@ -19,7 +19,7 @@ import com.trello.rxlifecycle2.android.ActivityEvent
 import com.ue.graffiti.R
 import com.ue.graffiti.touch.*
 import com.ue.graffiti.util.loadToggleMenuAnimations
-import com.ue.graffiti.util.toast
+import com.ue.library.util.toast
 import com.ue.graffiti.widget.CanvasView
 import com.ue.library.constant.Constants
 import com.ue.library.util.FileUtils

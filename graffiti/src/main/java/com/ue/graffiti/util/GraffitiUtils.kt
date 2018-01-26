@@ -9,6 +9,7 @@ import com.ue.graffiti.constant.DrawPelFlags
 import com.ue.graffiti.event.OnStepListener
 import com.ue.graffiti.model.*
 import com.ue.graffiti.touch.CrossFillTouch
+import com.ue.library.util.bindUtilDestroy
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers

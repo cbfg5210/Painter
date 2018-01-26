@@ -8,15 +8,30 @@
     android:orientation="vertical"
     tools:context="com.ue.painter.MainActivity">
 
-    <com.youth.banner.Banner
-        android:id="@+id/banner"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/widget_size_200"/>
+        android:layout_height="wrap_content">
+
+        <com.youth.banner.Banner
+            android:id="@+id/banner"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/widget_size_200"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/col_44000000"
+            android:padding="@dimen/widget_size_5"
+            android:text="@string/recent_works_display"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_size_12"/>
+    </FrameLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvModules"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/widget_size_5"
         android:orientation="vertical"
         app:layoutManager="android.support.v7.widget.GridLayoutManager"
         app:spanCount="2"

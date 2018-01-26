@@ -44,4 +44,6 @@ dependencies {
     implementation deps.gson
     implementation deps.andPermission
     implementation deps.spinKit
+    implementation deps.rxLifecycle.lib
+    implementation deps.rxLifecycle.components
 }

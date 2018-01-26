@@ -12,7 +12,6 @@ import com.ue.coloring.event.OnAddWordsSuccessListener
 import com.ue.coloring.event.OnChangeBorderListener
 import com.ue.coloring.widget.ColorPickerSeekBar
 import com.ue.fingercoloring.R
-import com.ue.library.util.DensityUtils
 import com.ue.library.util.SPUtils
 import kotlinx.android.synthetic.main.co_layout_check_box.view.*
 import kotlinx.android.synthetic.main.co_view_addborder.view.*

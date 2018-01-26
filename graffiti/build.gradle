@@ -66,6 +66,4 @@ dependencies {
     implementation deps.rxjava2
     implementation deps.rxAndroid
     implementation deps.recyclerAdapterDelegate
-    implementation deps.rxLifecycle.lib
-    implementation deps.rxLifecycle.components
 }

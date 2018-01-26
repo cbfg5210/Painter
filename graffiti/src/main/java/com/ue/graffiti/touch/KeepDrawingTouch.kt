@@ -5,7 +5,7 @@ import android.graphics.PointF
 import android.graphics.drawable.BitmapDrawable
 import com.ue.graffiti.R
 import com.ue.graffiti.helper.DialogHelper
-import com.ue.graffiti.util.toast
+import com.ue.library.util.toast
 import com.ue.graffiti.widget.CanvasView
 
 class KeepDrawingTouch(canvasView: CanvasView) : Touch(canvasView) {

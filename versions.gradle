@@ -35,6 +35,7 @@ versions.photoview="2.0.0"
 versions.myPhotoview = "1.0.2"
 versions.dashedCircularProgress = "1.0@aar"
 versions.spinKit="1.1.0"
+versions.discreteScrollView="1.3.2"
 
 
 def deps = [:]
@@ -104,6 +105,7 @@ deps.photoview="com.github.chrisbanes:PhotoView:$versions.photoview"
 deps.myPhotoview = "com.github.cbfg5210:PhotoView:$versions.myPhotoview"
 deps.dashedCircularProgress = "com.github.glomadrian:$versions.dashedCircularProgress"
 deps.spinKit="com.github.ybq:Android-SpinKit:$versions.spinKit"
+deps.discreteScrollView="com.yarolegovich:discrete-scrollview:$versions.discreteScrollView"
 
 ext.deps = deps
 
