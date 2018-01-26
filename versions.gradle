@@ -14,7 +14,7 @@ versions.picasso = "2.5.2"
 versions.gson = "2.8.2"
 versions.recyclerAdapterDelegate = "0.8"
 versions.androidGradlePlugin = "3.0.1"
-versions.kotlin = "1.2.21"
+versions.kotlin = "1.2.10"
 versions.androidMavenPlugin = "1.5"
 versions.butterknife = "8.5.1"
 versions.eventbus = "3.0.0"
@@ -31,11 +31,12 @@ versions.easySwipeMenuLayout = "1.1.2"
 versions.oneDrawable = "1.1.0"
 versions.smartMenu = "v0.1"
 versions.flexbox = "0.3.1"
-versions.photoview="2.0.0"
+versions.photoview = "2.0.0"
 versions.myPhotoview = "1.0.2"
 versions.dashedCircularProgress = "1.0@aar"
-versions.spinKit="1.1.0"
-versions.discreteScrollView="1.3.2"
+versions.spinKit = "1.1.0"
+versions.discreteScrollView = "1.3.2"
+versions.banner = "1.4.10"
 
 
 def deps = [:]
@@ -48,7 +49,7 @@ support.cardview = "com.android.support:cardview-v7:$versions.support"
 support.design = "com.android.support:design:$versions.support"
 support.v4 = "com.android.support:support-v4:$versions.support"
 support.constraintLayout = "com.android.support.constraint:constraint-layout:$versions.constraintLayout"
-support.core="com.android.support:support-core-utils:$versions.support"
+support.core = "com.android.support:support-core-utils:$versions.support"
 deps.support = support
 
 def room = [:]
@@ -83,8 +84,8 @@ deps.gson = "com.google.code.gson:gson:$versions.gson"
 deps.recyclerAdapterDelegate = "com.github.cbfg5210:RecyclerAdapterDelegate:$versions.recyclerAdapterDelegate"
 deps.androidGradlePlugin = "com.android.tools.build:gradle:$versions.androidGradlePlugin"
 //kotlin
-deps.kotlinGradlePlugin="org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
-deps.kotlinJre="org.jetbrains.kotlin:kotlin-stdlib-jre7:$versions.kotlin"
+deps.kotlinGradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+deps.kotlinJre = "org.jetbrains.kotlin:kotlin-stdlib-jre7:$versions.kotlin"
 //
 deps.androidMavenPlugin = "com.github.dcendents:android-maven-gradle-plugin:$versions.androidMavenPlugin"
 deps.eventbus = "org.greenrobot:eventbus:$versions.eventbus"
@@ -101,11 +102,12 @@ deps.transitionsEverywhere = "com.andkulikov:transitionseverywhere:$versions.tra
 deps.easySwipeMenuLayout = "com.github.anzaizai:EasySwipeMenuLayout:$versions.easySwipeMenuLayout"
 deps.smartMenu = "com.github.cbfg5210:SmartMenu:$versions.smartMenu"
 deps.flexbox = "com.google.android:flexbox:$versions.flexbox"
-deps.photoview="com.github.chrisbanes:PhotoView:$versions.photoview"
+deps.photoview = "com.github.chrisbanes:PhotoView:$versions.photoview"
 deps.myPhotoview = "com.github.cbfg5210:PhotoView:$versions.myPhotoview"
 deps.dashedCircularProgress = "com.github.glomadrian:$versions.dashedCircularProgress"
-deps.spinKit="com.github.ybq:Android-SpinKit:$versions.spinKit"
-deps.discreteScrollView="com.yarolegovich:discrete-scrollview:$versions.discreteScrollView"
+deps.spinKit = "com.github.ybq:Android-SpinKit:$versions.spinKit"
+deps.discreteScrollView = "com.yarolegovich:discrete-scrollview:$versions.discreteScrollView"
+deps.banner = "com.youth.banner:banner:$versions.banner"
 
 ext.deps = deps
 

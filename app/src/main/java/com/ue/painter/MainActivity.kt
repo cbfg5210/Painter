@@ -16,25 +16,28 @@ class MainActivity : RxAppCompatActivity() {
 
         rvModules.setHasFixedSize(true)
         rvModules.adapter = ModuleAdapter(this)
+        //banner,not display if not start()
+        banner.setImages(arrayListOf(R.mipmap.ic_launcher))
+                .setBannerTitles(arrayListOf(getString(R.string.no_works_display)))
+                .setImageLoader(PicassoImageLoader())
+                .setBannerStyle(BannerConfig.NUM_INDICATOR_TITLE)
+                .start()
 
         Work.get()
-                .getRecentWorks(this)
-                .subscribe { works ->
-                    val images = ArrayList<Any>()
-                    val titles = ArrayList<String>()
-                    works.apply {
-                        if (isEmpty()) add(WorkItem(getString(R.string.no_works_display), R.mipmap.ic_launcher))
-                        forEach {
-                            titles.add(it.name)
-                            images.add(it.path)
+                .getRecentWorks(this, object : Work.OnFetchWorksListener {
+                    override fun onWorksFetched(works: ArrayList<WorkItem>) {
+                        if (works.isEmpty()) return
+
+                        val images = ArrayList<Any>()
+                        val titles = ArrayList<String>()
+                        works.apply {
+                            forEach {
+                                titles.add(it.name)
+                                images.add(it.path)
+                            }
                         }
+                        banner.update(images, titles)
                     }
-                    //默认是CIRCLE_INDICATOR
-                    banner.setImages(images)
-                            .setBannerTitles(titles)
-                            .setImageLoader(PicassoImageLoader())
-                            .setBannerStyle(BannerConfig.NUM_INDICATOR_TITLE)
-                            .start()
-                }
+                })
     }
 }
