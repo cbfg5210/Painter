@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <array name="au_bgs">
+        <item>@drawable/fs0</item>
+        <item>@drawable/fs1</item>
+        <item>@drawable/fs2</item>
+        <item>@drawable/fs3</item>
+        <item>@drawable/fs4</item>
+        <item>@drawable/fs5</item>
+        <item>@drawable/fs6</item>
+        <item>@drawable/fs7</item>
+        <item>@drawable/fs8</item>
+        <item>@drawable/fs9</item>
+        <item>@drawable/fs10</item>
+    </array>
+    <array name="au_pens">
+        <item>@drawable/au_svg_pencil</item>
+        <item>@drawable/au_svg_fountain_pen</item>
+        <item>@drawable/au_svg_blush</item>
+        <item>@drawable/au_svg_feather</item>
+    </array>
     <array name="au_paintColorOptions">
         <item>@color/black</item>
         <item>@color/col_f44336</item>

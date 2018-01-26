@@ -115,33 +115,23 @@ class OutlineActivity : AppCompatActivity(),
     }
 
     private fun initRecyclerViews() {
-        val bgAdapter = BgAdapter(this, intArrayOf(
-                R.drawable.fs0, R.drawable.fs1,
-                R.drawable.fs2, R.drawable.fs3,
-                R.drawable.fs4, R.drawable.fs5,
-                R.drawable.fs6, R.drawable.fs7,
-                R.drawable.fs8, R.drawable.fs9, R.drawable.fs10))
-        bgAdapter.itemListener = AdapterView.OnItemClickListener { _, _, imgRes, _ ->
-            advOutline.setBgBitmapRes(imgRes)
+        rvBgOptions.apply {
+            setHasFixedSize(true)
+            adapter = BgAdapter(this@OutlineActivity, getXmlImageArray(R.array.au_bgs))
+                    .apply { itemListener = AdapterView.OnItemClickListener { _, _, imgRes, _ -> advOutline.setBgBitmapRes(imgRes) } }
         }
-        rvBgOptions.setHasFixedSize(true)
-        rvBgOptions.adapter = bgAdapter
 
-        val paintAdapter = PaintAdapter(intArrayOf(
-                R.drawable.au_svg_pencil, R.drawable.au_svg_fountain_pen,
-                R.drawable.au_svg_blush, R.drawable.au_svg_feather))
-        paintAdapter.itemListener = AdapterView.OnItemClickListener { _, _, imgRes, _ ->
-            advOutline.setPaintBitmapRes(imgRes)
+        rvPaintOptions.apply {
+            setHasFixedSize(true)
+            adapter = PaintAdapter(getXmlImageArray(R.array.au_pens))
+                    .apply { itemListener = AdapterView.OnItemClickListener { _, _, imgRes, _ -> advOutline.setPaintBitmapRes(imgRes) } }
         }
-        rvPaintOptions.setHasFixedSize(true)
-        rvPaintOptions.adapter = paintAdapter
 
-        val paintColorAdapter = PaintColorAdapter(resources.getIntArray(R.array.au_paintColorOptions))
-        paintColorAdapter.itemListener = AdapterView.OnItemClickListener { _, _, paintColor, _ ->
-            advOutline.setPaintColor(paintColor)
+        rvPaintColorOptions.apply {
+            setHasFixedSize(true)
+            adapter = PaintColorAdapter(resources.getIntArray(R.array.au_paintColorOptions))
+                    .apply { itemListener = AdapterView.OnItemClickListener { _, _, paintColor, _ -> advOutline.setPaintColor(paintColor) } }
         }
-        rvPaintColorOptions.setHasFixedSize(true)
-        rvPaintColorOptions.adapter = paintColorAdapter
     }
 
     override fun onClick(v: View) {
