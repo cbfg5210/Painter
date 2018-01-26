@@ -111,6 +111,7 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
         if (!isRecording) return
         stopRecoding()
         recordVideoListener?.onComplete(videoPath)
+        activity.toggleFullScreen(false)
     }
 
     private fun stopRecoding() {
@@ -142,7 +143,7 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
             activity.startActivityForResult(mProjectionManager.createScreenCaptureIntent(), REQ_RECORD_VIDEO)
             return
         }
-        ActivityUtils.toggleFullScreen(activity, true)
+        activity.toggleFullScreen(true)
         //全屏过程会有一段时间，避免录入全屏过程及对绘制轮廓的影响
         Observable.timer(300, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.single())

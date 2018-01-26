@@ -2,6 +2,8 @@ package com.ue.library.util
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.support.v7.app.AppCompatActivity
+import android.view.WindowManager
 import android.widget.Toast
 import com.trello.rxlifecycle2.android.ActivityEvent
 import com.trello.rxlifecycle2.android.FragmentEvent
@@ -45,6 +47,22 @@ fun Context.dip2px(dpValue: Float): Int {
 fun Context.px2dip(pxValue: Float): Int {
     val scale = this.resources.displayMetrics.density
     return (pxValue / scale + 0.5f).toInt()
+}
+
+fun AppCompatActivity.toggleFullScreen(isFullScreen: Boolean) {
+    this.apply {
+        window.apply {
+            if (isFullScreen) {
+                attributes.flags = attributes.flags or WindowManager.LayoutParams.FLAG_FULLSCREEN
+                addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+                supportActionBar?.hide()
+            } else {
+                attributes.flags = attributes.flags and WindowManager.LayoutParams.FLAG_FULLSCREEN.inv()
+                clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+                supportActionBar?.show()
+            }
+        }
+    }
 }
 
 fun Observable<Any>.bindUtilDestroy(context: Any): Observable<Any> {

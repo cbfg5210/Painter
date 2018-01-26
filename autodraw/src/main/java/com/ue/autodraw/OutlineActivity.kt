@@ -227,7 +227,6 @@ class OutlineActivity : RxAppCompatActivity(),
                 override fun onComplete(videoPath: String) {
                     //录制完成后保存临摹结果图片
                     advOutline.saveOutlinePicture(null, false)
-                    ActivityUtils.toggleFullScreen(this@OutlineActivity, false)
                     toast(R.string.au_complete_recording)
                     ShareVideoDialog.newInstance(videoPath).show(supportFragmentManager, "")
                 }
