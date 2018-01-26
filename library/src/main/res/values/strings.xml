@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dont_show_next_time">下次不再显示</string>
     <string name="no_recording_perms">录制取消：没有授予录制相关权限</string>
@@ -12,4 +13,8 @@
     <string name="module_outline">轮廓临摹</string>
     <string name="module_graffiti">指尖涂鸦</string>
     <string name="module_pixel">像素画</string>
+    <string name="module_slogan_coloring">颜色的魅力在于让单调变得多姿多彩</string>
+    <string name="module_slogan_outline">观察和享受绘画的过程</string>
+    <string name="module_slogan_graffiti">让灵感在涂鸦中自由释放</string>
+    <string name="module_slogan_pixel">简单的像素也可以拼成美妙的图画</string>
 </resources>

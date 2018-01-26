@@ -7,6 +7,14 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <!--windowBackground vs colorBackground
+         the difference is that when the app starts the android:windowBackground is visible first,
+         for a brief moment, and then the layout background color takes over.
+         So if you use two different colors, it will flicker on the screen
+        -->
+        <item name="android:windowBackground">@color/colorWindowBg</item>
+        <item name="android:colorBackground">@color/colorWindowBg</item>
+        <!---->
     </style>
 
     <style name="FullScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">

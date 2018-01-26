@@ -18,7 +18,9 @@
     <TextView
         android:id="@+id/tvModuleName"
         style="@style/TV_c666666_s15"
-        android:layout_marginTop="@dimen/widget_size_5"
+        android:layout_marginTop="@dimen/widget_size_2"
+        android:textColor="@color/col_424242"
+        android:textSize="@dimen/font_size_16"
         tools:text="Coloring"/>
 
     <TextView

@@ -15,7 +15,7 @@ class MainActivity : RxAppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         rvModules.setHasFixedSize(true)
-        rvModules.adapter = ModuleAdapter()
+        rvModules.adapter = ModuleAdapter(this)
 
         Work.get()
                 .getRecentWorks(this)
@@ -23,7 +23,7 @@ class MainActivity : RxAppCompatActivity() {
                     val images = ArrayList<Any>()
                     val titles = ArrayList<String>()
                     works.apply {
-                        if (isEmpty()) add(WorkItem("充场", R.mipmap.ic_launcher))
+                        if (isEmpty()) add(WorkItem(getString(R.string.no_works_display), R.mipmap.ic_launcher))
                         forEach {
                             titles.add(it.name)
                             images.add(it.path)

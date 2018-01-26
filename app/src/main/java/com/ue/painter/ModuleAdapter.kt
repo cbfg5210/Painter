@@ -1,6 +1,7 @@
 package com.ue.painter
 
-import android.graphics.Color
+import android.content.Context
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +13,7 @@ import kotlinx.android.synthetic.main.item_module.view.*
 /**
  * Created by hawk on 2018/1/25.
  */
-class ModuleAdapter() : RecyclerView.Adapter<ModuleAdapter.ViewHolder>() {
+class ModuleAdapter(context: Context) : RecyclerView.Adapter<ModuleAdapter.ViewHolder>() {
     companion object {
         private val OUTLINE = 0
         private val COLORING = 1
@@ -21,10 +22,10 @@ class ModuleAdapter() : RecyclerView.Adapter<ModuleAdapter.ViewHolder>() {
     }
 
     private val modules = arrayOf(
-            ModuleItem(OUTLINE, R.mipmap.ic_launcher, "aa", "aaaaa"),
-            ModuleItem(COLORING, R.mipmap.ic_launcher, "bb", "aaaaa"),
-            ModuleItem(GRAFFITI, R.mipmap.ic_launcher, "cc", "aaaaa"),
-            ModuleItem(PIXEL, R.mipmap.ic_launcher, "dd", "aaaaa"))
+            ModuleItem(OUTLINE, R.mipmap.ic_launcher, context.getString(R.string.module_outline), context.getString(R.string.module_slogan_outline)),
+            ModuleItem(COLORING, R.mipmap.ic_launcher, context.getString(R.string.module_coloring), context.getString(R.string.module_slogan_coloring)),
+            ModuleItem(GRAFFITI, R.mipmap.ic_launcher, context.getString(R.string.module_graffiti), context.getString(R.string.module_slogan_graffiti)),
+            ModuleItem(PIXEL, R.mipmap.ic_launcher, context.getString(R.string.module_pixel), context.getString(R.string.module_slogan_pixel)))
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_module, parent, false)
@@ -50,16 +51,16 @@ class ModuleAdapter() : RecyclerView.Adapter<ModuleAdapter.ViewHolder>() {
     }
 
     class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val vgModule = itemView.vgModule!!
-        private val ivModuleImage = itemView.ivModuleImage!!
-        private val tvModuleName = itemView.tvModuleName!!
-        private val tvModuleSlogan = itemView.tvModuleSlogan!!
+        private val vgModule = itemView.vgModule
+        private val ivModuleImage = itemView.ivModuleImage
+        private val tvModuleName = itemView.tvModuleName
+        private val tvModuleSlogan = itemView.tvModuleSlogan
 
         fun update(module: ModuleItem) {
             PicassoUtils.displayImage(itemView.context, ivModuleImage, module.image)
             tvModuleName.text = module.name
             tvModuleSlogan.text = module.slogan
-            val bgColor = if (adapterPosition % 3 == 0) Color.LTGRAY else Color.GREEN
+            val bgColor = ContextCompat.getColor(vgModule.context, if (adapterPosition % 3 == 0) R.color.white else R.color.col_f7f7f7)
             vgModule.setBackgroundColor(bgColor)
         }
     }

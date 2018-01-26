@@ -3,9 +3,11 @@
     <color name="colorPrimary">@color/col_3f51b5</color>
     <color name="colorPrimaryDark">@color/col_303f9f</color>
     <color name="colorAccent">@color/col_ff4081</color>
+    <color name="colorWindowBg">@color/col_efefef</color>
     <color name="black">#000000</color>
     <color name="col_3f51b5">#3F51B5</color>
     <color name="col_303f9f">#303F9F</color>
     <color name="col_ff4081">#FF4081</color>
     <color name="col_666666">#666666</color>
+    <color name="col_efefef">#efefef</color>
 </resources>
