@@ -11,9 +11,9 @@
 
     <ImageView
         android:id="@+id/ivModuleImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:src="@mipmap/ic_launcher"/>
+        android:layout_width="@dimen/widget_size_80"
+        android:layout_height="@dimen/widget_size_80"
+        tools:src="@drawable/svg_graffi"/>
 
     <TextView
         android:id="@+id/tvModuleName"

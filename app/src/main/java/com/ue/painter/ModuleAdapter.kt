@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.ue.library.util.PicassoUtils
 import com.ue.painter.model.ModuleItem
 import kotlinx.android.synthetic.main.item_module.view.*
 
@@ -22,10 +21,10 @@ class ModuleAdapter(context: Context) : RecyclerView.Adapter<ModuleAdapter.ViewH
     }
 
     private val modules = arrayOf(
-            ModuleItem(OUTLINE, R.mipmap.ic_launcher, context.getString(R.string.module_outline), context.getString(R.string.module_slogan_outline)),
-            ModuleItem(COLORING, R.mipmap.ic_launcher, context.getString(R.string.module_coloring), context.getString(R.string.module_slogan_coloring)),
-            ModuleItem(GRAFFITI, R.mipmap.ic_launcher, context.getString(R.string.module_graffiti), context.getString(R.string.module_slogan_graffiti)),
-            ModuleItem(PIXEL, R.mipmap.ic_launcher, context.getString(R.string.module_pixel), context.getString(R.string.module_slogan_pixel)))
+            ModuleItem(OUTLINE, R.drawable.svg_outline, context.getString(R.string.module_outline), context.getString(R.string.module_slogan_outline)),
+            ModuleItem(COLORING, R.drawable.svg_coloring, context.getString(R.string.module_coloring), context.getString(R.string.module_slogan_coloring)),
+            ModuleItem(GRAFFITI, R.drawable.svg_graffi, context.getString(R.string.module_graffiti), context.getString(R.string.module_slogan_graffiti)),
+            ModuleItem(PIXEL, R.drawable.svg_pixel, context.getString(R.string.module_pixel), context.getString(R.string.module_slogan_pixel)))
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_module, parent, false)
@@ -57,7 +56,7 @@ class ModuleAdapter(context: Context) : RecyclerView.Adapter<ModuleAdapter.ViewH
         private val tvModuleSlogan = itemView.tvModuleSlogan
 
         fun update(module: ModuleItem) {
-            PicassoUtils.displayImage(itemView.context, ivModuleImage, module.image)
+            ivModuleImage.setImageResource(module.image)
             tvModuleName.text = module.name
             tvModuleSlogan.text = module.slogan
             val bgColor = ContextCompat.getColor(vgModule.context, if (adapterPosition % 3 == 0) R.color.white else R.color.col_f7f7f7)
