@@ -109,9 +109,7 @@ class OutlineActivity : AppCompatActivity(),
             }
 
             override fun onComplete() {
-                if (recordVideoHelper != null && recordVideoHelper!!.isRecording) {
-                    recordVideoHelper!!.finishRecording()
-                }
+                recordVideoHelper?.apply { if (isRecording) finishRecording() }
             }
         }
     }
@@ -283,16 +281,10 @@ class OutlineActivity : AppCompatActivity(),
     * */
     private fun loadPhoto(photo: Any) {
         readyThenDraw = true
-        ImageLoaderUtils.display(this, ivObjectView, photo, R.mipmap.test,
-                object : ImageLoaderUtils.ImageLoaderCallback {
-                    override fun onBitmapLoaded(bitmap: Bitmap) {
-                        advOutline.setOutlineObject(bitmap)
-                    }
-
-                    override fun onBitmapFailed(errorBitmap: Bitmap?) {
-                        if (errorBitmap != null) {
-                            advOutline.setOutlineObject(errorBitmap)
-                        }
+        ImageLoaderUtils.display(ivObjectView, photo, R.mipmap.test, getString(R.string.au_load_photo_failed),
+                object : ImageLoaderUtils.ImageLoaderCallback2 {
+                    override fun onBitmapResult(bitmap: Bitmap?) {
+                        if (bitmap != null) advOutline.setOutlineObject(bitmap)
                     }
                 })
     }

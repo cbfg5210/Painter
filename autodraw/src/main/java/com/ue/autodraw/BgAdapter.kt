@@ -27,7 +27,7 @@ class BgAdapter(context: Context, private val bgs: IntArray) : RecyclerView.Adap
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        ImageLoaderUtils.display(holder.itemView.context, holder.sivBg, bgs[position], Point(displaySize, displaySize))
+        ImageLoaderUtils.display(holder.sivBg, bgs[position], Point(displaySize, displaySize))
     }
 
     override fun getItemCount(): Int {

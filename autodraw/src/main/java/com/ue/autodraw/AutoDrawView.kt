@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.ue.library.constant.Constants
+import com.ue.library.event.SimplePermissionListener
 import com.ue.library.util.BitmapUtils
 import com.ue.library.util.FileUtils
 import com.ue.library.util.PermissionUtils
@@ -206,8 +207,8 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
         PermissionUtils.checkReadWriteStoragePerms(context,
                 context.getString(R.string.au_no_read_storage_perm),
-                object : PermissionUtils.SimplePermissionListener {
-                    override fun onSucceed(requestCode: Int, grantPermissions: List<String>) {
+                object : SimplePermissionListener() {
+                    override fun onSucceed(requestCode: Int, grantPermissions: MutableList<String>) {
                         val path = Environment.getExternalStorageDirectory().getPath() + Constants.PATH_OUTLINE
                         FileUtils.saveImageLocally(context, mTmpBm!!, path, "$bitmapName.png", saveListener)
                     }
@@ -256,9 +257,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
                 })
                 .subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    autoDrawListener?.onComplete()
-                })
+                .subscribe { autoDrawListener?.onComplete() }
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) {
