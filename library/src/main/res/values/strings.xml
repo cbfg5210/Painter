@@ -17,4 +17,5 @@
     <string name="module_slogan_outline">观察和享受绘画的过程</string>
     <string name="module_slogan_graffiti">让灵感在涂鸦中自由释放</string>
     <string name="module_slogan_pixel">简单的像素也可以拼成美妙的图画</string>
+    <string name="record_failed_no_perm">录制失败：没有外部存储权限!</string>
 </resources>

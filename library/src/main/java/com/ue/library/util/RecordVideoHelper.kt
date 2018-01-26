@@ -81,7 +81,9 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
             }
         }
         mMediaProjection = mProjectionManager.getMediaProjection(resultCode, data)
-        mMediaProjection!!.registerCallback(mMediaProjectionCallback, null)
+                .apply {
+                    registerCallback(mMediaProjectionCallback, null)
+                }
 
         recordVideo()
     }
@@ -91,7 +93,7 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
         PermissionUtils.checkPermissions(activity,
                 PermissionUtils.REQ_PERM_READ_WRITE_STORAGE,
                 arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                activity.getString(R.string.no_recording_perms),
+                activity.getString(R.string.record_failed_no_perm),
                 object : SimplePermissionListener() {
                     override fun onSucceed(requestCode: Int, grantPermissions: MutableList<String>) {
                         recordVideo()
@@ -112,7 +114,6 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
     }
 
     private fun stopRecoding() {
-        ActivityUtils.toggleFullScreen(activity, false)
         mMediaRecorder.stop()
         mMediaRecorder.reset()
         mVirtualDisplay.release()
@@ -121,9 +122,12 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
     }
 
     fun destroyMediaProjection() {
-        mMediaRecorder.release()//If used: mMediaRecorder object cannot be reused again
-        mMediaProjection?.unregisterCallback(mMediaProjectionCallback)
-        mMediaProjection?.stop()
+        //If used: mMediaRecorder object cannot be reused again
+        mMediaRecorder.release()
+        mMediaProjection?.apply {
+            unregisterCallback(mMediaProjectionCallback)
+            stop()
+        }
     }
 
     private fun createVirtualDisplay(): VirtualDisplay {
@@ -143,6 +147,7 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
         Observable.timer(300, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread())
+                .bindUtilDestroy3(activity)
                 .subscribe {
                     initRecorder()
                     mVirtualDisplay = createVirtualDisplay()

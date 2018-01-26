@@ -186,27 +186,29 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
             mTmpCanvas.drawPoint((mLastPoint.x + offsetX).toFloat(), (mLastPoint.y + offsetY).toFloat(), mPaint)
         }
         //将bitmap绘制到SurfaceView中
-        val canvas = holder.lockCanvas()
-        canvas.drawBitmap(mTmpBm, 0f, 0f, mPaint)
-        if (tmpPoint != null) {
-            canvas.drawBitmap(mPaintBm, (mLastPoint.x + offsetX).toFloat(), (mLastPoint.y - mPaintBm.height + offsetY).toFloat(), mPaint)
-        }
-        holder.unlockCanvasAndPost(canvas)
+        holder.lockCanvas()
+                .apply {
+                    drawBitmap(mTmpBm, 0f, 0f, mPaint)
+                    if (tmpPoint != null) {
+                        drawBitmap(mPaintBm, (mLastPoint.x + offsetX).toFloat(), (mLastPoint.y - mPaintBm.height + offsetY).toFloat(), mPaint)
+                    }
+                    holder.unlockCanvasAndPost(this)
+                }
         return isDrawing && tmpPoint != null
     }
 
     /**
      * 保存结果图片
      */
-    fun saveOutlinePicture(saveListener: FileUtils.OnSaveImageListener) {
+    fun saveOutlinePicture(saveListener: FileUtils.OnSaveImageListener?, showToast: Boolean? = true) {
         if (!isCanSave) return
 
         PermissionUtils.checkReadWriteStoragePerms(context,
                 context.getString(R.string.au_no_read_storage_perm),
                 object : SimplePermissionListener() {
                     override fun onSucceed(requestCode: Int, grantPermissions: MutableList<String>) {
-                        val path = Environment.getExternalStorageDirectory().getPath() + Constants.PATH_OUTLINE
-                        FileUtils.saveImageLocally(context, mTmpBm!!, path, "$bitmapName.png", saveListener)
+                        val path = "${Environment.getExternalStorageDirectory().path}${Constants.PATH_OUTLINE}"
+                        FileUtils.saveImageLocally(context, mTmpBm!!, path, "$bitmapName.png", saveListener, showToast)
                     }
                 })
     }

@@ -65,6 +65,15 @@ fun Observable<Bitmap>.bindUtilDestroy2(context: Any): Observable<Bitmap> {
     return this
 }
 
+fun Observable<Long>.bindUtilDestroy3(context: Any): Observable<Long> {
+    if (context is RxAppCompatActivity) {
+        compose(context.bindUntilEvent(ActivityEvent.DESTROY))
+    } else if (context is RxFragment) {
+        compose(context.bindUntilEvent(FragmentEvent.DESTROY))
+    }
+    return this
+}
+
 fun dispose(disposable: Disposable?) {
     if (disposable != null && !disposable.isDisposed) {
         disposable.dispose()
