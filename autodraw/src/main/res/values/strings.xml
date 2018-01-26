@@ -19,7 +19,7 @@
     <string name="au_paint_color">颜料</string>
     <string name="au_settings">设置</string>
     <string name="au_no_outline_to_save">绘制轮廓后再进行分享吧~</string>
-    <string name="au_is_preparing">准备中，请稍等...</string>
+    <string name="au_is_loading">加载中，请稍等...</string>
     <string name="au_cancel_draw">绘制已取消</string>
     <string name="au_cannot_share_video_version">抱歉，Android5.0以上版本才支持分享绘制视频</string>
     <string name="au_not_ready_record_video">正在加载资源，请稍后再试~</string>

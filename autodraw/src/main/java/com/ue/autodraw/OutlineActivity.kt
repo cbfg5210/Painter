@@ -36,17 +36,16 @@ class OutlineActivity : RxAppCompatActivity(),
     private lateinit var loadingDialog: LoadingDialog
     private var recordVideoHelper: RecordVideoHelper? = null
     //when ready,true:draw,false:record
-    private var readyThenDraw = true
     private lateinit var homeWatcher: HomeWatcher
+
+    private var isProcessing = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.au_activity_outline)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         rgTabs.check(R.id.rbTabObject)
-
         initRecyclerViews()
         setListeners()
 
@@ -87,13 +86,10 @@ class OutlineActivity : RxAppCompatActivity(),
         nsDelaySpeed.setNumberChangeListener(this)
 
         advOutline.autoDrawListener = object : AutoDrawView.OnAutoDrawListener {
-
             override fun onReady() {
-                if (!loadingDialog.isAdded) return
-
-                loadingDialog.dismiss()
-                if (readyThenDraw) advOutline.startDrawing()
-                else recordDrawVideo()
+                isProcessing = false
+                if (loadingDialog.isAdded) loadingDialog.dismiss()
+                advOutline.startDrawing()
             }
 
             override fun onStop() {
@@ -149,21 +145,15 @@ class OutlineActivity : RxAppCompatActivity(),
             toast(R.string.au_cannot_share_video_version)
             return
         }
-        readyThenDraw = false
-        if (!advOutline.isCanSave) {
-            loadingDialog.showLoading(supportFragmentManager, getString(R.string.au_is_preparing))
-            return
-        }
+        if (checkIsProcessing()) return
+
         recordDrawVideo()
     }
 
     private fun onShareDrawPictureClick() {
         vgShare.visibility = View.GONE
-        readyThenDraw = true
-        if (!advOutline.isCanSave) {
-            toast(R.string.au_no_outline_to_save)
-            return
-        }
+        if (checkIsProcessing()) return
+
         advOutline.saveOutlinePicture(object : FileUtils.OnSaveImageListener {
             override fun onSaved(path: String) {
                 IntentUtils.shareImage(this@OutlineActivity, null, null, path)
@@ -180,10 +170,8 @@ class OutlineActivity : RxAppCompatActivity(),
             vgDrawSettings.visibility = View.GONE
             return
         }
-        if (!advOutline.isReadyToDraw) {
-            loadingDialog.showLoading(supportFragmentManager, getString(R.string.au_is_preparing))
-            return
-        }
+        if (checkIsProcessing()) return
+
         if (advOutline.isDrawing) {
             advOutline.stopDrawing()
             recordVideoHelper?.apply {
@@ -195,6 +183,14 @@ class OutlineActivity : RxAppCompatActivity(),
             return
         }
         advOutline.startDrawing()
+    }
+
+    private fun checkIsProcessing(): Boolean {
+        if (isProcessing) {
+            loadingDialog.showLoading(supportFragmentManager, getString(R.string.au_is_loading))
+            return true
+        }
+        return false
     }
 
     /**
@@ -257,11 +253,15 @@ class OutlineActivity : RxAppCompatActivity(),
         when (itemId) {
             android.R.id.home -> onBackPressed()
             R.id.actionSettings -> {
+                if (checkIsProcessing()) return true
+
                 advOutline.stopDrawing()
                 if (vgShare.visibility == View.VISIBLE) vgShare.visibility = View.GONE
                 vgDrawSettings.visibility = if (vgDrawSettings.visibility == View.VISIBLE) View.GONE else View.VISIBLE
             }
             R.id.actionShare -> {
+                if (checkIsProcessing()) return true
+
                 advOutline.stopDrawing()
                 if (vgDrawSettings.visibility == View.VISIBLE) vgDrawSettings.visibility = View.GONE
                 vgShare.visibility = if (vgShare.visibility == View.VISIBLE) View.GONE else View.VISIBLE
@@ -274,7 +274,9 @@ class OutlineActivity : RxAppCompatActivity(),
     * 图片相关
     * */
     private fun loadPhoto(photo: Any) {
-        readyThenDraw = true
+        isProcessing = true
+        loadingDialog.showLoading(supportFragmentManager, getString(R.string.au_is_loading))
+
         ImageLoaderUtils.display(ivObjectView, photo, R.mipmap.test, getString(R.string.au_load_photo_failed),
                 object : ImageLoaderUtils.ImageLoaderCallback2 {
                     override fun onBitmapResult(bitmap: Bitmap?) {
@@ -284,6 +286,7 @@ class OutlineActivity : RxAppCompatActivity(),
     }
 
     private fun pickPhoto() {
+        if (checkIsProcessing()) return
         PermissionUtils.checkReadWriteStoragePerms(this,
                 getString(R.string.au_no_read_storage_perm),
                 object : SimplePermissionListener() {

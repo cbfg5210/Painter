@@ -42,17 +42,11 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
     var isDrawing = false
         private set
 
-    var isReadyToDraw = false
-        private set
-        get() {
-            return sobelBitmap != null
-        }
-
-    var isCanSave = false
-        private set
-        get() {
-            return sobelBitmap != null && mTmpBm != null
-        }
+//    var isCanSave = false
+//        private set
+//        get() {
+//            return sobelBitmap != null && mTmpBm != null
+//        }
 
     private var drawDisposable: Disposable? = null
     private var loadDisposable: Disposable? = null
@@ -201,7 +195,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
      * 保存结果图片
      */
     fun saveOutlinePicture(saveListener: FileUtils.OnSaveImageListener?, showToast: Boolean? = true) {
-        if (!isCanSave) return
+        if (sobelBitmap == null || mTmpBm == null) return
 
         PermissionUtils.checkReadWriteStoragePerms(context,
                 context.getString(R.string.au_no_read_storage_perm),
