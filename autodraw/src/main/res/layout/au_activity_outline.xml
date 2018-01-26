@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!--画板-->
@@ -34,5 +32,5 @@
             android:text="@string/au_share_draw_video"/>
     </LinearLayout>
     <!--设置-->
-    <include layout="@layout/au_layout_auto_draw_settings"/>
+    <include layout="@layout/au_layout_outline_settings"/>
 </FrameLayout>

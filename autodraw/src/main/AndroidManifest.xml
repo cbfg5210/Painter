@@ -4,7 +4,7 @@
 
     <application>
         <activity
-            android:name=".AutoDrawActivity"
+            android:name=".OutlineActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>

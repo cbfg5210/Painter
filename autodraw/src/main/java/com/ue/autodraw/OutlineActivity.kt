@@ -14,13 +14,14 @@ import android.widget.AdapterView
 import android.widget.RadioGroup
 import android.widget.Toast
 import com.ue.library.event.HomeWatcher
+import com.ue.library.event.SimplePermissionListener
 import com.ue.library.util.*
 import com.ue.library.widget.LoadingDialog
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.au_activity_auto_draw.*
-import kotlinx.android.synthetic.main.au_layout_auto_draw_settings.*
+import kotlinx.android.synthetic.main.au_activity_outline.*
+import kotlinx.android.synthetic.main.au_layout_outline_settings.*
 
-class AutoDrawActivity : AppCompatActivity(),
+class OutlineActivity : AppCompatActivity(),
         View.OnClickListener,
         RadioGroup.OnCheckedChangeListener,
         NumberSelectorView.OnNumberChangeListener {
@@ -41,7 +42,7 @@ class AutoDrawActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.au_activity_auto_draw)
+        setContentView(R.layout.au_activity_outline)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.au_module_name)
@@ -103,7 +104,7 @@ class AutoDrawActivity : AppCompatActivity(),
                 if (recordVideoHelper != null && recordVideoHelper!!.isRecording) {
                     recordVideoHelper!!.cancelRecording()
                 } else {
-                    Toast.makeText(this@AutoDrawActivity, R.string.au_cancel_draw, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@OutlineActivity, R.string.au_cancel_draw, Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -146,7 +147,8 @@ class AutoDrawActivity : AppCompatActivity(),
     }
 
     override fun onClick(v: View) {
-        when (v.id) {
+        val vid = v.id
+        when (vid) {
             R.id.ivObjectView -> pickPhoto()
             R.id.advOutline -> onOutlineClick()
             R.id.tvShareDrawPicture -> onShareDrawPictureClick()
@@ -177,7 +179,7 @@ class AutoDrawActivity : AppCompatActivity(),
         }
         advOutline.saveOutlinePicture(object : FileUtils.OnSaveImageListener {
             override fun onSaved(path: String) {
-                IntentUtils.shareImage(this@AutoDrawActivity, null, null, path)
+                IntentUtils.shareImage(this@OutlineActivity, null, null, path)
             }
         })
     }
@@ -230,11 +232,11 @@ class AutoDrawActivity : AppCompatActivity(),
             }
 
             override fun onCancel() {
-                Toast.makeText(this@AutoDrawActivity, R.string.au_cancel_record_video, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@OutlineActivity, R.string.au_cancel_record_video, Toast.LENGTH_SHORT).show()
             }
 
             override fun onComplete(videoPath: String) {
-                Toast.makeText(this@AutoDrawActivity, R.string.au_complete_recording, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@OutlineActivity, R.string.au_complete_recording, Toast.LENGTH_SHORT).show()
                 ShareVideoDialog.newInstance(videoPath).show(supportFragmentManager, "")
             }
         }
@@ -298,21 +300,18 @@ class AutoDrawActivity : AppCompatActivity(),
     private fun pickPhoto() {
         PermissionUtils.checkReadWriteStoragePerms(this,
                 getString(R.string.au_no_read_storage_perm),
-                object : PermissionUtils.SimplePermissionListener {
-                    override fun onSucceed(requestCode: Int, grantPermissions: List<String>) {
+                object : SimplePermissionListener() {
+                    override fun onSucceed(requestCode: Int, grantPermissions: MutableList<String>) {
                         startActivityForResult(Intent.createChooser(Intent(Intent.ACTION_GET_CONTENT).setType("image/*"), getString(R.string.au_choose_photo)), REQ_PICK_PHOTO)
                     }
                 }
         )
     }
 
-    /*******/
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQ_PICK_PHOTO) {
             if (resultCode == Activity.RESULT_OK && data != null) {
-                //Log.e("AutoDrawActivity", "onActivityResult: photo path=${data.dataString}")
                 SPUtils.putString(SP_OUTLINE_OBJ_PATH, data.dataString)
                 loadPhoto(data.dataString)
             }
@@ -341,6 +340,6 @@ class AutoDrawActivity : AppCompatActivity(),
         super.onDestroy()
         recordVideoHelper?.destroyMediaProjection()
         homeWatcher.stopWatch()
-        RxJavaUtils.dispose(disposable)
+        dispose(disposable)
     }
 }

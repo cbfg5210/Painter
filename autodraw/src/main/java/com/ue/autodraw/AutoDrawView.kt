@@ -10,6 +10,7 @@ import com.ue.library.constant.Constants
 import com.ue.library.util.BitmapUtils
 import com.ue.library.util.FileUtils
 import com.ue.library.util.PermissionUtils
+import com.ue.library.util.dispose
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -101,7 +102,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
     fun setOutlineObject(bm: Bitmap) {
         //重设对象时第一步就是取消原先的加载
-        RxJavaUtils.dispose(loadDisposable)
+        dispose(loadDisposable)
 
         this.bitmapName = SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis())
 
@@ -218,7 +219,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
             return
         }
         isDrawing = false
-        RxJavaUtils.dispose(drawDisposable)
+        dispose(drawDisposable)
         autoDrawListener?.onStop()
     }
 
@@ -237,7 +238,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
         mLastPoint = Point()
 
-        RxJavaUtils.dispose(drawDisposable)
+        dispose(drawDisposable)
         drawDisposable = Observable
                 .create(ObservableOnSubscribe<Any> { e ->
                     //绘制背景
@@ -294,8 +295,8 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
         isDrawing = false
-        RxJavaUtils.dispose(loadDisposable)
-        RxJavaUtils.dispose(drawDisposable)
+        dispose(loadDisposable)
+        dispose(drawDisposable)
     }
 
     interface OnAutoDrawListener {

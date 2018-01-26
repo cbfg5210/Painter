@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.widget.Toast
 import com.ue.library.R
+import com.ue.library.event.SimplePermissionListener
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -16,8 +17,8 @@ object FileUtils {
     fun saveImageLocally(context: Context, bmp: Bitmap, path: String, workName: String, listener: OnSaveImageListener? = null) {
         PermissionUtils.checkReadWriteStoragePerms(context,
                 context.getString(R.string.save_error_no_perm),
-                object : PermissionUtils.SimplePermissionListener {
-                    override fun onSucceed(requestCode: Int, grantPermissions: List<String>) {
+                object : SimplePermissionListener() {
+                    override fun onSucceed(requestCode: Int, grantPermissions: MutableList<String>) {
                         goSaveImage(context, bmp, path, "$workName.png", listener)
                     }
                 })

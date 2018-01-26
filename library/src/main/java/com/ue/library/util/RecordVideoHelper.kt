@@ -18,6 +18,7 @@ import android.view.Surface
 import android.widget.Toast
 import com.ue.library.R
 import com.ue.library.constant.Constants
+import com.ue.library.event.SimplePermissionListener
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -86,13 +87,13 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
     }
 
     fun startRecording() {
-        videoPath = "${Environment.getExternalStorageDirectory().getPath()}${Constants.PATH_OUTLINE}${SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis())}.mp4"
+        videoPath = "${Environment.getExternalStorageDirectory().path}${Constants.PATH_OUTLINE}${SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis())}.mp4"
         PermissionUtils.checkPermissions(activity,
                 PermissionUtils.REQ_PERM_READ_WRITE_STORAGE,
                 arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE),
                 activity.getString(R.string.no_recording_perms),
-                object : PermissionUtils.SimplePermissionListener {
-                    override fun onSucceed(requestCode: Int, grantPermissions: List<String>) {
+                object : SimplePermissionListener() {
+                    override fun onSucceed(requestCode: Int, grantPermissions: MutableList<String>) {
                         recordVideo()
                     }
                 })

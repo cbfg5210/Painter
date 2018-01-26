@@ -2,7 +2,7 @@ package com.ue.library.util
 
 import android.Manifest
 import android.content.Context
-import android.widget.Toast
+import com.ue.library.event.SimplePermissionListener
 import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.PermissionListener
 
@@ -20,20 +20,21 @@ object PermissionUtils {
                 successCallback)
     }
 
-    fun checkPermissions(context: Context, reqCode: Int, perms: Array<String>, failureTip: String, successCallback: SimplePermissionListener) {
+    fun checkPermissions(context: Context, reqCode: Int, perms: Array<String>, failureTip: String, callback: SimplePermissionListener) {
         val callback = object : PermissionListener {
             override fun onSucceed(requestCode: Int, grantPermissions: MutableList<String>) {
-                successCallback.onSucceed(requestCode, grantPermissions)
+                callback.onSucceed(requestCode, grantPermissions)
             }
 
             override fun onFailed(requestCode: Int, deniedPermissions: MutableList<String>) {
-                Toast.makeText(context, failureTip, Toast.LENGTH_SHORT)
+                context.toast(failureTip)
+                callback.onFailed(requestCode, deniedPermissions)
             }
         }
         checkPermissions(context, reqCode, perms, callback)
     }
 
-    fun checkPermissions(context: Context, reqCode: Int, perms: Array<String>, callback: PermissionListener?) {
+    private fun checkPermissions(context: Context, reqCode: Int, perms: Array<String>, callback: PermissionListener?) {
         val permList = perms.toList()
         if (AndPermission.hasPermission(context, permList)) {
             callback?.onSucceed(reqCode, permList)
@@ -59,9 +60,5 @@ object PermissionUtils {
                     }
                 })
                 .start()
-    }
-
-    interface SimplePermissionListener {
-        fun onSucceed(requestCode: Int, grantPermissions: List<String>)
     }
 }
