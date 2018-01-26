@@ -16,7 +16,7 @@
     <application
         android:name=".DebugApplication"
         android:allowBackup="false"
-        android:icon="@android:drawable/alert_dark_frame"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/gr_module_name"
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme">

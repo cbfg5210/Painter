@@ -5,13 +5,13 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.RadioGroup
+import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.ue.library.event.HomeWatcher
 import com.ue.library.event.SimplePermissionListener
 import com.ue.library.util.*
@@ -20,7 +20,7 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.au_activity_outline.*
 import kotlinx.android.synthetic.main.au_layout_outline_settings.*
 
-class OutlineActivity : AppCompatActivity(),
+class OutlineActivity : RxAppCompatActivity(),
         View.OnClickListener,
         RadioGroup.OnCheckedChangeListener,
         NumberSelectorView.OnNumberChangeListener {

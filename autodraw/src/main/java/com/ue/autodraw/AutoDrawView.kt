@@ -8,10 +8,7 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.ue.library.constant.Constants
 import com.ue.library.event.SimplePermissionListener
-import com.ue.library.util.BitmapUtils
-import com.ue.library.util.FileUtils
-import com.ue.library.util.PermissionUtils
-import com.ue.library.util.dispose
+import com.ue.library.util.*
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -111,18 +108,17 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
                 .create(ObservableOnSubscribe<Bitmap> { e ->
                     //480x800,648x1152
                     //返回的是处理过的Bitmap
-                    val sobelBitmap =
+                    e.onNext(
                             if (resources.displayMetrics.widthPixels >= 1080) SobelUtils.sobel(bm, 648, 1152)
-                            else SobelUtils.sobel(bm, 480, 800)
-
-                    e.onNext(sobelBitmap)
+                            else SobelUtils.sobel(bm, 480, 800))
                 })
                 .subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ sobelBitmap ->
-                    this.sobelBitmap = sobelBitmap
+                .bindUtilDestroy2(context)
+                .subscribe {
+                    this.sobelBitmap = it
                     autoDrawListener?.onReady()
-                })
+                }
     }
 
     //根据Bitmap信息，获取每个位置的像素点是否需要绘制
@@ -257,6 +253,7 @@ class AutoDrawView : SurfaceView, SurfaceHolder.Callback {
                 })
                 .subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread())
+                .bindUtilDestroy(context)
                 .subscribe { autoDrawListener?.onComplete() }
     }
 

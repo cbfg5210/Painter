@@ -1,6 +1,7 @@
 package com.ue.library.util
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.widget.Toast
 import com.trello.rxlifecycle2.android.ActivityEvent
 import com.trello.rxlifecycle2.android.FragmentEvent
@@ -47,6 +48,15 @@ fun Context.px2dip(pxValue: Float): Int {
 }
 
 fun Observable<Any>.bindUtilDestroy(context: Any): Observable<Any> {
+    if (context is RxAppCompatActivity) {
+        compose(context.bindUntilEvent(ActivityEvent.DESTROY))
+    } else if (context is RxFragment) {
+        compose(context.bindUntilEvent(FragmentEvent.DESTROY))
+    }
+    return this
+}
+
+fun Observable<Bitmap>.bindUtilDestroy2(context: Any): Observable<Bitmap> {
     if (context is RxAppCompatActivity) {
         compose(context.bindUntilEvent(ActivityEvent.DESTROY))
     } else if (context is RxFragment) {

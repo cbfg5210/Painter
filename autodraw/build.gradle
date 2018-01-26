@@ -37,10 +37,11 @@ android {
         main {
             if (isRunAlone.toBoolean()) {
                 manifest.srcFile 'src/main/debug/AndroidManifest.xml'
-                java.srcDirs += "src/main/debug/java/";
+                java.srcDirs += "src/main/debug/java/"
+                res.srcDirs += "src/main/debug/res/"
             } else {
                 manifest.srcFile 'src/main/AndroidManifest.xml'
-                java.srcDirs += "src/main/java/";
+                java.srcDirs += "src/main/java/"
             }
         }
     }
@@ -55,11 +56,15 @@ dependencies {
     implementation deps.kotlinJre
     implementation deps.support.app_compat
     implementation deps.support.recyclerview
+
     implementation project(':library')
+
     implementation deps.rxjava2
     implementation deps.rxAndroid
     implementation deps.picasso
     implementation deps.andPermission
     implementation deps.transitionsEverywhere
     implementation deps.spinKit
+    implementation deps.rxLifecycle.lib
+    implementation deps.rxLifecycle.components
 }
