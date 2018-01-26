@@ -5,23 +5,35 @@ import android.graphics.Bitmap
 import android.graphics.Point
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.widget.ImageView
 import com.squareup.picasso.Picasso
+import com.squareup.picasso.RequestCreator
 import com.squareup.picasso.Target
 import com.ue.library.event.SimpleTarget
+import java.io.File
 
 /**
  * Created by hawk on 2018/1/10.
  */
 object ImageLoaderUtils {
+    private fun load(iv: ImageView, image: Any): RequestCreator {
+        return when (image) {
+            is Int -> Picasso.with(iv.context).load(image)
+            is String -> Picasso.with(iv.context).load(image)
+            is Uri -> Picasso.with(iv.context).load(image)
+            is File -> Picasso.with(iv.context).load(image)
+            else -> throw IllegalArgumentException("illegal argument:image")
+        }
+    }
+
     fun display(iv: ImageView, image: Any) {
-        if (image is Int) Picasso.with(iv.context).load(image).into(iv)
-        else if (image is String) Picasso.with(iv.context).load(image).into(iv)
+        load(iv, image).into(iv)
     }
 
     fun display(iv: ImageView, image: Any, size: Point) {
-        if (image is Int) Picasso.with(iv.context).load(image).resize(size.x, size.y).into(iv)
-        else if (image is String) Picasso.with(iv.context).load(image).resize(size.x, size.y).into(iv)
+        if (size.x == 0 || size.y == 0) load(iv, image).into(iv)
+        else load(iv, image).resize(size.x, size.y).into(iv)
     }
 
     fun display(iv: ImageView, image: Any, errorDrawableRes: Int, callback: ImageLoaderCallback) {
@@ -46,8 +58,7 @@ object ImageLoaderUtils {
                 callback.onBitmapFailed((errorDrawable as? BitmapDrawable)?.bitmap)
             }
         }
-        if (image is String) Picasso.with(iv.context).load(image).error(errorDrawableRes).into(iv.tag as Target)
-        else if (image is Int) Picasso.with(iv.context).load(image).error(errorDrawableRes).into(iv.tag as Target)
+        load(iv, image).error(errorDrawableRes).into(iv.tag as Target)
     }
 
     fun display(iv: ImageView, image: Any, errorDrawableRes: Int, errorTip: String, callback: ImageLoaderCallback2) {
@@ -75,8 +86,7 @@ object ImageLoaderUtils {
                 }
             }
         }
-        if (image is String) Picasso.with(iv.context).load(image).error(errorDrawableRes).into(iv.tag as Target)
-        else if (image is Int) Picasso.with(iv.context).load(image).error(errorDrawableRes).into(iv.tag as Target)
+        load(iv, image).error(errorDrawableRes).into(iv.tag as Target)
     }
 
     interface ImageLoaderCallback {
