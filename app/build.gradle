@@ -55,4 +55,5 @@ dependencies {
     implementation deps.rxLifecycle.lib
     implementation deps.rxLifecycle.components
     implementation deps.andPermission
+    implementation deps.recyclerAdapterDelegate
 }
