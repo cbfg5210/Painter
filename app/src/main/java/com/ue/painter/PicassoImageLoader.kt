@@ -13,8 +13,8 @@ class PicassoImageLoader : ImageLoader() {
         //Log.e("PicassoImageLoader", "displayImage: iv width=${imageView.width},height=${imageView.height},measureW=${imageView.measuredWidth},measureH=${imageView.measuredHeight}")
         //both width and height = 0
         //shape is changed
-        //val width = context.resources.displayMetrics.widthPixels
-        //val height = context.resources.getDimensionPixelSize(R.dimen.widget_size_200)
+        //val width = activity.resources.displayMetrics.widthPixels
+        //val height = activity.resources.getDimensionPixelSize(R.dimen.widget_size_200)
         //ImageLoaderUtils.display(imageView, path, Point(width, height))
         ImageLoaderUtils.display(imageView, path)
     }

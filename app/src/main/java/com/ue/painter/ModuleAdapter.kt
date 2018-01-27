@@ -33,9 +33,9 @@ class ModuleAdapter(activity: Activity) : DelegationAdapter<ModuleItem>() {
             override fun onClick(v: View, position: Int) {
                 val flag = items[position].flag
                 when (flag) {
-//                        OUTLINE -> v.context.startActivity(Intent(v.context, AutoDrawActivity::class.java))
-//                        COLORING -> v.context.startActivity(Intent(v.context, MainListActivity::class.java))
-//                        GRAFFITI -> v.context.startActivity(Intent(v.context, GraffitiActivity::class.java))
+//                        OUTLINE -> v.activity.startActivity(Intent(v.activity, AutoDrawActivity::class.java))
+//                        COLORING -> v.activity.startActivity(Intent(v.activity, MainListActivity::class.java))
+//                        GRAFFITI -> v.activity.startActivity(Intent(v.activity, GraffitiActivity::class.java))
 //                        PIXEL -> Intent()
                 }
             }
