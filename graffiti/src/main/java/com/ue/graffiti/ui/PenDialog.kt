@@ -76,14 +76,7 @@ class PenDialog : DialogFragment(), OnSeekBarChangeListener {
         val images = context.getXmlImageArray(imageArrayId)
         val names = resources.getStringArray(nameArrayId)
 
-        return images.indices
-                .mapTo(ArrayList<Any>(images.size)) {
-                    PenShapeItem(flag, images[it], names[it])
-                            .apply {
-                                index = it
-                                isChecked = lastIndex == it
-                            }
-                }
+        return images.indices.mapTo(ArrayList<Any>(images.size)) { PenShapeItem(flag, images[it], names[it], it, lastIndex == it) }
     }
 
     fun setCurrentPaint(currentPaint: Paint) {
@@ -149,16 +142,12 @@ class PenDialog : DialogFragment(), OnSeekBarChangeListener {
             when (lastShapeImage) {
             //椭圆
                 R.drawable.ic_line_oval -> {
-                    val p = Path().apply {
-                        addOval(RectF(0f, 0f, paintStrokeSize.toFloat(), paintStrokeSize.toFloat()), Path.Direction.CCW)
-                    }
+                    val p = Path().apply { addOval(RectF(0f, 0f, paintStrokeSize.toFloat(), paintStrokeSize.toFloat()), Path.Direction.CCW) }
                     pathEffect = PathDashPathEffect(p, (paintStrokeSize + 10).toFloat(), 0f, PathDashPathEffect.Style.ROTATE)
                 }
             //正方形
                 R.drawable.ic_line_rect -> {
-                    val p = Path().apply {
-                        addRect(RectF(0f, 0f, paintStrokeSize.toFloat(), paintStrokeSize.toFloat()), Path.Direction.CCW)
-                    }
+                    val p = Path().apply { addRect(RectF(0f, 0f, paintStrokeSize.toFloat(), paintStrokeSize.toFloat()), Path.Direction.CCW) }
                     pathEffect = PathDashPathEffect(p, (paintStrokeSize + 10).toFloat(), 0f, PathDashPathEffect.Style.ROTATE)
                 }
             //毛笔

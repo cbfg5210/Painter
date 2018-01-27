@@ -26,12 +26,12 @@ internal class PenStyleAdapter(activity: Activity, mItems: MutableList<Any>?) : 
 
     init {
         mItems?.apply {
-            for (i in items.indices) {
-                val item = items[i] as? PenShapeItem ?: continue
-                if (!item.isChecked) continue
-
-                if (item.flag == PenDialog.FLAG_SHAPE) lastShapeIndex = i
-                else lastEffectIndex = i
+            for (i in mItems.indices) {
+                val item = mItems[i] as? PenShapeItem ?: continue
+                if (item.isChecked) {
+                    if (item.flag == PenDialog.FLAG_SHAPE) lastShapeIndex = i
+                    else lastEffectIndex = i
+                }
             }
             items.addAll(this)
         }
@@ -74,9 +74,6 @@ internal class PenStyleAdapter(activity: Activity, mItems: MutableList<Any>?) : 
                     item as PenCatTitleItem
                     tvPenCatTitle.text = item.title
                 }
-
-                //remove default listener for itemView
-                override fun setListeners(clickListener: View.OnClickListener) {}
             }
         }
     }
