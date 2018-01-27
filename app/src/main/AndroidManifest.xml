@@ -30,6 +30,7 @@
         <activity
             android:name=".WorksActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:label="@string/works_list"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
     </application>

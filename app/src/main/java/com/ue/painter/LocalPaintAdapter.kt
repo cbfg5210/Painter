@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import com.ue.painter.R
+import com.ue.painter.WorksActivity
 import com.ue.painter.model.LocalWork
 import kotlinx.android.synthetic.main.co_item_work.view.*
 import java.text.SimpleDateFormat
@@ -50,7 +51,7 @@ internal class LocalPaintAdapter(var context: Context, localImageListBean: List<
         Picasso.with(context)
                 .load(item.imageUrl)
                 .resize(imgWidth, (imgWidth / item.wvHRadio).toInt())
-                .tag(WorksFragment.TAG_WORKS)
+                .tag(WorksActivity.TAG_WORKS)
                 .into(holder.ivThemeImage)
 
         holder.tvLastModify.text = dateFormatter.format(item.lastModTimeStamp)

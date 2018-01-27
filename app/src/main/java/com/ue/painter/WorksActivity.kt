@@ -9,7 +9,6 @@ import android.widget.Toast
 import com.squareup.picasso.Picasso
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.ue.coloring.feature.main.LocalPaintAdapter
-import com.ue.coloring.feature.main.WorksFragment
 import com.ue.painter.model.LocalWork
 import com.ue.painter.util.FileUtils
 import com.ue.painter.util.bindUtilDestroy2
@@ -24,6 +23,7 @@ import kotlinx.android.synthetic.main.co_fragment_works.*
  */
 class WorksActivity : RxAppCompatActivity() {
     companion object {
+        val TAG_WORKS = "works"
         fun start(context: Context) {
             context.startActivity(Intent(context, WorksActivity::class.java))
         }
@@ -48,9 +48,9 @@ class WorksActivity : RxAppCompatActivity() {
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    Picasso.with(this@WorksActivity).resumeTag(WorksFragment.TAG_WORKS)
+                    Picasso.with(this@WorksActivity).resumeTag(TAG_WORKS)
                 } else if (newState == RecyclerView.SCROLL_STATE_SETTLING) {
-                    Picasso.with(this@WorksActivity).pauseTag(WorksFragment.TAG_WORKS)
+                    Picasso.with(this@WorksActivity).pauseTag(TAG_WORKS)
                 }
             }
         })

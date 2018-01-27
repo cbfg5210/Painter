@@ -14,7 +14,7 @@ object FileUtils {
 
     fun obtainLocalImages(): List<LocalWork> {
         val localWorks = ArrayList<LocalWork>()
-        val path = Environment.getExternalStorageDirectory().path + Constants.PATH_COLORING
+        val path = Environment.getExternalStorageDirectory().path + Constants.PATH_GRAFFITI
         val f = File(path)
         if (f.listFiles() != null) {
             val file = f.listFiles()
