@@ -118,13 +118,13 @@ class OutlineActivity : RxAppCompatActivity(),
 
         rvPaintOptions.apply {
             setHasFixedSize(true)
-            adapter = PaintAdapter(getXmlImageArray(R.array.au_pens))
+            adapter = PaintAdapter(this@OutlineActivity, getXmlImageArray(R.array.au_pens))
                     .apply { itemListener = AdapterView.OnItemClickListener { _, _, imgRes, _ -> advOutline.setPaintBitmapRes(imgRes) } }
         }
 
         rvPaintColorOptions.apply {
             setHasFixedSize(true)
-            adapter = PaintColorAdapter(resources.getIntArray(R.array.au_paintColorOptions))
+            adapter = PaintColorAdapter(this@OutlineActivity, resources.getIntArray(R.array.au_paintColorOptions).toTypedArray())
                     .apply { itemListener = AdapterView.OnItemClickListener { _, _, paintColor, _ -> advOutline.setPaintColor(paintColor) } }
         }
     }

@@ -23,12 +23,9 @@ fun Context.toast(messageRes: Int, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, getString(messageRes), duration).show()
 }
 
-fun Context.getXmlImageArray(arrayId: Int): IntArray {
+fun Context.getXmlImageArray(arrayId: Int): Array<Int> {
     val ta = this.resources.obtainTypedArray(arrayId)
-    val imageArray = IntArray(ta.length())
-    for (i in imageArray.indices) {
-        imageArray[i] = ta.getResourceId(i, 0)
-    }
+    val imageArray = Array(ta.length(), { i -> ta.getResourceId(i, 0) })
     ta.recycle()
     return imageArray
 }

@@ -67,4 +67,5 @@ dependencies {
     implementation deps.spinKit
     implementation deps.rxLifecycle.lib
     implementation deps.rxLifecycle.components
+    implementation deps.recyclerAdapterDelegate
 }

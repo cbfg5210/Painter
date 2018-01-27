@@ -33,7 +33,7 @@ open class Touch(canvasView: CanvasView?) : View.OnTouchListener {
     //当前第一只手指事件坐标
     var curPoint: PointF = PointF()
     //当前第二只手指事件坐标
-    protected var secPoint: PointF
+    protected var secPoint: PointF = PointF()
     //特殊处理用
     //贝塞尔曲线切换时敲定
     var control: Boolean = false
@@ -55,11 +55,10 @@ open class Touch(canvasView: CanvasView?) : View.OnTouchListener {
     }
 
     init {
-        secPoint = PointF()
         beginPoint = PointF()
 
         if (canvasView != null) {
-            selectedPel = canvasView!!.getSelectedPel()
+            selectedPel = canvasView.getSelectedPel()
             //获取undo
             undoStack = canvasView.undoStack
             // 画布裁剪区域
