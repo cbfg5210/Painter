@@ -171,8 +171,6 @@ class DrawPictureDialog : DialogFragment(), View.OnClickListener {
     }
 
     companion object {
-        fun newInstance(): DrawPictureDialog {
-            return DrawPictureDialog().apply { setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialog) }
-        }
+        fun newInstance()=DrawPictureDialog().apply { setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialog) }
     }
 }

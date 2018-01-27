@@ -26,7 +26,7 @@ class PictureDialog : DialogFragment() {
         val pictureItems = ArrayList<PictureItem>(pictureNameArray.size)
         pictureNameArray.indices.mapTo(pictureItems) { PictureItem(pictureNameArray[it], pictureResArray[it]) }
 
-        rvPictures.adapter = PictureAdapter(pictureItems).apply {
+        rvPictures.adapter = PictureAdapter(activity, pictureItems).apply {
             itemClickListener = object : PictureAdapter.OnPictureItemListener {
                 override fun onItemClick(position: Int, pictureItem: PictureItem) {
                     pickPictureListener?.onPicturePicked(pictureItem.res)
@@ -43,8 +43,6 @@ class PictureDialog : DialogFragment() {
     }
 
     companion object {
-        fun newInstance(): PictureDialog {
-            return PictureDialog().apply { setStyle(DialogFragment.STYLE_NO_TITLE, R.style.gr_GraffitiDialog) }
-        }
+        fun newInstance() = PictureDialog().apply { setStyle(DialogFragment.STYLE_NO_TITLE, R.style.gr_GraffitiDialog) }
     }
 }

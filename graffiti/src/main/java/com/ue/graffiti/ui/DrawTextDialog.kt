@@ -182,8 +182,6 @@ class DrawTextDialog : DialogFragment(), View.OnClickListener {
     }
 
     companion object {
-        fun newInstance(): DrawTextDialog {
-            return DrawTextDialog().apply { setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialog) }
-        }
+        fun newInstance()=DrawTextDialog().apply { setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialog) }
     }
 }

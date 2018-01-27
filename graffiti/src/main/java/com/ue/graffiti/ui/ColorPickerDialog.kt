@@ -43,9 +43,7 @@ class ColorPickerDialog : DialogFragment() {
     }
 
     companion object {
-        fun newInstance(): ColorPickerDialog {
-            //如果在onCreateDialog初始化界面的话设置的主题没有效果
-            return ColorPickerDialog().apply { setStyle(DialogFragment.STYLE_NORMAL, R.style.gr_GraffitiDialog) }
-        }
+        //如果在onCreateDialog初始化界面的话设置的主题没有效果
+        fun newInstance() = ColorPickerDialog().apply { setStyle(DialogFragment.STYLE_NORMAL, R.style.gr_GraffitiDialog) }
     }
 }

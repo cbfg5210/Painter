@@ -40,10 +40,6 @@ internal class PenStyleAdapter(activity: Activity, mItems: MutableList<Any>?) : 
     }
 
     override fun onClick(view: View, position: Int) {
-        if (position < 0 || position >= itemCount) {
-            return
-        }
-
         val item = items[position] as PenShapeItem
         if (item.isChecked) return
 
