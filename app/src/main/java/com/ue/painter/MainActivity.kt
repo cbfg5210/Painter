@@ -21,6 +21,7 @@ class MainActivity : RxAppCompatActivity() {
                 .setBannerTitles(arrayListOf(getString(R.string.no_works_display)))
                 .setImageLoader(PicassoImageLoader())
                 .setBannerStyle(BannerConfig.NUM_INDICATOR_TITLE)
+                .setOnBannerListener { WorksActivity.start(this) }
                 .start()
 
         Work.get()

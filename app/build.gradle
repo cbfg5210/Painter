@@ -56,4 +56,5 @@ dependencies {
     implementation deps.rxLifecycle.components
     implementation deps.andPermission
     implementation deps.recyclerAdapterDelegate
+    implementation deps.picasso
 }

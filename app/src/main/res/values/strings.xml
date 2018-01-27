@@ -3,4 +3,5 @@
     <string name="recent_works_display">最近作品展示</string>
     <string name="no_works_display">主人派我来充场的.png</string>
     <string name="load_photo_err_no_perm">加载图片失败：没有外部存储的读写权限！</string>
+    <string name="read_data_error">读取数据出错:%s</string>
 </resources>

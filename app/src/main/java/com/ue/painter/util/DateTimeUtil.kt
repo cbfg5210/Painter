@@ -1,4 +1,4 @@
-package com.ue.coloring.util
+package com.ue.painter.util
 
 import java.util.*
 
