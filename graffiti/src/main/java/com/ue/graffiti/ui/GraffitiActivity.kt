@@ -19,6 +19,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.ue.graffiti.R
+import com.ue.graffiti.R.id.*
 import com.ue.graffiti.constant.DrawPelFlags
 import com.ue.graffiti.constant.SPKeys
 import com.ue.graffiti.event.OnMultiTouchListener

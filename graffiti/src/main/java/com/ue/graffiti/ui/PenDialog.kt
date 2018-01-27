@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
-import com.ue.adapterdelegate.Item
 import com.ue.adapterdelegate.OnDelegateClickListener
 import com.ue.graffiti.R
 import com.ue.graffiti.constant.SPKeys
@@ -19,9 +18,9 @@ import com.ue.graffiti.model.PenCatTitleItem
 import com.ue.graffiti.model.PenShapeItem
 import com.ue.graffiti.util.getPaintEffectByImage
 import com.ue.graffiti.util.getPaintShapeByImage
-import com.ue.library.util.getXmlImageArray
 import com.ue.graffiti.widget.PenEffectView
 import com.ue.library.util.SPUtils
+import com.ue.library.util.getXmlImageArray
 import kotlinx.android.synthetic.main.gr_dialog_pen.view.*
 
 //调色板对话框
@@ -60,12 +59,12 @@ class PenDialog : DialogFragment(), OnSeekBarChangeListener {
         }
     }
 
-    private val penList: MutableList<Item>
+    private val penList: MutableList<Any>
         get() {
             lastShapeIndex = SPUtils.getInt(SPKeys.SP_PAINT_SHAPE_INDEX, 0)
             lastEffectIndex = SPUtils.getInt(SPKeys.SP_PAINT_EFFECT_INDEX, 0)
 
-            return ArrayList<Item>().apply {
+            return ArrayList<Any>().apply {
                 add(PenCatTitleItem(getString(R.string.gr_line_shape)))
                 addAll(getPenShapes(FLAG_SHAPE, R.array.gr_penShapeImages, R.array.gr_penShapeNames, lastShapeIndex))
                 add(PenCatTitleItem(getString(R.string.gr_special_effect)))
@@ -73,12 +72,12 @@ class PenDialog : DialogFragment(), OnSeekBarChangeListener {
             }
         }
 
-    private fun getPenShapes(flag: Int, imageArrayId: Int, nameArrayId: Int, lastIndex: Int): ArrayList<Item> {
+    private fun getPenShapes(flag: Int, imageArrayId: Int, nameArrayId: Int, lastIndex: Int): ArrayList<Any> {
         val images = context.getXmlImageArray(imageArrayId)
         val names = resources.getStringArray(nameArrayId)
 
         return images.indices
-                .mapTo(ArrayList<Item>(images.size)) {
+                .mapTo(ArrayList<Any>(images.size)) {
                     PenShapeItem(flag, images[it], names[it])
                             .apply {
                                 index = it

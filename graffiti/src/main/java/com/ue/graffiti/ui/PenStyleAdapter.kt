@@ -1,14 +1,12 @@
 package com.ue.graffiti.ui
 
 import android.app.Activity
-import android.support.v7.widget.RecyclerView
 import android.view.View
-import com.ue.adapterdelegate.BaseAdapterDelegate
+import com.ue.adapterdelegate.AdapterDelegate
+import com.ue.adapterdelegate.BaseViewHolder
 import com.ue.adapterdelegate.DelegationAdapter
-import com.ue.adapterdelegate.Item
 import com.ue.adapterdelegate.OnDelegateClickListener
 import com.ue.graffiti.R
-import com.ue.graffiti.base.BaseViewHolder
 import com.ue.graffiti.model.PenCatTitleItem
 import com.ue.graffiti.model.PenShapeItem
 import kotlinx.android.synthetic.main.gr_item_pen_cat_title.view.*
@@ -17,7 +15,7 @@ import kotlinx.android.synthetic.main.gr_item_pen_shape.view.*
 /**
  * Created by hawk on 2018/1/17.
  */
-internal class PenStyleAdapter(activity: Activity, items: MutableList<Item>?) : DelegationAdapter<Item>(), OnDelegateClickListener {
+internal class PenStyleAdapter(activity: Activity, mItems: MutableList<Any>?) : DelegationAdapter<Any>(), OnDelegateClickListener {
     var delegateClickListener: OnDelegateClickListener? = null
     private var lastShapeIndex = 0
     private var lastEffectIndex = 0
@@ -27,26 +25,18 @@ internal class PenStyleAdapter(activity: Activity, items: MutableList<Item>?) : 
     }
 
     init {
-        if (items != null) {
+        mItems?.apply {
             for (i in items.indices) {
                 val item = items[i] as? PenShapeItem ?: continue
-                if (!item.isChecked) {
-                    continue
-                }
-                if (item.flag == PenDialog.FLAG_SHAPE) {
-                    lastShapeIndex = i
-                } else {
-                    lastEffectIndex = i
-                }
+                if (!item.isChecked) continue
+
+                if (item.flag == PenDialog.FLAG_SHAPE) lastShapeIndex = i
+                else lastEffectIndex = i
             }
-            this.items.addAll(items)
+            items.addAll(this)
         }
-
-        val delegate = PenItemDelegate(activity)
-        delegate.onDelegateClickListener = this
-        this.addDelegate(delegate)
-
         addDelegate(PenTitleItemDelegate(activity))
+        addDelegate(PenItemDelegate(activity).apply { delegateClickListener = this@PenStyleAdapter })
     }
 
     override fun onClick(view: View, position: Int) {
@@ -55,9 +45,8 @@ internal class PenStyleAdapter(activity: Activity, items: MutableList<Item>?) : 
         }
 
         val item = items[position] as PenShapeItem
-        if (item.isChecked) {
-            return
-        }
+        if (item.isChecked) return
+
         if (item.flag == PenDialog.FLAG_SHAPE) {
             (items[lastShapeIndex] as PenShapeItem).isChecked = false
             notifyItemChanged(lastShapeIndex, 0)
@@ -73,52 +62,38 @@ internal class PenStyleAdapter(activity: Activity, items: MutableList<Item>?) : 
         delegateClickListener?.onClick(view, position)
     }
 
-    private class PenTitleItemDelegate(activity: Activity) : BaseAdapterDelegate<Item>(activity, R.layout.gr_item_pen_cat_title) {
+    private class PenTitleItemDelegate(activity: Activity) : AdapterDelegate<Any>(activity, R.layout.gr_item_pen_cat_title) {
 
-        override fun onCreateViewHolder(itemView: View): RecyclerView.ViewHolder {
-            return ViewHolder(itemView)
-        }
+        override fun isForViewType(item: Any) = item is PenCatTitleItem
 
-        override fun isForViewType(item: Item): Boolean {
-            return item is PenCatTitleItem
-        }
+        override fun onCreateViewHolder(itemView: View): BaseViewHolder<Any> {
+            return object : BaseViewHolder<Any>(itemView) {
+                private val tvPenCatTitle = itemView.tvPenCatTitle
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item, payloads: List<Any>) {
-            (holder as BaseViewHolder).update(item)
-        }
+                override fun updateContents(item: Any) {
+                    item as PenCatTitleItem
+                    tvPenCatTitle.text = item.title
+                }
 
-        internal inner class ViewHolder(itemView: View) : BaseViewHolder(itemView) {
-            var tvPenCatTitle = itemView.tvPenCatTitle!!
-
-            override fun update(item: Any) {
-                item as PenCatTitleItem
-                tvPenCatTitle.text = item.title
+                //remove default listener for itemView
+                override fun setListeners(clickListener: View.OnClickListener) {}
             }
         }
     }
 
-    private class PenItemDelegate(activity: Activity) : BaseAdapterDelegate<Item>(activity, R.layout.gr_item_pen_shape) {
+    private class PenItemDelegate(activity: Activity) : AdapterDelegate<Any>(activity, R.layout.gr_item_pen_shape) {
+        override fun isForViewType(item: Any) = item is PenShapeItem
 
-        override fun onCreateViewHolder(itemView: View): RecyclerView.ViewHolder {
-            return ViewHolder(itemView)
-        }
+        override fun onCreateViewHolder(itemView: View): BaseViewHolder<Any> {
+            return object : BaseViewHolder<Any>(itemView) {
+                private val rbShapeName = itemView.rbShapeName
 
-        override fun isForViewType(item: Item): Boolean {
-            return item is PenShapeItem
-        }
-
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item, payloads: List<Any>) {
-            (holder as BaseViewHolder).update(item)
-        }
-
-        internal inner class ViewHolder(itemView: View) : BaseViewHolder(itemView) {
-            var rbShapeName = itemView.rbShapeName!!
-
-            override fun update(item: Any) {
-                item as PenShapeItem
-                rbShapeName.text = item.name
-                rbShapeName.setCompoundDrawablesWithIntrinsicBounds(0, item.image, 0, 0)
-                rbShapeName.isChecked = item.isChecked
+                override fun updateContents(item: Any) {
+                    item as PenShapeItem
+                    rbShapeName.text = item.name
+                    rbShapeName.setCompoundDrawablesWithIntrinsicBounds(0, item.image, 0, 0)
+                    rbShapeName.isChecked = item.isChecked
+                }
             }
         }
     }

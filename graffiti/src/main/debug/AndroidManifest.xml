@@ -19,7 +19,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/gr_module_name"
         android:screenOrientation="portrait"
-        android:theme="@style/AppTheme">
+        android:theme="@style/FullScreenTheme">
         <activity
             android:name="com.ue.graffiti.ui.GraffitiActivity"
             android:configChanges="orientation|keyboardHidden"
