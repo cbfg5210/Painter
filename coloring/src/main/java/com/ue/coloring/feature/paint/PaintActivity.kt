@@ -3,7 +3,6 @@ package com.ue.coloring.feature.paint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
@@ -11,7 +10,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import com.squareup.picasso.Picasso
 import com.ue.adapterdelegate.OnDelegateClickListener
 import com.ue.coloring.factory.DialogHelper
 import com.ue.coloring.util.FileUtils
@@ -19,9 +17,8 @@ import com.ue.coloring.widget.ColorPicker
 import com.ue.coloring.widget.ColourImageView
 import com.ue.coloring.widget.TipDialog
 import com.ue.fingercoloring.R
-import com.ue.library.event.SimpleTarget
+import com.ue.library.util.ImageLoaderUtils
 import com.ue.library.util.IntentUtils
-import com.ue.library.util.PicassoUtils
 import kotlinx.android.synthetic.main.co_activity_paint.*
 
 
@@ -68,15 +65,11 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun loadPicture() {
         tipDialog.showTip(supportFragmentManager, getString(R.string.co_load_picture))
-        PicassoUtils.displayImage(this, civColoring, picturePath, object : SimpleTarget() {
-            override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
-                tipDialog.dismiss()
-            }
 
-            override fun onBitmapFailed(errorDrawable: Drawable?) {
+        ImageLoaderUtils.display(civColoring, picturePath, 0, getString(R.string.co_load_picture_failed), object : ImageLoaderUtils.ImageLoaderCallback2 {
+            override fun onBitmapResult(bitmap: Bitmap?) {
                 tipDialog.dismiss()
-                Toast.makeText(this@PaintActivity, getString(R.string.co_load_picture_failed), Toast.LENGTH_SHORT).show()
-                finish()
+                bitmap ?: finish()
             }
         })
     }
@@ -286,15 +279,10 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
         civColoring.clearStack()
         hasSaved = true
 
-        PicassoUtils.displayImage(this, civColoring, path ?: picturePath, object : SimpleTarget() {
-            override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
+        ImageLoaderUtils.display(civColoring, path ?: picturePath, 0, getString(R.string.co_load_picture_failed), object : ImageLoaderUtils.ImageLoaderCallback2 {
+            override fun onBitmapResult(bitmap: Bitmap?) {
                 tipDialog.dismiss()
-            }
-
-            override fun onBitmapFailed(errorDrawable: Drawable?) {
-                tipDialog.dismiss()
-                Toast.makeText(this@PaintActivity, getString(R.string.co_load_picture_failed), Toast.LENGTH_SHORT).show()
-                finish()
+                bitmap ?: finish()
             }
         })
     }

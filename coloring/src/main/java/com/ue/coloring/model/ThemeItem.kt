@@ -1,11 +1,7 @@
 package com.ue.coloring.model
 
-import com.ue.adapterdelegate.Item
-
 /**
  * Created by hawk on 2017/12/24.
  */
 
-class ThemeItem(var name: String, var imageUrl: String) : Item {
-    var visible = false
-}
+class ThemeItem(val name: String, val imageUrl: String, var visible: Boolean)

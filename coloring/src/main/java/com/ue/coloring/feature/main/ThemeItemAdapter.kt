@@ -1,37 +1,34 @@
 package com.ue.coloring.feature.main
 
 import android.app.Activity
-import android.support.v7.widget.RecyclerView
+import android.graphics.Point
 import android.view.View
 import com.google.android.flexbox.FlexboxLayoutManager
-import com.squareup.picasso.Picasso
-import com.ue.adapterdelegate.BaseAdapterDelegate
+import com.ue.adapterdelegate.AdapterDelegate
+import com.ue.adapterdelegate.BaseViewHolder
 import com.ue.adapterdelegate.DelegationAdapter
-import com.ue.adapterdelegate.Item
 import com.ue.adapterdelegate.OnDelegateClickListener
-import com.ue.fingercoloring.R
 import com.ue.coloring.feature.paint.PaintActivity
 import com.ue.coloring.model.ThemeItem
 import com.ue.coloring.model.ThemeTitle
-import com.ue.library.util.PicassoUtils
+import com.ue.fingercoloring.R
+import com.ue.library.util.ImageLoaderUtils
 import kotlinx.android.synthetic.main.co_item_theme.view.*
 import kotlinx.android.synthetic.main.co_item_theme_title.view.*
 
 /**
  * Created by hawk on 2017/12/24.
  */
-internal class ThemeItemAdapter(private val activity: Activity, items: List<Item>?) : DelegationAdapter<Item>(), OnDelegateClickListener {
+internal class ThemeItemAdapter(private val activity: Activity, items: List<Any>?) : DelegationAdapter<Any>(), OnDelegateClickListener {
+    companion object {
+        private val TYPE_TITLE = -1
+    }
 
     init {
         if (items != null) this.items.addAll(items)
 
-        val titleItemDelegate = TitleItemDelegate(activity)
-        titleItemDelegate.onDelegateClickListener = this
-        this.addDelegate(titleItemDelegate)
-
-        val themeItemDelegate = ThemeItemDelegate(activity)
-        themeItemDelegate.onDelegateClickListener = this
-        this.addDelegate(themeItemDelegate)
+        addDelegate(TitleItemDelegate(activity).apply { delegateClickListener = this@ThemeItemAdapter })
+        addDelegate(ThemeItemDelegate(activity).apply { delegateClickListener = this@ThemeItemAdapter })
     }
 
     override fun onClick(view: View, position: Int) {
@@ -43,53 +40,45 @@ internal class ThemeItemAdapter(private val activity: Activity, items: List<Item
             PaintActivity.start(activity, true, item.name, item.imageUrl)
             return
         }
-        if (view.tag == null || view.tag !is Int) {
-            return
+
+        if (view.tag != TYPE_TITLE) return
+
+        val item = items[position + 1] as ThemeItem
+        val visible = !item.visible
+
+        var themeItem: Any
+        var lastIndex = 1
+        for (i in position + 1 until itemCount) {
+            themeItem = items[i]
+            if (themeItem !is ThemeItem) break
+            lastIndex = i
+            themeItem.visible = visible
         }
-        val tag = view.tag as Int
-        if (tag == -1) {
-            val item = items[position + 1] as ThemeItem
-            val visible = !item.visible
+        //notifyItemRangeChanged(position + 1, i - 1);//会有异常
+        if (visible) notifyItemRangeInserted(position + 1, lastIndex)
+        else notifyItemRangeRemoved(position + 1, lastIndex)
+    }
 
-            var i = 1
-            while (position + i < itemCount && items[position + i] !is ThemeTitle)
-                (items[position + i++] as ThemeItem).visible = visible
+    private class TitleItemDelegate(activity: Activity) : AdapterDelegate<Any>(activity, R.layout.co_item_theme_title) {
 
-            //notifyItemRangeChanged(position + 1, i - 1);//会有异常
-            if (visible)
-                notifyItemRangeInserted(position + 1, i - 1)
-            else
-                notifyItemRangeRemoved(position + 1, i - 1)
+        override fun isForViewType(item: Any) = item is ThemeTitle
+
+        override fun onCreateViewHolder(itemView: View): BaseViewHolder<Any> {
+            return object : BaseViewHolder<Any>(itemView) {
+                val ivThemeImage = itemView.ivThemeImage
+                val ivThemeName = itemView.ivThemeName
+
+                override fun updateContents(item: Any) {
+                    item as ThemeTitle
+                    itemView.tag = TYPE_TITLE
+                    ivThemeName.text = item.name
+                    ImageLoaderUtils.display(ivThemeImage.ivThemeImage, item.imgUrl)
+                }
+            }
         }
     }
 
-    private class TitleItemDelegate(activity: Activity) : BaseAdapterDelegate<Item>(activity, R.layout.co_item_theme_title) {
-
-        override fun onCreateViewHolder(itemView: View): RecyclerView.ViewHolder {
-            itemView.tag = TYPE_TITLE
-            return ViewHolder(itemView)
-        }
-
-        override fun isForViewType(item: Item): Boolean {
-            return item is ThemeTitle
-        }
-
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item, payloads: List<Any>) {
-            val vHolder = holder as ViewHolder
-            val title = item as ThemeTitle
-            val context = holder.itemView.context
-
-            vHolder.ivThemeName.text = title.name
-            PicassoUtils.displayImage(context, vHolder.ivThemeImage, title.imgUrl)
-        }
-
-        private class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            val ivThemeImage = itemView.ivThemeImage!!
-            val ivThemeName = itemView.ivThemeName!!
-        }
-    }
-
-    private class ThemeItemDelegate(activity: Activity) : BaseAdapterDelegate<Item>(activity, R.layout.co_item_theme) {
+    private class ThemeItemDelegate(activity: Activity) : AdapterDelegate<Any>(activity, R.layout.co_item_theme) {
         private val imgSize: Int
         private val margin: Int
 
@@ -99,43 +88,30 @@ internal class ThemeItemAdapter(private val activity: Activity, items: List<Item
             margin = (screenWidth - imgSize * 3) / 6
         }
 
-        override fun onCreateViewHolder(itemView: View): RecyclerView.ViewHolder {
-            return ViewHolder(itemView)
-        }
+        override fun isForViewType(item: Any) = item is ThemeItem
 
-        override fun isForViewType(item: Item): Boolean {
-            return item is ThemeItem
-        }
+        override fun onCreateViewHolder(itemView: View): BaseViewHolder<Any> {
+            return object : BaseViewHolder<Any>(itemView) {
+                val ivThemeItem = itemView.ivThemeTerm
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, item: Item, payloads: List<Any>) {
-            val vHolder = holder as ViewHolder
-            val themeTerm = item as ThemeItem
-            val lp = holder.itemView.layoutParams
+                override fun updateContents(item: Any) {
+                    item as ThemeItem
+                    val lp = itemView.layoutParams
 
-            if (!themeTerm.visible) {
-                lp.height = 0
-                return
+                    if (!item.visible) {
+                        lp.height = 0
+                        return
+                    }
+
+                    if (lp is FlexboxLayoutManager.LayoutParams) {
+                        lp.width = imgSize
+                        lp.height = imgSize
+                        lp.setMargins(margin, margin, margin, margin)
+                    }
+                    //resize:有效减少内存、加快速度
+                    ImageLoaderUtils.display(ivThemeItem, item.imageUrl, Point(imgSize, imgSize), ThemesFragment.TAG_THEMES)
+                }
             }
-
-            if (lp is FlexboxLayoutManager.LayoutParams) {
-                lp.width = imgSize
-                lp.height = imgSize
-                lp.setMargins(margin, margin, margin, margin)
-            }
-
-            Picasso.with(holder.itemView.context)
-                    .load(themeTerm.imageUrl)
-                    .resize(imgSize, imgSize)//有效减少内存、加快速度
-                    .tag(ThemesFragment.TAG_THEMES)
-                    .into(vHolder.ivThemeItem)
         }
-
-        private class ViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            val ivThemeItem = itemView.ivThemeTerm!!
-        }
-    }
-
-    companion object {
-        private val TYPE_TITLE = -1
     }
 }

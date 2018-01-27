@@ -9,13 +9,13 @@ import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.ue.fingercoloring.R
 import com.ue.coloring.event.OnAddWordsSuccessListener
 import com.ue.coloring.event.OnChangeBorderListener
 import com.ue.coloring.factory.DialogHelper
 import com.ue.coloring.widget.DragedTextView
 import com.ue.coloring.widget.TipDialog
-import com.ue.library.util.PicassoUtils
+import com.ue.fingercoloring.R
+import com.ue.library.util.ImageLoaderUtils
 import kotlinx.android.synthetic.main.co_dialog_after_effect.view.*
 
 
@@ -64,7 +64,7 @@ class AfterEffectDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         rootView = LayoutInflater.from(context).inflate(R.layout.co_dialog_after_effect, null)
 
-        PicassoUtils.displayImage(context, rootView.current_image, "file://$imageUri")
+        ImageLoaderUtils.display(rootView.current_image, "file://$imageUri")
 
         val listener = View.OnClickListener { v ->
             when (v.id) {

@@ -36,6 +36,11 @@ object ImageLoaderUtils {
         else load(iv, image).resize(size.x, size.y).into(iv)
     }
 
+    fun display(iv: ImageView, image: Any, size: Point, tag: String) {
+        if (size.x == 0 || size.y == 0) load(iv, image).tag(tag).into(iv)
+        else load(iv, image).resize(size.x, size.y).tag(tag).into(iv)
+    }
+
     fun display(iv: ImageView, image: Any, errorDrawableRes: Int, callback: ImageLoaderCallback) {
         iv.tag = object : SimpleTarget() {
             override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom) {
@@ -86,7 +91,8 @@ object ImageLoaderUtils {
                 }
             }
         }
-        load(iv, image).error(errorDrawableRes).into(iv.tag as Target)
+        if (errorDrawableRes == 0) load(iv, image).into(iv.tag as Target)
+        else load(iv, image).error(errorDrawableRes).into(iv.tag as Target)
     }
 
     interface ImageLoaderCallback {

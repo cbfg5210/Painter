@@ -13,6 +13,7 @@ import com.ue.coloring.event.OnChangeBorderListener
 import com.ue.coloring.widget.ColorPickerSeekBar
 import com.ue.fingercoloring.R
 import com.ue.library.util.SPUtils
+import com.ue.library.util.dip2px
 import kotlinx.android.synthetic.main.co_layout_check_box.view.*
 import kotlinx.android.synthetic.main.co_view_addborder.view.*
 import kotlinx.android.synthetic.main.co_view_addwords.view.*
@@ -86,10 +87,8 @@ class DialogHelper(private val context: Context) {
         AlertDialog.Builder(context)
                 .setTitle(R.string.co_add_border)
                 .setPositiveButton(R.string.co_ok) { _, _ ->
-                    if (drawableId == 1)
-                        listener.changeBorder(R.drawable.xiangkuang, DensityUtils.dip2px(context, 36f), DensityUtils.dip2px(context, 36f), DensityUtils.dip2px(context, 21f), DensityUtils.dip2px(context, 21f))
-                    else
-                        listener.changeBorder(R.drawable.xiangkuang2, DensityUtils.dip2px(context, 16f), DensityUtils.dip2px(context, 16f), DensityUtils.dip2px(context, 16f), DensityUtils.dip2px(context, 16f))
+                    if (drawableId == 1) listener.changeBorder(R.drawable.xiangkuang, context.dip2px(36f), context.dip2px(36f), context.dip2px(21f), context.dip2px(21f))
+                    else listener.changeBorder(R.drawable.xiangkuang2, context.dip2px(16f), context.dip2px(16f), context.dip2px(16f), context.dip2px(16f))
                 }
                 .setNegativeButton(R.string.co_cancel, null)
                 .setView(layout)

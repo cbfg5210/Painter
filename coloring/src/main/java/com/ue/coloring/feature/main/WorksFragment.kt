@@ -9,10 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.squareup.picasso.Picasso
-import com.ue.fingercoloring.R
 import com.ue.coloring.model.LocalWork
 import com.ue.coloring.util.FileUtils
 import com.ue.coloring.widget.TimeLineDecoration
+import com.ue.fingercoloring.R
+import com.ue.library.util.dispose
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -94,6 +95,6 @@ class WorksFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        RxJavaUtils.dispose(disposable)
+        dispose(disposable)
     }
 }

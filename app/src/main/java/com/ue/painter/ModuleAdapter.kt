@@ -43,7 +43,7 @@ class ModuleAdapter(activity: Activity) : DelegationAdapter<ModuleItem>() {
         addDelegate(delegate)
     }
 
-    class ModuleDelegate(activity: Activity) : AdapterDelegate<ModuleItem>(activity, R.layout.item_module) {
+    private class ModuleDelegate(activity: Activity) : AdapterDelegate<ModuleItem>(activity, R.layout.item_module) {
         override fun onCreateViewHolder(itemView: View): BaseViewHolder<ModuleItem> {
             return object : BaseViewHolder<ModuleItem>(itemView) {
                 private val vgModule = itemView.vgModule

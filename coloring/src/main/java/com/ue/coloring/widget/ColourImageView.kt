@@ -10,6 +10,7 @@ import com.ue.coloring.constant.SPKeys
 import com.ue.coloring.event.OnDrawLineListener
 import com.ue.coloring.util.SizedStack
 import com.ue.library.util.SPUtils
+import com.ue.library.util.dispose
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -105,7 +106,7 @@ class ColourImageView : AppCompatImageView {
         if (isOk) {
             ProgressLoading.show(context, true)
             ProgressLoading.setOnDismissListener(DialogInterface.OnDismissListener {
-                RxJavaUtils.dispose(mDisposable)
+                dispose(mDisposable)
             })
 
             doFillColorAction(x, y)
@@ -113,7 +114,7 @@ class ColourImageView : AppCompatImageView {
     }
 
     private fun doFillColorAction(x: Int, y: Int) {
-        RxJavaUtils.dispose(mDisposable)
+        dispose(mDisposable)
         mDisposable = Observable
                 .create(ObservableOnSubscribe<Bitmap> { e ->
                     val bm = mBitmap!!
