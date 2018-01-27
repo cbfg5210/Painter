@@ -29,21 +29,22 @@ class Work {
         PermissionUtils.checkReadWriteStoragePerms(context, context.getString(R.string.load_photo_err_no_perm), object : SimplePermissionListener() {
             override fun onSucceed(requestCode: Int, grantPermissions: MutableList<String>) {
                 Observable
-                        .create(ObservableOnSubscribe<ArrayList<WorkItem>> { e ->
-                            val works = ArrayList<WorkItem>()
+                        .create(ObservableOnSubscribe<ArrayList<PictureWorkItem>> { e ->
+                            val works = ArrayList<PictureWorkItem>()
                             val externalPath = Environment.getExternalStorageDirectory().path
 
-                            val outlineWork = getLatestFile("$externalPath${Constants.PATH_OUTLINE}")
-                            if (outlineWork != null) works.add(WorkItem("${context.getString(R.string.module_outline)}-${outlineWork.name}", "file://${outlineWork.absolutePath}"))
-
-                            val coloringWork = getLatestFile("$externalPath${Constants.PATH_COLORING}")
-                            if (coloringWork != null) works.add(WorkItem("${context.getString(R.string.module_coloring)}-${coloringWork.name}", "file://${coloringWork.absolutePath}"))
-
-                            val graffitiWork = getLatestFile("$externalPath${Constants.PATH_GRAFFITI}")
-                            if (graffitiWork != null) works.add(WorkItem("${context.getString(R.string.module_graffiti)}-${graffitiWork.name}", "file://${graffitiWork.absolutePath}"))
-
-                            val pixelWork = getLatestFile("$externalPath${Constants.PATH_PIXEL}")
-                            if (pixelWork != null) works.add(WorkItem("${context.getString(R.string.module_pixel)}-${pixelWork.name}", "file://${pixelWork.absolutePath}"))
+                            getLatestFile("$externalPath${Constants.PATH_OUTLINE}")?.apply {
+                                works.add(PictureWorkItem("${context.getString(R.string.module_outline)}-$name", "file://$absolutePath"))
+                            }
+                            getLatestFile("$externalPath${Constants.PATH_COLORING}")?.apply {
+                                works.add(PictureWorkItem("${context.getString(R.string.module_coloring)}-$name", "file://$absolutePath"))
+                            }
+                            getLatestFile("$externalPath${Constants.PATH_GRAFFITI}")?.apply {
+                                works.add(PictureWorkItem("${context.getString(R.string.module_graffiti)}-$name", "file://$absolutePath"))
+                            }
+                            getLatestFile("$externalPath${Constants.PATH_PIXEL}")?.apply {
+                                works.add(PictureWorkItem("${context.getString(R.string.module_pixel)}-$name", "file://$absolutePath"))
+                            }
 
                             e.onNext(works)
                             e.onComplete()
@@ -71,6 +72,6 @@ class Work {
     }
 
     interface OnFetchWorksListener {
-        fun onWorksFetched(works: ArrayList<WorkItem>)
+        fun onWorksFetched(works: ArrayList<PictureWorkItem>)
     }
 }
