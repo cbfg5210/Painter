@@ -46,7 +46,7 @@ dependencies {
         implementation project(':autodraw')
         implementation project(':coloring')
         implementation project(':graffiti')
-        implementation project(':pixelpaint')
+        //implementation project(':pixelpaint')
     }
 
     implementation deps.banner

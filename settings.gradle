@@ -1,1 +1,1 @@
-include ':app', ':coloring', ':pixelpaint', ':autodraw', ':library', ':graffiti'
+include ':app', ':coloring', ':autodraw', ':library', ':graffiti'
