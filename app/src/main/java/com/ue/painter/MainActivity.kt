@@ -2,8 +2,8 @@ package com.ue.painter
 
 import android.os.Bundle
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
-import com.ue.painter.model.PictureWorkItem
-import com.ue.painter.model.Work
+import com.ue.painter.model.PictureWork
+import com.ue.painter.model.WorkShop
 import com.youth.banner.BannerConfig
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -24,9 +24,9 @@ class MainActivity : RxAppCompatActivity() {
                 .setOnBannerListener { WorksActivity.start(this) }
                 .start()
 
-        Work.get()
-                .getRecentWorks(this, object : Work.OnFetchWorksListener {
-                    override fun onWorksFetched(works: ArrayList<PictureWorkItem>) {
+        WorkShop.get()
+                .getRecentWorks(this, object : WorkShop.OnFetchPicWorksListener {
+                    override fun onPicWorksFetched(works: ArrayList<PictureWork>) {
                         if (works.isEmpty()) return
 
                         val images = ArrayList<Any>()

@@ -5,17 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
-import android.widget.Toast
 import com.squareup.picasso.Picasso
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
-import com.ue.coloring.feature.main.LocalPaintAdapter
-import com.ue.painter.model.LocalWork
-import com.ue.painter.util.FileUtils
-import com.ue.painter.util.bindUtilDestroy2
-import io.reactivex.Observable
-import io.reactivex.ObservableOnSubscribe
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.ue.coloring.feature.main.WorksAdapter
+import com.ue.library.util.toast
+import com.ue.painter.model.Work
+import com.ue.painter.model.WorkShop
 import kotlinx.android.synthetic.main.co_fragment_works.*
 
 /**
@@ -29,8 +24,7 @@ class WorksActivity : RxAppCompatActivity() {
         }
     }
 
-    private lateinit var adapter: LocalPaintAdapter
-    private var localWorks: List<LocalWork>? = null
+    private lateinit var adapter: WorksAdapter
 
     private var isLoadingData = false
 
@@ -41,7 +35,7 @@ class WorksActivity : RxAppCompatActivity() {
         ervWorks.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         ervWorks.addItemDecoration(TimeLineDecoration(this, (resources.displayMetrics.widthPixels * 0.085f).toInt()))
 
-        adapter = LocalPaintAdapter(this, localWorks)
+        adapter = WorksAdapter(this)
         ervWorks.adapter = adapter
 
         ervWorks.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -62,24 +56,15 @@ class WorksActivity : RxAppCompatActivity() {
         if (isLoadingData) return
 
         isLoadingData = true
-        Observable
-                .create(ObservableOnSubscribe<List<LocalWork>> { e ->
-                    val results = FileUtils.obtainLocalImages()
-                    e.onNext(results)
-                    e.onComplete()
-                })
-                .subscribeOn(Schedulers.single())
-                .observeOn(AndroidSchedulers.mainThread())
-                .bindUtilDestroy2(this)
-                .subscribe({ mLocalWorks ->
-                    adapter.items.clear()
-                    adapter.items.addAll(mLocalWorks)
+        WorkShop.get().getAllWorks(this, object : WorkShop.OnFetchWorksListener {
+            override fun onWorksFetched(works: List<Work>) {
+                if (works.isEmpty()) toast(R.string.no_works)
+                else {
+                    adapter.items.addAll(works)
                     adapter.notifyDataSetChanged()
-
-                    localWorks = mLocalWorks
-                    isLoadingData = false
-                }, { t ->
-                    Toast.makeText(this, getString(R.string.read_data_error, t.message), Toast.LENGTH_SHORT).show()
-                })
+                }
+                isLoadingData = false
+            }
+        })
     }
 }

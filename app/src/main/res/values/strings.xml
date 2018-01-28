@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">小画家</string>
     <string name="recent_works_display">最近作品展示</string>
@@ -5,4 +6,5 @@
     <string name="load_photo_err_no_perm">加载图片失败：没有外部存储的读写权限！</string>
     <string name="read_data_error">读取数据出错:%s</string>
     <string name="works_list">作品列表</string>
+    <string name="no_works">还没有保存过作品哦~</string>
 </resources>
