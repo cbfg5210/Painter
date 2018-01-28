@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
+import android.view.MenuItem
 import com.squareup.picasso.Picasso
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.ue.coloring.feature.main.WorksAdapter
@@ -31,6 +32,8 @@ class WorksActivity : RxAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.co_fragment_works)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         ervWorks.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         ervWorks.addItemDecoration(TimeLineDecoration(this, (resources.displayMetrics.widthPixels * 0.085f).toInt()))
@@ -66,5 +69,13 @@ class WorksActivity : RxAppCompatActivity() {
                 isLoadingData = false
             }
         })
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            finish()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
