@@ -3,7 +3,7 @@
 
     <style name="AppTheme" parent="QMUI_Theme">
         <!-- 配置qmui提供的theme -->
-        <item name="qmui_content_spacing_horizontal">20dp</item>
+        <item name="qmui_content_spacing_horizontal">@dimen/widget_size_20</item>
     </style>
 
     <!--&lt;!&ndash; Base application theme. &ndash;&gt;-->

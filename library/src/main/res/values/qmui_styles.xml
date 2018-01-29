@@ -73,7 +73,7 @@
 
     <style name="QMUITextAppearance" parent="TextAppearanceBase">
         <item name="android:textColor">?attr/qmui_config_color_black</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/font_size_14</item>
         <item name="android:textColorHighlight">?attr/qmui_config_color_background_pressed</item>
     </style>
 
@@ -91,6 +91,6 @@
 
     <style name="QMUITextAppearance.GridItem.Small">
         <item name="android:textColor">@color/qmui_config_color_gray_3</item>
-        <item name="android:textSize">11sp</item>
+        <item name="android:textSize">@dimen/font_size_11</item>
     </style>
 </resources>
