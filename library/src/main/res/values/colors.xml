@@ -10,4 +10,35 @@
     <color name="col_ff4081">#FF4081</color>
     <color name="col_666666">#666666</color>
     <color name="col_efefef">#efefef</color>
+
+    <color name="col_801b88ee">#801B88EE</color>
+    <color name="col_416f96">#416f96</color>
+    <color name="col_243f55">#243f55</color>
+    <color name="col_80416f96">#80416f96</color>
+    <color name="col_00000000">#00000000</color>
+    <color name="col_ffffff">#ffffff</color>
+    <color name="col_c0ffffff">#c0ffffff</color>
+    <color name="col_80FFFFFF">#80FFFFFF</color>
+    <color name="col_c0000000">#C0000000</color>
+    <color name="col_1b88ee">#1B88EE</color>
+    <color name="col_fa3a3a">#FA3A3A</color>
+    <color name="col_dee0e2">#DEE0E2</color>
+    <color name="col_d4d6d8">#d4d6d8</color>
+    <color name="col_f4f5f7">#f4f5f7</color>
+    <color name="col_eeeff1">#EEEFF1</color>
+    <color name="col_212832">#212832</color>
+    <color name="col_547fb0">#547FB0</color>
+    <color name="col_eeeef0">#eeeef0</color>
+    <color name="col_353c46">#353C46</color>
+    <color name="col_49505a">#49505A</color>
+    <color name="col_5d646e">#5D646E</color>
+    <color name="col_717882">#717882</color>
+    <color name="col_858c96">#717882</color>
+    <color name="col_99a0aa">#99A0AA</color>
+    <color name="col_adb4be">#ADB4BE</color>
+    <color name="col_c4c8d0">#C4C8D0</color>
+    <color name="col_d8dce4">#D8DCE4</color>
+    <color name="col_8000a8e1">#8000a8e1</color>
+    <color name="col_c000a8e1">#c000a8e1</color>
+    <color name="col_00a8e1">#00a8e1</color>
 </resources>

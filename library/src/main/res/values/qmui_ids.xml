@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- dialog -->
+    <item name="qmui_dialog_edit_input" type="id"/>
+    <item name="qmui_dialog_edit_right_icon" type="id"/>
+
+</resources>
