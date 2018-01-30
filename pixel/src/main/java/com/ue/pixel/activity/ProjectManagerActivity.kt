@@ -12,6 +12,7 @@ import android.widget.TextView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
+import com.ue.library.util.toast
 import com.ue.pixel.R
 import com.ue.pixel.pxerexportable.ExportingUtils
 import com.ue.pixel.util.Tool
@@ -44,7 +45,7 @@ class ProjectManagerActivity : AppCompatActivity() {
         projects.clear()
 
         //Find all projects
-        val parent = File(ExportingUtils.getProjectPath())
+        val parent = File(ExportingUtils.projectPath)
         if (parent.exists()) {
             val temp = parent.listFiles(PxerFileFilter()) ?: return
             for (i in temp.indices) {
@@ -103,9 +104,9 @@ class ProjectManagerActivity : AppCompatActivity() {
 
                                     setResult(Activity.RESULT_OK, newIntent)
 
-                                    Tool.toast(this@ProjectManagerActivity, getString(R.string.projectdeleted))
+                                    toast( getString(R.string.projectdeleted))
                                 } else
-                                    Tool.toast(this@ProjectManagerActivity, getString(R.string.unabletodeleteproject))
+                                    toast( getString(R.string.unabletodeleteproject))
                             }.show()
                         }
                         true

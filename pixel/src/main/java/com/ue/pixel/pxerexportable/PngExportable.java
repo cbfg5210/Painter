@@ -55,7 +55,7 @@ public class PngExportable extends Exportable{
                     protected void onPostExecute(Void aVoid) {
                         ExportingUtils.getInstance().dismissAllDialogs();
                         ExportingUtils.getInstance().toastAndFinishExport(context,file.toString());
-                        Tool.freeMemory();
+                        Tool.INSTANCE.freeMemory();
                         super.onPostExecute(aVoid);
                     }
                 }.execute();

@@ -25,6 +25,7 @@ import android.view.View;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.ue.library.util.ExtendUtilsKt;
 import com.ue.pixel.activity.DrawingActivity;
 import com.ue.pixel.R;
 import com.ue.pixel.util.Tool;
@@ -310,7 +311,7 @@ public class PxerView extends View implements ScaleGestureDetector.OnScaleGestur
 
         reCalBackground();
 
-        Tool.freeMemory();
+        Tool.INSTANCE.freeMemory();
     }
 
     public boolean loadProject(File file) {
@@ -329,7 +330,7 @@ public class PxerView extends View implements ScaleGestureDetector.OnScaleGestur
         } catch (Exception e) {
             e.printStackTrace();
 
-            Tool.prompt(getContext()).content(R.string.error_while_loading_project).title(R.string.something_went_wrong).negativeText("").positiveColor(Color.GRAY).positiveText(R.string.cancel).show();
+            Tool.INSTANCE.prompt(getContext()).content(R.string.error_while_loading_project).title(R.string.something_went_wrong).negativeText("").positiveColor(Color.GRAY).positiveText(R.string.cancel).show();
             return false;
         }
 
@@ -365,7 +366,7 @@ public class PxerView extends View implements ScaleGestureDetector.OnScaleGestur
             }
         }
         onLayerUpdate();
-        this.projectName = Tool.stripExtension(file.getName());
+        this.projectName = Tool.INSTANCE.stripExtension(file.getName());
 
         mScaleFactor = 1.f;
         drawMatrix.reset();
@@ -376,13 +377,13 @@ public class PxerView extends View implements ScaleGestureDetector.OnScaleGestur
         reCalBackground();
         invalidate();
 
-        Tool.freeMemory();
+        Tool.INSTANCE.freeMemory();
         return true;
     }
 
     public void undo() {
         if (historyIndex.get(currentLayer) <= 0) {
-            Tool.toast(getContext(), "No more undo");
+            Tool.INSTANCE.toast(getContext(), "No more undo");
             return;
         }
 
@@ -403,7 +404,7 @@ public class PxerView extends View implements ScaleGestureDetector.OnScaleGestur
 
     public void redo() {
         if (redohistory.get(currentLayer).size() <= 0) {
-            Tool.toast(getContext(), "No more redo");
+            Tool.INSTANCE.toast(getContext(), "No more redo");
             return;
         }
 
@@ -428,7 +429,7 @@ public class PxerView extends View implements ScaleGestureDetector.OnScaleGestur
             if (force)
                 new MaterialDialog.Builder(getContext())
                         .titleGravity(GravityEnum.CENTER)
-                        .typeface(Tool.myType, Tool.myType)
+                        .typeface(Tool.INSTANCE.getMyType(), Tool.INSTANCE.getMyType())
                         .inputRange(0, 20)
                         .title(R.string.save_project)
                         .input(getContext().getString(R.string.name), null, false, new MaterialDialog.InputCallback() {
@@ -472,7 +473,7 @@ public class PxerView extends View implements ScaleGestureDetector.OnScaleGestur
             DrawingActivity.Companion.setCurrentProjectPath(Environment.getExternalStorageDirectory().getPath().concat("/PxerStudio/Project/").concat(projectName + ".pxer"));
             if (getContext() instanceof DrawingActivity)
                 ((DrawingActivity) getContext()).setTitle(projectName, false);
-            Tool.saveProject(projectName + PXER_EXTENSION_NAME, gson.toJson(out));
+            Tool.INSTANCE.saveProject(projectName + PXER_EXTENSION_NAME, gson.toJson(out));
             return true;
         }
     }
@@ -649,7 +650,7 @@ public class PxerView extends View implements ScaleGestureDetector.OnScaleGestur
             case Fill:
                 //The fill tool is brought to us with aid by some open source project online :( I forgot the name
                 if (event.getAction() == MotionEvent.ACTION_UP && x == downX && downY == y) {
-                    Tool.freeMemory();
+                    Tool.INSTANCE.freeMemory();
 
                     int targetColor = bitmapToDraw.getPixel(x, y);
                     Queue<Point> toExplore = new LinkedList<>();

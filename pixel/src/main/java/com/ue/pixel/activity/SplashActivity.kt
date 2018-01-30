@@ -8,7 +8,7 @@ import android.os.Handler
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.animation.AccelerateDecelerateInterpolator
-import com.ue.pixel.util.Tool
+import com.ue.library.util.toast
 import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : AppCompatActivity() {
@@ -46,7 +46,7 @@ class SplashActivity : AppCompatActivity() {
         if (requestCode == 0x456) {
             for (i in grantResults.indices) {
                 if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                    Tool.toast(this, "Sorry this application require storage permission for saving your project")
+                    toast("Sorry this application require storage permission for saving your project")
                     handler.postDelayed({ recreate() }, 1000)
                     return
                 }

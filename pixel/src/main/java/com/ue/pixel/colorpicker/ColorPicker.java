@@ -32,10 +32,10 @@ public class ColorPicker {
         popupWindow = new PopupWindow(contentView);
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#424242")));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            popupWindow.setElevation(Tool.convertDpToPixel(8,c));
+            popupWindow.setElevation(Tool.INSTANCE.convertDpToPixel(8,c));
         }
-        popupWindow.setHeight((int) Tool.convertDpToPixel(292, c));
-        popupWindow.setWidth((int) Tool.convertDpToPixel(216, c));
+        popupWindow.setHeight((int) Tool.INSTANCE.convertDpToPixel(292, c));
+        popupWindow.setWidth((int) Tool.INSTANCE.convertDpToPixel(216, c));
     }
 
     public void show(View anchor) {

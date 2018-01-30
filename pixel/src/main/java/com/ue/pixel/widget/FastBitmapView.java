@@ -36,7 +36,7 @@ public class FastBitmapView extends View {
     private Path visibilityBg = new Path();
     private float strokeWidth = 2.5f;
     private float radius = 0f;
-    private float iconSize = Tool.convertDpToPixel(24, getContext());
+    private float iconSize = Tool.INSTANCE.convertDpToPixel(24, getContext());
     private float iconSize2 = iconSize / 2;
 
     public FastBitmapView(Context context) {
@@ -77,7 +77,7 @@ public class FastBitmapView extends View {
     public void init() {
         accentColor = getContext().getResources().getColor(R.color.colorAccent);
         bgPaint.setStyle(Paint.Style.STROKE);
-        bgPaint.setStrokeWidth(Tool.convertDpToPixel(2, getContext()));
+        bgPaint.setStrokeWidth(Tool.INSTANCE.convertDpToPixel(2, getContext()));
         bgPaint.setColor(Color.GRAY);
 
         iconPaint.setFilterBitmap(true);
@@ -86,9 +86,9 @@ public class FastBitmapView extends View {
 
         overlay = new PorterDuffColorFilter(ColorUtils.setAlphaComponent(Color.DKGRAY, 100), PorterDuff.Mode.SRC_OVER);
 
-        strokeWidth = Tool.convertDpToPixel(strokeWidth, getContext());
+        strokeWidth = Tool.INSTANCE.convertDpToPixel(strokeWidth, getContext());
 
-        invisibleBitmap = Tool.drawableToBitmap(getResources().getDrawable(R.drawable.ic_visibility_off_24dp));
+        invisibleBitmap = Tool.INSTANCE.drawableToBitmap(getResources().getDrawable(R.drawable.ic_visibility_off_24dp));
 
         setWillNotDraw(false);
     }

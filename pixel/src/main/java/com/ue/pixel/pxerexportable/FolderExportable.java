@@ -61,8 +61,8 @@ public class FolderExportable extends Exportable{
 
                     @Override
                     protected void onProgressUpdate(Integer... values) {
-                        if (ExportingUtils.getInstance().currentProgressDialog != null) {
-                            ExportingUtils.getInstance().currentProgressDialog.setTitle("Working on frame " + String.valueOf(values[0]+1));
+                        if (ExportingUtils.getInstance().getCurrentProgressDialog() != null) {
+                            ExportingUtils.getInstance().getCurrentProgressDialog().setTitle("Working on frame " + String.valueOf(values[0]+1));
                         }
                         super.onProgressUpdate(values);
                     }
@@ -72,7 +72,7 @@ public class FolderExportable extends Exportable{
                         ExportingUtils.getInstance().dismissAllDialogs();
                         ExportingUtils.getInstance().toastAndFinishExport(context,null);
                         ExportingUtils.getInstance().scanAlotsOfFile(context,pngs);
-                        Tool.freeMemory();
+                        Tool.INSTANCE.freeMemory();
                         super.onPostExecute(aVoid);
                     }
                 }.execute();

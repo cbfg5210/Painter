@@ -57,12 +57,12 @@ public class BorderFab extends FloatingActionButton{
         bg.setPixel(0,0, Color.GRAY);
         bg.setPixel(1,1, Color.GRAY);
 
-        three = Tool.convertDpToPixel(2,getContext());
-        one = Tool.convertDpToPixel(1,getContext());
+        three = Tool.INSTANCE.convertDpToPixel(2,getContext());
+        one = Tool.INSTANCE.convertDpToPixel(1,getContext());
 
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(getContext().getResources().getColor(R.color.colorAccent));
-        paint.setStrokeWidth(Tool.convertDpToPixel(6,getContext()));
+        paint.setStrokeWidth(Tool.INSTANCE.convertDpToPixel(6,getContext()));
     }
 
     @Override
