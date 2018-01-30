@@ -7,15 +7,14 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.TextView
-import com.ue.pixel.pxerexportable.ExportingUtils
-import com.ue.pixel.util.Tool
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.ue.pixel.R
+import com.ue.pixel.pxerexportable.ExportingUtils
+import com.ue.pixel.util.Tool
 import kotlinx.android.synthetic.main.activity_project_manager.*
 import kotlinx.android.synthetic.main.content_project_manager.*
 import kotlinx.android.synthetic.main.item_project.view.*
@@ -32,10 +31,8 @@ class ProjectManagerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_project_manager)
-        val toolbar = toolbar as Toolbar
-        setSupportActionBar(toolbar)
 
-        val rv = rv as RecyclerView
+        setSupportActionBar(toolbar)
 
         rv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         fa = FastAdapter()
@@ -49,8 +46,8 @@ class ProjectManagerActivity : AppCompatActivity() {
         //Find all projects
         val parent = File(ExportingUtils.getProjectPath())
         if (parent.exists()) {
-            val temp = parent.listFiles(PxerFileFilter())
-            for (i in temp!!.indices) {
+            val temp = parent.listFiles(PxerFileFilter()) ?: return
+            for (i in temp.indices) {
                 projects.add(temp[i])
             }
             if (projects.size >= 1) {
@@ -78,8 +75,7 @@ class ProjectManagerActivity : AppCompatActivity() {
                         when (item.itemId) {
                             R.id.rename -> Tool.promptTextInput(this@ProjectManagerActivity, getString(R.string.rename)).input(null, projects[position].name, false) { _, input ->
                                 var mInput = input.toString()
-                                if (!mInput.endsWith(".pxer"))
-                                    mInput += ".pxer"
+                                if (!mInput.endsWith(".pxer")) mInput += ".pxer"
 
                                 val fromFile = File(projects[position].path)
                                 val newFile = File(projects[position].parent, mInput)
@@ -100,8 +96,7 @@ class ProjectManagerActivity : AppCompatActivity() {
                                     ia.remove(position)
                                     projects.removeAt(position)
 
-                                    if (projects.size < 1)
-                                        noProjectFound.visibility = View.VISIBLE
+                                    if (projects.size < 1) noProjectFound.visibility = View.VISIBLE
 
                                     val newIntent = Intent()
                                     newIntent.putExtra("fileNameChanged", true)
@@ -154,5 +149,4 @@ class ProjectManagerActivity : AppCompatActivity() {
             internal var projectPath: TextView = view.path as TextView
         }
     }
-
 }
