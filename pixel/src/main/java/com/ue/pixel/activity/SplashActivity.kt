@@ -1,4 +1,4 @@
-package com.benny.pxerstudio.activity
+package com.ue.pixel.activity
 
 import android.Manifest
 import android.content.Intent
@@ -9,7 +9,7 @@ import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
-import com.benny.pxerstudio.util.Tool
+import com.ue.pixel.util.Tool
 import com.ue.pixel.R
 
 class SplashActivity : AppCompatActivity() {

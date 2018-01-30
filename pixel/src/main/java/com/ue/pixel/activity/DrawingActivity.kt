@@ -1,4 +1,4 @@
-package com.benny.pxerstudio.activity
+package com.ue.pixel.activity
 
 import android.app.Activity
 import android.content.Context
@@ -29,18 +29,18 @@ import com.afollestad.materialdialogs.GravityEnum
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.folderselector.FileChooserDialog
 import com.ue.pixel.R
-import com.benny.pxerstudio.colorpicker.ColorPicker
-import com.benny.pxerstudio.colorpicker.SatValView
-import com.benny.pxerstudio.pxerexportable.AtlasExportable
-import com.benny.pxerstudio.pxerexportable.FolderExportable
-import com.benny.pxerstudio.pxerexportable.GifExportable
-import com.benny.pxerstudio.pxerexportable.PngExportable
-import com.benny.pxerstudio.shape.EraserShape
-import com.benny.pxerstudio.shape.LineShape
-import com.benny.pxerstudio.shape.RectShape
-import com.benny.pxerstudio.util.Tool
-import com.benny.pxerstudio.widget.FastBitmapView
-import com.benny.pxerstudio.widget.PxerView
+import com.ue.pixel.colorpicker.ColorPicker
+import com.ue.pixel.colorpicker.SatValView
+import com.ue.pixel.pxerexportable.AtlasExportable
+import com.ue.pixel.pxerexportable.FolderExportable
+import com.ue.pixel.pxerexportable.GifExportable
+import com.ue.pixel.pxerexportable.PngExportable
+import com.ue.pixel.shape.EraserShape
+import com.ue.pixel.shape.LineShape
+import com.ue.pixel.shape.RectShape
+import com.ue.pixel.util.Tool
+import com.ue.pixel.widget.FastBitmapView
+import com.ue.pixel.widget.PxerView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.items.AbstractItem

@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.benny.pxerstudio.activity.DrawingActivity">
+    tools:context=".activity.DrawingActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -91,7 +91,7 @@
             fab:fab_showShadow="true"
             fab:fab_size="mini" />
 
-        <com.benny.pxerstudio.widget.BorderFab
+        <com.ue.pixel.widget.BorderFab
             android:id="@+id/fab_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

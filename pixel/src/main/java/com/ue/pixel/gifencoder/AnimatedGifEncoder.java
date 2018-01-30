@@ -1,4 +1,4 @@
-package com.benny.pxerstudio.gifencoder;
+package com.ue.pixel.gifencoder;
 
 /**
  * Ported from the original Java version of AnimatedGifEncoder by nbadal

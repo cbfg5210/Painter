@@ -1,9 +1,9 @@
-package com.benny.pxerstudio.shape;
+package com.ue.pixel.shape;
 
 import android.graphics.Bitmap;
 import android.support.v4.graphics.ColorUtils;
 
-import com.benny.pxerstudio.widget.PxerView;
+import com.ue.pixel.widget.PxerView;
 
 import java.util.ArrayList;
 

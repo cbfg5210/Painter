@@ -1,4 +1,4 @@
-package com.benny.pxerstudio.colorpicker;
+package com.ue.pixel.colorpicker;
 
 import android.content.Context;
 import android.graphics.Bitmap;

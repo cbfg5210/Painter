@@ -1,4 +1,4 @@
-package com.benny.pxerstudio.pxerexportable;
+package com.ue.pixel.pxerexportable;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,8 +7,8 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 
-import com.benny.pxerstudio.util.Tool;
-import com.benny.pxerstudio.widget.PxerView;
+import com.ue.pixel.util.Tool;
+import com.ue.pixel.widget.PxerView;
 
 import java.io.File;
 import java.io.FileOutputStream;

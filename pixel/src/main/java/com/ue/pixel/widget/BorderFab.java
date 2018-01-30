@@ -1,4 +1,4 @@
-package com.benny.pxerstudio.widget;
+package com.ue.pixel.widget;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,7 +10,7 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 
 import com.ue.pixel.R;
-import com.benny.pxerstudio.util.Tool;
+import com.ue.pixel.util.Tool;
 import com.github.clans.fab.FloatingActionButton;
 
 /**

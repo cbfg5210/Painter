@@ -1,4 +1,4 @@
-package com.benny.pxerstudio.pxerexportable;
+package com.ue.pixel.pxerexportable;
 
 import android.content.Context;
 import android.media.MediaScannerConnection;
@@ -15,8 +15,8 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ue.pixel.R;
-import com.benny.pxerstudio.util.Tool;
-import com.benny.pxerstudio.widget.PxerView;
+import com.ue.pixel.util.Tool;
+import com.ue.pixel.widget.PxerView;
 
 import java.io.File;
 import java.util.List;

@@ -1,8 +1,8 @@
-package com.benny.pxerstudio.pxerexportable;
+package com.ue.pixel.pxerexportable;
 
 import android.content.Context;
 
-import com.benny.pxerstudio.widget.PxerView;
+import com.ue.pixel.widget.PxerView;
 
 /**
  * Created by BennyKok on 10/17/2016.

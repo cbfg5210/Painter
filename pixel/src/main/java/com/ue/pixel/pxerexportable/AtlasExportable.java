@@ -1,4 +1,4 @@
-package com.benny.pxerstudio.pxerexportable;
+package com.ue.pixel.pxerexportable;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,11 +7,9 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 
-import com.benny.pxerstudio.util.Tool;
-import com.benny.pxerstudio.gifencoder.AnimatedGifEncoder;
-import com.benny.pxerstudio.widget.PxerView;
+import com.ue.pixel.util.Tool;
+import com.ue.pixel.widget.PxerView;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -20,40 +18,41 @@ import java.io.OutputStream;
  * Created by BennyKok on 10/17/2016.
  */
 
-public class GifExportable extends Exportable {
+public class AtlasExportable extends Exportable {
     @Override
     public void runExport(final Context context, final PxerView pxerView) {
-        ExportingUtils.getInstance().showExportingDialog(context, pxerView, new ExportingUtils.OnExportConfirmedListenser() {
+        ExportingUtils.getInstance().showExportingDialog(context,2048, pxerView, new ExportingUtils.OnExportConfirmedListenser() {
             @Override
             public void OnExportConfirmed(String fileName, int width, int height) {
                 Paint paint = new Paint();
                 Canvas canvas = new Canvas();
 
-                //Make gif
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                AnimatedGifEncoder encoder = new AnimatedGifEncoder();
-                encoder.start(bos);
-                for (int i = 0; i < pxerView.getPxerLayers().size(); i++) {
-                    final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-                    canvas.setBitmap(bitmap);
-                    canvas.drawBitmap(pxerView.getPxerLayers().get(i).bitmap, null, new Rect(0, 0, width, height), paint);
-                    encoder.addFrame(bitmap);
-                }
-                encoder.finish();
-                final byte[] finalgif = bos.toByteArray();
-                //Finish giffing
+                int atlasWidth = (int)Math.ceil((float)pxerView.getPxerLayers().size()/(float)Math.sqrt(((float)pxerView.getPxerLayers().size())));
+                int atlasHeight = (int)Math.ceil((float)pxerView.getPxerLayers().size()/(float)atlasWidth);
 
-                final File file = new File(ExportingUtils.getInstance().checkAndCreateProjectDirs(), fileName + ".gif");
+                final Bitmap bitmap = Bitmap.createBitmap(width * atlasWidth, height * atlasHeight, Bitmap.Config.ARGB_8888);
+                canvas.setBitmap(bitmap);
+
+                int counter = 0;
+                for (int y = 0; y < atlasHeight; y++) {
+                    for (int x = 0; x < atlasWidth; x++) {
+                        if (pxerView.getPxerLayers().size() > counter) {
+                            canvas.drawBitmap(pxerView.getPxerLayers().get(counter).bitmap, null, new Rect(width * x, height * y, width * (x + 1), height * (y + 1)), paint);
+                        }
+                        counter ++;
+                    }
+                }
+
+                final File file = new File(ExportingUtils.getInstance().checkAndCreateProjectDirs(), fileName + "_Atlas" + ".png");
 
                 ExportingUtils.getInstance().showProgressDialog(context);
-
                 new AsyncTask<Void, Void, Void>() {
                     @Override
                     protected Void doInBackground(Void... params) {
                         try {
                             file.createNewFile();
                             final OutputStream out = new FileOutputStream(file);
-                            out.write(finalgif);
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
                             out.flush();
                             out.close();
                         } catch (Exception e) {
@@ -65,7 +64,7 @@ public class GifExportable extends Exportable {
                     @Override
                     protected void onPostExecute(Void aVoid) {
                         ExportingUtils.getInstance().dismissAllDialogs();
-                        ExportingUtils.getInstance().toastAndFinishExport(context,file.toString());
+                        ExportingUtils.getInstance().toastAndFinishExport(context, file.toString());
                         Tool.freeMemory();
                         super.onPostExecute(aVoid);
                     }

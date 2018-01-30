@@ -1,4 +1,4 @@
-package com.benny.pxerstudio.colorpicker;
+package com.ue.pixel.colorpicker;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.PopupWindow;
 
 import com.ue.pixel.R;
-import com.benny.pxerstudio.util.Tool;
+import com.ue.pixel.util.Tool;
 
 /**
  * Created by BennyKok on 10/14/2016.

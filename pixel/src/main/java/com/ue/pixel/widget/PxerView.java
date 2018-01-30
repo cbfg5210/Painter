@@ -1,4 +1,4 @@
-package com.benny.pxerstudio.widget;
+package com.ue.pixel.widget;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -25,10 +25,10 @@ import android.view.View;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.benny.pxerstudio.activity.DrawingActivity;
+import com.ue.pixel.activity.DrawingActivity;
 import com.ue.pixel.R;
-import com.benny.pxerstudio.util.Tool;
-import com.benny.pxerstudio.shape.BaseShape;
+import com.ue.pixel.util.Tool;
+import com.ue.pixel.shape.BaseShape;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 

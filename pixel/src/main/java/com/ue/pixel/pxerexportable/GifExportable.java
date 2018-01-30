@@ -1,4 +1,4 @@
-package com.benny.pxerstudio.pxerexportable;
+package com.ue.pixel.pxerexportable;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,9 +7,11 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 
-import com.benny.pxerstudio.util.Tool;
-import com.benny.pxerstudio.widget.PxerView;
+import com.ue.pixel.util.Tool;
+import com.ue.pixel.gifencoder.AnimatedGifEncoder;
+import com.ue.pixel.widget.PxerView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -18,21 +20,30 @@ import java.io.OutputStream;
  * Created by BennyKok on 10/17/2016.
  */
 
-public class PngExportable extends Exportable{
+public class GifExportable extends Exportable {
     @Override
     public void runExport(final Context context, final PxerView pxerView) {
         ExportingUtils.getInstance().showExportingDialog(context, pxerView, new ExportingUtils.OnExportConfirmedListenser() {
             @Override
             public void OnExportConfirmed(String fileName, int width, int height) {
                 Paint paint = new Paint();
-                final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-                Canvas canvas = new Canvas(bitmap);
-                for (int i = 0; i < pxerView.getPxerLayers().size(); i++) {
-                    if (pxerView.getPxerLayers().get(i).visible)
-                        canvas.drawBitmap(pxerView.getPxerLayers().get(i).bitmap, null, new Rect(0, 0, width, height), paint);
-                }
+                Canvas canvas = new Canvas();
 
-                final File file = new File(ExportingUtils.getInstance().checkAndCreateProjectDirs(),fileName + ".png");
+                //Make gif
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                AnimatedGifEncoder encoder = new AnimatedGifEncoder();
+                encoder.start(bos);
+                for (int i = 0; i < pxerView.getPxerLayers().size(); i++) {
+                    final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+                    canvas.setBitmap(bitmap);
+                    canvas.drawBitmap(pxerView.getPxerLayers().get(i).bitmap, null, new Rect(0, 0, width, height), paint);
+                    encoder.addFrame(bitmap);
+                }
+                encoder.finish();
+                final byte[] finalgif = bos.toByteArray();
+                //Finish giffing
+
+                final File file = new File(ExportingUtils.getInstance().checkAndCreateProjectDirs(), fileName + ".gif");
 
                 ExportingUtils.getInstance().showProgressDialog(context);
 
@@ -42,7 +53,7 @@ public class PngExportable extends Exportable{
                         try {
                             file.createNewFile();
                             final OutputStream out = new FileOutputStream(file);
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+                            out.write(finalgif);
                             out.flush();
                             out.close();
                         } catch (Exception e) {

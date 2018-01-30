@@ -1,4 +1,4 @@
-package com.benny.pxerstudio.util;
+package com.ue.pixel.util;
 
 import android.content.Context;
 import android.content.res.Resources;

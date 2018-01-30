@@ -1,8 +1,6 @@
-package com.benny.pxerstudio.shape;
+package com.ue.pixel.shape;
 
-import android.graphics.Point;
-
-import com.benny.pxerstudio.widget.PxerView;
+import com.ue.pixel.widget.PxerView;
 
 /**
  * Created by BennyKok on 10/12/2016.
