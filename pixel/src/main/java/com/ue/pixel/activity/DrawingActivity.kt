@@ -219,9 +219,11 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
         fab_color.setColor(pxerView.selectedColor)
         fab_color.colorNormal = pxerView.selectedColor
         fab_color.colorPressed = pxerView.selectedColor
-        cp = ColorPicker(this, pxerView.selectedColor, SatValView.OnColorChangeListener { newColor ->
-            pxerView.selectedColor = newColor
-            fab_color.setColor(newColor)
+        cp = ColorPicker(this, pxerView.selectedColor, object:SatValView.OnColorChangeListener{
+            override fun onColorChanged(newColor: Int) {
+                pxerView.selectedColor = newColor
+                fab_color.setColor(newColor)
+            }
         })
         fab_color.setOnClickListener { view -> cp.show(view) }
         fab_undo.setOnClickListener { pxerView.undo() }
@@ -230,7 +232,6 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
             if (pxerView.mode == PxerView.Mode.Dropper) {
                 fab_undo.show(true)
                 fab_redo.show(true)
-
                 tools_fab.show(true)
 
                 pxerView.mode = previousMode
@@ -239,8 +240,8 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
             } else {
                 fab_undo.hide(true)
                 fab_redo.hide(true)
-
                 tools_fab.hide(true)
+
                 if (tools_view.visibility == View.VISIBLE) tools_fab.callOnClick()
 
                 previousMode = pxerView.mode
@@ -322,8 +323,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
     }
 
     override fun itemTouchOnMove(oldPosition: Int, newPosition: Int): Boolean {
-        if (!isEdited)
-            isEdited = true
+        if (!isEdited) isEdited = true
 
         pxerView.moveLayer(oldPosition, newPosition)
 
@@ -356,7 +356,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
     }
 
     fun onLayerRefresh() {
-        layers_recycler?.invalidate()
+        layers_recycler.invalidate()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

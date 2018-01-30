@@ -66,8 +66,7 @@ object Tool {
         }
     }
 
-    fun stripExtension(str: String?): String? {
-        str ?: return null
+    fun stripExtension(str: String): String {
         val pos = str.lastIndexOf(".")
         return if (pos == -1) str else str.substring(0, pos)
     }
