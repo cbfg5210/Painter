@@ -299,17 +299,17 @@ class QMUIBottomSheet(context: Context) : Dialog(context, R.style.QMUI_BottomShe
 
         private fun buildViews(): View {
             return View.inflate(mContext, contentViewLayoutId, null).apply {
-                title as TextView
-                mTitleTv = title
+                tvProjectTitle as TextView
+                mTitleTv = tvProjectTitle
 
                 listview as ListView
                 mContainerView = listview
 
                 if (!TextUtils.isEmpty(mTitle)) {
-                    title.visibility = View.VISIBLE
-                    title.text = mTitle
+                    tvProjectTitle.visibility = View.VISIBLE
+                    tvProjectTitle.text = mTitle
                 } else {
-                    title.visibility = View.GONE
+                    tvProjectTitle.visibility = View.GONE
                 }
                 if (mHeaderViews.size > 0) {
                     for (headerView in mHeaderViews) {

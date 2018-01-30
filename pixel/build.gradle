@@ -71,4 +71,5 @@ dependencies {
         transitive = true
     }
     implementation deps.gson
+    implementation deps.recyclerAdapterDelegate
 }

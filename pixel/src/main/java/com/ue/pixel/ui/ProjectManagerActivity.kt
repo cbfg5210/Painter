@@ -1,152 +1,87 @@
 package com.ue.pixel.ui
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.PopupMenu
-import android.support.v7.widget.RecyclerView
 import android.view.View
-import android.widget.TextView
-import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.adapters.ItemAdapter
-import com.mikepenz.fastadapter.items.AbstractItem
-import com.ue.library.util.toast
 import com.ue.pixel.R
+import com.ue.pixel.model.ProjectItem
 import com.ue.pixel.util.ExportingUtils
-import com.ue.pixel.util.Tool
 import kotlinx.android.synthetic.main.activity_project_manager.*
-import kotlinx.android.synthetic.main.item_project.view.*
 import java.io.File
 import java.io.FileFilter
 import java.util.*
 
 class ProjectManagerActivity : AppCompatActivity() {
-
-    internal var projects = ArrayList<File>()
-    internal lateinit var fa: FastAdapter<Item>
-    internal lateinit var ia: ItemAdapter<Item>
+    internal var projectFiles = ArrayList<File>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_project_manager)
 
         setSupportActionBar(toolbar)
+        rv.adapter = ProjectAdapter(this, getProjects())
+        projectFiles.clear()
+    }
 
-        rv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        fa = FastAdapter()
-        ia = ItemAdapter()
-
-        fa.withSelectable(false)
-        rv.adapter = ia.wrap(fa)
-
-        projects.clear()
-
-        //Find all projects
+    private fun getProjects(): List<ProjectItem>? {
         val parent = File(ExportingUtils.projectPath)
-        if (parent.exists()) {
-            val temp = parent.listFiles(PxerFileFilter()) ?: return
-            for (i in temp.indices) {
-                projects.add(temp[i])
-            }
-            if (projects.size >= 1) {
-                noProjectFound.visibility = View.GONE
 
-                for (i in projects.indices) {
-                    val mName = projects[i].name.substring(0, projects[i].name.lastIndexOf('.'))
-                    val mPath = projects[i].path
-                    ia.add(Item(mName, mPath))
-                }
+        if (!parent.exists()) return null
+        val temp = parent.listFiles(FileFilter { it.name.endsWith(".pxer") }) ?: return null
 
-                fa.withOnClickListener { _, _, item, _ ->
-                    val newIntent = Intent()
-                    newIntent.putExtra("selectedProjectPath", item.path)
-
-                    setResult(Activity.RESULT_OK, newIntent)
-                    finish()
-                    true
-                }
-
-                fa.withOnLongClickListener { v, _, _, position ->
-                    val pm = PopupMenu(v.context, v)
-                    pm.inflate(R.menu.menu_popup_project)
-                    pm.setOnMenuItemClickListener { item ->
-                        when (item.itemId) {
-                            R.id.rename -> Tool.promptTextInput(this@ProjectManagerActivity, getString(R.string.rename)).input(null, projects[position].name, false) { _, input ->
-                                var mInput = input.toString()
-                                if (!mInput.endsWith(".pxer")) mInput += ".pxer"
-
-                                val fromFile = File(projects[position].path)
-                                val newFile = File(projects[position].parent, mInput)
-
-                                if (fromFile.renameTo(newFile)) {
-                                    projects[position] = newFile
-                                    ia.set(position, Item(newFile.name, newFile.path))
-                                    fa.notifyAdapterItemChanged(position)
-
-                                    val newIntent = Intent()
-                                    newIntent.putExtra("fileNameChanged", true)
-
-                                    setResult(Activity.RESULT_OK, newIntent)
-                                }
-                            }.show()
-                            R.id.delete -> Tool.prompt(this@ProjectManagerActivity).title(R.string.deleteproject).content(R.string.deleteprojectwarning).positiveText(R.string.delete).onPositive { _, _ ->
-                                if (projects[position].delete()) {
-                                    ia.remove(position)
-                                    projects.removeAt(position)
-
-                                    if (projects.size < 1) noProjectFound.visibility = View.VISIBLE
-
-                                    val newIntent = Intent()
-                                    newIntent.putExtra("fileNameChanged", true)
-
-                                    setResult(Activity.RESULT_OK, newIntent)
-
-                                    toast( getString(R.string.projectdeleted))
-                                } else
-                                    toast( getString(R.string.unabletodeleteproject))
-                            }.show()
-                        }
-                        true
-                    }
-                    pm.show()
-                    true
-                }
-            }
+        val projects = ArrayList<ProjectItem>()
+        temp.forEach {
+            projectFiles.add(it)
+            projects.add(ProjectItem(it.name.substring(0, it.name.lastIndexOf('.')), it.path))
         }
-    }
+        if (projects.size > 0) noProjectFound.visibility = View.GONE
 
-    inner class PxerFileFilter : FileFilter {
-        override fun accept(pathname: File): Boolean {
-            return pathname.name.endsWith(".pxer")
-        }
-    }
+        return projects
 
-    class Item(var title: String, var path: String) : AbstractItem<ProjectManagerActivity.Item, ProjectManagerActivity.Item.ViewHolder>() {
-
-        override fun getType(): Int {
-            return 0
-        }
-
-        override fun getLayoutRes(): Int {
-            return R.layout.item_project
-        }
-
-        override fun getViewHolder(v: View): ViewHolder {
-            return ViewHolder(v)
-        }
-
-        override fun bindView(holder: ViewHolder, payloads: List<*>?) {
-            super.bindView(holder, payloads)
-
-            holder.projectTitle.text = title
-            holder.projectPath.text = path
-        }
-
-        class ViewHolder internal constructor(view: View) : RecyclerView.ViewHolder(view) {
-            internal var projectTitle: TextView = view.title as TextView
-            internal var projectPath: TextView = view.path as TextView
-        }
+//            fa.withOnLongClickListener { v, _, _, position ->
+//                val pm = PopupMenu(v.context, v)
+//                pm.inflate(R.menu.menu_popup_project)
+//                pm.setOnMenuItemClickListener { item ->
+//                    when (item.itemId) {
+//                        R.id.rename -> Tool.promptTextInput(this@ProjectManagerActivity, getString(R.string.rename)).input(null, projectFiles[position].name, false) { _, input ->
+//                            var mInput = input.toString()
+//                            if (!mInput.endsWith(".pxer")) mInput += ".pxer"
+//
+//                            val fromFile = File(projectFiles[position].path)
+//                            val newFile = File(projectFiles[position].parent, mInput)
+//
+//                            if (fromFile.renameTo(newFile)) {
+//                                projectFiles[position] = newFile
+//                                ia.set(position, Item(newFile.name, newFile.path))
+//                                fa.notifyAdapterItemChanged(position)
+//
+//                                val newIntent = Intent()
+//                                newIntent.putExtra("fileNameChanged", true)
+//
+//                                setResult(Activity.RESULT_OK, newIntent)
+//                            }
+//                        }.show()
+//                        R.id.delete -> Tool.prompt(this@ProjectManagerActivity).title(R.string.deleteproject).content(R.string.deleteprojectwarning).positiveText(R.string.delete).onPositive { _, _ ->
+//                            if (projectFiles[position].delete()) {
+//                                ia.remove(position)
+//                                projectFiles.removeAt(position)
+//
+//                                if (projectFiles.size < 1) noProjectFound.visibility = View.VISIBLE
+//
+//                                val newIntent = Intent()
+//                                newIntent.putExtra("fileNameChanged", true)
+//
+//                                setResult(Activity.RESULT_OK, newIntent)
+//
+//                                toast(getString(R.string.projectdeleted))
+//                            } else
+//                                toast(getString(R.string.unabletodeleteproject))
+//                        }.show()
+//                    }
+//                    true
+//                }
+//                pm.show()
+//                true
+//            }
     }
 }

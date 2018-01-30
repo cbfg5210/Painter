@@ -58,10 +58,10 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
 
     companion object {
         const val UNTITLED = "Untitled"
-        const val LAST_USED_COLOR = "lastUsedColor"
-        const val LAST_OPENED_PROJECT = "lastOpenedProject"
+        private const val LAST_USED_COLOR = "lastUsedColor"
+        private const val LAST_OPENED_PROJECT = "lastOpenedProject"
         const val SELECTED_PROJECT_PATH = "selectedProjectPath"
-        const val FILE_NAME_CHANGED = "fileNameChanged"
+        private const val FILE_NAME_CHANGED = "fileNameChanged"
 
         val rectShapeFactory = RectShape()
         val lineShapeFactory = LineShape()

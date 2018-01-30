@@ -5,7 +5,7 @@
               android:orientation="vertical">
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/tvProjectTitle"
         android:layout_width="match_parent"
         android:layout_height="?attr/qmui_bottom_sheet_title_height"
         android:background="?attr/qmui_bottom_sheet_title_bg"
