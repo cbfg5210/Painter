@@ -219,7 +219,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
         fab_color.setColor(pxerView.selectedColor)
         fab_color.colorNormal = pxerView.selectedColor
         fab_color.colorPressed = pxerView.selectedColor
-        cp = ColorPicker(this, pxerView.selectedColor, object:SatValView.OnColorChangeListener{
+        cp = ColorPicker(this, pxerView.selectedColor, object : SatValView.OnColorChangeListener {
             override fun onColorChanged(newColor: Int) {
                 pxerView.selectedColor = newColor
                 fab_color.setColor(newColor)
@@ -356,7 +356,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
     }
 
     fun onLayerRefresh() {
-        layers_recycler.invalidate()
+        layers_recycler?.invalidate()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

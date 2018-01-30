@@ -2,6 +2,7 @@ package com.ue.library.util
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.WindowManager
 import android.widget.Toast
@@ -28,6 +29,10 @@ fun Context.getXmlImageArray(arrayId: Int): Array<Int> {
     val imageArray = Array(ta.length(), { i -> ta.getResourceId(i, 0) })
     ta.recycle()
     return imageArray
+}
+
+fun Context.compatGetColor(colorRes: Int): Int {
+    return ContextCompat.getColor(this, colorRes);
 }
 
 /**

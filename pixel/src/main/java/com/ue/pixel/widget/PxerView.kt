@@ -53,7 +53,7 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
         private set
     var picHeight = 0
         private set
-    private var pxerSize: Float = 0.toFloat()
+    private var pxerSize=0f
     private lateinit var picBoundary: RectF
     private val picRect = Rect()
     private val grid = Path()
