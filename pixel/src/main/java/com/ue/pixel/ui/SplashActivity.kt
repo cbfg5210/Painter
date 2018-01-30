@@ -1,4 +1,4 @@
-package com.ue.pixel.activity
+package com.ue.pixel.ui
 
 import android.Manifest
 import android.content.Intent

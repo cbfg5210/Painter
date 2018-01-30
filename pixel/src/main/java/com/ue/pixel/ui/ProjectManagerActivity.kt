@@ -1,4 +1,4 @@
-package com.ue.pixel.activity
+package com.ue.pixel.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -14,7 +14,7 @@ import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.ue.library.util.toast
 import com.ue.pixel.R
-import com.ue.pixel.pxerexportable.ExportingUtils
+import com.ue.pixel.util.ExportingUtils
 import com.ue.pixel.util.Tool
 import kotlinx.android.synthetic.main.activity_project_manager.*
 import kotlinx.android.synthetic.main.content_project_manager.*

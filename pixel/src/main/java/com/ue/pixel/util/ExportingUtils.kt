@@ -1,4 +1,4 @@
-package com.ue.pixel.pxerexportable
+package com.ue.pixel.util
 
 import android.content.Context
 import android.media.MediaScannerConnection
@@ -11,7 +11,6 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.ue.library.constant.Constants
 import com.ue.library.util.toast
 import com.ue.pixel.R
-import com.ue.pixel.util.Tool
 import com.ue.pixel.widget.PxerView
 import kotlinx.android.synthetic.main.dialog_activity_drawing.view.*
 import java.io.File

@@ -1,9 +1,16 @@
 package com.ue.library.util
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Bitmap
+import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.text.Html
+import android.text.Spanned
+import android.view.ViewPropertyAnimator
 import android.view.WindowManager
 import android.widget.Toast
 import com.trello.rxlifecycle2.android.ActivityEvent
@@ -34,6 +41,23 @@ fun Context.getXmlImageArray(arrayId: Int): Array<Int> {
 fun Context.compatGetColor(colorRes: Int): Int {
     return ContextCompat.getColor(this, colorRes);
 }
+
+fun fromHtml(source: String): Spanned {
+    return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) Html.fromHtml(source)
+    else Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY)
+}
+
+fun ViewPropertyAnimator.withAnimEndAction(endRunnable: Runnable): ViewPropertyAnimator {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) withEndAction(endRunnable)
+    else setListener(object : AnimatorListenerAdapter() {
+        override fun onAnimationEnd(animation: Animator) {
+            endRunnable.run()
+        }
+    })
+    return this
+}
+
+fun SharedPreferences.getString(key: String) = this.getString(key, "")
 
 /**
  * 根据手机的分辨率从 dp 的单位 转成为 px(像素)

@@ -8,7 +8,7 @@
     android:animateLayoutChanges="true"
     android:background="#424242"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activity.ProjectManagerActivity"
+    tools:context=".ui.ProjectManagerActivity"
     tools:showIn="@layout/activity_project_manager">
 
     <TextView

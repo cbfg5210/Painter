@@ -1,4 +1,4 @@
-package com.ue.pixel.pxerexportable
+package com.ue.pixel.exportable
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.os.AsyncTask
+import com.ue.pixel.util.ExportingUtils
 import com.ue.pixel.util.Tool
 import com.ue.pixel.widget.PxerView
 import java.io.File

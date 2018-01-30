@@ -1,4 +1,4 @@
-package com.ue.pixel.pxerexportable
+package com.ue.pixel.exportable
 
 import android.content.Context
 

@@ -1,4 +1,4 @@
-package com.ue.pixel.activity
+package com.ue.pixel.ui
 
 import android.app.Activity
 import android.content.Context
@@ -32,20 +32,20 @@ import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback
 import com.ue.library.constant.Modules
+import com.ue.library.util.fromHtml
+import com.ue.library.util.getString
+import com.ue.library.util.withAnimEndAction
 import com.ue.pixel.R
 import com.ue.pixel.colorpicker.ColorPicker
 import com.ue.pixel.colorpicker.SatValView
-import com.ue.pixel.pxerexportable.AtlasExportable
-import com.ue.pixel.pxerexportable.FolderExportable
-import com.ue.pixel.pxerexportable.GifExportable
-import com.ue.pixel.pxerexportable.PngExportable
+import com.ue.pixel.exportable.AtlasExportable
+import com.ue.pixel.exportable.FolderExportable
+import com.ue.pixel.exportable.GifExportable
+import com.ue.pixel.exportable.PngExportable
 import com.ue.pixel.shape.EraserShape
 import com.ue.pixel.shape.LineShape
 import com.ue.pixel.shape.RectShape
 import com.ue.pixel.util.Tool
-import com.ue.pixel.util.fromHtml
-import com.ue.pixel.util.getString
-import com.ue.pixel.util.withAnimEndAction
 import com.ue.pixel.widget.FastBitmapView
 import com.ue.pixel.widget.PxerView
 import kotlinx.android.synthetic.main.activity_drawing.*

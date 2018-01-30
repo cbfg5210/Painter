@@ -1,4 +1,4 @@
-package com.ue.pixel.pxerexportable
+package com.ue.pixel.exportable
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -6,8 +6,11 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.os.AsyncTask
+import com.ue.pixel.gifencoder.AnimatedGifEncoder
+import com.ue.pixel.util.ExportingUtils
 import com.ue.pixel.util.Tool
 import com.ue.pixel.widget.PxerView
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 
@@ -15,19 +18,28 @@ import java.io.FileOutputStream
  * Created by BennyKok on 10/17/2016.
  */
 
-class PngExportable : Exportable() {
+class GifExportable : Exportable() {
     override fun runExport(context: Context, pxerView: PxerView) {
         ExportingUtils.instance.showExportingDialog(context, pxerView, object : ExportingUtils.OnExportConfirmedListenser {
             override fun OnExportConfirmed(fileName: String, width: Int, height: Int) {
                 val paint = Paint()
-                val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-                val canvas = Canvas(bitmap)
-                for (i in 0 until pxerView.pxerLayers.size) {
-                    if (pxerView.pxerLayers[i].visible)
-                        canvas.drawBitmap(pxerView.pxerLayers[i].bitmap, null, Rect(0, 0, width, height), paint)
-                }
+                val canvas = Canvas()
 
-                val file = File(ExportingUtils.instance.checkAndCreateProjectDirs(), fileName + ".png")
+                //Make gif
+                val bos = ByteArrayOutputStream()
+                val encoder = AnimatedGifEncoder()
+                encoder.start(bos)
+                for (i in 0 until pxerView.pxerLayers.size) {
+                    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+                    canvas.setBitmap(bitmap)
+                    canvas.drawBitmap(pxerView.pxerLayers[i].bitmap, null, Rect(0, 0, width, height), paint)
+                    encoder.addFrame(bitmap)
+                }
+                encoder.finish()
+                val finalgif = bos.toByteArray()
+                //Finish giffing
+
+                val file = File(ExportingUtils.instance.checkAndCreateProjectDirs(), fileName + ".gif")
 
                 ExportingUtils.instance.showProgressDialog(context)
 
@@ -36,7 +48,7 @@ class PngExportable : Exportable() {
                         try {
                             file.createNewFile()
                             val out = FileOutputStream(file)
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+                            out.write(finalgif)
                             out.flush()
                             out.close()
                         } catch (e: Exception) {
