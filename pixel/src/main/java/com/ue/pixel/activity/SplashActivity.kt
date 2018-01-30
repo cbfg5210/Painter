@@ -7,25 +7,34 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
-import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.ue.pixel.util.Tool
-import com.ue.pixel.R
+import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : AppCompatActivity() {
 
-    private var handler: Handler? = null
+    private lateinit var handler: Handler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.ue.pixel.R.layout.activity_splash)
 
-        (findViewById(R.id.iv) as View).animate().alpha(1f).scaleY(1.1f).scaleX(1.1f).setDuration(2000L).interpolator = AccelerateDecelerateInterpolator()
-        (findViewById(R.id.tv) as View).animate().alpha(1f).scaleY(1.1f).scaleX(1.1f).setDuration(2000L).interpolator = AccelerateDecelerateInterpolator()
+        iv.animate()
+                .alpha(1f)
+                .scaleY(1.1f)
+                .scaleX(1.1f)
+                .setDuration(2000L)
+                .interpolator = AccelerateDecelerateInterpolator()
+        tv.animate()
+                .alpha(1f)
+                .scaleY(1.1f)
+                .scaleX(1.1f)
+                .setDuration(2000L)
+                .interpolator = AccelerateDecelerateInterpolator()
 
         handler = Handler()
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
-            handler!!.postDelayed({
+            handler.postDelayed({
                 startActivity(Intent(this@SplashActivity, DrawingActivity::class.java))
                 finish()
             }, 2000L)
@@ -38,11 +47,11 @@ class SplashActivity : AppCompatActivity() {
             for (i in grantResults.indices) {
                 if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                     Tool.toast(this, "Sorry this application require storage permission for saving your project")
-                    handler!!.postDelayed({ recreate() }, 1000)
+                    handler.postDelayed({ recreate() }, 1000)
                     return
                 }
             }
-            handler!!.postDelayed({
+            handler.postDelayed({
                 startActivity(Intent(this@SplashActivity, DrawingActivity::class.java))
                 finish()
             }, 2000L)
