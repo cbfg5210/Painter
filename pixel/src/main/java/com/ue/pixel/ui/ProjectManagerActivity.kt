@@ -17,7 +17,6 @@ import com.ue.pixel.R
 import com.ue.pixel.util.ExportingUtils
 import com.ue.pixel.util.Tool
 import kotlinx.android.synthetic.main.activity_project_manager.*
-import kotlinx.android.synthetic.main.content_project_manager.*
 import kotlinx.android.synthetic.main.item_project.view.*
 import java.io.File
 import java.io.FileFilter
