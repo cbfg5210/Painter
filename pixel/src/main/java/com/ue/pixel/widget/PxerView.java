@@ -60,7 +60,7 @@ public class PxerView extends View implements ScaleGestureDetector.OnScaleGestur
     private boolean showGrid;
     private boolean isUnrecordedChanges;
     //Picture property
-    private String projectName = DrawingActivity.Companion.getUNTITLED();
+    private String projectName = DrawingActivity.UNTITLED;
     private Paint borderPaint;
     private Rect[][] rects;
     private int picWidth;

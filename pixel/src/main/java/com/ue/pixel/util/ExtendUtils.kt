@@ -2,6 +2,7 @@ package com.ue.pixel.util
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.SharedPreferences
 import android.os.Build
 import android.text.Html
 import android.text.Spanned
@@ -25,3 +26,5 @@ fun ViewPropertyAnimator.withAnimEndAction(endRunnable: Runnable): ViewPropertyA
     })
     return this
 }
+
+fun SharedPreferences.getString(key: String) = this.getString(key, "")
