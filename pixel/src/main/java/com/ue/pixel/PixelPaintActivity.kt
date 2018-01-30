@@ -1,4 +1,4 @@
-package com.ue.pixelpaint
+package com.ue.pixel
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity

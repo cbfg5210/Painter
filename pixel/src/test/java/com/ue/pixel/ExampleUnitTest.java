@@ -1,4 +1,4 @@
-package com.ue.pixelpaint;
+package com.ue.pixel;
 
 import org.junit.Test;
 

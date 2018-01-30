@@ -1,4 +1,4 @@
-package com.ue.pixelpaint
+package com.ue.pixel
 
 import android.view.MotionEvent
 import android.view.View

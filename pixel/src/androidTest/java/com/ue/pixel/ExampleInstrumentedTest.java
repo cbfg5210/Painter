@@ -1,4 +1,4 @@
-package com.ue.pixelpaint;
+package com.ue.pixel;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
