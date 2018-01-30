@@ -54,5 +54,21 @@ dependencies {
 
     implementation deps.kotlinJre
     implementation deps.support.app_compat
+    implementation deps.support.recyclerview
+    implementation deps.support.constraintLayout
+    implementation deps.support.cardview
     implementation project(':library')
+
+    implementation('com.github.clans:fab:1.6.4') {
+        exclude group: 'com.android.support'
+    }
+    implementation('com.afollestad.material-dialogs:commons:0.9.4.5')
+    implementation('com.afollestad.material-dialogs:core:0.9.4.5')
+    implementation('com.mikepenz:fastadapter-extensions:2.6.3@aar') {
+        exclude group: 'com.android.support'
+    }
+    implementation('com.mikepenz:fastadapter:2.6.2@aar') {
+        transitive = true
+    }
+    implementation deps.gson
 }
