@@ -48,7 +48,7 @@ class PngExportable : Exportable() {
                         return null
                     }
 
-                    override fun onPostExecute(aVoid: Void) {
+                    override fun onPostExecute(aVoid: Void?) {
                         ExportingUtils.instance.dismissAllDialogs()
                         ExportingUtils.instance.toastAndFinishExport(context, file.toString())
                         Tool.freeMemory()

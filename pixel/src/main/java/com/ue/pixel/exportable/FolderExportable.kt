@@ -61,7 +61,7 @@ class FolderExportable : Exportable() {
                         super.onProgressUpdate(*values)
                     }
 
-                    override fun onPostExecute(aVoid: Void) {
+                    override fun onPostExecute(aVoid: Void?) {
                         ExportingUtils.instance.dismissAllDialogs()
                         ExportingUtils.instance.toastAndFinishExport(context, null)
                         ExportingUtils.instance.scanAlotsOfFile(context, pngs)

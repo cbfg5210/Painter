@@ -17,7 +17,6 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.text.InputType
 import android.text.TextUtils
-import android.util.Log
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
@@ -347,7 +346,6 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                 layerAdapter.notifyAdapterDataSetChanged()
             }
             R.id.export -> {
-                Log.e("DrawingActivity", "onOptionsItemSelected: projectName=$projectName,pxerView=$pxerView")
                 PngExportable().runExport(this, projectName, pxerView)
             }
             R.id.exportgif -> GifExportable().runExport(this, projectName, pxerView)

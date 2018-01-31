@@ -1,7 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:fontFamily">sans-serif-light</item>
+        <!--设置fontFamily,toast出错:Error inflating class android.widget.TextView-->
+        <!--<item name="android:fontFamily">sans-serif-light</item>-->
         <item name="android:windowBackground">@null</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
