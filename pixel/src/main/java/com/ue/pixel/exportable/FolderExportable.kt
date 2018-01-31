@@ -18,8 +18,8 @@ import java.util.*
  */
 
 class FolderExportable : Exportable() {
-    override fun runExport(context: Context, pxerView: PxerView) {
-        ExportingUtils.instance.showExportingDialog(context, pxerView, object : ExportingUtils.OnExportConfirmedListenser {
+    override fun runExport(context: Context, name: String, pxerView: PxerView) {
+        ExportingUtils.instance.showExportingDialog(context, name, pxerView.picWidth, pxerView.picHeight, object : ExportingUtils.OnExportConfirmedListenser {
             override fun OnExportConfirmed(fileName: String, width: Int, height: Int) {
                 val paint = Paint()
                 val canvas = Canvas()

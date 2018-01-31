@@ -9,5 +9,5 @@ import com.ue.pixel.widget.PxerView
  */
 
 abstract class Exportable {
-    abstract fun runExport(context: Context, pxerView: PxerView)
+    abstract fun runExport(context: Context, name: String, pxerView: PxerView)
 }

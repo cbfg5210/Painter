@@ -17,15 +17,16 @@ import java.io.FileOutputStream
  */
 
 class PngExportable : Exportable() {
-    override fun runExport(context: Context, pxerView: PxerView) {
-        ExportingUtils.instance.showExportingDialog(context, pxerView, object : ExportingUtils.OnExportConfirmedListenser {
+    override fun runExport(context: Context, name: String, pxerView: PxerView) {
+        ExportingUtils.instance.showExportingDialog(context, name, pxerView.picWidth, pxerView.picHeight, object : ExportingUtils.OnExportConfirmedListenser {
             override fun OnExportConfirmed(fileName: String, width: Int, height: Int) {
                 val paint = Paint()
                 val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
                 val canvas = Canvas(bitmap)
                 for (i in 0 until pxerView.pxerLayers.size) {
-                    if (pxerView.pxerLayers[i].visible)
+                    if (pxerView.pxerLayers[i].visible){
                         canvas.drawBitmap(pxerView.pxerLayers[i].bitmap, null, Rect(0, 0, width, height), paint)
+                    }
                 }
 
                 val file = File(ExportingUtils.instance.checkAndCreateProjectDirs(), fileName + ".png")

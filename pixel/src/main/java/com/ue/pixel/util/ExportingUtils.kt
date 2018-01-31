@@ -11,7 +11,6 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.ue.library.constant.Constants
 import com.ue.library.util.toast
 import com.ue.pixel.R
-import com.ue.pixel.widget.PxerView
 import kotlinx.android.synthetic.main.dialog_activity_drawing.view.*
 import java.io.File
 
@@ -72,25 +71,25 @@ class ExportingUtils private constructor() {
                 .show()
     }
 
-    fun showExportingDialog(context: Context, pxerView: PxerView, listenser: OnExportConfirmedListenser) {
-        showExportingDialog(context, -1, pxerView, listenser)
+    fun showExportingDialog(context: Context, projectName: String, picWidth: Int, picHeight: Int, listener: OnExportConfirmedListenser) {
+        showExportingDialog(context, -1, projectName, picWidth, picHeight, listener)
     }
 
-    fun showExportingDialog(context: Context, maxSize: Int, pxerView: PxerView, listenser: OnExportConfirmedListenser) {
+    fun showExportingDialog(context: Context, maxSize: Int, projectName: String, picWidth: Int, picHeight: Int, listener: OnExportConfirmedListenser) {
         val l = LayoutInflater.from(context).inflate(R.layout.dialog_activity_drawing, null) as ConstraintLayout
         val editText = l.et1
         val seekBar = l.sb
         val textView = l.tv2
 
-        editText.setText(pxerView.projectName)
+        editText.setText(projectName)
 
-        if (maxSize == -1) seekBar.max = 4096 - pxerView.picWidth
-        else seekBar.max = maxSize - pxerView.picWidth
+        if (maxSize == -1) seekBar.max = 4096 - picWidth
+        else seekBar.max = maxSize - picWidth
 
-        textView.text = "Size : ${pxerView.picWidth} x ${pxerView.picHeight}"
+        textView.text = "Size : $picWidth x $picHeight"
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
-                textView.text = "Size : ${(i + pxerView.picWidth)} x ${(i + pxerView.picHeight)}"
+                textView.text = "Size : ${i + picWidth} x ${i + picHeight}"
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
@@ -110,7 +109,7 @@ class ExportingUtils private constructor() {
                         context.toast("The file name cannot be empty!")
                         return@SingleButtonCallback
                     }
-                    listenser.OnExportConfirmed(editText.text.toString(), seekBar.progress + pxerView.picWidth, seekBar.progress + pxerView.picHeight)
+                    listener.OnExportConfirmed(editText.text.toString(), seekBar.progress + picWidth, seekBar.progress + picHeight)
                 })
                 .show()
     }

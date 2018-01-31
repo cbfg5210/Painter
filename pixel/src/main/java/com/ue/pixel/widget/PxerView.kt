@@ -2,23 +2,19 @@ package com.ue.pixel.widget
 
 import android.content.Context
 import android.graphics.*
-import android.os.Environment
 import android.os.SystemClock
 import android.support.v4.graphics.ColorUtils
-import android.text.InputType
 import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
-import com.afollestad.materialdialogs.GravityEnum
-import com.afollestad.materialdialogs.MaterialDialog
 import com.google.gson.Gson
 import com.google.gson.stream.JsonReader
 import com.ue.library.util.toast
 import com.ue.pixel.R
-import com.ue.pixel.ui.DrawingActivity
 import com.ue.pixel.shape.BaseShape
+import com.ue.pixel.ui.DrawingActivity
 import com.ue.pixel.util.Tool
 import java.io.File
 import java.io.FileInputStream
@@ -46,8 +42,7 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
             invalidate()
         }
     private var isUnrecordedChanges = false
-    //Picture property
-    var projectName = DrawingActivity.UNTITLED
+
     private lateinit var borderPaint: Paint
     var picWidth = 0
         private set
@@ -178,8 +173,7 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
         invalidate()
     }
 
-    fun createBlankProject(name: String, picWidth: Int, picHeight: Int) {
-        this.projectName = name
+    fun createBlankProject(picWidth: Int, picHeight: Int) {
         this.picWidth = picWidth
         this.picHeight = picHeight
 
@@ -267,7 +261,6 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
             }
         }
         onLayerUpdate()
-        this.projectName = Tool.stripExtension(file.name)
 
         mScaleFactor = 1f
         drawMatrix.reset()
@@ -323,51 +316,6 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
 
         redohistory[this.currentLayer].removeAt(redohistory[this.currentLayer].size - 1)
         invalidate()
-    }
-
-    fun save(force: Boolean): Boolean {
-        if (projectName.isEmpty()) {
-            if (force)
-                MaterialDialog.Builder(context)
-                        .titleGravity(GravityEnum.CENTER)
-                        .typeface(Tool.myType, Tool.myType)
-                        .inputRange(0, 20)
-                        .title(R.string.save_project)
-                        .input(context.getString(R.string.name), null, false) { dialog, input -> }
-                        .inputType(InputType.TYPE_CLASS_TEXT)
-                        .positiveText(R.string.save)
-                        .onPositive { dialog, which ->
-                            projectName = dialog.inputEditText!!.text.toString()
-                            if (context is DrawingActivity)
-                                (context as DrawingActivity).setTitle(projectName, false)
-                            save(true)
-                        }
-                        .show()
-            return false
-        } else {
-            (context as DrawingActivity).isEdited = false
-            val gson = Gson()
-            val out = ArrayList<PxableLayer>()
-            for (i in pxerLayers.indices) {
-                val pxableLayer = PxableLayer()
-                pxableLayer.height = picHeight
-                pxableLayer.width = picWidth
-                pxableLayer.visible = pxerLayers[i].visible
-                out.add(pxableLayer)
-                for (x in 0 until pxerLayers[i].bitmap.width) {
-                    for (y in 0 until pxerLayers[i].bitmap.height) {
-                        val pc = pxerLayers[i].bitmap.getPixel(x, y)
-                        if (pc != Color.TRANSPARENT) {
-                            out[i].pxers.add(Pxer(x, y, pc))
-                        }
-                    }
-                }
-            }
-            DrawingActivity.currentProjectPath = Environment.getExternalStorageDirectory().path + "/PxerStudio/Project/" + (projectName + ".pxer")
-            if (context is DrawingActivity) (context as DrawingActivity).setTitle(projectName, false)
-            Tool.saveProject(projectName + PXER_EXTENSION_NAME, gson.toJson(out))
-            return true
-        }
     }
 
     fun resetViewPort() {
@@ -768,5 +716,9 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
             for (item in list) clone.add(item.clone())
             return clone
         }
+    }
+
+    interface PxerViewListener{
+
     }
 }

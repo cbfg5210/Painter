@@ -15,7 +15,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.text.InputType
 import android.text.TextUtils
+import android.util.Log
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
@@ -25,6 +27,7 @@ import android.widget.SeekBar
 import com.afollestad.materialdialogs.GravityEnum
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.folderselector.FileChooserDialog
+import com.google.gson.Gson
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
@@ -72,18 +75,18 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
     var isEdited = false
         set(value) {
             field = value
-            title_text_view.text = fromHtml("PxerStudio<br><small><small>${pxerView.projectName}${(if (value) "*" else "")}</small></small>")
+            title_text_view.text = fromHtml("PxerStudio<br><small><small>${projectName}${(if (value) "*" else "")}</small></small>")
         }
 
     private lateinit var layerAdapter: FastAdapter<LayerThumbItem>
     private lateinit var layerItemAdapter: ItemAdapter<LayerThumbItem>
 
-//    private lateinit var toolsAdapter: FastAdapter<ToolItem>
-//    private lateinit var toolsItemAdapter: ItemAdapter<ToolItem>
-
     private lateinit var cp: ColorPicker
 
     private var onlyShowSelected: Boolean = false
+
+    //Picture property
+    private var projectName = DrawingActivity.UNTITLED
 
     fun setTitle(subtitle: String?, edited: Boolean) {
         title_text_view.text = fromHtml("PxerStudio<br><small><small>${if (subtitle.isNullOrEmpty()) UNTITLED else subtitle}${if (edited) "*" else ""}</small></small>")
@@ -343,11 +346,14 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
 
                 layerAdapter.notifyAdapterDataSetChanged()
             }
-            R.id.export -> PngExportable().runExport(this, pxerView)
-            R.id.exportgif -> GifExportable().runExport(this, pxerView)
-            R.id.exportfolder -> FolderExportable().runExport(this, pxerView)
-            R.id.exportatlas -> AtlasExportable().runExport(this, pxerView)
-            R.id.save -> pxerView.save(true)
+            R.id.export -> {
+                Log.e("DrawingActivity", "onOptionsItemSelected: projectName=$projectName,pxerView=$pxerView")
+                PngExportable().runExport(this, projectName, pxerView)
+            }
+            R.id.exportgif -> GifExportable().runExport(this, projectName, pxerView)
+            R.id.exportfolder -> FolderExportable().runExport(this, projectName, pxerView)
+            R.id.exportatlas -> AtlasExportable().runExport(this, projectName, pxerView)
+            R.id.save -> save(true)
             R.id.projectm -> openProjectManager()
             R.id.open -> FileChooserDialog.Builder(this)
                     .initialPath(Environment.getExternalStorageDirectory().path + "/PxerStudio/Project")
@@ -459,7 +465,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
     }
 
     private fun openProjectManager() {
-        pxerView.save(false)
+        save(false)
         startActivityForResult(Intent(this, ProjectManagerActivity::class.java), 659)
     }
 
@@ -470,12 +476,14 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                 currentProjectPath = path
                 val file = File(path)
                 if (file.exists()) {
-                    pxerView.loadProject(file)
+                    if (pxerView.loadProject(file)) {
+                        projectName = Tool.stripExtension(file.name)
+                    }
                     setTitle(Tool.stripExtension(file.name), false)
                 }
             } else if (data.getBooleanExtra(FILE_NAME_CHANGED, false)) {
                 currentProjectPath = ""
-                pxerView.projectName = ""
+                projectName = ""
                 recreate()
             }
         }
@@ -523,11 +531,12 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                 .negativeText(R.string.cancel)
                 .onPositive(MaterialDialog.SingleButtonCallback { _, _ ->
                     if (editText.text.toString().isEmpty()) return@SingleButtonCallback
-                    setTitle(editText.text.toString(), true)
-                    pxerView.createBlankProject(editText.text.toString(), seekBar.progress + 1, seekBar2.progress + 1)
+                    projectName = editText.text.toString()
+                    setTitle(projectName, true)
+                    pxerView.createBlankProject(seekBar.progress + 1, seekBar2.progress + 1)
                 })
                 .show()
-        pxerView.save(false)
+        save(false)
     }
 
     override fun onFileSelection(dialog: FileChooserDialog, file: File) {
@@ -550,10 +559,53 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                 .putString(LAST_OPENED_PROJECT, currentProjectPath)
                 .putInt(LAST_USED_COLOR, pxerView.selectedColor)
                 .apply()
-        if (!pxerView.projectName.isNullOrEmpty() || pxerView.projectName != UNTITLED)
-            pxerView.save(false)
+        if (!projectName.isNullOrEmpty() || projectName != UNTITLED)
+            save(false)
         else
-            pxerView.save(true)
+            save(true)
+    }
+
+    fun save(force: Boolean): Boolean {
+        if (projectName.isEmpty()) {
+            if (force) MaterialDialog.Builder(this)
+                    .titleGravity(GravityEnum.CENTER)
+                    .typeface(Tool.myType, Tool.myType)
+                    .inputRange(0, 20)
+                    .title(R.string.save_project)
+                    .input(getString(R.string.name), null, false) { dialog, input -> }
+                    .inputType(InputType.TYPE_CLASS_TEXT)
+                    .positiveText(R.string.save)
+                    .onPositive { dialog, which ->
+                        projectName = dialog.inputEditText!!.text.toString()
+                        setTitle(projectName, false)
+                        save(true)
+                    }
+                    .show()
+            return false
+        }
+        isEdited = false
+        val gson = Gson()
+        val out = ArrayList<PxerView.PxableLayer>()
+        val pxerLayers = pxerView.pxerLayers
+        for (i in pxerLayers.indices) {
+            val pxableLayer = PxerView.PxableLayer()
+            pxableLayer.height = pxerView.picHeight
+            pxableLayer.width = pxerView.picWidth
+            pxableLayer.visible = pxerLayers[i].visible
+            out.add(pxableLayer)
+            for (x in 0 until pxerLayers[i].bitmap.width) {
+                for (y in 0 until pxerLayers[i].bitmap.height) {
+                    val pc = pxerLayers[i].bitmap.getPixel(x, y)
+                    if (pc != Color.TRANSPARENT) {
+                        out[i].pxers.add(PxerView.Pxer(x, y, pc))
+                    }
+                }
+            }
+        }
+        DrawingActivity.currentProjectPath = Environment.getExternalStorageDirectory().path + "/PxerStudio/Project/" + (projectName + ".pxer")
+        setTitle(projectName, false)
+        Tool.saveProject(projectName + PxerView.PXER_EXTENSION_NAME, gson.toJson(out))
+        return true
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
