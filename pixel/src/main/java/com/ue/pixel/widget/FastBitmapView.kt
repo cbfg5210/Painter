@@ -89,27 +89,28 @@ class FastBitmapView : View {
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        bitmap?.apply {
-            val w = (width * Math.min(this.width, this.height) / Math.max(this.width, this.height)).toFloat()
-            val h = (height * Math.min(this.width, this.height) / Math.max(this.width, this.height)).toFloat()
+        val vWidth = width
+        val vHeight = height
 
-            boundary.set(0f, 0f, width.toFloat(), height.toFloat())
+        bitmap.apply {
+            val w = (vWidth * Math.min(width, height) / Math.max(width, height)).toFloat()
+            val h = (vHeight * Math.min(width, height) / Math.max(width, height)).toFloat()
+
+            boundary.set(0f, 0f, vWidth.toFloat(), vHeight.toFloat())
             boundary.inset(strokeWidth / 2, strokeWidth / 2)
 
-            if (this.width < this.height) {
-                boundary2.set(Math.abs(width - w) / 2, 0f, width - Math.abs(width - w) / 2, height.toFloat())
-            } else {
-                boundary2.set(0f, Math.abs(height - h) / 2, height.toFloat(), height - Math.abs(height - h) / 2)
-            }
+            if (width < height) boundary2.set(Math.abs(vWidth - w) / 2, 0f, vWidth - Math.abs(vWidth - w) / 2, vHeight.toFloat())
+            else boundary2.set(0f, Math.abs(vHeight - h) / 2, vHeight.toFloat(), vHeight - Math.abs(vHeight - h) / 2)
+
             boundary2.inset(strokeWidth, strokeWidth)
-            boundary3.set(width / 2 - iconSize2, height / 2 - iconSize2, width / 2 + iconSize2, height / 2 + iconSize2)
+            boundary3.set(vWidth / 2 - iconSize2, vHeight / 2 - iconSize2, vWidth / 2 + iconSize2, vHeight / 2 + iconSize2)
 
             visibilityBg.reset()
             visibilityBg.moveTo(strokeWidth, strokeWidth)
-            visibilityBg.lineTo(width - strokeWidth, height - strokeWidth)
+            visibilityBg.lineTo(vWidth - strokeWidth, vHeight - strokeWidth)
 
-            visibilityBg.moveTo(width - strokeWidth, strokeWidth)
-            visibilityBg.lineTo(strokeWidth, height - strokeWidth)
+            visibilityBg.moveTo(vWidth - strokeWidth, strokeWidth)
+            visibilityBg.lineTo(strokeWidth, vHeight - strokeWidth)
         }
     }
 }
