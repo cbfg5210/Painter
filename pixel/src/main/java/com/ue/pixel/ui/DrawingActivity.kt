@@ -21,7 +21,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.widget.ImageView
 import android.widget.SeekBar
 import com.afollestad.materialdialogs.GravityEnum
 import com.afollestad.materialdialogs.MaterialDialog
@@ -31,6 +30,7 @@ import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback
+import com.ue.adapterdelegate.OnDelegateClickListener
 import com.ue.library.constant.Modules
 import com.ue.library.util.fromHtml
 import com.ue.library.util.getString
@@ -78,8 +78,8 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
     private lateinit var layerAdapter: FastAdapter<LayerThumbItem>
     private lateinit var layerItemAdapter: ItemAdapter<LayerThumbItem>
 
-    private lateinit var toolsAdapter: FastAdapter<ToolItem>
-    private lateinit var toolsItemAdapter: ItemAdapter<ToolItem>
+//    private lateinit var toolsAdapter: FastAdapter<ToolItem>
+//    private lateinit var toolsItemAdapter: ItemAdapter<ToolItem>
 
     private lateinit var cp: ColorPicker
 
@@ -159,62 +159,29 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
     private fun setupControl() {
         tools_view.post({ tools_view.translationX = (tools_view.width).toFloat() })
 
-        toolsAdapter = FastAdapter()
-        toolsItemAdapter = ItemAdapter()
-
-        tools_recycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
-        tools_recycler.adapter = toolsItemAdapter.wrap(toolsAdapter)
-
-        tools_recycler.itemAnimator = DefaultItemAnimator()
-
-        with(toolsAdapter) {
-            withMultiSelect(false)
-            withSelectable(true)
-            withAllowDeselection(false)
+        val toolAdapter = ToolAdapter(this)
+        toolAdapter.itemClickListener = object : OnDelegateClickListener {
+            override fun onClick(view: View, image: Int) {
+                when (image) {
+                    R.drawable.ic_mode_edit_24dp -> pxerView.mode = PxerView.Mode.Normal
+                    R.drawable.ic_fill_24dp -> pxerView.mode = PxerView.Mode.Fill
+                    R.drawable.ic_eraser_24dp -> {
+                        pxerView.mode = PxerView.Mode.ShapeTool
+                        pxerView.shapeTool = eraserShapeFactory
+                    }
+                    R.drawable.ic_line_24dp -> {
+                        pxerView.mode = PxerView.Mode.ShapeTool
+                        pxerView.shapeTool = lineShapeFactory
+                    }
+                    R.drawable.ic_square_24dp -> {
+                        pxerView.mode = PxerView.Mode.ShapeTool
+                        pxerView.shapeTool = rectShapeFactory
+                    }
+                }
+            }
         }
-
-        with(toolsItemAdapter) {
-            add(ToolItem(R.drawable.ic_square_24dp).withOnItemClickListener { _, _, item, _ ->
-                pxerView.mode = PxerView.Mode.ShapeTool
-                pxerView.shapeTool = rectShapeFactory
-
-                tools_fab.setImageResource(item.icon)
-                notifyDataSetChanged()
-                true
-            })
-            add(ToolItem(R.drawable.ic_line_24dp).withOnItemClickListener { _, _, item, _ ->
-                pxerView.mode = PxerView.Mode.ShapeTool
-                pxerView.shapeTool = lineShapeFactory
-
-                tools_fab.setImageResource(item.icon)
-                notifyDataSetChanged()
-                true
-            })
-            add(ToolItem(R.drawable.ic_fill_24dp).withOnItemClickListener { _, _, item, _ ->
-                pxerView.mode = PxerView.Mode.Fill
-
-                tools_fab.setImageResource(item.icon)
-                notifyDataSetChanged()
-                true
-            })
-            add(ToolItem(R.drawable.ic_eraser_24dp).withOnItemClickListener { _, _, item, _ ->
-                pxerView.mode = PxerView.Mode.ShapeTool
-                pxerView.shapeTool = eraserShapeFactory
-
-                tools_fab.setImageResource(item.icon)
-                notifyDataSetChanged()
-                true
-            })
-            add(ToolItem(R.drawable.ic_mode_edit_24dp).withOnItemClickListener { _, _, item, _ ->
-                pxerView.mode = PxerView.Mode.Normal
-
-                tools_fab.setImageResource(item.icon)
-                notifyDataSetChanged()
-                true
-            })
-        }
-        toolsItemAdapter.adapterItems.reverse()
-        toolsAdapter.select(0)
+        (tools_recycler.layoutManager as LinearLayoutManager).reverseLayout = true
+        tools_recycler.adapter = toolAdapter
 
         fab_color.setColor(pxerView.selectedColor)
         fab_color.colorNormal = pxerView.selectedColor
@@ -609,6 +576,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
             return R.id.item_layer_thumb
         }
 
+
         override fun getLayoutRes(): Int {
             return R.layout.item_layer_thumb
         }
@@ -637,38 +605,6 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
 
         internal inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             var iv: FastBitmapView = view as FastBitmapView
-        }
-    }
-
-    private inner class ToolItem(var icon: Int) : AbstractItem<ToolItem, ToolItem.ViewHolder>() {
-
-        override fun getType(): Int {
-            return R.id.item_tool
-        }
-
-        override fun getLayoutRes(): Int {
-            return R.layout.item_tool
-        }
-
-        override fun bindView(viewHolder: ViewHolder, payloads: List<*>?) {
-            super.bindView(viewHolder, payloads)
-
-            if (isSelected) viewHolder.iv.alpha = 1f
-            else viewHolder.iv.alpha = 0.3f
-
-            viewHolder.iv.setImageResource(icon)
-        }
-
-        override fun isSelectable(): Boolean {
-            return true
-        }
-
-        override fun getViewHolder(v: View): ViewHolder {
-            return ViewHolder(v)
-        }
-
-        internal inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            var iv: ImageView = view as ImageView
         }
     }
 }
