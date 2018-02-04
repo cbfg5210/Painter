@@ -45,8 +45,11 @@ class ExportingUtils private constructor() {
     }
 
     fun toastAndFinishExport(context: Context, fileName: String?) {
-        if (!fileName.isNullOrEmpty()) MediaScannerConnection.scanFile(context, arrayOf(fileName), null, null)
-        context.toast("Exported successfully")
+        if (fileName.isNullOrEmpty()) context.toast("Exported failed")
+        else {
+            MediaScannerConnection.scanFile(context, arrayOf(fileName), null, null)
+            context.toast("Exported successfully")
+        }
     }
 
     fun scanAlotsOfFile(context: Context, files: List<File>) {
@@ -54,7 +57,7 @@ class ExportingUtils private constructor() {
         for (i in files.indices) {
             paths[i] = files[i].toString()
         }
-        MediaScannerConnection.scanFile(context, paths, null,null)
+        MediaScannerConnection.scanFile(context, paths, null, null)
     }
 
     fun showProgressDialog(context: Context) {
