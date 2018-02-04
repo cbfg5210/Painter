@@ -69,11 +69,11 @@ class ExportingUtils private constructor() {
                 .show()
     }
 
-    fun showExportingDialog(context: Context, projectName: String, picWidth: Int, picHeight: Int, listener: OnExportConfirmedListenser) {
+    fun showExportingDialog(context: Context, projectName: String, picWidth: Int, picHeight: Int, listener: OnExportConfirmedListener) {
         showExportingDialog(context, -1, projectName, picWidth, picHeight, listener)
     }
 
-    fun showExportingDialog(context: Context, maxSize: Int, projectName: String, picWidth: Int, picHeight: Int, listener: OnExportConfirmedListenser) {
+    fun showExportingDialog(context: Context, maxSize: Int, projectName: String, picWidth: Int, picHeight: Int, listener: OnExportConfirmedListener) {
         val l = LayoutInflater.from(context).inflate(R.layout.dialog_activity_drawing, null) as ConstraintLayout
         val editText = l.et1
         val seekBar = l.sb
@@ -107,13 +107,13 @@ class ExportingUtils private constructor() {
                         context.toast("The file name cannot be empty!")
                         return@SingleButtonCallback
                     }
-                    listener.OnExportConfirmed(editText.text.toString(), seekBar.progress + picWidth, seekBar.progress + picHeight)
+                    listener.onExportConfirmed(editText.text.toString(), seekBar.progress + picWidth, seekBar.progress + picHeight)
                 })
                 .show()
     }
 
-    interface OnExportConfirmedListenser {
-        fun OnExportConfirmed(fileName: String, width: Int, height: Int)
+    interface OnExportConfirmedListener {
+        fun onExportConfirmed(fileName: String, width: Int, height: Int)
     }
 
     companion object {

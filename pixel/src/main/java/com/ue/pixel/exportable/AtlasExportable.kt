@@ -22,8 +22,8 @@ import java.io.IOException
 
 class AtlasExportable : Exportable() {
     override fun runExport(context: Context, name: String, pxerView: PxerView) {
-        ExportingUtils.instance.showExportingDialog(context, 2048, name, pxerView.picWidth, pxerView.picHeight, object : ExportingUtils.OnExportConfirmedListenser {
-            override fun OnExportConfirmed(fileName: String, width: Int, height: Int) {
+        ExportingUtils.instance.showExportingDialog(context, 2048, name, pxerView.picWidth, pxerView.picHeight, object : ExportingUtils.OnExportConfirmedListener {
+            override fun onExportConfirmed(fileName: String, width: Int, height: Int) {
                 val paint = Paint()
                 val canvas = Canvas()
 

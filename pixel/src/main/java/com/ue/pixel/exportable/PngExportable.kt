@@ -18,8 +18,8 @@ import java.io.FileOutputStream
 
 class PngExportable : Exportable() {
     override fun runExport(context: Context, name: String, pxerView: PxerView) {
-        ExportingUtils.instance.showExportingDialog(context, name, pxerView.picWidth, pxerView.picHeight, object : ExportingUtils.OnExportConfirmedListenser {
-            override fun OnExportConfirmed(fileName: String, width: Int, height: Int) {
+        ExportingUtils.instance.showExportingDialog(context, name, pxerView.picWidth, pxerView.picHeight, object : ExportingUtils.OnExportConfirmedListener {
+            override fun onExportConfirmed(fileName: String, width: Int, height: Int) {
                 val paint = Paint()
                 val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
                 val canvas = Canvas(bitmap)
