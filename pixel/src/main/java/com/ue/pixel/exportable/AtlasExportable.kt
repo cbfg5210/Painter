@@ -5,12 +5,16 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
-import android.os.AsyncTask
+import com.ue.library.util.bindUtilDestroy
 import com.ue.pixel.util.ExportingUtils
 import com.ue.pixel.util.Tool
 import com.ue.pixel.widget.PxerView
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 
 /**
  * Created by BennyKok on 10/17/2016.
@@ -39,31 +43,41 @@ class AtlasExportable : Exportable() {
                     }
                 }
 
-                val file = File(ExportingUtils.instance.checkAndCreateProjectDirs(), fileName + "_Atlas" + ".png")
-
                 ExportingUtils.instance.showProgressDialog(context)
 
-                object : AsyncTask<Void, Void, Void>() {
-                    override fun doInBackground(vararg params: Void): Void? {
-                        try {
-                            file.createNewFile()
-                            val out = FileOutputStream(file)
-                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
-                            out.flush()
-                            out.close()
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                        return null
-                    }
+                Observable
+                        .create<Any> {
+                            val file = File(ExportingUtils.instance.checkAndCreateProjectDirs(), fileName + "_Atlas" + ".png")
+                            var out: FileOutputStream? = null
+                            try {
+                                file.createNewFile()
+                                out = FileOutputStream(file)
+                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+                                out.flush()
 
-                    override fun onPostExecute(aVoid: Void?) {
-                        ExportingUtils.instance.dismissAllDialogs()
-                        ExportingUtils.instance.toastAndFinishExport(context, file.toString())
-                        Tool.freeMemory()
-                        super.onPostExecute(aVoid)
-                    }
-                }.execute()
+                                it.onNext(file.path)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                                it.onNext("")
+                            } finally {
+                                if (out != null) {
+                                    try {
+                                        out.close()
+                                    } catch (e: IOException) {
+                                        e.printStackTrace()
+                                    }
+                                }
+                            }
+                            it.onComplete()
+                        }
+                        .subscribeOn(Schedulers.single())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .bindUtilDestroy(context)
+                        .subscribe {
+                            ExportingUtils.instance.dismissAllDialogs()
+                            ExportingUtils.instance.toastAndFinishExport(context, it as String)
+                            Tool.freeMemory()
+                        }
             }
         })
     }

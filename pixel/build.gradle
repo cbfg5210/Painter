@@ -72,4 +72,6 @@ dependencies {
     }
     implementation deps.gson
     implementation deps.recyclerAdapterDelegate
+    implementation deps.rxjava2
+    implementation deps.rxAndroid
 }
