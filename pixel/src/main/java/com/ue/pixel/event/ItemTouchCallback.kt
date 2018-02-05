@@ -1,10 +1,10 @@
-package com.ue.pixel.event;
+package com.ue.pixel.event
 
 /**
  * Created by hawk on 2018/2/5.
  */
 
-public interface ItemTouchCallback {
+interface ItemTouchCallback {
 
     /**
      * Called when an item has been dragged
@@ -14,7 +14,7 @@ public interface ItemTouchCallback {
      * @param newPosition end position
      * @return true if moved otherwise false
      */
-    boolean itemTouchOnMove(int oldPosition, int newPosition);
+    fun itemTouchOnMove(oldPosition: Int, newPosition: Int): Boolean
 
     /**
      * Called when an item has been dropped
@@ -23,5 +23,5 @@ public interface ItemTouchCallback {
      * @param oldPosition start position
      * @param newPosition end position
      */
-    void itemTouchDropped(int oldPosition, int newPosition);
+    fun itemTouchDropped(oldPosition: Int, newPosition: Int)
 }
