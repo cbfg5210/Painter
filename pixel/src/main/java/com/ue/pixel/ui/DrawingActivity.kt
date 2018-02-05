@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PopupMenu
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.text.InputType
 import android.text.TextUtils
@@ -27,10 +26,6 @@ import com.afollestad.materialdialogs.GravityEnum
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.folderselector.FileChooserDialog
 import com.google.gson.Gson
-import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.adapters.ItemAdapter
-import com.mikepenz.fastadapter.items.AbstractItem
-import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback
 import com.ue.adapterdelegate.OnDelegateClickListener
 import com.ue.library.constant.Constants
 import com.ue.library.constant.Modules
@@ -40,13 +35,14 @@ import com.ue.library.util.withAnimEndAction
 import com.ue.pixel.R
 import com.ue.pixel.colorpicker.ColorPicker
 import com.ue.pixel.colorpicker.SatValView
+import com.ue.pixel.event.OnItemClickListener2
+import com.ue.pixel.model.LayerThumbItem1
 import com.ue.pixel.shape.EraserShape
 import com.ue.pixel.shape.LineShape
 import com.ue.pixel.shape.RectShape
 import com.ue.pixel.util.ExportUtils
 import com.ue.pixel.util.ExportingUtils
 import com.ue.pixel.util.Tool
-import com.ue.pixel.widget.FastBitmapView
 import com.ue.pixel.widget.PxerView
 import kotlinx.android.synthetic.main.pi_activity_drawing.*
 import kotlinx.android.synthetic.main.pi_dialog_new_project.view.*
@@ -75,8 +71,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
             tvTitle.text = fromHtml("PxerStudio<br><small><small>${projectName}${(if (value) "*" else "")}</small></small>")
         }
 
-    private lateinit var layerAdapter: FastAdapter<LayerThumbItem>
-    private lateinit var layerItemAdapter: ItemAdapter<LayerThumbItem>
+    private lateinit var layerAdt: LayerThumbAdapter
 
     private lateinit var cp: ColorPicker
 
@@ -116,10 +111,9 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                 setTitle(Tool.stripExtension(file.name), false)
             }
         }
-        if (layerAdapter.itemCount == 0) {
-            layerItemAdapter.add(LayerThumbItem())
-            layerAdapter.select(0)
-            layerItemAdapter.getAdapterItem(0).pressed()
+
+        if (layerAdt.itemCount == 0) {
+            layerAdt.add(LayerThumbItem1(pvPixelCanvasView.pxerLayers[0].bitmap, true))
         }
         System.gc()
     }
@@ -224,18 +218,17 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
 
         layersBtn.setOnClickListener {
             pvPixelCanvasView.addLayer()
-            layerItemAdapter.add(Math.max(pvPixelCanvasView.currentLayer, 0), LayerThumbItem())
-            layerAdapter.deselect()
-            layerAdapter.select(pvPixelCanvasView.currentLayer)
-            layerItemAdapter.getAdapterItem(pvPixelCanvasView.currentLayer).pressed()
+
+            val currentLayer = pvPixelCanvasView.currentLayer
+            layerAdt.add(Math.max(currentLayer, 0), LayerThumbItem1(pvPixelCanvasView.pxerLayers[currentLayer].bitmap, true))
+
             rvLayerList.invalidate()
         }
 
-        layerAdapter = FastAdapter()
-        layerItemAdapter = ItemAdapter()
+        layerAdt = LayerThumbAdapter(this)
 
         rvLayerList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        rvLayerList.adapter = layerItemAdapter.wrap(layerAdapter)
+        rvLayerList.adapter = layerAdt
 
         rvLayerList.itemAnimator = DefaultItemAnimator()
         rvLayerList.itemAnimator.changeDuration = 0
@@ -246,46 +239,34 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
         val touchHelper = ItemTouchHelper(touchCallback)
         touchHelper.attachToRecyclerView(rvLayerList)
 
-        with(layerAdapter) {
-            withSelectable(true)
-            withMultiSelect(false)
-            withAllowDeselection(false)
-        }
+        layerAdt.itemClickListener = object : OnItemClickListener2<LayerThumbItem1> {
+            override fun onItemClick(view: View, item: LayerThumbItem1, position: Int) {
+                if (onlyShowSelected) {
+                    val layer = pvPixelCanvasView.pxerLayers[pvPixelCanvasView.currentLayer]
+                    layer.visible = false
+                    pvPixelCanvasView.invalidate()
 
-        layerAdapter.withOnLongClickListener { _, _, item, position ->
-            layerAdapter.deselect()
-            layerAdapter.select(position)
-
-            item.pressed()
-            false
-        }
-        layerAdapter.withOnClickListener { v, _, item, position ->
-            if (onlyShowSelected) {
-                val layer = pvPixelCanvasView.pxerLayers[pvPixelCanvasView.currentLayer]
-                layer.visible = false
-                pvPixelCanvasView.invalidate()
-
-                layerAdapter.notifyAdapterItemChanged(pvPixelCanvasView.currentLayer)
-            }
-            pvPixelCanvasView.currentLayer = position
-            if (onlyShowSelected) {
-                val layer = pvPixelCanvasView.pxerLayers[pvPixelCanvasView.currentLayer]
-                layer.visible = true
-                pvPixelCanvasView.invalidate()
-
-                layerAdapter.notifyAdapterItemChanged(pvPixelCanvasView.currentLayer)
-            }
-            item.pressed()
-            if (item.isPressSecondTime) {
-                val popupMenu = PopupMenu(this@DrawingActivity, v)
-                popupMenu.inflate(R.menu.menu_popup_layer)
-                popupMenu.setOnMenuItemClickListener { clickedItem ->
-                    this@DrawingActivity.onOptionsItemSelected(clickedItem)
-                    false
+                    layerAdt.notifyItemVisible(position, false)
                 }
-                popupMenu.show()
+                pvPixelCanvasView.currentLayer = position
+                if (onlyShowSelected) {
+                    val layer = pvPixelCanvasView.pxerLayers[pvPixelCanvasView.currentLayer]
+                    layer.visible = true
+                    pvPixelCanvasView.invalidate()
+
+                    layerAdt.notifyItemVisible(position, true)
+                }
+                item.pressed()
+                if (item.isPressSecondTime) {
+                    val popupMenu = PopupMenu(this@DrawingActivity, view)
+                    popupMenu.inflate(R.menu.menu_popup_layer)
+                    popupMenu.setOnMenuItemClickListener { clickedItem ->
+                        this@DrawingActivity.onOptionsItemSelected(clickedItem)
+                        false
+                    }
+                    popupMenu.show()
+                }
             }
-            true
         }
     }
 
@@ -296,13 +277,13 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
 
         if (oldPosition < newPosition) {
             for (i in oldPosition + 1..newPosition) {
-                Collections.swap(layerItemAdapter.adapterItems, i, i - 1)
-                layerAdapter.notifyAdapterItemMoved(i, i - 1)
+                Collections.swap(layerAdt.items, i, i - 1)
+                layerAdt.notifyItemMoved2(i, i - 1)
             }
         } else {
             for (i in oldPosition - 1 downTo newPosition) {
-                Collections.swap(layerItemAdapter.adapterItems, i, i + 1)
-                layerAdapter.notifyAdapterItemMoved(i, i + 1)
+                Collections.swap(layerAdt.items, i, i + 1)
+                layerAdt.notifyItemMoved2(i, i + 1)
             }
         }
 
@@ -314,12 +295,12 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
     }
 
     fun onLayerUpdate() {
-        layerItemAdapter.clear()
+        layerAdt.items.clear()
         for (i in 0 until pvPixelCanvasView.pxerLayers.size) {
-            layerItemAdapter.add(LayerThumbItem())
+            layerAdt.items.add(LayerThumbItem1(pvPixelCanvasView.pxerLayers[i].bitmap, true))
         }
-        layerAdapter.select(0)
-        layerItemAdapter.getAdapterItem(0).pressed()
+        layerAdt.items[0].visible = true
+        layerAdt.select(0)
     }
 
     fun onLayerRefresh() {
@@ -341,7 +322,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                 layer2.visible = true
                 pvPixelCanvasView.invalidate()
 
-                layerAdapter.notifyAdapterDataSetChanged()
+                layerAdt.notifyItemVisible(pvPixelCanvasView.currentLayer, true)
             }
             R.id.export -> ExportUtils.exportAsPng(this, projectName, pvPixelCanvasView)
             R.id.exportgif -> ExportUtils.exportAsGif(this, projectName, pvPixelCanvasView)
@@ -357,12 +338,14 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
             R.id.hidealllayers -> run {
                 if (onlyShowSelected) return@run
                 pvPixelCanvasView.visibilityAllLayer(false)
-                layerAdapter.notifyAdapterDataSetChanged()
+
+                layerAdt.setAllVisibility(false)
             }
             R.id.showalllayers -> {
                 onlyShowSelected = false
                 pvPixelCanvasView.visibilityAllLayer(true)
-                layerAdapter.notifyAdapterDataSetChanged()
+
+                layerAdt.setAllVisibility(true)
             }
             R.id.gridonoff -> {
                 if (pvPixelCanvasView.isShowGrid)
@@ -397,22 +380,19 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                 Tool.prompt(this).title(R.string.deletelayer).content(R.string.deletelayerwarning).positiveText(R.string.delete).onPositive { _, _ ->
                     if (!isEdited) isEdited = true
 
-                    layerItemAdapter.remove(pvPixelCanvasView.currentLayer)
+                    layerAdt.removeAt(pvPixelCanvasView.currentLayer)
                     pvPixelCanvasView.removeCurrentLayer()
+                    layerAdt.select(pvPixelCanvasView.currentLayer)
 
-                    layerAdapter.deselect()
-                    layerAdapter.select(pvPixelCanvasView.currentLayer)
-                    layerItemAdapter.getAdapterItem(pvPixelCanvasView.currentLayer).pressed()
-                    layerAdapter.notifyAdapterDataSetChanged()
                 }.show()
             }
             R.id.copypastelayer -> {
                 pvPixelCanvasView.copyAndPasteCurrentLayer()
-                layerItemAdapter.add(Math.max(pvPixelCanvasView.currentLayer, 0), LayerThumbItem())
-                layerAdapter.deselect()
-                layerAdapter.select(pvPixelCanvasView.currentLayer)
-                layerItemAdapter.getAdapterItem(pvPixelCanvasView.currentLayer).pressed()
+
+                layerAdt.add(Math.max(pvPixelCanvasView.currentLayer, 0), LayerThumbItem1(pvPixelCanvasView.pxerLayers[pvPixelCanvasView.currentLayer].bitmap, true))
+                layerAdt.select(pvPixelCanvasView.currentLayer)
                 rvLayerList.invalidate()
+
             }
             R.id.mergealllayer -> run {
                 if (pvPixelCanvasView.pxerLayers.size <= 1) return@run
@@ -420,11 +400,10 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                     if (!isEdited) isEdited = true
 
                     pvPixelCanvasView.mergeAllLayers()
-                    layerItemAdapter.clear()
-                    layerItemAdapter.add(LayerThumbItem())
-                    layerAdapter.deselect()
-                    layerAdapter.select(0)
-                    layerItemAdapter.getAdapterItem(0).pressed()
+                    layerAdt.items.clear()
+                    layerAdt.add(LayerThumbItem1(pvPixelCanvasView.pxerLayers[pvPixelCanvasView.currentLayer].bitmap, true))
+                    layerAdt.select(0)
+
                 }.show()
             }
             R.id.tvisibility -> run {
@@ -432,7 +411,8 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                 val layer = pvPixelCanvasView.pxerLayers[pvPixelCanvasView.currentLayer]
                 layer.visible = !layer.visible
                 pvPixelCanvasView.invalidate()
-                layerAdapter.notifyAdapterItemChanged(pvPixelCanvasView.currentLayer)
+
+                layerAdt.notifyItemVisible(pvPixelCanvasView.currentLayer, layer.visible)
             }
             R.id.clearlayer -> Tool.prompt(this)
                     .title(R.string.clearcurrentlayer)
@@ -447,9 +427,10 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                         .positiveText(R.string.merge)
                         .onPositive { _, _ ->
                             pvPixelCanvasView.mergeDownLayer()
-                            layerItemAdapter.remove(pvPixelCanvasView.currentLayer + 1)
-                            layerAdapter.select(pvPixelCanvasView.currentLayer)
-                            layerItemAdapter.getAdapterItem(pvPixelCanvasView.currentLayer).pressed()
+
+                            layerAdt.removeAt(pvPixelCanvasView.currentLayer + 1)
+                            layerAdt.select(pvPixelCanvasView.currentLayer)
+
                         }.show()
             }
         }
@@ -603,52 +584,5 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         cp.onConfigChanges()
-    }
-
-    private inner class LayerThumbItem : AbstractItem<LayerThumbItem, LayerThumbItem.ViewHolder>() {
-        var pressedTime = 0
-
-        val isPressSecondTime: Boolean
-            get() = pressedTime == 2
-
-        fun pressed() {
-            pressedTime++
-            pressedTime = Math.min(2, pressedTime)
-        }
-
-        override fun getType(): Int {
-            return R.id.item_layer_thumb
-        }
-
-
-        override fun getLayoutRes(): Int {
-            return R.layout.pi_item_layer_thumb
-        }
-
-        override fun bindView(viewHolder: ViewHolder, payloads: List<*>?) {
-            super.bindView(viewHolder, payloads)
-            viewHolder.iv.isSelected = isSelected
-
-            val layer = pvPixelCanvasView.pxerLayers[viewHolder.layoutPosition]
-            viewHolder.iv.setVisible(layer.visible)
-            viewHolder.iv.bitmap = layer.bitmap
-        }
-
-        override fun isSelectable(): Boolean {
-            return true
-        }
-
-        override fun withSetSelected(selected: Boolean): LayerThumbItem {
-            if (!selected) pressedTime = 0
-            return super.withSetSelected(selected)
-        }
-
-        override fun getViewHolder(v: View): ViewHolder {
-            return ViewHolder(v)
-        }
-
-        internal inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            var iv: FastBitmapView = view as FastBitmapView
-        }
     }
 }
