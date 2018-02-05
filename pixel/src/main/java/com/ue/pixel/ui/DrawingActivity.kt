@@ -31,7 +31,6 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback
-import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback
 import com.ue.adapterdelegate.OnDelegateClickListener
 import com.ue.library.constant.Constants
 import com.ue.library.constant.Modules
@@ -55,7 +54,7 @@ import kotlinx.android.synthetic.main.pi_layout_main.*
 import java.io.File
 import java.util.*
 
-class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, ItemTouchCallback, PxerView.OnDropperCallBack {
+class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, ItemTouchCallback1, PxerView.OnDropperCallBack {
 
     companion object {
         const val UNTITLED = "Untitled"
@@ -98,6 +97,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
         setContentView(R.layout.pi_activity_drawing)
 
         setTitle(UNTITLED, false)
+        tbToolbar.title = ""
         setSupportActionBar(tbToolbar)
         tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
 
@@ -242,7 +242,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
         rvLayerList.itemAnimator.addDuration = 0
         rvLayerList.itemAnimator.removeDuration = 0
 
-        val touchCallback = SimpleDragCallback(this)
+        val touchCallback = SimpleDragCallback1(this)
         val touchHelper = ItemTouchHelper(touchCallback)
         touchHelper.attachToRecyclerView(rvLayerList)
 
