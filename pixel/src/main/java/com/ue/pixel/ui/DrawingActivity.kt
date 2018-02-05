@@ -33,6 +33,7 @@ import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback
 import com.ue.adapterdelegate.OnDelegateClickListener
+import com.ue.library.constant.Constants
 import com.ue.library.constant.Modules
 import com.ue.library.util.fromHtml
 import com.ue.library.util.getString
@@ -40,11 +41,11 @@ import com.ue.library.util.withAnimEndAction
 import com.ue.pixel.R
 import com.ue.pixel.colorpicker.ColorPicker
 import com.ue.pixel.colorpicker.SatValView
-import com.ue.pixel.exportable.GifExportable
-import com.ue.pixel.exportable.PngExportable
 import com.ue.pixel.shape.EraserShape
 import com.ue.pixel.shape.LineShape
 import com.ue.pixel.shape.RectShape
+import com.ue.pixel.util.ExportUtils
+import com.ue.pixel.util.ExportingUtils
 import com.ue.pixel.util.Tool
 import com.ue.pixel.widget.FastBitmapView
 import com.ue.pixel.widget.PxerView
@@ -343,14 +344,12 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
 
                 layerAdapter.notifyAdapterDataSetChanged()
             }
-            R.id.export -> {
-                PngExportable().runExport(this, projectName, pxerView)
-            }
-            R.id.exportgif -> GifExportable().runExport(this, projectName, pxerView)
+            R.id.export -> ExportUtils.exportAsPng(this, projectName, pxerView)
+            R.id.exportgif -> ExportUtils.exportAsGif(this, projectName, pxerView)
             R.id.save -> save(true)
             R.id.projectm -> openProjectManager()
             R.id.open -> FileChooserDialog.Builder(this)
-                    .initialPath(Environment.getExternalStorageDirectory().path + "/PxerStudio/Project")
+                    .initialPath(ExportingUtils.projectPath)
                     .extensionsFilter(PxerView.PXER_EXTENSION_NAME)
                     .goUpLabel(".../")
                     .show()
@@ -596,7 +595,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                 }
             }
         }
-        DrawingActivity.currentProjectPath = Environment.getExternalStorageDirectory().path + "/PxerStudio/Project/" + (projectName + ".pxer")
+        DrawingActivity.currentProjectPath = Environment.getExternalStorageDirectory().path + Constants.PATH_PIXEL + (projectName + ".pxer")
         setTitle(projectName, false)
         Tool.saveProject(projectName + PxerView.PXER_EXTENSION_NAME, gson.toJson(out))
         return true

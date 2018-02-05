@@ -66,8 +66,4 @@
                 android:title="@string/new_new" />
         </menu>
     </item>
-
-    <item
-        android:id="@+id/about"
-        android:title="@string/about" />
 </menu>
