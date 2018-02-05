@@ -9,7 +9,7 @@ import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.ue.library.util.toast
-import kotlinx.android.synthetic.main.activity_splash.*
+import kotlinx.android.synthetic.main.pi_activity_splash.*
 
 class SplashActivity : AppCompatActivity() {
 
@@ -17,15 +17,15 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.ue.pixel.R.layout.activity_splash)
+        setContentView(com.ue.pixel.R.layout.pi_activity_splash)
 
-        iv.animate()
+        ivAppImage.animate()
                 .alpha(1f)
                 .scaleY(1.1f)
                 .scaleX(1.1f)
                 .setDuration(2000L)
                 .interpolator = AccelerateDecelerateInterpolator()
-        tv.animate()
+        tvAppName.animate()
                 .alpha(1f)
                 .scaleY(1.1f)
                 .scaleX(1.1f)

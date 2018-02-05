@@ -11,7 +11,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.ue.library.constant.Constants
 import com.ue.library.util.toast
 import com.ue.pixel.R
-import kotlinx.android.synthetic.main.dialog_activity_drawing.view.*
+import kotlinx.android.synthetic.main.pi_dialog_export.view.*
 import java.io.File
 
 /**
@@ -77,10 +77,10 @@ class ExportingUtils private constructor() {
     }
 
     fun showExportingDialog(context: Context, maxSize: Int, projectName: String, picWidth: Int, picHeight: Int, listener: OnExportConfirmedListener) {
-        val l = LayoutInflater.from(context).inflate(R.layout.dialog_activity_drawing, null) as ConstraintLayout
-        val editText = l.et1
-        val seekBar = l.sb
-        val textView = l.tv2
+        val l = LayoutInflater.from(context).inflate(R.layout.pi_dialog_export, null) as ConstraintLayout
+        val editText = l.etExportPixelName
+        val seekBar = l.sbSizeBar
+        val textView = l.tvSizeLab
 
         editText.setText(projectName)
 

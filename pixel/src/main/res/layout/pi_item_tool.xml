@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:paddingBottom="@dimen/widget_size_18"
+    android:paddingLeft="@dimen/widget_size_28"
+    android:paddingRight="@dimen/widget_size_28"
+    android:paddingTop="@dimen/widget_size_18"/>

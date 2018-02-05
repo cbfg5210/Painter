@@ -21,11 +21,11 @@ class ColorPicker(c: Context, startColor: Int, listener: SatValView.OnColorChang
     private val satValView: SatValView
 
     init {
-        val contentView = LayoutInflater.from(c).inflate(R.layout.colorpicker_popup, null)
+        val contentView = LayoutInflater.from(c).inflate(R.layout.pi_popup_color_picker, null)
         contentView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        satValView = contentView.findViewById<View>(R.id.satValView) as SatValView
-        satValView.withHueBar(contentView.findViewById<View>(R.id.hueSeekBar) as HueSeekBar)
-        satValView.withAlphaBar(contentView.findViewById<View>(R.id.alphaSeekBar) as AlphaSeekBar)
+        satValView = contentView.findViewById<View>(R.id.svvSatValView) as SatValView
+        satValView.withHueBar(contentView.findViewById<View>(R.id.hsbHueSeekBar) as HueSeekBar)
+        satValView.withAlphaBar(contentView.findViewById<View>(R.id.asbAlphaSeekBar) as AlphaSeekBar)
         satValView.setListener(listener)
         satValView.setColor(startColor)
         popupWindow = PopupWindow(contentView)

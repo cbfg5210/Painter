@@ -38,7 +38,7 @@ class ToolAdapter(activity: Activity) : DelegationAdapter<ToolItem>(), OnDelegat
         itemClickListener?.onClick(view, items[position].image)
     }
 
-    inner class ToolDelegate(activity: Activity) : AdapterDelegate<ToolItem>(activity, R.layout.item_tool) {
+    inner class ToolDelegate(activity: Activity) : AdapterDelegate<ToolItem>(activity, R.layout.pi_item_tool) {
         override fun onCreateViewHolder(itemView: View): BaseViewHolder<ToolItem> {
             return object : BaseViewHolder<ToolItem>(itemView) {
                 override fun updateContents(item: ToolItem) {

@@ -49,9 +49,9 @@ import com.ue.pixel.util.ExportingUtils
 import com.ue.pixel.util.Tool
 import com.ue.pixel.widget.FastBitmapView
 import com.ue.pixel.widget.PxerView
-import kotlinx.android.synthetic.main.activity_drawing.*
-import kotlinx.android.synthetic.main.content_main.*
-import kotlinx.android.synthetic.main.dialog_activity_drawing_newproject.view.*
+import kotlinx.android.synthetic.main.pi_activity_drawing.*
+import kotlinx.android.synthetic.main.pi_dialog_new_project.view.*
+import kotlinx.android.synthetic.main.pi_layout_main.*
 import java.io.File
 import java.util.*
 
@@ -73,7 +73,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
     var isEdited = false
         set(value) {
             field = value
-            title_text_view.text = fromHtml("PxerStudio<br><small><small>${projectName}${(if (value) "*" else "")}</small></small>")
+            tvTitle.text = fromHtml("PxerStudio<br><small><small>${projectName}${(if (value) "*" else "")}</small></small>")
         }
 
     private lateinit var layerAdapter: FastAdapter<LayerThumbItem>
@@ -86,8 +86,8 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
     //Picture property
     private var projectName = DrawingActivity.UNTITLED
 
-    fun setTitle(subtitle: String?, edited: Boolean) {
-        title_text_view.text = fromHtml("PxerStudio<br><small><small>${if (subtitle.isNullOrEmpty()) UNTITLED else subtitle}${if (edited) "*" else ""}</small></small>")
+    private fun setTitle(subtitle: String?, edited: Boolean) {
+        tvTitle.text = fromHtml("PxerStudio<br><small><small>${if (subtitle.isNullOrEmpty()) UNTITLED else subtitle}${if (edited) "*" else ""}</small></small>")
         isEdited = edited
     }
 
@@ -95,16 +95,15 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_drawing)
+        setContentView(R.layout.pi_activity_drawing)
 
         setTitle(UNTITLED, false)
-        toolbar.title = ""
-        setSupportActionBar(toolbar)
-        title_text_view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+        setSupportActionBar(tbToolbar)
+        tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
 
         val pxerPref = getSharedPreferences(Modules.M_PIXEL, Context.MODE_PRIVATE)
-        pxerView.selectedColor = pxerPref.getInt(LAST_USED_COLOR, Color.YELLOW)
-        pxerView.setDropperCallBack(this)
+        pvPixelCanvasView.selectedColor = pxerPref.getInt(LAST_USED_COLOR, Color.YELLOW)
+        pvPixelCanvasView.setDropperCallBack(this)
 
         setUpLayersView()
         setupControl()
@@ -113,7 +112,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
         if (!currentProjectPath.isNullOrEmpty()) {
             val file = File(currentProjectPath)
             if (file.exists()) {
-                pxerView.loadProject(file)
+                pvPixelCanvasView.loadProject(file)
                 setTitle(Tool.stripExtension(file.name), false)
             }
         }
@@ -126,10 +125,10 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
     }
 
     override fun onColorDropped(newColor: Int) {
-        fab_color.setColor(newColor)
+        fabColor.setColor(newColor)
         cp.setColor(newColor)
 
-        fab_dropper.callOnClick()
+        fabDropper.callOnClick()
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -142,110 +141,110 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
     }
 
     fun onToggleToolsPanel(view: View) {
-        if (tools_view.visibility == View.INVISIBLE) {
-            tools_view.visibility = View.VISIBLE
-            tools_view.animate()
+        if (cvToolsPanel.visibility == View.INVISIBLE) {
+            cvToolsPanel.visibility = View.VISIBLE
+            cvToolsPanel.animate()
                     .setDuration(100)
                     .setInterpolator(AccelerateDecelerateInterpolator())
                     .translationX(0f)
         } else {
-            tools_view.animate()
+            cvToolsPanel.animate()
                     .setDuration(100)
                     .setInterpolator(AccelerateDecelerateInterpolator())
-                    .translationX((+tools_view.width).toFloat())
-                    .withAnimEndAction(Runnable { tools_view.visibility = View.INVISIBLE })
+                    .translationX((+cvToolsPanel.width).toFloat())
+                    .withAnimEndAction(Runnable { cvToolsPanel.visibility = View.INVISIBLE })
         }
     }
 
     private fun setupControl() {
-        tools_view.post({ tools_view.translationX = (tools_view.width).toFloat() })
+        cvToolsPanel.post({ cvToolsPanel.translationX = (cvToolsPanel.width).toFloat() })
 
         val toolAdapter = ToolAdapter(this)
         toolAdapter.itemClickListener = object : OnDelegateClickListener {
             override fun onClick(view: View, image: Int) {
                 when (image) {
-                    R.drawable.ic_mode_edit_24dp -> pxerView.mode = PxerView.Mode.Normal
-                    R.drawable.ic_fill_24dp -> pxerView.mode = PxerView.Mode.Fill
+                    R.drawable.ic_mode_edit_24dp -> pvPixelCanvasView.mode = PxerView.Mode.Normal
+                    R.drawable.ic_fill_24dp -> pvPixelCanvasView.mode = PxerView.Mode.Fill
                     R.drawable.ic_eraser_24dp -> {
-                        pxerView.mode = PxerView.Mode.ShapeTool
-                        pxerView.shapeTool = eraserShapeFactory
+                        pvPixelCanvasView.mode = PxerView.Mode.ShapeTool
+                        pvPixelCanvasView.shapeTool = eraserShapeFactory
                     }
                     R.drawable.ic_line_24dp -> {
-                        pxerView.mode = PxerView.Mode.ShapeTool
-                        pxerView.shapeTool = lineShapeFactory
+                        pvPixelCanvasView.mode = PxerView.Mode.ShapeTool
+                        pvPixelCanvasView.shapeTool = lineShapeFactory
                     }
                     R.drawable.ic_square_24dp -> {
-                        pxerView.mode = PxerView.Mode.ShapeTool
-                        pxerView.shapeTool = rectShapeFactory
+                        pvPixelCanvasView.mode = PxerView.Mode.ShapeTool
+                        pvPixelCanvasView.shapeTool = rectShapeFactory
                     }
                 }
             }
         }
-        (tools_recycler.layoutManager as LinearLayoutManager).reverseLayout = true
-        tools_recycler.adapter = toolAdapter
+        (rvToolsList.layoutManager as LinearLayoutManager).reverseLayout = true
+        rvToolsList.adapter = toolAdapter
 
-        fab_color.setColor(pxerView.selectedColor)
-        fab_color.colorNormal = pxerView.selectedColor
-        fab_color.colorPressed = pxerView.selectedColor
-        cp = ColorPicker(this, pxerView.selectedColor, object : SatValView.OnColorChangeListener {
+        fabColor.setColor(pvPixelCanvasView.selectedColor)
+        fabColor.colorNormal = pvPixelCanvasView.selectedColor
+        fabColor.colorPressed = pvPixelCanvasView.selectedColor
+        cp = ColorPicker(this, pvPixelCanvasView.selectedColor, object : SatValView.OnColorChangeListener {
             override fun onColorChanged(newColor: Int) {
-                pxerView.selectedColor = newColor
-                fab_color.setColor(newColor)
+                pvPixelCanvasView.selectedColor = newColor
+                fabColor.setColor(newColor)
             }
         })
-        fab_color.setOnClickListener { view -> cp.show(view) }
-        fab_undo.setOnClickListener { pxerView.undo() }
-        fab_redo.setOnClickListener { pxerView.redo() }
-        fab_dropper.setOnClickListener {
-            if (pxerView.mode == PxerView.Mode.Dropper) {
-                fab_undo.show(true)
-                fab_redo.show(true)
-                tools_fab.show(true)
+        fabColor.setOnClickListener { view -> cp.show(view) }
+        fabUndo.setOnClickListener { pvPixelCanvasView.undo() }
+        fabRedo.setOnClickListener { pvPixelCanvasView.redo() }
+        fabDropper.setOnClickListener {
+            if (pvPixelCanvasView.mode == PxerView.Mode.Dropper) {
+                fabUndo.show(true)
+                fabRedo.show(true)
+                fabCurrentTool.show(true)
 
-                pxerView.mode = previousMode
+                pvPixelCanvasView.mode = previousMode
 
-                fab_dropper.setImageResource(R.drawable.ic_colorize_24dp)
+                fabDropper.setImageResource(R.drawable.ic_colorize_24dp)
             } else {
-                fab_undo.hide(true)
-                fab_redo.hide(true)
-                tools_fab.hide(true)
+                fabUndo.hide(true)
+                fabRedo.hide(true)
+                fabCurrentTool.hide(true)
 
-                if (tools_view.visibility == View.VISIBLE) tools_fab.callOnClick()
+                if (cvToolsPanel.visibility == View.VISIBLE) fabCurrentTool.callOnClick()
 
-                previousMode = pxerView.mode
-                pxerView.mode = PxerView.Mode.Dropper
+                previousMode = pvPixelCanvasView.mode
+                pvPixelCanvasView.mode = PxerView.Mode.Dropper
 
-                fab_dropper.setImageResource(R.drawable.ic_close_24dp)
+                fabDropper.setImageResource(R.drawable.ic_close_24dp)
             }
         }
     }
 
     private fun setUpLayersView() {
-        val layersBtn = layers_add
+        val layersBtn = cvAddLayerPanel
 
         layersBtn.setOnClickListener {
-            pxerView.addLayer()
-            layerItemAdapter.add(Math.max(pxerView.currentLayer, 0), LayerThumbItem())
+            pvPixelCanvasView.addLayer()
+            layerItemAdapter.add(Math.max(pvPixelCanvasView.currentLayer, 0), LayerThumbItem())
             layerAdapter.deselect()
-            layerAdapter.select(pxerView.currentLayer)
-            layerItemAdapter.getAdapterItem(pxerView.currentLayer).pressed()
-            layers_recycler.invalidate()
+            layerAdapter.select(pvPixelCanvasView.currentLayer)
+            layerItemAdapter.getAdapterItem(pvPixelCanvasView.currentLayer).pressed()
+            rvLayerList.invalidate()
         }
 
         layerAdapter = FastAdapter()
         layerItemAdapter = ItemAdapter()
 
-        layers_recycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        layers_recycler.adapter = layerItemAdapter.wrap(layerAdapter)
+        rvLayerList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        rvLayerList.adapter = layerItemAdapter.wrap(layerAdapter)
 
-        layers_recycler.itemAnimator = DefaultItemAnimator()
-        layers_recycler.itemAnimator.changeDuration = 0
-        layers_recycler.itemAnimator.addDuration = 0
-        layers_recycler.itemAnimator.removeDuration = 0
+        rvLayerList.itemAnimator = DefaultItemAnimator()
+        rvLayerList.itemAnimator.changeDuration = 0
+        rvLayerList.itemAnimator.addDuration = 0
+        rvLayerList.itemAnimator.removeDuration = 0
 
         val touchCallback = SimpleDragCallback(this)
         val touchHelper = ItemTouchHelper(touchCallback)
-        touchHelper.attachToRecyclerView(layers_recycler)
+        touchHelper.attachToRecyclerView(rvLayerList)
 
         with(layerAdapter) {
             withSelectable(true)
@@ -262,19 +261,19 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
         }
         layerAdapter.withOnClickListener { v, _, item, position ->
             if (onlyShowSelected) {
-                val layer = pxerView.pxerLayers[pxerView.currentLayer]
+                val layer = pvPixelCanvasView.pxerLayers[pvPixelCanvasView.currentLayer]
                 layer.visible = false
-                pxerView.invalidate()
+                pvPixelCanvasView.invalidate()
 
-                layerAdapter.notifyAdapterItemChanged(pxerView.currentLayer)
+                layerAdapter.notifyAdapterItemChanged(pvPixelCanvasView.currentLayer)
             }
-            pxerView.currentLayer = position
+            pvPixelCanvasView.currentLayer = position
             if (onlyShowSelected) {
-                val layer = pxerView.pxerLayers[pxerView.currentLayer]
+                val layer = pvPixelCanvasView.pxerLayers[pvPixelCanvasView.currentLayer]
                 layer.visible = true
-                pxerView.invalidate()
+                pvPixelCanvasView.invalidate()
 
-                layerAdapter.notifyAdapterItemChanged(pxerView.currentLayer)
+                layerAdapter.notifyAdapterItemChanged(pvPixelCanvasView.currentLayer)
             }
             item.pressed()
             if (item.isPressSecondTime) {
@@ -293,7 +292,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
     override fun itemTouchOnMove(oldPosition: Int, newPosition: Int): Boolean {
         if (!isEdited) isEdited = true
 
-        pxerView.moveLayer(oldPosition, newPosition)
+        pvPixelCanvasView.moveLayer(oldPosition, newPosition)
 
         if (oldPosition < newPosition) {
             for (i in oldPosition + 1..newPosition) {
@@ -311,12 +310,12 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
     }
 
     override fun itemTouchDropped(oldPosition: Int, newPosition: Int) {
-        pxerView.currentLayer = newPosition
+        pvPixelCanvasView.currentLayer = newPosition
     }
 
     fun onLayerUpdate() {
         layerItemAdapter.clear()
-        for (i in 0 until pxerView.pxerLayers.size) {
+        for (i in 0 until pvPixelCanvasView.pxerLayers.size) {
             layerItemAdapter.add(LayerThumbItem())
         }
         layerAdapter.select(0)
@@ -324,7 +323,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
     }
 
     fun onLayerRefresh() {
-        layers_recycler?.invalidate()
+        rvLayerList?.invalidate()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -336,16 +335,16 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
         when (item.itemId) {
             R.id.onlyshowselectedlayer -> {
                 onlyShowSelected = true
-                pxerView.visibilityAllLayer(false)
+                pvPixelCanvasView.visibilityAllLayer(false)
 
-                val layer2 = pxerView.pxerLayers[pxerView.currentLayer]
+                val layer2 = pvPixelCanvasView.pxerLayers[pvPixelCanvasView.currentLayer]
                 layer2.visible = true
-                pxerView.invalidate()
+                pvPixelCanvasView.invalidate()
 
                 layerAdapter.notifyAdapterDataSetChanged()
             }
-            R.id.export -> ExportUtils.exportAsPng(this, projectName, pxerView)
-            R.id.exportgif -> ExportUtils.exportAsGif(this, projectName, pxerView)
+            R.id.export -> ExportUtils.exportAsPng(this, projectName, pvPixelCanvasView)
+            R.id.exportgif -> ExportUtils.exportAsGif(this, projectName, pvPixelCanvasView)
             R.id.save -> save(true)
             R.id.projectm -> openProjectManager()
             R.id.open -> FileChooserDialog.Builder(this)
@@ -354,38 +353,38 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                     .goUpLabel(".../")
                     .show()
             R.id.newp -> createNewProject()
-            R.id.resetvp -> pxerView.resetViewPort()
+            R.id.resetvp -> pvPixelCanvasView.resetViewPort()
             R.id.hidealllayers -> run {
                 if (onlyShowSelected) return@run
-                pxerView.visibilityAllLayer(false)
+                pvPixelCanvasView.visibilityAllLayer(false)
                 layerAdapter.notifyAdapterDataSetChanged()
             }
             R.id.showalllayers -> {
                 onlyShowSelected = false
-                pxerView.visibilityAllLayer(true)
+                pvPixelCanvasView.visibilityAllLayer(true)
                 layerAdapter.notifyAdapterDataSetChanged()
             }
             R.id.gridonoff -> {
-                if (pxerView.isShowGrid)
+                if (pvPixelCanvasView.isShowGrid)
                     item.setIcon(R.drawable.ic_grid_on_24dp)
                 else
                     item.setIcon(R.drawable.ic_grid_off_24dp)
-                pxerView.isShowGrid = !pxerView.isShowGrid
+                pvPixelCanvasView.isShowGrid = !pvPixelCanvasView.isShowGrid
             }
             R.id.layers -> {
-                layer_view.pivotX = (layer_view.width / 2).toFloat()
-                layer_view.pivotY = 0f
-                if (layer_view.visibility == View.VISIBLE) {
-                    layer_view.animate()
+                cvLayersPanel.pivotX = (cvLayersPanel.width / 2).toFloat()
+                cvLayersPanel.pivotY = 0f
+                if (cvLayersPanel.visibility == View.VISIBLE) {
+                    cvLayersPanel.animate()
                             .setDuration(100)
                             .setInterpolator(AccelerateDecelerateInterpolator())
                             .alpha(0f)
                             .scaleX(0.85f)
                             .scaleY(0.85f)
-                            .withAnimEndAction(Runnable { layer_view.visibility = View.INVISIBLE })
+                            .withAnimEndAction(Runnable { cvLayersPanel.visibility = View.INVISIBLE })
                 } else {
-                    layer_view.visibility = View.VISIBLE
-                    layer_view.animate()
+                    cvLayersPanel.visibility = View.VISIBLE
+                    cvLayersPanel.animate()
                             .setDuration(100)
                             .setInterpolator(AccelerateDecelerateInterpolator())
                             .scaleX(1f)
@@ -394,33 +393,33 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                 }
             }
             R.id.deletelayer -> run {
-                if (pxerView.pxerLayers.size <= 1) return@run
+                if (pvPixelCanvasView.pxerLayers.size <= 1) return@run
                 Tool.prompt(this).title(R.string.deletelayer).content(R.string.deletelayerwarning).positiveText(R.string.delete).onPositive { _, _ ->
                     if (!isEdited) isEdited = true
 
-                    layerItemAdapter.remove(pxerView.currentLayer)
-                    pxerView.removeCurrentLayer()
+                    layerItemAdapter.remove(pvPixelCanvasView.currentLayer)
+                    pvPixelCanvasView.removeCurrentLayer()
 
                     layerAdapter.deselect()
-                    layerAdapter.select(pxerView.currentLayer)
-                    layerItemAdapter.getAdapterItem(pxerView.currentLayer).pressed()
+                    layerAdapter.select(pvPixelCanvasView.currentLayer)
+                    layerItemAdapter.getAdapterItem(pvPixelCanvasView.currentLayer).pressed()
                     layerAdapter.notifyAdapterDataSetChanged()
                 }.show()
             }
             R.id.copypastelayer -> {
-                pxerView.copyAndPasteCurrentLayer()
-                layerItemAdapter.add(Math.max(pxerView.currentLayer, 0), LayerThumbItem())
+                pvPixelCanvasView.copyAndPasteCurrentLayer()
+                layerItemAdapter.add(Math.max(pvPixelCanvasView.currentLayer, 0), LayerThumbItem())
                 layerAdapter.deselect()
-                layerAdapter.select(pxerView.currentLayer)
-                layerItemAdapter.getAdapterItem(pxerView.currentLayer).pressed()
-                layers_recycler.invalidate()
+                layerAdapter.select(pvPixelCanvasView.currentLayer)
+                layerItemAdapter.getAdapterItem(pvPixelCanvasView.currentLayer).pressed()
+                rvLayerList.invalidate()
             }
             R.id.mergealllayer -> run {
-                if (pxerView.pxerLayers.size <= 1) return@run
+                if (pvPixelCanvasView.pxerLayers.size <= 1) return@run
                 Tool.prompt(this).title(R.string.mergealllayers).content(R.string.mergealllayerswarning).positiveText(R.string.merge).onPositive { _, _ ->
                     if (!isEdited) isEdited = true
 
-                    pxerView.mergeAllLayers()
+                    pvPixelCanvasView.mergeAllLayers()
                     layerItemAdapter.clear()
                     layerItemAdapter.add(LayerThumbItem())
                     layerAdapter.deselect()
@@ -430,27 +429,27 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
             }
             R.id.tvisibility -> run {
                 if (onlyShowSelected) return@run
-                val layer = pxerView.pxerLayers[pxerView.currentLayer]
+                val layer = pvPixelCanvasView.pxerLayers[pvPixelCanvasView.currentLayer]
                 layer.visible = !layer.visible
-                pxerView.invalidate()
-                layerAdapter.notifyAdapterItemChanged(pxerView.currentLayer)
+                pvPixelCanvasView.invalidate()
+                layerAdapter.notifyAdapterItemChanged(pvPixelCanvasView.currentLayer)
             }
             R.id.clearlayer -> Tool.prompt(this)
                     .title(R.string.clearcurrentlayer)
                     .content(R.string.clearcurrentlayerwarning)
                     .positiveText(R.string.clear)
-                    .onPositive { _, _ -> pxerView.clearCurrentLayer() }.show()
+                    .onPositive { _, _ -> pvPixelCanvasView.clearCurrentLayer() }.show()
             R.id.mergedown -> run {
-                if (pxerView.currentLayer == pxerView.pxerLayers.size - 1) return@run
+                if (pvPixelCanvasView.currentLayer == pvPixelCanvasView.pxerLayers.size - 1) return@run
                 Tool.prompt(this)
                         .title(R.string.mergedownlayer)
                         .content(R.string.mergedownlayerwarning)
                         .positiveText(R.string.merge)
                         .onPositive { _, _ ->
-                            pxerView.mergeDownLayer()
-                            layerItemAdapter.remove(pxerView.currentLayer + 1)
-                            layerAdapter.select(pxerView.currentLayer)
-                            layerItemAdapter.getAdapterItem(pxerView.currentLayer).pressed()
+                            pvPixelCanvasView.mergeDownLayer()
+                            layerItemAdapter.remove(pvPixelCanvasView.currentLayer + 1)
+                            layerAdapter.select(pvPixelCanvasView.currentLayer)
+                            layerItemAdapter.getAdapterItem(pvPixelCanvasView.currentLayer).pressed()
                         }.show()
             }
         }
@@ -469,7 +468,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                 currentProjectPath = path
                 val file = File(path)
                 if (file.exists()) {
-                    if (pxerView.loadProject(file)) {
+                    if (pvPixelCanvasView.loadProject(file)) {
                         projectName = Tool.stripExtension(file.name)
                     }
                     setTitle(Tool.stripExtension(file.name), false)
@@ -484,30 +483,30 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
     }
 
     private fun createNewProject() {
-        val l = layoutInflater.inflate(R.layout.dialog_activity_drawing_newproject, null) as ConstraintLayout
-        val editText = l.et1
-        val seekBar = l.sb
-        val textView = l.tv2
-        val seekBar2 = l.sb2
-        val textView2 = l.tv3
-        seekBar.max = 127
-        seekBar.progress = 39
-        textView.text = "Width : 40"
-        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        val l = layoutInflater.inflate(R.layout.pi_dialog_new_project, null) as ConstraintLayout
+        val etNewPixelName = l.etNewPixelName
+        val sbWidthBar = l.sbWidthBar
+        val tvWidthLab = l.tvWidthLab
+        val sbHeightBar = l.sbHeightBar
+        val tvHeightLab = l.tvHeightLab
+        sbWidthBar.max = 127
+        sbWidthBar.progress = 39
+        tvWidthLab.text = "Width : 40"
+        sbWidthBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
-                textView.text = "Width : ${(i + 1)}"
+                tvWidthLab.text = "Width : ${(i + 1)}"
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
-        seekBar2.max = 127
-        seekBar2.progress = 39
-        textView2.text = "Height : 40"
-        seekBar2.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        sbHeightBar.max = 127
+        sbHeightBar.progress = 39
+        tvHeightLab.text = "Height : 40"
+        sbHeightBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
-                textView2.text = "Height : ${i + 1}"
+                tvHeightLab.text = "Height : ${i + 1}"
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
@@ -523,17 +522,17 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                 .positiveText(R.string.create)
                 .negativeText(R.string.cancel)
                 .onPositive(MaterialDialog.SingleButtonCallback { _, _ ->
-                    if (editText.text.toString().isEmpty()) return@SingleButtonCallback
-                    projectName = editText.text.toString()
+                    if (etNewPixelName.text.toString().isEmpty()) return@SingleButtonCallback
+                    projectName = etNewPixelName.text.toString()
                     setTitle(projectName, true)
-                    pxerView.createBlankProject(seekBar.progress + 1, seekBar2.progress + 1)
+                    pvPixelCanvasView.createBlankProject(sbWidthBar.progress + 1, sbHeightBar.progress + 1)
                 })
                 .show()
         save(false)
     }
 
     override fun onFileSelection(dialog: FileChooserDialog, file: File) {
-        pxerView.loadProject(file)
+        pvPixelCanvasView.loadProject(file)
         setTitle(Tool.stripExtension(file.name), false)
         currentProjectPath = file.path
     }
@@ -550,7 +549,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
         val pxerPref = getSharedPreferences(Modules.M_PIXEL, Context.MODE_PRIVATE)
         pxerPref.edit()
                 .putString(LAST_OPENED_PROJECT, currentProjectPath)
-                .putInt(LAST_USED_COLOR, pxerView.selectedColor)
+                .putInt(LAST_USED_COLOR, pvPixelCanvasView.selectedColor)
                 .apply()
         if (!projectName.isNullOrEmpty() || projectName != UNTITLED)
             save(false)
@@ -579,11 +578,11 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
         isEdited = false
         val gson = Gson()
         val out = ArrayList<PxerView.PxableLayer>()
-        val pxerLayers = pxerView.pxerLayers
+        val pxerLayers = pvPixelCanvasView.pxerLayers
         for (i in pxerLayers.indices) {
             val pxableLayer = PxerView.PxableLayer()
-            pxableLayer.height = pxerView.picHeight
-            pxableLayer.width = pxerView.picWidth
+            pxableLayer.height = pvPixelCanvasView.picHeight
+            pxableLayer.width = pvPixelCanvasView.picWidth
             pxableLayer.visible = pxerLayers[i].visible
             out.add(pxableLayer)
             for (x in 0 until pxerLayers[i].bitmap.width) {
@@ -623,14 +622,14 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
 
 
         override fun getLayoutRes(): Int {
-            return R.layout.item_layer_thumb
+            return R.layout.pi_item_layer_thumb
         }
 
         override fun bindView(viewHolder: ViewHolder, payloads: List<*>?) {
             super.bindView(viewHolder, payloads)
             viewHolder.iv.isSelected = isSelected
 
-            val layer = pxerView.pxerLayers[viewHolder.layoutPosition]
+            val layer = pvPixelCanvasView.pxerLayers[viewHolder.layoutPosition]
             viewHolder.iv.setVisible(layer.visible)
             viewHolder.iv.bitmap = layer.bitmap
         }

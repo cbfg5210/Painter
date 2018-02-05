@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/tbToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -24,17 +24,17 @@
     </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
-        android:id="@+id/content_project_manager"
+        android:id="@+id/vgProjectsPanel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
         android:background="#424242"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".ui.ProjectManagerActivity"
-        tools:showIn="@layout/activity_project_manager">
+        tools:showIn="@layout/pi_activity_project_manager">
 
         <TextView
-            android:id="@+id/noProjectFound"
+            android:id="@+id/tvNoProjectFound"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fontFamily="sans-serif-light"
@@ -43,12 +43,12 @@
             android:textColor="@android:color/white"/>
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv"
+            android:id="@+id/rvProjectList"
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             android:layout_height="match_parent"
-            android:clipToPadding="false"/>
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
 
     </RelativeLayout>
 

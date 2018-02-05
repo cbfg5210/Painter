@@ -9,7 +9,7 @@ import com.ue.adapterdelegate.DelegationAdapter
 import com.ue.adapterdelegate.OnDelegateClickListener
 import com.ue.pixel.R
 import com.ue.pixel.model.ProjectItem
-import kotlinx.android.synthetic.main.item_project.view.*
+import kotlinx.android.synthetic.main.pi_item_project.view.*
 
 /**
  * Created by hawk on 2018/1/30.
@@ -29,7 +29,7 @@ class ProjectAdapter(private val activity: Activity, files: List<ProjectItem>?) 
         activity.finish()
     }
 
-    class ProjectDelegate(activity: Activity) : AdapterDelegate<ProjectItem>(activity, R.layout.item_project) {
+    class ProjectDelegate(activity: Activity) : AdapterDelegate<ProjectItem>(activity, R.layout.pi_item_project) {
         override fun onCreateViewHolder(itemView: View): BaseViewHolder<ProjectItem> {
             return object : BaseViewHolder<ProjectItem>(itemView) {
                 private val tvProjectTitle = itemView.tvProjectTitle

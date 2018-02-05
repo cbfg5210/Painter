@@ -6,7 +6,7 @@ import android.view.View
 import com.ue.pixel.R
 import com.ue.pixel.model.ProjectItem
 import com.ue.pixel.util.ExportingUtils
-import kotlinx.android.synthetic.main.activity_project_manager.*
+import kotlinx.android.synthetic.main.pi_activity_project_manager.*
 import java.io.File
 import java.io.FileFilter
 import java.util.*
@@ -16,10 +16,10 @@ class ProjectManagerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_project_manager)
+        setContentView(R.layout.pi_activity_project_manager)
 
-        setSupportActionBar(toolbar)
-        rv.adapter = ProjectAdapter(this, getProjects())
+        setSupportActionBar(tbToolbar)
+        rvProjectList.adapter = ProjectAdapter(this, getProjects())
         projectFiles.clear()
     }
 
@@ -34,7 +34,7 @@ class ProjectManagerActivity : AppCompatActivity() {
             projectFiles.add(it)
             projects.add(ProjectItem(it.name.substring(0, it.name.lastIndexOf('.')), it.path))
         }
-        if (projects.size > 0) noProjectFound.visibility = View.GONE
+        if (projects.size > 0) tvNoProjectFound.visibility = View.GONE
 
         return projects
 
