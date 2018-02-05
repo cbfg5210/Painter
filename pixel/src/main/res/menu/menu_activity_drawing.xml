@@ -46,12 +46,6 @@
             <item
                 android:id="@+id/exportgif"
                 android:title="@string/gif" />
-            <item
-                android:id="@+id/exportatlas"
-                android:title="@string/sprite_atlas" />
-            <item
-                android:id="@+id/exportfolder"
-                android:title="@string/folder" />
         </menu>
     </item>
 

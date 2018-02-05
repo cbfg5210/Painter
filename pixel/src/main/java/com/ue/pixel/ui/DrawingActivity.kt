@@ -40,8 +40,6 @@ import com.ue.library.util.withAnimEndAction
 import com.ue.pixel.R
 import com.ue.pixel.colorpicker.ColorPicker
 import com.ue.pixel.colorpicker.SatValView
-import com.ue.pixel.exportable.AtlasExportable
-import com.ue.pixel.exportable.FolderExportable
 import com.ue.pixel.exportable.GifExportable
 import com.ue.pixel.exportable.PngExportable
 import com.ue.pixel.shape.EraserShape
@@ -349,8 +347,6 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                 PngExportable().runExport(this, projectName, pxerView)
             }
             R.id.exportgif -> GifExportable().runExport(this, projectName, pxerView)
-            R.id.exportfolder -> FolderExportable().runExport(this, projectName, pxerView)
-            R.id.exportatlas -> AtlasExportable().runExport(this, projectName, pxerView)
             R.id.save -> save(true)
             R.id.projectm -> openProjectManager()
             R.id.open -> FileChooserDialog.Builder(this)
