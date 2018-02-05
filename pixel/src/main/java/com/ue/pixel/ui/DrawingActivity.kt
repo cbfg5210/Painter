@@ -35,7 +35,9 @@ import com.ue.library.util.withAnimEndAction
 import com.ue.pixel.R
 import com.ue.pixel.colorpicker.ColorPicker
 import com.ue.pixel.colorpicker.SatValView
+import com.ue.pixel.event.ItemTouchCallback
 import com.ue.pixel.event.OnItemClickListener2
+import com.ue.pixel.event.SimpleDragCallback
 import com.ue.pixel.model.LayerThumbItem1
 import com.ue.pixel.shape.EraserShape
 import com.ue.pixel.shape.LineShape
@@ -50,7 +52,7 @@ import kotlinx.android.synthetic.main.pi_layout_main.*
 import java.io.File
 import java.util.*
 
-class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, ItemTouchCallback1, PxerView.OnDropperCallBack {
+class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, ItemTouchCallback, PxerView.OnDropperCallBack {
 
     companion object {
         const val UNTITLED = "Untitled"
@@ -235,7 +237,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
         rvLayerList.itemAnimator.addDuration = 0
         rvLayerList.itemAnimator.removeDuration = 0
 
-        val touchCallback = SimpleDragCallback1(this)
+        val touchCallback = SimpleDragCallback(this)
         val touchHelper = ItemTouchHelper(touchCallback)
         touchHelper.attachToRecyclerView(rvLayerList)
 

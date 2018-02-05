@@ -1,11 +1,8 @@
-package com.ue.pixel.ui;
+package com.ue.pixel.event;
 
 import android.support.annotation.IntDef;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-
-import com.mikepenz.fastadapter.IDraggable;
-import com.ue.pixel.R;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -14,10 +11,10 @@ import java.lang.annotation.RetentionPolicy;
  * Created by hawk on 2018/2/5.
  */
 
-public class SimpleDragCallback1 extends ItemTouchHelper.SimpleCallback {
+public class SimpleDragCallback extends ItemTouchHelper.SimpleCallback {
 
     //our callback
-    private ItemTouchCallback1 mCallbackItemTouch; // interface
+    private ItemTouchCallback mCallbackItemTouch; // interface
 
     private int mFrom = RecyclerView.NO_POSITION;
     private int mTo = RecyclerView.NO_POSITION;
@@ -33,22 +30,22 @@ public class SimpleDragCallback1 extends ItemTouchHelper.SimpleCallback {
     public @interface Directions {
     }
 
-    public SimpleDragCallback1() {
+    public SimpleDragCallback() {
         super(UP_DOWN, 0);
     }
 
-    public SimpleDragCallback1(@SimpleDragCallback1.Directions int directions) {
+    public SimpleDragCallback(@SimpleDragCallback.Directions int directions) {
         super(directions, 0);
         this.mDirections = directions;
     }
 
-    public SimpleDragCallback1(@SimpleDragCallback1.Directions int directions, ItemTouchCallback1 itemTouchCallback) {
+    public SimpleDragCallback(@SimpleDragCallback.Directions int directions, ItemTouchCallback itemTouchCallback) {
         super(directions, 0);
         this.mDirections = directions;
         this.mCallbackItemTouch = itemTouchCallback;
     }
 
-    public SimpleDragCallback1(ItemTouchCallback1 itemTouchCallback) {
+    public SimpleDragCallback(ItemTouchCallback itemTouchCallback) {
         super(UP_DOWN, 0);
         this.mCallbackItemTouch = itemTouchCallback;
     }
@@ -61,14 +58,20 @@ public class SimpleDragCallback1 extends ItemTouchHelper.SimpleCallback {
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
         // remember the from/to positions
-        if (target.itemView.getTag(R.id.fastadapter_item) instanceof IDraggable) {
-            if (((IDraggable) target.itemView.getTag(R.id.fastadapter_item)).isDraggable()) {
-                if (mFrom == RecyclerView.NO_POSITION) {
-                    mFrom = viewHolder.getAdapterPosition();
-                }
-                mTo = target.getAdapterPosition();
-            }
+//        if (target.itemView.getTag(R.id.fastadapter_item) instanceof IDraggable) {
+//            if (((IDraggable) target.itemView.getTag(R.id.fastadapter_item)).isDraggable()) {
+//                if (mFrom == RecyclerView.NO_POSITION) {
+//                    mFrom = viewHolder.getAdapterPosition();
+//                }
+//                mTo = target.getAdapterPosition();
+//            }
+//        }
+
+        if (mFrom == RecyclerView.NO_POSITION) {
+            mFrom = viewHolder.getAdapterPosition();
         }
+        mTo = target.getAdapterPosition();
+
         return mCallbackItemTouch.itemTouchOnMove(viewHolder.getAdapterPosition(), target.getAdapterPosition()); // information to the interface
     }
 
@@ -81,7 +84,7 @@ public class SimpleDragCallback1 extends ItemTouchHelper.SimpleCallback {
 //                return 0;
 //            }
 //        } else {
-            return mDirections;
+        return mDirections;
 //        }
     }
 

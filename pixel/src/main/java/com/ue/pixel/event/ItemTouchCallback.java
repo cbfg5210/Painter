@@ -1,10 +1,10 @@
-package com.ue.pixel.ui;
+package com.ue.pixel.event;
 
 /**
  * Created by hawk on 2018/2/5.
  */
 
-public interface ItemTouchCallback1 {
+public interface ItemTouchCallback {
 
     /**
      * Called when an item has been dragged
