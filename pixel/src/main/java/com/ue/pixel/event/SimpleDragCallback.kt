@@ -12,6 +12,12 @@ import java.lang.annotation.RetentionPolicy
  */
 
 class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
+    companion object {
+        const val ALL = ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        const val UP_DOWN = ItemTouchHelper.UP or ItemTouchHelper.DOWN
+        const val LEFT_RIGHT = ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+    }
+
     @IntDef(ALL.toLong(), UP_DOWN.toLong(), LEFT_RIGHT.toLong())
     @Retention(RetentionPolicy.SOURCE)
     annotation class Directions
@@ -61,11 +67,5 @@ class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
         // reset the from/to positions
         mTo = RecyclerView.NO_POSITION
         mFrom = mTo
-    }
-
-    companion object {
-        const val ALL = ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        const val UP_DOWN = ItemTouchHelper.UP or ItemTouchHelper.DOWN
-        const val LEFT_RIGHT = ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
     }
 }
