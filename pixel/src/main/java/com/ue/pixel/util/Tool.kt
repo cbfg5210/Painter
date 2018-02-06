@@ -98,7 +98,7 @@ object Tool {
     fun promptTextInput(c: Context, title: String): MaterialDialog.Builder {
         return MaterialDialog.Builder(c)
                 .negativeText(R.string.cancel)
-                .positiveText(R.string.ok)
+                .positiveText(R.string.sure)
                 .title(title)
                 .inputType(InputType.TYPE_CLASS_TEXT)
                 .inputRange(0, 20)

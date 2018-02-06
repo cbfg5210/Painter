@@ -39,7 +39,7 @@
             android:layout_height="match_parent"
             android:fontFamily="sans-serif-light"
             android:gravity="center"
-            android:text="@string/no_project_found"
+            android:text="@string/pi_no_project_found"
             android:textColor="@android:color/white"/>
 
         <android.support.v7.widget.RecyclerView

@@ -379,7 +379,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
             }
             R.id.deletelayer -> run {
                 if (pvPixelCanvasView.pxerLayers.size <= 1) return@run
-                Tool.prompt(this).title(R.string.deletelayer).content(R.string.deletelayerwarning).positiveText(R.string.delete).onPositive { _, _ ->
+                Tool.prompt(this).title(R.string.pi_delete_layer).content(R.string.pi_tip_delete_layer).positiveText(R.string.delete).onPositive { _, _ ->
                     if (!isEdited) isEdited = true
 
                     layerAdt.removeAt(pvPixelCanvasView.currentLayer)
@@ -398,7 +398,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
             }
             R.id.mergealllayer -> run {
                 if (pvPixelCanvasView.pxerLayers.size <= 1) return@run
-                Tool.prompt(this).title(R.string.mergealllayers).content(R.string.mergealllayerswarning).positiveText(R.string.merge).onPositive { _, _ ->
+                Tool.prompt(this).title(R.string.pi_merge_all_layers).content(R.string.pi_tip_merge_all_layers).positiveText(R.string.pi_merge).onPositive { _, _ ->
                     if (!isEdited) isEdited = true
 
                     pvPixelCanvasView.mergeAllLayers()
@@ -417,16 +417,16 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                 layerAdt.notifyItemVisible(pvPixelCanvasView.currentLayer, layer.visible)
             }
             R.id.clearlayer -> Tool.prompt(this)
-                    .title(R.string.clearcurrentlayer)
-                    .content(R.string.clearcurrentlayerwarning)
-                    .positiveText(R.string.clear)
+                    .title(R.string.pi_clear_current_layer)
+                    .content(R.string.pi_tip_clear_current_layer)
+                    .positiveText(R.string.pi_clear)
                     .onPositive { _, _ -> pvPixelCanvasView.clearCurrentLayer() }.show()
             R.id.mergedown -> run {
                 if (pvPixelCanvasView.currentLayer == pvPixelCanvasView.pxerLayers.size - 1) return@run
                 Tool.prompt(this)
-                        .title(R.string.mergedownlayer)
-                        .content(R.string.mergedownlayerwarning)
-                        .positiveText(R.string.merge)
+                        .title(R.string.pi_merge_down_layer)
+                        .content(R.string.pi_tip_merge_down_layer)
+                        .positiveText(R.string.pi_merge)
                         .onPositive { _, _ ->
                             pvPixelCanvasView.mergeDownLayer()
 
@@ -501,8 +501,8 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                 .titleGravity(GravityEnum.CENTER)
                 .typeface(Tool.myType, Tool.myType)
                 .customView(l, false)
-                .title(R.string.newproject)
-                .positiveText(R.string.create)
+                .title(R.string.pi_new_project)
+                .positiveText(R.string.pi_create)
                 .negativeText(R.string.cancel)
                 .onPositive(MaterialDialog.SingleButtonCallback { _, _ ->
                     if (etNewPixelName.text.toString().isEmpty()) return@SingleButtonCallback
@@ -546,8 +546,8 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                     .titleGravity(GravityEnum.CENTER)
                     .typeface(Tool.myType, Tool.myType)
                     .inputRange(0, 20)
-                    .title(R.string.save_project)
-                    .input(getString(R.string.name), null, false) { dialog, input -> }
+                    .title(R.string.pi_save_project)
+                    .input(getString(R.string.pi_name), null, false) { dialog, input -> }
                     .inputType(InputType.TYPE_CLASS_TEXT)
                     .positiveText(R.string.save)
                     .onPositive { dialog, which ->

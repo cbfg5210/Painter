@@ -4,57 +4,57 @@
     <item
         android:id="@+id/gridonoff"
         android:icon="@drawable/ic_grid_on_24dp"
-        android:title="@string/grid_on_off"
+        android:title="@string/pi_grid_on_off"
         app:showAsAction="always" />
     <item
         android:id="@+id/resetvp"
         android:icon="@drawable/ic_center_focus_weak_24dp"
-        android:title="@string/reset_view_port"
+        android:title="@string/pi_reset_view_port"
         app:showAsAction="always" />
     <item
         android:id="@+id/layers"
         android:icon="@drawable/ic_layers_24dp"
-        android:title="@string/layers"
+        android:title="@string/pi_layers"
         app:showAsAction="always" />
 
-    <item android:title="@string/layer">
+    <item android:title="@string/pi_layer">
         <menu>
             <item
                 android:id="@+id/onlyshowselectedlayer"
-                android:title="@string/only_show_selected_layer" />
+                android:title="@string/pi_only_show_selected_layer" />
 
             <item
                 android:id="@+id/showalllayers"
-                android:title="@string/show_all_layers" />
+                android:title="@string/pi_show_all_layers" />
 
             <item
                 android:id="@+id/hidealllayers"
-                android:title="@string/hide_all_layers" />
+                android:title="@string/pi_hide_all_layers" />
 
             <item
                 android:id="@+id/mergealllayer"
-                android:title="@string/merge_all_layers" />
+                android:title="@string/pi_merge_all_layers" />
 
         </menu>
     </item>
 
-    <item android:title="@string/export">
+    <item android:title="@string/pi_export">
         <menu>
             <item
                 android:id="@+id/export"
-                android:title="@string/png" />
+                android:title="@string/pi_png" />
             <item
                 android:id="@+id/exportgif"
-                android:title="@string/gif" />
+                android:title="@string/pi_gif" />
         </menu>
     </item>
 
 
-    <item android:title="@string/project">
+    <item android:title="@string/pi_project">
         <menu>
             <item
                 android:id="@+id/projectm"
-                android:title="@string/project_manager" />
+                android:title="@string/pi_all_projects" />
             <item
                 android:id="@+id/save"
                 android:title="@string/save" />
@@ -63,7 +63,7 @@
                 android:title="@string/open" />
             <item
                 android:id="@+id/newp"
-                android:title="@string/new_new" />
+                android:title="@string/pi_new_new" />
         </menu>
     </item>
 </menu>

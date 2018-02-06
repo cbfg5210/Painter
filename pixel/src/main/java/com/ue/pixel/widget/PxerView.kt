@@ -225,7 +225,7 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
         } catch (e: Exception) {
             e.printStackTrace()
 
-            Tool.prompt(context).content(R.string.error_while_loading_project).title(R.string.something_went_wrong).negativeText("").positiveColor(Color.GRAY).positiveText(R.string.cancel).show()
+            Tool.prompt(context).content(R.string.pi_error_while_loading_project).title(R.string.pi_something_went_wrong).negativeText("").positiveColor(Color.GRAY).positiveText(R.string.cancel).show()
             return false
         }
 
