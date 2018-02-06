@@ -41,4 +41,5 @@
     <string name="pi_error_while_loading_project">加载项目出错</string>
     <string name="pi_no_project_found">没有找到项目</string>
     <string name="pi_duplicate_layer">克隆</string>
+    <string name="pi_project_name_null">项目名称不能为空!</string>
 </resources>

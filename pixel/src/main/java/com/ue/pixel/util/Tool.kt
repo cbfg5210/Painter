@@ -3,18 +3,12 @@ package com.ue.pixel.util
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Environment
-import android.text.InputType
 import android.util.DisplayMetrics
 import android.util.Log
-import com.afollestad.materialdialogs.GravityEnum
-import com.afollestad.materialdialogs.MaterialDialog
 import com.ue.library.constant.Constants
-import com.ue.pixel.R
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -24,7 +18,6 @@ import java.io.OutputStreamWriter
  * Created by BennyKok on 10/6/2016.
  */
 object Tool {
-    val myType = Typeface.create("sans-serif-light", Typeface.NORMAL)
 
     fun drawableToBitmap(drawable: Drawable): Bitmap {
         if (drawable is BitmapDrawable && drawable.bitmap != null) {
@@ -85,25 +78,5 @@ object Tool {
     fun trimLongString(str: String): String {
         return if (str.length <= 25) str
         else "...${str.substring(str.length - 21, str.length)}"
-    }
-
-    fun prompt(c: Context): MaterialDialog.Builder {
-        return MaterialDialog.Builder(c)
-                .negativeText(R.string.cancel)
-                .titleGravity(GravityEnum.CENTER)
-                .typeface(Tool.myType, Tool.myType)
-                .positiveColor(Color.RED)
-    }
-
-    fun promptTextInput(c: Context, title: String): MaterialDialog.Builder {
-        return MaterialDialog.Builder(c)
-                .negativeText(R.string.cancel)
-                .positiveText(R.string.sure)
-                .title(title)
-                .inputType(InputType.TYPE_CLASS_TEXT)
-                .inputRange(0, 20)
-                .titleGravity(GravityEnum.CENTER)
-                .typeface(Tool.myType, Tool.myType)
-                .positiveColor(Color.GREEN)
     }
 }

@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.util.Log
 import com.ue.library.util.bindUtilDestroy
+import com.ue.pixel.event.OnProjectInfoListener
 import com.ue.pixel.gifencoder.AnimatedGifEncoder
 import com.ue.pixel.widget.PxerView
 import io.reactivex.Observable
@@ -22,8 +23,8 @@ import java.io.IOException
  */
 object ExportUtils {
     fun exportAsPng(context: Context, name: String, pxerView: PxerView) {
-        ExportingUtils.instance.showExportingDialog(context, name, pxerView.picWidth, pxerView.picHeight, object : ExportingUtils.OnExportConfirmedListener {
-            override fun onExportConfirmed(fileName: String, width: Int, height: Int) {
+        DialogHelper.showExportingDialog(context, name, pxerView.picWidth, pxerView.picHeight, object : OnProjectInfoListener {
+            override fun onProjectInfo(fileName: String, width: Int, height: Int) {
 
                 ExportingUtils.instance.showProgressDialog(context)
                 Observable
@@ -71,8 +72,8 @@ object ExportUtils {
     }
 
     fun exportAsGif(context: Context, name: String, pxerView: PxerView) {
-        ExportingUtils.instance.showExportingDialog(context, name, pxerView.picWidth, pxerView.picHeight, object : ExportingUtils.OnExportConfirmedListener {
-            override fun onExportConfirmed(fileName: String, width: Int, height: Int) {
+        DialogHelper.showExportingDialog(context, name, pxerView.picWidth, pxerView.picHeight, object : OnProjectInfoListener {
+            override fun onProjectInfo(name: String, width: Int, height: Int) {
                 ExportingUtils.instance.showProgressDialog(context)
                 Observable
                         .create<Any> {
@@ -91,7 +92,7 @@ object ExportUtils {
                             encoder.finish()
                             val finalGif = bos.toByteArray()
 
-                            val file = File(ExportingUtils.instance.checkAndCreateProjectDirs(), fileName + ".gif")
+                            val file = File(ExportingUtils.instance.checkAndCreateProjectDirs(), name + ".gif")
                             var out: FileOutputStream? = null
 
                             try {

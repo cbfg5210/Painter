@@ -3,15 +3,9 @@ package com.ue.pixel.util
 import android.content.Context
 import android.media.MediaScannerConnection
 import android.os.Environment
-import android.support.constraint.ConstraintLayout
-import android.view.LayoutInflater
-import android.widget.SeekBar
-import com.afollestad.materialdialogs.GravityEnum
 import com.afollestad.materialdialogs.MaterialDialog
 import com.ue.library.constant.Constants
 import com.ue.library.util.toast
-import com.ue.pixel.R
-import kotlinx.android.synthetic.main.pi_dialog_export.view.*
 import java.io.File
 
 /**
@@ -61,58 +55,7 @@ class ExportingUtils private constructor() {
     }
 
     fun showProgressDialog(context: Context) {
-        currentProgressDialog = MaterialDialog.Builder(context)
-                .titleGravity(GravityEnum.CENTER)
-                .typeface(Tool.myType, Tool.myType)
-                .cancelable(false)
-                .canceledOnTouchOutside(false)
-                .title("Painting...")
-                .progress(true, 0)
-                .progressIndeterminateStyle(true)
-                .show()
-    }
-
-    fun showExportingDialog(context: Context, projectName: String, picWidth: Int, picHeight: Int, listener: OnExportConfirmedListener) {
-        showExportingDialog(context, -1, projectName, picWidth, picHeight, listener)
-    }
-
-    fun showExportingDialog(context: Context, maxSize: Int, projectName: String, picWidth: Int, picHeight: Int, listener: OnExportConfirmedListener) {
-        val l = LayoutInflater.from(context).inflate(R.layout.pi_dialog_export, null) as ConstraintLayout
-        val editText = l.etExportPixelName
-        val seekBar = l.sbSizeBar
-        val textView = l.tvSizeLab
-
-        editText.setText(projectName)
-
-        if (maxSize == -1) seekBar.max = 4096 - picWidth
-        else seekBar.max = maxSize - picWidth
-
-        textView.text = "Size : $picWidth x $picHeight"
-        seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
-                textView.text = "Size : ${i + picWidth} x ${i + picHeight}"
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar) {}
-
-            override fun onStopTrackingTouch(seekBar: SeekBar) {}
-        })
-
-        MaterialDialog.Builder(context)
-                .titleGravity(GravityEnum.CENTER)
-                .typeface(Tool.myType, Tool.myType)
-                .customView(l, false)
-                .title("Export")
-                .positiveText("Export")
-                .negativeText("Cancel")
-                .onPositive(MaterialDialog.SingleButtonCallback { dialog, which ->
-                    if (editText.text.toString().isEmpty()) {
-                        context.toast("The file name cannot be empty!")
-                        return@SingleButtonCallback
-                    }
-                    listener.onExportConfirmed(editText.text.toString(), seekBar.progress + picWidth, seekBar.progress + picHeight)
-                })
-                .show()
+        currentProgressDialog = DialogHelper.showProgressDialog(context)
     }
 
     interface OnExportConfirmedListener {
@@ -121,9 +64,6 @@ class ExportingUtils private constructor() {
 
     companion object {
         val instance = ExportingUtils()
-
-        val exportPath: String
-            get() = Environment.getExternalStorageDirectory().path + Constants.PATH_PIXEL
 
         val projectPath: String
             get() = Environment.getExternalStorageDirectory().path + Constants.PATH_PIXEL

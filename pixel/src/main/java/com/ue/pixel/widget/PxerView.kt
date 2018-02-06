@@ -15,6 +15,7 @@ import com.ue.library.util.toast
 import com.ue.pixel.R
 import com.ue.pixel.shape.BaseShape
 import com.ue.pixel.ui.DrawingActivity
+import com.ue.pixel.util.DialogHelper
 import com.ue.pixel.util.Tool
 import java.io.File
 import java.io.FileInputStream
@@ -48,7 +49,7 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
         private set
     var picHeight = 0
         private set
-    private var pxerSize=0f
+    private var pxerSize = 0f
     private lateinit var picBoundary: RectF
     private val picRect = Rect()
     private val grid = Path()
@@ -225,7 +226,13 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
         } catch (e: Exception) {
             e.printStackTrace()
 
-            Tool.prompt(context).content(R.string.pi_error_while_loading_project).title(R.string.pi_something_went_wrong).negativeText("").positiveColor(Color.GRAY).positiveText(R.string.cancel).show()
+            DialogHelper.prompt(context)
+                    .content(R.string.pi_error_while_loading_project)
+                    .title(R.string.pi_something_went_wrong)
+                    .negativeText("")
+                    .positiveColor(Color.GRAY)
+                    .positiveText(R.string.cancel)
+                    .show()
             return false
         }
 
@@ -718,7 +725,7 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
         }
     }
 
-    interface PxerViewListener{
+    interface PxerViewListener {
 
     }
 }

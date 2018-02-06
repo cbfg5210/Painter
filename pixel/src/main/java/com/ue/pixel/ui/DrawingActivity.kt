@@ -8,46 +8,45 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Environment
-import android.support.constraint.ConstraintLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.text.InputType
 import android.text.TextUtils
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.widget.SeekBar
-import com.afollestad.materialdialogs.GravityEnum
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.folderselector.FileChooserDialog
 import com.google.gson.Gson
 import com.ue.adapterdelegate.OnDelegateClickListener
 import com.ue.library.constant.Constants
 import com.ue.library.constant.Modules
+import com.ue.library.event.OnTextInputListener
 import com.ue.library.util.fromHtml
 import com.ue.library.util.getString
+import com.ue.library.util.toast
 import com.ue.library.util.withAnimEndAction
 import com.ue.pixel.R
 import com.ue.pixel.colorpicker.ColorPicker
 import com.ue.pixel.colorpicker.SatValView
 import com.ue.pixel.event.ItemTouchCallback
 import com.ue.pixel.event.OnItemClickListener2
+import com.ue.pixel.event.OnProjectInfoListener
 import com.ue.pixel.event.SimpleDragCallback
 import com.ue.pixel.model.LayerThumbItem1
 import com.ue.pixel.shape.EraserShape
 import com.ue.pixel.shape.LineShape
 import com.ue.pixel.shape.RectShape
+import com.ue.pixel.util.DialogHelper
 import com.ue.pixel.util.ExportUtils
 import com.ue.pixel.util.ExportingUtils
 import com.ue.pixel.util.Tool
 import com.ue.pixel.widget.PxerView
 import kotlinx.android.synthetic.main.pi_activity_drawing.*
-import kotlinx.android.synthetic.main.pi_dialog_new_project.view.*
 import kotlinx.android.synthetic.main.pi_layout_main.*
 import java.io.File
 import java.util.*
@@ -379,14 +378,13 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
             }
             R.id.deletelayer -> run {
                 if (pvPixelCanvasView.pxerLayers.size <= 1) return@run
-                Tool.prompt(this).title(R.string.pi_delete_layer).content(R.string.pi_tip_delete_layer).positiveText(R.string.delete).onPositive { _, _ ->
+                DialogHelper.showDeleteLayerDialog(this, MaterialDialog.SingleButtonCallback { _, _ ->
                     if (!isEdited) isEdited = true
 
                     layerAdt.removeAt(pvPixelCanvasView.currentLayer)
                     pvPixelCanvasView.removeCurrentLayer()
                     layerAdt.select(pvPixelCanvasView.currentLayer)
-
-                }.show()
+                })
             }
             R.id.copypastelayer -> {
                 pvPixelCanvasView.copyAndPasteCurrentLayer()
@@ -398,15 +396,14 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
             }
             R.id.mergealllayer -> run {
                 if (pvPixelCanvasView.pxerLayers.size <= 1) return@run
-                Tool.prompt(this).title(R.string.pi_merge_all_layers).content(R.string.pi_tip_merge_all_layers).positiveText(R.string.pi_merge).onPositive { _, _ ->
+                DialogHelper.showMergeAllLayersDialog(this, MaterialDialog.SingleButtonCallback { _, _ ->
                     if (!isEdited) isEdited = true
 
                     pvPixelCanvasView.mergeAllLayers()
                     layerAdt.items.clear()
                     layerAdt.add(LayerThumbItem1(pvPixelCanvasView.pxerLayers[pvPixelCanvasView.currentLayer].bitmap, true))
                     layerAdt.select(0)
-
-                }.show()
+                })
             }
             R.id.tvisibility -> run {
                 if (onlyShowSelected) return@run
@@ -416,24 +413,19 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
 
                 layerAdt.notifyItemVisible(pvPixelCanvasView.currentLayer, layer.visible)
             }
-            R.id.clearlayer -> Tool.prompt(this)
-                    .title(R.string.pi_clear_current_layer)
-                    .content(R.string.pi_tip_clear_current_layer)
-                    .positiveText(R.string.pi_clear)
-                    .onPositive { _, _ -> pvPixelCanvasView.clearCurrentLayer() }.show()
+            R.id.clearlayer ->
+                DialogHelper.showClearLayerDialog(this, MaterialDialog.SingleButtonCallback { _, _ ->
+                    pvPixelCanvasView.clearCurrentLayer()
+                })
             R.id.mergedown -> run {
                 if (pvPixelCanvasView.currentLayer == pvPixelCanvasView.pxerLayers.size - 1) return@run
-                Tool.prompt(this)
-                        .title(R.string.pi_merge_down_layer)
-                        .content(R.string.pi_tip_merge_down_layer)
-                        .positiveText(R.string.pi_merge)
-                        .onPositive { _, _ ->
-                            pvPixelCanvasView.mergeDownLayer()
 
-                            layerAdt.removeAt(pvPixelCanvasView.currentLayer + 1)
-                            layerAdt.select(pvPixelCanvasView.currentLayer)
+                DialogHelper.showMergeDownDialog(this, MaterialDialog.SingleButtonCallback { _, _ ->
+                    pvPixelCanvasView.mergeDownLayer()
 
-                        }.show()
+                    layerAdt.removeAt(pvPixelCanvasView.currentLayer + 1)
+                    layerAdt.select(pvPixelCanvasView.currentLayer)
+                })
             }
         }
         return super.onOptionsItemSelected(item)
@@ -466,51 +458,18 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
     }
 
     private fun createNewProject() {
-        val l = layoutInflater.inflate(R.layout.pi_dialog_new_project, null) as ConstraintLayout
-        val etNewPixelName = l.etNewPixelName
-        val sbWidthBar = l.sbWidthBar
-        val tvWidthLab = l.tvWidthLab
-        val sbHeightBar = l.sbHeightBar
-        val tvHeightLab = l.tvHeightLab
-        sbWidthBar.max = 127
-        sbWidthBar.progress = 39
-        tvWidthLab.text = "Width : 40"
-        sbWidthBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
-                tvWidthLab.text = "Width : ${(i + 1)}"
+        DialogHelper.showNewProjectDialog(this, object : OnProjectInfoListener {
+            override fun onProjectInfo(name: String, width: Int, height: Int) {
+                if (name.isEmpty()) {
+                    toast(R.string.pi_project_name_null)
+                    return
+                }
+                projectName = name
+                setTitle(projectName, true)
+                pvPixelCanvasView.createBlankProject(width, height)
             }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar) {}
-
-            override fun onStopTrackingTouch(seekBar: SeekBar) {}
-        })
-        sbHeightBar.max = 127
-        sbHeightBar.progress = 39
-        tvHeightLab.text = "Height : 40"
-        sbHeightBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
-                tvHeightLab.text = "Height : ${i + 1}"
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar) {}
-
-            override fun onStopTrackingTouch(seekBar: SeekBar) {}
         })
 
-        MaterialDialog.Builder(this)
-                .titleGravity(GravityEnum.CENTER)
-                .typeface(Tool.myType, Tool.myType)
-                .customView(l, false)
-                .title(R.string.pi_new_project)
-                .positiveText(R.string.pi_create)
-                .negativeText(R.string.cancel)
-                .onPositive(MaterialDialog.SingleButtonCallback { _, _ ->
-                    if (etNewPixelName.text.toString().isEmpty()) return@SingleButtonCallback
-                    projectName = etNewPixelName.text.toString()
-                    setTitle(projectName, true)
-                    pvPixelCanvasView.createBlankProject(sbWidthBar.progress + 1, sbHeightBar.progress + 1)
-                })
-                .show()
         save(false)
     }
 
@@ -540,22 +499,15 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
             save(true)
     }
 
-    fun save(force: Boolean): Boolean {
+    private fun save(force: Boolean): Boolean {
         if (projectName.isEmpty()) {
-            if (force) MaterialDialog.Builder(this)
-                    .titleGravity(GravityEnum.CENTER)
-                    .typeface(Tool.myType, Tool.myType)
-                    .inputRange(0, 20)
-                    .title(R.string.pi_save_project)
-                    .input(getString(R.string.pi_name), null, false) { dialog, input -> }
-                    .inputType(InputType.TYPE_CLASS_TEXT)
-                    .positiveText(R.string.save)
-                    .onPositive { dialog, which ->
-                        projectName = dialog.inputEditText!!.text.toString()
-                        setTitle(projectName, false)
-                        save(true)
-                    }
-                    .show()
+            if (force) DialogHelper.showSaveProjectDialog(this, object : OnTextInputListener {
+                override fun onTextInput(text: String) {
+                    projectName = text
+                    setTitle(projectName, false)
+                    save(true)
+                }
+            })
             return false
         }
         isEdited = false
