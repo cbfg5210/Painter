@@ -11,7 +11,6 @@ import android.view.ScaleGestureDetector
 import android.view.View
 import com.google.gson.Gson
 import com.google.gson.stream.JsonReader
-import com.ue.library.util.toast
 import com.ue.pixel.R
 import com.ue.pixel.shape.BaseShape
 import com.ue.pixel.ui.DrawingActivity
@@ -85,7 +84,7 @@ class PixelCanvasView : View, ScaleGestureDetector.OnScaleGestureListener, Gestu
     }
 
     fun copyAndPasteCurrentLayer() {
-        val bitmap = pixelCanvasLayers[this.currentLayer].bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        val bitmap = pixelCanvasLayers[currentLayer].bitmap.copy(Bitmap.Config.ARGB_8888, true)
         pixelCanvasLayers.add(Math.max(currentLayer, 0), PixelCanvasLayer(bitmap))
 
         history.add(Math.max(currentLayer, 0), ArrayList())
@@ -123,7 +122,7 @@ class PixelCanvasView : View, ScaleGestureDetector.OnScaleGestureListener, Gestu
     }
 
     fun clearCurrentLayer() {
-        pixelCanvasLayers[this.currentLayer].bitmap.eraseColor(Color.TRANSPARENT)
+        pixelCanvasLayers[currentLayer].bitmap.eraseColor(Color.TRANSPARENT)
     }
 
     fun mergeDownLayer() {
@@ -283,45 +282,39 @@ class PixelCanvasView : View, ScaleGestureDetector.OnScaleGestureListener, Gestu
     }
 
     fun undo() {
-        if (historyIndex[this.currentLayer] <= 0) {
-            context.toast("No more undo")
-            return
-        }
+        if (historyIndex[currentLayer] <= 0) return
 
-        historyIndex[this.currentLayer] = historyIndex[this.currentLayer] - 1
-        for (i in history[this.currentLayer][historyIndex[this.currentLayer]].pixels.indices) {
-            val pxer = history[this.currentLayer][historyIndex[this.currentLayer]].pixels[i]
-            currentHistory.add(Pixel(pxer.x, pxer.y, pixelCanvasLayers[this.currentLayer].bitmap.getPixel(pxer.x, pxer.y)))
+        historyIndex[currentLayer] = historyIndex[currentLayer] - 1
+        for (i in history[currentLayer][historyIndex[currentLayer]].pixels.indices) {
+            val pxer = history[currentLayer][historyIndex[currentLayer]].pixels[i]
+            currentHistory.add(Pixel(pxer.x, pxer.y, pixelCanvasLayers[currentLayer].bitmap.getPixel(pxer.x, pxer.y)))
 
-            val coord = history[this.currentLayer][historyIndex[this.currentLayer]].pixels[i]
-            pixelCanvasLayers[this.currentLayer].bitmap.setPixel(coord.x, coord.y, coord.color)
+            val coord = history[currentLayer][historyIndex[currentLayer]].pixels[i]
+            pixelCanvasLayers[currentLayer].bitmap.setPixel(coord.x, coord.y, coord.color)
         }
-        redoHistory[this.currentLayer].add(PixelHistory(cloneList(currentHistory)))
+        redoHistory[currentLayer].add(PixelHistory(cloneList(currentHistory)))
         currentHistory.clear()
 
-        history[this.currentLayer].removeAt(history[this.currentLayer].size - 1)
+        history[currentLayer].removeAt(history[currentLayer].size - 1)
         invalidate()
     }
 
     fun redo() {
-        if (redoHistory[this.currentLayer].size <= 0) {
-            context.toast("No more redo")
-            return
+        if (redoHistory[currentLayer].size <= 0) return
+
+        for (i in redoHistory[currentLayer][redoHistory[currentLayer].size - 1].pixels.indices) {
+            var pxer = redoHistory[currentLayer][redoHistory[currentLayer].size - 1].pixels[i]
+            currentHistory.add(Pixel(pxer.x, pxer.y, pixelCanvasLayers[currentLayer].bitmap.getPixel(pxer.x, pxer.y)))
+
+            pxer = redoHistory[currentLayer][redoHistory[currentLayer].size - 1].pixels[i]
+            pixelCanvasLayers[currentLayer].bitmap.setPixel(pxer.x, pxer.y, pxer.color)
         }
+        historyIndex[currentLayer] = historyIndex[currentLayer] + 1
 
-        for (i in redoHistory[this.currentLayer][redoHistory[this.currentLayer].size - 1].pixels.indices) {
-            var pxer = redoHistory[this.currentLayer][redoHistory[this.currentLayer].size - 1].pixels[i]
-            currentHistory.add(Pixel(pxer.x, pxer.y, pixelCanvasLayers[this.currentLayer].bitmap.getPixel(pxer.x, pxer.y)))
-
-            pxer = redoHistory[this.currentLayer][redoHistory[this.currentLayer].size - 1].pixels[i]
-            pixelCanvasLayers[this.currentLayer].bitmap.setPixel(pxer.x, pxer.y, pxer.color)
-        }
-        historyIndex[this.currentLayer] = historyIndex[this.currentLayer] + 1
-
-        history[this.currentLayer].add(PixelHistory(cloneList(currentHistory)))
+        history[currentLayer].add(PixelHistory(cloneList(currentHistory)))
         currentHistory.clear()
 
-        redoHistory[this.currentLayer].removeAt(redoHistory[this.currentLayer].size - 1)
+        redoHistory[currentLayer].removeAt(redoHistory[currentLayer].size - 1)
         invalidate()
     }
 
@@ -379,7 +372,7 @@ class PixelCanvasView : View, ScaleGestureDetector.OnScaleGestureListener, Gestu
         mGestureDetector.onTouchEvent(motionEvent)
     }
 
-    fun reCalBackground() {
+    private fun reCalBackground() {
         preview = Bitmap.createBitmap(picWidth, picHeight, Bitmap.Config.ARGB_8888)
 
         bgbitmap = Bitmap.createBitmap(picWidth * 2, picHeight * 2, Bitmap.Config.ARGB_8888)
@@ -449,7 +442,7 @@ class PixelCanvasView : View, ScaleGestureDetector.OnScaleGestureListener, Gestu
         }
 
         val pixel: Pixel
-        val bitmapToDraw = pixelCanvasLayers[this.currentLayer].bitmap
+        val bitmapToDraw = pixelCanvasLayers[currentLayer].bitmap
         if (event.action != MotionEvent.ACTION_UP) {
             pixel = Pixel(x, y, bitmapToDraw.getPixel(x, y))
             if (!currentHistory.contains(pixel)) currentHistory.add(pixel)
@@ -539,9 +532,9 @@ class PixelCanvasView : View, ScaleGestureDetector.OnScaleGestureListener, Gestu
     fun finishAddHistory() {
         if (currentHistory.size > 0 && isUnrecordedChanges) {
             isUnrecordedChanges = false
-            redoHistory[this.currentLayer].clear()
-            historyIndex[this.currentLayer] = historyIndex[this.currentLayer] + 1
-            history[this.currentLayer].add(PixelHistory(cloneList(currentHistory)))
+            redoHistory[currentLayer].clear()
+            historyIndex[currentLayer] = historyIndex[currentLayer] + 1
+            history[currentLayer].add(PixelHistory(cloneList(currentHistory)))
             currentHistory.clear()
         }
     }
@@ -592,7 +585,6 @@ class PixelCanvasView : View, ScaleGestureDetector.OnScaleGestureListener, Gestu
     }
 
     override fun onShowPress(motionEvent: MotionEvent) {
-
     }
 
     override fun onSingleTapUp(motionEvent: MotionEvent): Boolean {
@@ -606,7 +598,6 @@ class PixelCanvasView : View, ScaleGestureDetector.OnScaleGestureListener, Gestu
     }
 
     override fun onLongPress(motionEvent: MotionEvent) {
-
     }
 
     override fun onFling(motionEvent: MotionEvent, motionEvent1: MotionEvent, v: Float, v1: Float): Boolean {
