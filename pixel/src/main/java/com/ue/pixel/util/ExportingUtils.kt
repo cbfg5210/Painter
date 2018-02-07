@@ -6,6 +6,7 @@ import android.os.Environment
 import com.afollestad.materialdialogs.MaterialDialog
 import com.ue.library.constant.Constants
 import com.ue.library.util.toast
+import com.ue.pixel.R
 import java.io.File
 
 /**
@@ -13,53 +14,24 @@ import java.io.File
  */
 class ExportingUtils private constructor() {
 
-    var currentProgressDialog: MaterialDialog? = null
+    private var currentProgressDialog: MaterialDialog? = null
 
     fun dismissAllDialogs() {
         currentProgressDialog?.dismiss()
     }
 
-    fun checkAndCreateProjectDirs(): File {
-        val path = Environment.getExternalStorageDirectory().path + Constants.PATH_PIXEL
-        val dirs = File(path)
-        if (!dirs.exists()) {
-            dirs.mkdirs()
-        }
-        return dirs
-    }
-
-    fun checkAndCreateProjectDirs(extraFolder: String?): File {
-        if (extraFolder == null || extraFolder.isEmpty()) return checkAndCreateProjectDirs()
-        val path = Environment.getExternalStorageDirectory().path + Constants.PATH_PIXEL + extraFolder
-        val dirs = File(path)
-        if (!dirs.exists()) {
-            dirs.mkdirs()
-        }
-        return dirs
-    }
+    fun checkAndCreateProjectDirs() = File(projectPath).apply { if (!exists()) mkdir() }
 
     fun toastAndFinishExport(context: Context, fileName: String?) {
-        if (fileName.isNullOrEmpty()) context.toast("Exported failed")
+        if (fileName.isNullOrEmpty()) context.toast(R.string.pi_export_failed)
         else {
             MediaScannerConnection.scanFile(context, arrayOf(fileName), null, null)
-            context.toast("Exported successfully")
+            context.toast(R.string.pi_export_successful)
         }
-    }
-
-    fun scanAlotsOfFile(context: Context, files: List<File>) {
-        val paths = arrayOfNulls<String>(files.size)
-        for (i in files.indices) {
-            paths[i] = files[i].toString()
-        }
-        MediaScannerConnection.scanFile(context, paths, null, null)
     }
 
     fun showProgressDialog(context: Context) {
         currentProgressDialog = DialogHelper.showProgressDialog(context)
-    }
-
-    interface OnExportConfirmedListener {
-        fun onExportConfirmed(fileName: String, width: Int, height: Int)
     }
 
     companion object {

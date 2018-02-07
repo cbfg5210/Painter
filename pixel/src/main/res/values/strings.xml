@@ -46,4 +46,6 @@
     <string name="pi_height_value">高：%d</string>
     <string name="pi_painting">绘制中...</string>
     <string name="pi_width_height">宽高：%d x %d</string>
+    <string name="pi_export_failed">导出失败</string>
+    <string name="pi_export_successful">导出成功</string>
 </resources>
