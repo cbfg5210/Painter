@@ -27,6 +27,16 @@ object DialogHelper {
                 .positiveColor(Color.RED)
     }
 
+    fun showLoadProjectErrorDialog(context: Context) {
+        prompt(context)
+                .content(R.string.pi_error_while_loading_project)
+                .title(R.string.pi_something_went_wrong)
+                .negativeText("")
+                .positiveColor(Color.GRAY)
+                .positiveText(R.string.cancel)
+                .show()
+    }
+
     fun promptTextInput(c: Context, title: String): MaterialDialog.Builder {
         return MaterialDialog.Builder(c)
                 .negativeText(R.string.cancel)

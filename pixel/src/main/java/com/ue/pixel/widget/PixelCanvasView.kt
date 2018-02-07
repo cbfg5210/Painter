@@ -9,9 +9,8 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
-import com.google.gson.Gson
 import com.google.gson.stream.JsonReader
-import com.ue.pixel.R
+import com.ue.library.util.GsonHolder
 import com.ue.pixel.shape.BaseShape
 import com.ue.pixel.ui.DrawingActivity
 import com.ue.pixel.util.DialogHelper
@@ -210,8 +209,7 @@ class PixelCanvasView : View, ScaleGestureDetector.OnScaleGestureListener, Gestu
     }
 
     fun loadProject(file: File): Boolean {
-        val gson = Gson()
-
+        val gson = GsonHolder.gson
         val out = ArrayList<PixelLayer>()
         try {
             val reader = JsonReader(InputStreamReader(FileInputStream(File(file.path))))
@@ -223,15 +221,7 @@ class PixelCanvasView : View, ScaleGestureDetector.OnScaleGestureListener, Gestu
             reader.endArray()
             reader.close()
         } catch (e: Exception) {
-            e.printStackTrace()
-
-            DialogHelper.prompt(context)
-                    .content(R.string.pi_error_while_loading_project)
-                    .title(R.string.pi_something_went_wrong)
-                    .negativeText("")
-                    .positiveColor(Color.GRAY)
-                    .positiveText(R.string.cancel)
-                    .show()
+            DialogHelper.showLoadProjectErrorDialog(context)
             return false
         }
 
