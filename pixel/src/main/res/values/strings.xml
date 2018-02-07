@@ -42,4 +42,8 @@
     <string name="pi_no_project_found">没有找到项目</string>
     <string name="pi_duplicate_layer">克隆</string>
     <string name="pi_project_name_null">项目名称不能为空!</string>
+    <string name="pi_width_value">宽：%d</string>
+    <string name="pi_height_value">高：%d</string>
+    <string name="pi_painting">绘制中...</string>
+    <string name="pi_width_height">宽高：%d x %d</string>
 </resources>

@@ -2,7 +2,6 @@ package com.ue.pixel.util
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Typeface
 import android.support.constraint.ConstraintLayout
 import android.text.InputType
 import android.view.LayoutInflater
@@ -20,13 +19,11 @@ import kotlinx.android.synthetic.main.pi_dialog_new_project.view.*
  * Created by hawk on 2018/2/6.
  */
 object DialogHelper {
-    val myType = Typeface.create("sans-serif-light", Typeface.NORMAL)
 
     fun prompt(c: Context): MaterialDialog.Builder {
         return MaterialDialog.Builder(c)
                 .negativeText(R.string.cancel)
                 .titleGravity(GravityEnum.CENTER)
-                .typeface(myType, myType)
                 .positiveColor(Color.RED)
     }
 
@@ -38,14 +35,12 @@ object DialogHelper {
                 .inputType(InputType.TYPE_CLASS_TEXT)
                 .inputRange(0, 20)
                 .titleGravity(GravityEnum.CENTER)
-                .typeface(myType, myType)
                 .positiveColor(Color.GREEN)
     }
 
     fun showSaveProjectDialog(context: Context, callback: OnTextInputListener) {
         MaterialDialog.Builder(context)
                 .titleGravity(GravityEnum.CENTER)
-                .typeface(DialogHelper.myType, DialogHelper.myType)
                 .inputRange(0, 20)
                 .title(R.string.pi_save_project)
                 .input(context.getString(R.string.pi_name), null, false) { _, _ -> }
@@ -103,10 +98,10 @@ object DialogHelper {
 
         sbWidthBar.max = 127
         sbWidthBar.progress = 39
-        tvWidthLab.text = "Width : 40"
+        tvWidthLab.text = context.getString(R.string.pi_width_value, 40)
         sbWidthBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
-                tvWidthLab.text = "Width : ${(i + 1)}"
+                tvWidthLab.text = context.getString(R.string.pi_width_value, i + 1)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
@@ -115,10 +110,10 @@ object DialogHelper {
 
         sbHeightBar.max = 127
         sbHeightBar.progress = 39
-        tvHeightLab.text = "Height : 40"
+        tvHeightLab.text = context.getString(R.string.pi_height_value, 40)
         sbHeightBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
-                tvHeightLab.text = "Height : ${i + 1}"
+                tvHeightLab.text = context.getString(R.string.pi_height_value, i + 1)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
@@ -127,7 +122,6 @@ object DialogHelper {
 
         MaterialDialog.Builder(context)
                 .titleGravity(GravityEnum.CENTER)
-                .typeface(myType, myType)
                 .customView(l, false)
                 .title(R.string.pi_new_project)
                 .positiveText(R.string.pi_create)
@@ -141,10 +135,9 @@ object DialogHelper {
     fun showProgressDialog(context: Context): MaterialDialog {
         return MaterialDialog.Builder(context)
                 .titleGravity(GravityEnum.CENTER)
-                .typeface(DialogHelper.myType, DialogHelper.myType)
                 .cancelable(false)
                 .canceledOnTouchOutside(false)
-                .title("Painting...")
+                .title(R.string.pi_painting)
                 .progress(true, 0)
                 .progressIndeterminateStyle(true)
                 .show()
@@ -165,10 +158,10 @@ object DialogHelper {
         if (maxSize == -1) seekBar.max = 4096 - picWidth
         else seekBar.max = maxSize - picWidth
 
-        textView.text = "Size : $picWidth x $picHeight"
+        textView.text = context.getString(R.string.pi_width_height, picWidth, picHeight)
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
-                textView.text = "Size : ${i + picWidth} x ${i + picHeight}"
+                textView.text = context.getString(R.string.pi_width_height, i + picWidth, i + picHeight)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
@@ -177,14 +170,13 @@ object DialogHelper {
 
         MaterialDialog.Builder(context)
                 .titleGravity(GravityEnum.CENTER)
-                .typeface(DialogHelper.myType, DialogHelper.myType)
                 .customView(l, false)
-                .title("Export")
-                .positiveText("Export")
-                .negativeText("Cancel")
+                .title(R.string.pi_export)
+                .positiveText(R.string.pi_export)
+                .negativeText(R.string.cancel)
                 .onPositive(MaterialDialog.SingleButtonCallback { _, _ ->
                     if (editText.text.toString().isEmpty()) {
-                        context.toast("The file name cannot be empty!")
+                        context.toast(R.string.pi_project_name_null)
                         return@SingleButtonCallback
                     }
                     listener.onProjectInfo(editText.text.toString(), seekBar.progress + picWidth, seekBar.progress + picHeight)
