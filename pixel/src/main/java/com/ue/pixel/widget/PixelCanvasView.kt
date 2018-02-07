@@ -25,8 +25,8 @@ import java.util.*
 /**
  * Created by BennyKok on 10/3/2016.
  */
-class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetector.OnGestureListener {
-    val pxerLayers = ArrayList<PxerLayer>()
+class PixelCanvasView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetector.OnGestureListener {
+    val pixelCanvasLayers = ArrayList<PixelCanvasLayer>()
     //Drawing property
     private lateinit var pxerPaint: Paint
     var selectedColor = Color.YELLOW
@@ -49,7 +49,7 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
         private set
     var picHeight = 0
         private set
-    private var pxerSize = 0f
+    private var pixelSize = 0f
     private lateinit var picBoundary: RectF
     private val picRect = Rect()
     private val grid = Path()
@@ -68,10 +68,10 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
     private var mScaleFactor = 1f
     private var prePressedTime = -1L
     //History property
-    private val history = ArrayList<ArrayList<PxerHistory>>()
-    private val redohistory = ArrayList<ArrayList<PxerHistory>>()
+    private val history = ArrayList<ArrayList<PixelHistory>>()
+    private val redoHistory = ArrayList<ArrayList<PixelHistory>>()
     private val historyIndex = ArrayList<Int>()
-    val currentHistory = ArrayList<Pxer>()
+    val currentHistory = ArrayList<Pixel>()
     //Callback
     private var dropperCallBack: OnDropperCallBack? = null
 
@@ -85,29 +85,29 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
     }
 
     fun copyAndPasteCurrentLayer() {
-        val bitmap = pxerLayers[this.currentLayer].bitmap.copy(Bitmap.Config.ARGB_8888, true)
-        pxerLayers.add(Math.max(currentLayer, 0), PxerLayer(bitmap))
+        val bitmap = pixelCanvasLayers[this.currentLayer].bitmap.copy(Bitmap.Config.ARGB_8888, true)
+        pixelCanvasLayers.add(Math.max(currentLayer, 0), PixelCanvasLayer(bitmap))
 
         history.add(Math.max(currentLayer, 0), ArrayList())
-        redohistory.add(Math.max(currentLayer, 0), ArrayList())
+        redoHistory.add(Math.max(currentLayer, 0), ArrayList())
         historyIndex.add(Math.max(currentLayer, 0), 0)
     }
 
     fun addLayer() {
         val bitmap = Bitmap.createBitmap(picWidth, picHeight, Bitmap.Config.ARGB_8888)
         bitmap.eraseColor(Color.TRANSPARENT)
-        pxerLayers.add(Math.max(currentLayer, 0), PxerLayer(bitmap))
+        pixelCanvasLayers.add(Math.max(currentLayer, 0), PixelCanvasLayer(bitmap))
 
         history.add(Math.max(currentLayer, 0), ArrayList())
-        redohistory.add(Math.max(currentLayer, 0), ArrayList())
+        redoHistory.add(Math.max(currentLayer, 0), ArrayList())
         historyIndex.add(Math.max(currentLayer, 0), 0)
     }
 
     fun removeCurrentLayer() {
-        pxerLayers.removeAt(currentLayer)
+        pixelCanvasLayers.removeAt(currentLayer)
 
         history.removeAt(currentLayer)
-        redohistory.removeAt(currentLayer)
+        redoHistory.removeAt(currentLayer)
         historyIndex.removeAt(currentLayer)
 
         currentLayer = Math.max(0, currentLayer - 1)
@@ -115,40 +115,40 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
     }
 
     fun moveLayer(from: Int, to: Int) {
-        Collections.swap(pxerLayers, from, to)
+        Collections.swap(pixelCanvasLayers, from, to)
         Collections.swap(history, from, to)
-        Collections.swap(redohistory, from, to)
+        Collections.swap(redoHistory, from, to)
         Collections.swap(historyIndex, from, to)
         invalidate()
     }
 
     fun clearCurrentLayer() {
-        pxerLayers[this.currentLayer].bitmap.eraseColor(Color.TRANSPARENT)
+        pixelCanvasLayers[this.currentLayer].bitmap.eraseColor(Color.TRANSPARENT)
     }
 
     fun mergeDownLayer() {
         preview.eraseColor(Color.TRANSPARENT)
         previewCanvas.setBitmap(preview)
 
-        previewCanvas.drawBitmap(pxerLayers[currentLayer + 1].bitmap, 0f, 0f, null)
-        previewCanvas.drawBitmap(pxerLayers[currentLayer].bitmap, 0f, 0f, null)
+        previewCanvas.drawBitmap(pixelCanvasLayers[currentLayer + 1].bitmap, 0f, 0f, null)
+        previewCanvas.drawBitmap(pixelCanvasLayers[currentLayer].bitmap, 0f, 0f, null)
 
-        pxerLayers.removeAt(currentLayer + 1)
+        pixelCanvasLayers.removeAt(currentLayer + 1)
         history.removeAt(currentLayer + 1)
-        redohistory.removeAt(currentLayer + 1)
+        redoHistory.removeAt(currentLayer + 1)
         historyIndex.removeAt(currentLayer + 1)
 
-        pxerLayers[currentLayer] = PxerLayer(Bitmap.createBitmap(preview))
+        pixelCanvasLayers[currentLayer] = PixelCanvasLayer(Bitmap.createBitmap(preview))
         history[currentLayer] = ArrayList()
-        redohistory[currentLayer] = ArrayList()
+        redoHistory[currentLayer] = ArrayList()
         historyIndex[currentLayer] = 0
 
         invalidate()
     }
 
     fun visibilityAllLayer(visible: Boolean) {
-        for (i in pxerLayers.indices) {
-            pxerLayers[i].visible = visible
+        for (i in pixelCanvasLayers.indices) {
+            pixelCanvasLayers[i].visible = visible
         }
         invalidate()
     }
@@ -156,17 +156,17 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
     fun mergeAllLayers() {
         preview.eraseColor(Color.TRANSPARENT)
         previewCanvas.setBitmap(preview)
-        for (i in pxerLayers.indices) {
-            previewCanvas.drawBitmap(pxerLayers[pxerLayers.size - i - 1].bitmap, 0f, 0f, null)
+        for (i in pixelCanvasLayers.indices) {
+            previewCanvas.drawBitmap(pixelCanvasLayers[pixelCanvasLayers.size - i - 1].bitmap, 0f, 0f, null)
         }
-        pxerLayers.clear()
+        pixelCanvasLayers.clear()
         history.clear()
-        redohistory.clear()
+        redoHistory.clear()
         historyIndex.clear()
 
-        pxerLayers.add(PxerLayer(Bitmap.createBitmap(preview)))
+        pixelCanvasLayers.add(PixelCanvasLayer(Bitmap.createBitmap(preview)))
         history.add(ArrayList())
-        redohistory.add(ArrayList())
+        redoHistory.add(ArrayList())
         historyIndex.add(0)
 
         currentLayer = 0
@@ -187,8 +187,8 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
 
         val bitmap = Bitmap.createBitmap(picWidth, picHeight, Bitmap.Config.ARGB_8888)
         bitmap.eraseColor(Color.TRANSPARENT)
-        pxerLayers.clear()
-        pxerLayers.add(PxerLayer(bitmap))
+        pixelCanvasLayers.clear()
+        pixelCanvasLayers.add(PixelCanvasLayer(bitmap))
         onLayerUpdate()
 
         mScaleFactor = 1f
@@ -196,11 +196,11 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
         initPxerInfo()
 
         history.clear()
-        redohistory.clear()
+        redoHistory.clear()
         historyIndex.clear()
 
         history.add(ArrayList())
-        redohistory.add(ArrayList())
+        redoHistory.add(ArrayList())
         historyIndex.add(0)
 
         currentLayer = 0
@@ -213,12 +213,12 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
     fun loadProject(file: File): Boolean {
         val gson = Gson()
 
-        val out = ArrayList<PxableLayer>()
+        val out = ArrayList<PixelLayer>()
         try {
             val reader = JsonReader(InputStreamReader(FileInputStream(File(file.path))))
             reader.beginArray()
             while (reader.hasNext()) {
-                val layer = gson.fromJson<PxableLayer>(reader, PxableLayer::class.java)
+                val layer = gson.fromJson<PixelLayer>(reader, PixelLayer::class.java)
                 out.add(layer)
             }
             reader.endArray()
@@ -247,24 +247,24 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
         }
 
         history.clear()
-        redohistory.clear()
+        redoHistory.clear()
         historyIndex.clear()
 
 
-        pxerLayers.clear()
+        pixelCanvasLayers.clear()
         for (i in out.indices) {
             val bitmap = Bitmap.createBitmap(picWidth, picHeight, Bitmap.Config.ARGB_8888)
 
             history.add(ArrayList())
-            redohistory.add(ArrayList())
+            redoHistory.add(ArrayList())
             historyIndex.add(0)
 
-            val layer = PxerLayer(bitmap)
+            val layer = PixelCanvasLayer(bitmap)
             layer.visible = out[i].visible
-            pxerLayers.add(layer)
+            pixelCanvasLayers.add(layer)
             for (x in out[i].pxers.indices) {
                 val p = out[i].pxers[x]
-                pxerLayers[i].bitmap.setPixel(p.x, p.y, p.color)
+                pixelCanvasLayers[i].bitmap.setPixel(p.x, p.y, p.color)
             }
         }
         onLayerUpdate()
@@ -289,14 +289,14 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
         }
 
         historyIndex[this.currentLayer] = historyIndex[this.currentLayer] - 1
-        for (i in history[this.currentLayer][historyIndex[this.currentLayer]].pxers.indices) {
-            val pxer = history[this.currentLayer][historyIndex[this.currentLayer]].pxers[i]
-            currentHistory.add(Pxer(pxer.x, pxer.y, pxerLayers[this.currentLayer].bitmap.getPixel(pxer.x, pxer.y)))
+        for (i in history[this.currentLayer][historyIndex[this.currentLayer]].pixels.indices) {
+            val pxer = history[this.currentLayer][historyIndex[this.currentLayer]].pixels[i]
+            currentHistory.add(Pixel(pxer.x, pxer.y, pixelCanvasLayers[this.currentLayer].bitmap.getPixel(pxer.x, pxer.y)))
 
-            val coord = history[this.currentLayer][historyIndex[this.currentLayer]].pxers[i]
-            pxerLayers[this.currentLayer].bitmap.setPixel(coord.x, coord.y, coord.color)
+            val coord = history[this.currentLayer][historyIndex[this.currentLayer]].pixels[i]
+            pixelCanvasLayers[this.currentLayer].bitmap.setPixel(coord.x, coord.y, coord.color)
         }
-        redohistory[this.currentLayer].add(PxerHistory(cloneList(currentHistory)))
+        redoHistory[this.currentLayer].add(PixelHistory(cloneList(currentHistory)))
         currentHistory.clear()
 
         history[this.currentLayer].removeAt(history[this.currentLayer].size - 1)
@@ -304,24 +304,24 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
     }
 
     fun redo() {
-        if (redohistory[this.currentLayer].size <= 0) {
+        if (redoHistory[this.currentLayer].size <= 0) {
             context.toast("No more redo")
             return
         }
 
-        for (i in redohistory[this.currentLayer][redohistory[this.currentLayer].size - 1].pxers.indices) {
-            var pxer = redohistory[this.currentLayer][redohistory[this.currentLayer].size - 1].pxers[i]
-            currentHistory.add(Pxer(pxer.x, pxer.y, pxerLayers[this.currentLayer].bitmap.getPixel(pxer.x, pxer.y)))
+        for (i in redoHistory[this.currentLayer][redoHistory[this.currentLayer].size - 1].pixels.indices) {
+            var pxer = redoHistory[this.currentLayer][redoHistory[this.currentLayer].size - 1].pixels[i]
+            currentHistory.add(Pixel(pxer.x, pxer.y, pixelCanvasLayers[this.currentLayer].bitmap.getPixel(pxer.x, pxer.y)))
 
-            pxer = redohistory[this.currentLayer][redohistory[this.currentLayer].size - 1].pxers[i]
-            pxerLayers[this.currentLayer].bitmap.setPixel(pxer.x, pxer.y, pxer.color)
+            pxer = redoHistory[this.currentLayer][redoHistory[this.currentLayer].size - 1].pixels[i]
+            pixelCanvasLayers[this.currentLayer].bitmap.setPixel(pxer.x, pxer.y, pxer.color)
         }
         historyIndex[this.currentLayer] = historyIndex[this.currentLayer] + 1
 
-        history[this.currentLayer].add(PxerHistory(cloneList(currentHistory)))
+        history[this.currentLayer].add(PixelHistory(cloneList(currentHistory)))
         currentHistory.clear()
 
-        redohistory[this.currentLayer].removeAt(redohistory[this.currentLayer].size - 1)
+        redoHistory[this.currentLayer].removeAt(redoHistory[this.currentLayer].size - 1)
         invalidate()
     }
 
@@ -359,11 +359,11 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
 
         val bitmap = Bitmap.createBitmap(picWidth, picHeight, Bitmap.Config.ARGB_8888)
         bitmap.eraseColor(Color.TRANSPARENT)
-        pxerLayers.clear()
-        pxerLayers.add(PxerLayer(bitmap))
+        pixelCanvasLayers.clear()
+        pixelCanvasLayers.add(PixelCanvasLayer(bitmap))
 
         history.add(ArrayList())
-        redohistory.add(ArrayList())
+        redoHistory.add(ArrayList())
         historyIndex.add(0)
 
         reCalBackground()
@@ -448,38 +448,38 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
             return true
         }
 
-        val pxer: Pxer
-        val bitmapToDraw = pxerLayers[this.currentLayer].bitmap
+        val pixel: Pixel
+        val bitmapToDraw = pixelCanvasLayers[this.currentLayer].bitmap
         if (event.action != MotionEvent.ACTION_UP) {
-            pxer = Pxer(x, y, bitmapToDraw.getPixel(x, y))
-            if (!currentHistory.contains(pxer)) currentHistory.add(pxer)
+            pixel = Pixel(x, y, bitmapToDraw.getPixel(x, y))
+            if (!currentHistory.contains(pixel)) currentHistory.add(pixel)
         }
 
         when (mode) {
-            PxerView.Mode.Normal -> run {
+            PixelCanvasView.Mode.Normal -> run {
                 if (event.action == MotionEvent.ACTION_DOWN || event.action == MotionEvent.ACTION_UP) return@run
 
                 bitmapToDraw.setPixel(x, y, ColorUtils.compositeColors(selectedColor, bitmapToDraw.getPixel(x, y)))
                 setUnrecordedChanges(true)
             }
-            PxerView.Mode.Dropper -> run {
+            PixelCanvasView.Mode.Dropper -> run {
                 if (event.action == MotionEvent.ACTION_DOWN) return@run
 
                 if (x == downX && downY == y) {
-                    for (i in pxerLayers.indices) {
-                        val pixel = pxerLayers[i].bitmap.getPixel(x, y)
+                    for (i in pixelCanvasLayers.indices) {
+                        val pixel = pixelCanvasLayers[i].bitmap.getPixel(x, y)
                         if (pixel != Color.TRANSPARENT) {
-                            selectedColor = pxerLayers[i].bitmap.getPixel(x, y)
+                            selectedColor = pixelCanvasLayers[i].bitmap.getPixel(x, y)
                             dropperCallBack?.onColorDropped(selectedColor)
                             break
                         }
-                        if (i == pxerLayers.size - 1) {
+                        if (i == pixelCanvasLayers.size - 1) {
                             dropperCallBack?.onColorDropped(Color.TRANSPARENT)
                         }
                     }
                 }
             }
-            PxerView.Mode.Fill ->
+            PixelCanvasView.Mode.Fill ->
                 //The fill tool is brought to us with aid by some open source project online :( I forgot the name
                 if (event.action == MotionEvent.ACTION_UP && x == downX && downY == y) {
                     Tool.freeMemory()
@@ -492,7 +492,7 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
                     while (!toExplore.isEmpty()) {
                         val p = toExplore.remove()
                         //Color it
-                        currentHistory.add(Pxer(p.x, p.y, targetColor))
+                        currentHistory.add(Pixel(p.x, p.y, targetColor))
                         bitmapToDraw.setPixel(p.x, p.y, ColorUtils.compositeColors(selectedColor, bitmapToDraw.getPixel(p.x, p.y)))
                         //
                         var cp: Point
@@ -539,9 +539,9 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
     fun finishAddHistory() {
         if (currentHistory.size > 0 && isUnrecordedChanges) {
             isUnrecordedChanges = false
-            redohistory[this.currentLayer].clear()
+            redoHistory[this.currentLayer].clear()
             historyIndex[this.currentLayer] = historyIndex[this.currentLayer] + 1
-            history[this.currentLayer].add(PxerHistory(cloneList(currentHistory)))
+            history[this.currentLayer].add(PixelHistory(cloneList(currentHistory)))
             currentHistory.clear()
         }
     }
@@ -555,9 +555,9 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
         canvas.save()
         canvas.concat(drawMatrix)
         canvas.drawBitmap(bgbitmap, null, picBoundary, pxerPaint)
-        for (i in pxerLayers.size - 1 downTo -1 + 1) {
-            if (pxerLayers[i].visible) {
-                canvas.drawBitmap(pxerLayers[i].bitmap, null, picBoundary, pxerPaint)
+        for (i in pixelCanvasLayers.size - 1 downTo -1 + 1) {
+            if (pixelCanvasLayers[i].visible) {
+                canvas.drawBitmap(pixelCanvasLayers[i].bitmap, null, picBoundary, pxerPaint)
             }
         }
         if (isShowGrid) canvas.drawPath(grid, borderPaint)
@@ -570,18 +570,18 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
 
     private fun initPxerInfo() {
         val length = Math.min(height, width)
-        pxerSize = (length / 40).toFloat()
-        picBoundary.set(0f, 0f, pxerSize * picWidth, pxerSize * picHeight)
+        pixelSize = (length / 40).toFloat()
+        picBoundary.set(0f, 0f, pixelSize * picWidth, pixelSize * picHeight)
         scaleAtFirst()
 
         grid.reset()
         for (x in 0 until picWidth + 1) {
-            val posx = picBoundary.left + pxerSize * x
+            val posx = picBoundary.left + pixelSize * x
             grid.moveTo(posx, picBoundary.top)
             grid.lineTo(posx, picBoundary.bottom)
         }
         for (y in 0 until picHeight + 1) {
-            val posy = picBoundary.top + pxerSize * y
+            val posy = picBoundary.top + pixelSize * y
             grid.moveTo(picBoundary.left, posy)
             grid.lineTo(picBoundary.right, posy)
         }
@@ -654,7 +654,7 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
         invalidate()
     }
 
-    fun onLayerUpdate() {
+    private fun onLayerUpdate() {
         (context as DrawingActivity).onLayerUpdate()
     }
 
@@ -685,7 +685,7 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
         fun onColorDropped(newColor: Int)
     }
 
-    class PxerLayer {
+    class PixelCanvasLayer {
         var bitmap: Bitmap
         var visible = true
 
@@ -694,38 +694,34 @@ class PxerView : View, ScaleGestureDetector.OnScaleGestureListener, GestureDetec
         }
     }
 
-    class PxableLayer {
+    class PixelLayer {
         var width = 0
         var height = 0
         var visible = false
-        var pxers = ArrayList<Pxer>()
+        var pxers = ArrayList<Pixel>()
     }
 
-    class Pxer(var x: Int, var y: Int, var color: Int) {
+    class Pixel(var x: Int, var y: Int, var color: Int) {
 
-        fun clone(): Pxer {
-            return Pxer(x, y, color)
+        fun clone(): Pixel {
+            return Pixel(x, y, color)
         }
 
         override fun equals(obj: Any?): Boolean {
-            return (obj as Pxer).x == this.x && obj.y == this.y
+            return (obj as Pixel).x == this.x && obj.y == this.y
         }
     }
 
-    class PxerHistory(var pxers: ArrayList<Pxer>)
+    class PixelHistory(var pixels: ArrayList<Pixel>)
 
     companion object {
-        val PXER_EXTENSION_NAME = ".pxer"
-        private val pressDelay = 60L
+        const val PIXEL_EXTENSION_NAME = ".pxer"
+        private const val pressDelay = 60L
 
-        fun cloneList(list: List<Pxer>): ArrayList<Pxer> {
-            val clone = ArrayList<Pxer>(list.size)
-            for (item in list) clone.add(item.clone())
+        fun cloneList(list: List<Pixel>): ArrayList<Pixel> {
+            val clone = ArrayList<Pixel>(list.size)
+            list.mapTo(clone) { it.clone() }
             return clone
         }
-    }
-
-    interface PxerViewListener {
-
     }
 }

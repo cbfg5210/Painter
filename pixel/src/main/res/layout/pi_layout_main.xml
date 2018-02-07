@@ -8,7 +8,7 @@
     tools:context=".ui.DrawingActivity"
     tools:showIn="@layout/pi_activity_drawing">
 
-    <com.ue.pixel.widget.PxerView
+    <com.ue.pixel.widget.PixelCanvasView
         android:id="@+id/pvPixelCanvasView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

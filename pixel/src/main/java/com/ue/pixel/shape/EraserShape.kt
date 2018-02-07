@@ -3,7 +3,7 @@ package com.ue.pixel.shape
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
-import com.ue.pixel.widget.PxerView
+import com.ue.pixel.widget.PixelCanvasView
 import java.util.*
 
 /**
@@ -13,7 +13,7 @@ import java.util.*
 class EraserShape : BaseShape() {
     private val p = Paint()
     private var hasInit = false
-    private val previousPxer = ArrayList<PxerView.Pxer>()
+    private val previousPxer = ArrayList<PixelCanvasView.Pixel>()
     private lateinit var path: Path
 
     init {
@@ -21,46 +21,46 @@ class EraserShape : BaseShape() {
         p.strokeWidth = 3f
     }
 
-    override fun onDraw(pxerView: PxerView, startX: Int, startY: Int, endX: Int, endY: Int): Boolean {
-        if (!super.onDraw(pxerView, startX, startY, endX, endY)) return true
+    override fun onDraw(pixelCanvasView: PixelCanvasView, startX: Int, startY: Int, endX: Int, endY: Int): Boolean {
+        if (!super.onDraw(pixelCanvasView, startX, startY, endX, endY)) return true
         if (!hasInit) {
             path = Path()
             path.moveTo(startX.toFloat(), startY.toFloat())
             p.color = Color.YELLOW
-            pxerView.preview.eraseColor(Color.TRANSPARENT)
-            pxerView.previewCanvas.setBitmap(pxerView.preview)
+            pixelCanvasView.preview.eraseColor(Color.TRANSPARENT)
+            pixelCanvasView.previewCanvas.setBitmap(pixelCanvasView.preview)
 
             hasInit = true
         }
 
-        val layerToDraw = pxerView.pxerLayers[pxerView.currentLayer].bitmap
+        val layerToDraw = pixelCanvasView.pixelCanvasLayers[pixelCanvasView.currentLayer].bitmap
         path.lineTo(endX.toFloat(), endY.toFloat())
-        pxerView.previewCanvas.drawPath(path, p)
+        pixelCanvasView.previewCanvas.drawPath(path, p)
 
-        for (i in 0 until pxerView.picWidth) {
-            for (y in 0 until pxerView.picHeight) {
-                val c = pxerView.preview.getPixel(i, y)
+        for (i in 0 until pixelCanvasView.picWidth) {
+            for (y in 0 until pixelCanvasView.picHeight) {
+                val c = pixelCanvasView.preview.getPixel(i, y)
                 if (c != Color.TRANSPARENT) {
-                    val history = PxerView.Pxer(i, y, layerToDraw.getPixel(i, y))
+                    val history = PixelCanvasView.Pixel(i, y, layerToDraw.getPixel(i, y))
                     if (!previousPxer.contains(history)) previousPxer.add(history)
                     layerToDraw.setPixel(i, y, Color.TRANSPARENT)
                 }
             }
         }
-        pxerView.invalidate()
+        pixelCanvasView.invalidate()
         return true
     }
 
-    override fun onDrawEnd(pxerView: PxerView) {
-        super.onDrawEnd(pxerView)
+    override fun onDrawEnd(pixelCanvasView: PixelCanvasView) {
+        super.onDrawEnd(pixelCanvasView)
 
         hasInit = false
 
         if (previousPxer.isEmpty()) return
-        pxerView.currentHistory.addAll(previousPxer)
+        pixelCanvasView.currentHistory.addAll(previousPxer)
         previousPxer.clear()
 
-        pxerView.setUnrecordedChanges(true)
-        pxerView.finishAddHistory()
+        pixelCanvasView.setUnrecordedChanges(true)
+        pixelCanvasView.finishAddHistory()
     }
 }

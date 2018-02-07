@@ -21,15 +21,11 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.folderselector.FileChooserDialog
-import com.google.gson.Gson
 import com.ue.adapterdelegate.OnDelegateClickListener
 import com.ue.library.constant.Constants
 import com.ue.library.constant.Modules
 import com.ue.library.event.OnTextInputListener
-import com.ue.library.util.fromHtml
-import com.ue.library.util.getString
-import com.ue.library.util.toast
-import com.ue.library.util.withAnimEndAction
+import com.ue.library.util.*
 import com.ue.pixel.R
 import com.ue.pixel.colorpicker.ColorPicker
 import com.ue.pixel.colorpicker.SatValView
@@ -45,13 +41,13 @@ import com.ue.pixel.util.DialogHelper
 import com.ue.pixel.util.ExportUtils
 import com.ue.pixel.util.ExportingUtils
 import com.ue.pixel.util.Tool
-import com.ue.pixel.widget.PxerView
+import com.ue.pixel.widget.PixelCanvasView
 import kotlinx.android.synthetic.main.pi_activity_drawing.*
 import kotlinx.android.synthetic.main.pi_layout_main.*
 import java.io.File
 import java.util.*
 
-class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, ItemTouchCallback, PxerView.OnDropperCallBack {
+class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, ItemTouchCallback, PixelCanvasView.OnDropperCallBack {
 
     companion object {
         const val UNTITLED = "Untitled"
@@ -86,7 +82,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
         isEdited = edited
     }
 
-    private lateinit var previousMode: PxerView.Mode
+    private lateinit var mPreviousMode: PixelCanvasView.Mode
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,15 +102,16 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
 
         currentProjectPath = pxerPref.getString(LAST_OPENED_PROJECT)
         if (!currentProjectPath.isNullOrEmpty()) {
-            val file = File(currentProjectPath)
-            if (file.exists()) {
-                pvPixelCanvasView.loadProject(file)
-                setTitle(Tool.stripExtension(file.name), false)
+            File(currentProjectPath).apply {
+                if (exists()) {
+                    pvPixelCanvasView.loadProject(this)
+                    setTitle(Tool.stripExtension(name), false)
+                }
             }
         }
 
         if (layerAdt.itemCount == 0) {
-            layerAdt.add(LayerThumbItem1(pvPixelCanvasView.pxerLayers[0].bitmap, true))
+            layerAdt.add(LayerThumbItem1(pvPixelCanvasView.pixelCanvasLayers[0].bitmap, true))
         }
         System.gc()
     }
@@ -142,13 +139,13 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                     .setDuration(100)
                     .setInterpolator(AccelerateDecelerateInterpolator())
                     .translationX(0f)
-        } else {
-            cvToolsPanel.animate()
-                    .setDuration(100)
-                    .setInterpolator(AccelerateDecelerateInterpolator())
-                    .translationX((+cvToolsPanel.width).toFloat())
-                    .withAnimEndAction(Runnable { cvToolsPanel.visibility = View.INVISIBLE })
+            return
         }
+        cvToolsPanel.animate()
+                .setDuration(100)
+                .setInterpolator(AccelerateDecelerateInterpolator())
+                .translationX((+cvToolsPanel.width).toFloat())
+                .withAnimEndAction(Runnable { cvToolsPanel.visibility = View.INVISIBLE })
     }
 
     private fun setupControl() {
@@ -158,18 +155,18 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
         toolAdapter.itemClickListener = object : OnDelegateClickListener {
             override fun onClick(view: View, image: Int) {
                 when (image) {
-                    R.drawable.ic_mode_edit_24dp -> pvPixelCanvasView.mode = PxerView.Mode.Normal
-                    R.drawable.ic_fill_24dp -> pvPixelCanvasView.mode = PxerView.Mode.Fill
+                    R.drawable.ic_mode_edit_24dp -> pvPixelCanvasView.mode = PixelCanvasView.Mode.Normal
+                    R.drawable.ic_fill_24dp -> pvPixelCanvasView.mode = PixelCanvasView.Mode.Fill
                     R.drawable.ic_eraser_24dp -> {
-                        pvPixelCanvasView.mode = PxerView.Mode.ShapeTool
+                        pvPixelCanvasView.mode = PixelCanvasView.Mode.ShapeTool
                         pvPixelCanvasView.shapeTool = eraserShapeFactory
                     }
                     R.drawable.ic_line_24dp -> {
-                        pvPixelCanvasView.mode = PxerView.Mode.ShapeTool
+                        pvPixelCanvasView.mode = PixelCanvasView.Mode.ShapeTool
                         pvPixelCanvasView.shapeTool = lineShapeFactory
                     }
                     R.drawable.ic_square_24dp -> {
-                        pvPixelCanvasView.mode = PxerView.Mode.ShapeTool
+                        pvPixelCanvasView.mode = PixelCanvasView.Mode.ShapeTool
                         pvPixelCanvasView.shapeTool = rectShapeFactory
                     }
                 }
@@ -191,12 +188,12 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
         fabUndo.setOnClickListener { pvPixelCanvasView.undo() }
         fabRedo.setOnClickListener { pvPixelCanvasView.redo() }
         fabDropper.setOnClickListener {
-            if (pvPixelCanvasView.mode == PxerView.Mode.Dropper) {
+            if (pvPixelCanvasView.mode == PixelCanvasView.Mode.Dropper) {
                 fabUndo.show(true)
                 fabRedo.show(true)
                 fabCurrentTool.show(true)
 
-                pvPixelCanvasView.mode = previousMode
+                pvPixelCanvasView.mode = mPreviousMode
 
                 fabDropper.setImageResource(R.drawable.ic_colorize_24dp)
             } else {
@@ -206,8 +203,8 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
 
                 if (cvToolsPanel.visibility == View.VISIBLE) fabCurrentTool.callOnClick()
 
-                previousMode = pvPixelCanvasView.mode
-                pvPixelCanvasView.mode = PxerView.Mode.Dropper
+                mPreviousMode = pvPixelCanvasView.mode
+                pvPixelCanvasView.mode = PixelCanvasView.Mode.Dropper
 
                 fabDropper.setImageResource(R.drawable.ic_close_24dp)
             }
@@ -221,7 +218,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
             pvPixelCanvasView.addLayer()
 
             val currentLayer = pvPixelCanvasView.currentLayer
-            layerAdt.add(Math.max(currentLayer, 0), LayerThumbItem1(pvPixelCanvasView.pxerLayers[currentLayer].bitmap, true))
+            layerAdt.add(Math.max(currentLayer, 0), LayerThumbItem1(pvPixelCanvasView.pixelCanvasLayers[currentLayer].bitmap, true))
 
             rvLayerList.invalidate()
         }
@@ -243,7 +240,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
         layerAdt.itemClickListener = object : OnItemClickListener2<LayerThumbItem1> {
             override fun onItemClick(view: View, item: LayerThumbItem1, position: Int) {
                 if (onlyShowSelected) {
-                    val layer = pvPixelCanvasView.pxerLayers[pvPixelCanvasView.currentLayer]
+                    val layer = pvPixelCanvasView.pixelCanvasLayers[pvPixelCanvasView.currentLayer]
                     layer.visible = false
                     pvPixelCanvasView.invalidate()
 
@@ -251,7 +248,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                 }
                 pvPixelCanvasView.currentLayer = position
                 if (onlyShowSelected) {
-                    val layer = pvPixelCanvasView.pxerLayers[pvPixelCanvasView.currentLayer]
+                    val layer = pvPixelCanvasView.pixelCanvasLayers[pvPixelCanvasView.currentLayer]
                     layer.visible = true
                     pvPixelCanvasView.invalidate()
 
@@ -297,8 +294,8 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
 
     fun onLayerUpdate() {
         layerAdt.items.clear()
-        for (i in 0 until pvPixelCanvasView.pxerLayers.size) {
-            layerAdt.items.add(LayerThumbItem1(pvPixelCanvasView.pxerLayers[i].bitmap, true))
+        for (i in 0 until pvPixelCanvasView.pixelCanvasLayers.size) {
+            layerAdt.items.add(LayerThumbItem1(pvPixelCanvasView.pixelCanvasLayers[i].bitmap, true))
         }
         layerAdt.items[0].visible = true
         layerAdt.select(0)
@@ -319,7 +316,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                 onlyShowSelected = true
                 pvPixelCanvasView.visibilityAllLayer(false)
 
-                val layer2 = pvPixelCanvasView.pxerLayers[pvPixelCanvasView.currentLayer]
+                val layer2 = pvPixelCanvasView.pixelCanvasLayers[pvPixelCanvasView.currentLayer]
                 layer2.visible = true
                 pvPixelCanvasView.invalidate()
 
@@ -331,7 +328,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
             R.id.projectm -> openProjectManager()
             R.id.open -> FileChooserDialog.Builder(this)
                     .initialPath(ExportingUtils.projectPath)
-                    .extensionsFilter(PxerView.PXER_EXTENSION_NAME)
+                    .extensionsFilter(PixelCanvasView.PIXEL_EXTENSION_NAME)
                     .goUpLabel(".../")
                     .show()
             R.id.newp -> createNewProject()
@@ -377,7 +374,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                 }
             }
             R.id.deletelayer -> run {
-                if (pvPixelCanvasView.pxerLayers.size <= 1) return@run
+                if (pvPixelCanvasView.pixelCanvasLayers.size <= 1) return@run
                 DialogHelper.showDeleteLayerDialog(this, MaterialDialog.SingleButtonCallback { _, _ ->
                     if (!isEdited) isEdited = true
 
@@ -389,25 +386,25 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
             R.id.copypastelayer -> {
                 pvPixelCanvasView.copyAndPasteCurrentLayer()
 
-                layerAdt.add(Math.max(pvPixelCanvasView.currentLayer, 0), LayerThumbItem1(pvPixelCanvasView.pxerLayers[pvPixelCanvasView.currentLayer].bitmap, true))
+                layerAdt.add(Math.max(pvPixelCanvasView.currentLayer, 0), LayerThumbItem1(pvPixelCanvasView.pixelCanvasLayers[pvPixelCanvasView.currentLayer].bitmap, true))
                 layerAdt.select(pvPixelCanvasView.currentLayer)
                 rvLayerList.invalidate()
 
             }
             R.id.mergealllayer -> run {
-                if (pvPixelCanvasView.pxerLayers.size <= 1) return@run
+                if (pvPixelCanvasView.pixelCanvasLayers.size <= 1) return@run
                 DialogHelper.showMergeAllLayersDialog(this, MaterialDialog.SingleButtonCallback { _, _ ->
                     if (!isEdited) isEdited = true
 
                     pvPixelCanvasView.mergeAllLayers()
                     layerAdt.items.clear()
-                    layerAdt.add(LayerThumbItem1(pvPixelCanvasView.pxerLayers[pvPixelCanvasView.currentLayer].bitmap, true))
+                    layerAdt.add(LayerThumbItem1(pvPixelCanvasView.pixelCanvasLayers[pvPixelCanvasView.currentLayer].bitmap, true))
                     layerAdt.select(0)
                 })
             }
             R.id.tvisibility -> run {
                 if (onlyShowSelected) return@run
-                val layer = pvPixelCanvasView.pxerLayers[pvPixelCanvasView.currentLayer]
+                val layer = pvPixelCanvasView.pixelCanvasLayers[pvPixelCanvasView.currentLayer]
                 layer.visible = !layer.visible
                 pvPixelCanvasView.invalidate()
 
@@ -418,7 +415,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                     pvPixelCanvasView.clearCurrentLayer()
                 })
             R.id.mergedown -> run {
-                if (pvPixelCanvasView.currentLayer == pvPixelCanvasView.pxerLayers.size - 1) return@run
+                if (pvPixelCanvasView.currentLayer == pvPixelCanvasView.pixelCanvasLayers.size - 1) return@run
 
                 DialogHelper.showMergeDownDialog(this, MaterialDialog.SingleButtonCallback { _, _ ->
                     pvPixelCanvasView.mergeDownLayer()
@@ -441,12 +438,11 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
             val path = data.getStringExtra(SELECTED_PROJECT_PATH)
             if (!TextUtils.isEmpty(path)) {
                 currentProjectPath = path
-                val file = File(path)
-                if (file.exists()) {
-                    if (pvPixelCanvasView.loadProject(file)) {
-                        projectName = Tool.stripExtension(file.name)
+                File(path).apply {
+                    if (exists()) {
+                        if (pvPixelCanvasView.loadProject(this)) projectName = Tool.stripExtension(name)
+                        setTitle(Tool.stripExtension(name), false)
                     }
-                    setTitle(Tool.stripExtension(file.name), false)
                 }
             } else if (data.getBooleanExtra(FILE_NAME_CHANGED, false)) {
                 currentProjectPath = ""
@@ -493,10 +489,9 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                 .putString(LAST_OPENED_PROJECT, currentProjectPath)
                 .putInt(LAST_USED_COLOR, pvPixelCanvasView.selectedColor)
                 .apply()
-        if (!projectName.isNullOrEmpty() || projectName != UNTITLED)
-            save(false)
-        else
-            save(true)
+
+        if (!projectName.isNullOrEmpty() || projectName != UNTITLED) save(false)
+        else save(true)
     }
 
     private fun save(force: Boolean): Boolean {
@@ -511,11 +506,11 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
             return false
         }
         isEdited = false
-        val gson = Gson()
-        val out = ArrayList<PxerView.PxableLayer>()
-        val pxerLayers = pvPixelCanvasView.pxerLayers
+        val gson = GsonHolder.gson
+        val out = ArrayList<PixelCanvasView.PixelLayer>()
+        val pxerLayers = pvPixelCanvasView.pixelCanvasLayers
         for (i in pxerLayers.indices) {
-            val pxableLayer = PxerView.PxableLayer()
+            val pxableLayer = PixelCanvasView.PixelLayer()
             pxableLayer.height = pvPixelCanvasView.picHeight
             pxableLayer.width = pvPixelCanvasView.picWidth
             pxableLayer.visible = pxerLayers[i].visible
@@ -524,14 +519,14 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                 for (y in 0 until pxerLayers[i].bitmap.height) {
                     val pc = pxerLayers[i].bitmap.getPixel(x, y)
                     if (pc != Color.TRANSPARENT) {
-                        out[i].pxers.add(PxerView.Pxer(x, y, pc))
+                        out[i].pxers.add(PixelCanvasView.Pixel(x, y, pc))
                     }
                 }
             }
         }
-        DrawingActivity.currentProjectPath = Environment.getExternalStorageDirectory().path + Constants.PATH_PIXEL + (projectName + ".pxer")
+        currentProjectPath = Environment.getExternalStorageDirectory().path + Constants.PATH_PIXEL + (projectName + ".pxer")
         setTitle(projectName, false)
-        Tool.saveProject(projectName + PxerView.PXER_EXTENSION_NAME, gson.toJson(out))
+        Tool.saveProject(projectName + PixelCanvasView.PIXEL_EXTENSION_NAME, gson.toJson(out))
         return true
     }
 

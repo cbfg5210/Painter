@@ -9,7 +9,7 @@ import android.util.Log
 import com.ue.library.util.bindUtilDestroy
 import com.ue.pixel.event.OnProjectInfoListener
 import com.ue.pixel.gifencoder.AnimatedGifEncoder
-import com.ue.pixel.widget.PxerView
+import com.ue.pixel.widget.PixelCanvasView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -22,8 +22,8 @@ import java.io.IOException
  * Created by hawk on 2018/2/5.
  */
 object ExportUtils {
-    fun exportAsPng(context: Context, name: String, pxerView: PxerView) {
-        DialogHelper.showExportingDialog(context, name, pxerView.picWidth, pxerView.picHeight, object : OnProjectInfoListener {
+    fun exportAsPng(context: Context, name: String, pixelCanvasView: PixelCanvasView) {
+        DialogHelper.showExportingDialog(context, name, pixelCanvasView.picWidth, pixelCanvasView.picHeight, object : OnProjectInfoListener {
             override fun onProjectInfo(fileName: String, width: Int, height: Int) {
 
                 ExportingUtils.instance.showProgressDialog(context)
@@ -32,9 +32,9 @@ object ExportUtils {
                             val paint = Paint()
                             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
                             val canvas = Canvas(bitmap)
-                            (0 until pxerView.pxerLayers.size)
-                                    .filter { pxerView.pxerLayers[it].visible }
-                                    .forEach { canvas.drawBitmap(pxerView.pxerLayers[it].bitmap, null, Rect(0, 0, width, height), paint) }
+                            (0 until pixelCanvasView.pixelCanvasLayers.size)
+                                    .filter { pixelCanvasView.pixelCanvasLayers[it].visible }
+                                    .forEach { canvas.drawBitmap(pixelCanvasView.pixelCanvasLayers[it].bitmap, null, Rect(0, 0, width, height), paint) }
 
                             val file = File(ExportingUtils.instance.checkAndCreateProjectDirs(), fileName + ".png")
                             var out: FileOutputStream? = null
@@ -71,8 +71,8 @@ object ExportUtils {
         })
     }
 
-    fun exportAsGif(context: Context, name: String, pxerView: PxerView) {
-        DialogHelper.showExportingDialog(context, name, pxerView.picWidth, pxerView.picHeight, object : OnProjectInfoListener {
+    fun exportAsGif(context: Context, name: String, pixelCanvasView: PixelCanvasView) {
+        DialogHelper.showExportingDialog(context, name, pixelCanvasView.picWidth, pixelCanvasView.picHeight, object : OnProjectInfoListener {
             override fun onProjectInfo(name: String, width: Int, height: Int) {
                 ExportingUtils.instance.showProgressDialog(context)
                 Observable
@@ -83,10 +83,10 @@ object ExportUtils {
                             val bos = ByteArrayOutputStream()
                             val encoder = AnimatedGifEncoder()
                             encoder.start(bos)
-                            for (i in 0 until pxerView.pxerLayers.size) {
+                            for (i in 0 until pixelCanvasView.pixelCanvasLayers.size) {
                                 val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
                                 canvas.setBitmap(bitmap)
-                                canvas.drawBitmap(pxerView.pxerLayers[i].bitmap, null, Rect(0, 0, width, height), paint)
+                                canvas.drawBitmap(pixelCanvasView.pixelCanvasLayers[i].bitmap, null, Rect(0, 0, width, height), paint)
                                 encoder.addFrame(bitmap)
                             }
                             encoder.finish()

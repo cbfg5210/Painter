@@ -1,6 +1,6 @@
 package com.ue.pixel.shape
 
-import com.ue.pixel.widget.PxerView
+import com.ue.pixel.widget.PixelCanvasView
 
 /**
  * Created by BennyKok on 10/12/2016.
@@ -13,7 +13,7 @@ abstract class BaseShape {
     private var endX = -1
     private var endY = -1
 
-    open fun onDraw(pxerView: PxerView, startX: Int, startY: Int, endX: Int, endY: Int): Boolean {
+    open fun onDraw(pixelCanvasView: PixelCanvasView, startX: Int, startY: Int, endX: Int, endY: Int): Boolean {
         if (this.startX == startX && this.startY == startY && this.endX == endX && this.endY == endY) return false
         this.startX = startX
         this.startY = startY
@@ -22,7 +22,7 @@ abstract class BaseShape {
         return true
     }
 
-    open fun onDrawEnd(pxerView: PxerView) {
+    open fun onDrawEnd(pixelCanvasView: PixelCanvasView) {
         hasEnded = true
     }
 
