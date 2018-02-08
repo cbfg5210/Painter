@@ -47,23 +47,24 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-
     implementation deps.kotlinJre
     implementation deps.support.app_compat
     implementation deps.support.recyclerview
     implementation deps.support.constraintLayout
     implementation deps.support.cardview
+
     implementation project(':library')
+    implementation project(':colorpicker')
 
     implementation('com.github.clans:fab:1.6.4') {
         exclude group: 'com.android.support'
     }
-    implementation('com.afollestad.material-dialogs:commons:0.9.4.5')
-    implementation('com.afollestad.material-dialogs:core:0.9.4.5')
+    implementation 'com.afollestad.material-dialogs:commons:0.9.4.5'
+    implementation 'com.afollestad.material-dialogs:core:0.9.4.5'
     implementation deps.gson
     implementation deps.recyclerAdapterDelegate
     implementation deps.rxjava2

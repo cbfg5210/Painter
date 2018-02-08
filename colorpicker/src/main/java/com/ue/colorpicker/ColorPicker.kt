@@ -4,13 +4,13 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
-
-import com.ue.pixel.R
-import com.ue.pixel.util.Tool
+import com.ue.colorpicker.R
+import kotlinx.android.synthetic.main.cp_popup_color_picker.view.*
 
 /**
  * Created by BennyKok on 10/14/2016.
@@ -21,20 +21,20 @@ class ColorPicker(c: Context, startColor: Int, listener: SatValView.OnColorChang
     private val satValView: SatValView
 
     init {
-        val contentView = LayoutInflater.from(c).inflate(R.layout.pi_popup_color_picker, null)
+        val contentView = LayoutInflater.from(c).inflate(R.layout.cp_popup_color_picker, null)
         contentView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        satValView = contentView.findViewById<View>(R.id.svvSatValView) as SatValView
-        satValView.withHueBar(contentView.findViewById<View>(R.id.hsbHueSeekBar) as HueSeekBar)
-        satValView.withAlphaBar(contentView.findViewById<View>(R.id.asbAlphaSeekBar) as AlphaSeekBar)
+        satValView = contentView.svvSatValView
+        satValView.withHueBar(contentView.hsbHueSeekBar)
+        satValView.withAlphaBar(contentView.asbAlphaSeekBar)
         satValView.setListener(listener)
         satValView.setColor(startColor)
         popupWindow = PopupWindow(contentView)
         popupWindow.setBackgroundDrawable(ColorDrawable(Color.parseColor("#424242")))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            popupWindow.elevation = Tool.convertDpToPixel(8f, c)
+            popupWindow.elevation = convertDpToPixel(8f, c)
         }
-        popupWindow.height = Tool.convertDpToPixel(292f, c).toInt()
-        popupWindow.width = Tool.convertDpToPixel(216f, c).toInt()
+        popupWindow.height = convertDpToPixel(292f, c).toInt()
+        popupWindow.width = convertDpToPixel(216f, c).toInt()
     }
 
     fun show(anchor: View) {
@@ -48,5 +48,10 @@ class ColorPicker(c: Context, startColor: Int, listener: SatValView.OnColorChang
 
     fun onConfigChanges() {
         popupWindow.dismiss()
+    }
+
+    private fun convertDpToPixel(dp: Float, context: Context): Float {
+        val metrics = context.resources.displayMetrics
+        return dp * (metrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
     }
 }
