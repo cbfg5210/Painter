@@ -15,7 +15,6 @@ import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.ue.library.event.HomeWatcher
 import com.ue.library.event.SimplePermissionListener
 import com.ue.library.util.*
-import com.ue.library.widget.LoadingDialog
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.au_activity_outline.*
 import kotlinx.android.synthetic.main.au_layout_outline_settings.*
