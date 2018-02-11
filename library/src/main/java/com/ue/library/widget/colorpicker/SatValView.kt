@@ -1,4 +1,4 @@
-package com.ue.pixel.colorpicker
+package com.ue.library.widget.colorpicker
 
 import android.content.Context
 import android.graphics.*
