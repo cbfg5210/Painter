@@ -9,8 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
-import com.ue.colorpicker.R
-import kotlinx.android.synthetic.main.cp_popup_color_picker.view.*
+import com.ue.library.R
+import kotlinx.android.synthetic.main.popup_color_picker.view.*
 
 /**
  * Created by BennyKok on 10/14/2016.
@@ -21,7 +21,7 @@ class ColorPicker(c: Context, startColor: Int, listener: SatValView.OnColorChang
     private val satValView: SatValView
 
     init {
-        val contentView = LayoutInflater.from(c).inflate(R.layout.cp_popup_color_picker, null)
+        val contentView = LayoutInflater.from(c).inflate(R.layout.popup_color_picker, null)
         contentView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         satValView = contentView.svvSatValView
         satValView.withHueBar(contentView.hsbHueSeekBar)

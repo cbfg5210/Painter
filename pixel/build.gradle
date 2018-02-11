@@ -58,7 +58,7 @@ dependencies {
     implementation deps.support.cardview
 
     implementation project(':library')
-    implementation project(':colorpicker')
+//    implementation project(':colorpicker')
 
     implementation('com.github.clans:fab:1.6.4') {
         exclude group: 'com.android.support'

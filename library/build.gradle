@@ -39,6 +39,7 @@ dependencies {
     implementation deps.kotlinJre
     implementation deps.support.app_compat
     implementation deps.support.design
+    implementation deps.support.constraintLayout
 
     implementation deps.picasso
     implementation deps.rxjava2
