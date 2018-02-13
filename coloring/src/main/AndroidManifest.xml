@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.ue.fingercoloring">
+          package="com.ue.coloring">
 
     <application>
         <activity
-            android:name="com.ue.coloring.feature.main.MainListActivity"
+            android:name=".feature.main.MainListActivity"
             android:launchMode="singleTask"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.ue.coloring.feature.paint.PaintActivity"
+            android:name=".feature.paint.PaintActivity"
             android:launchMode="singleTask"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"/>

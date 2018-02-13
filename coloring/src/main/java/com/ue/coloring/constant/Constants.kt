@@ -1,5 +1,6 @@
 package com.ue.coloring.constant
 
+import com.ue.library.constant.Constants
 import java.io.File
 
 /**
@@ -7,8 +8,7 @@ import java.io.File
  */
 
 object Constants {
-    val ASSETS = "file:///android_asset/"
-    private val BASE_FOLDER = File.separator + "painter" + File.separator
-    val FOLDER_THEMES = BASE_FOLDER + "themes" + File.separator
-    val FOLDER_WORKS = BASE_FOLDER + "works" + File.separator
+    const val ASSETS = "file:///android_asset/"
+    val FOLDER_THEMES = "${Constants.PATH_COLORING}themes${File.separator}"
+    val FOLDER_WORKS = "${Constants.PATH_COLORING}works${File.separator}"
 }
