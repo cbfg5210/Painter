@@ -16,7 +16,7 @@ import com.ue.coloring.util.FileUtils
 import com.ue.coloring.widget.ColorPicker
 import com.ue.coloring.widget.ColourImageView
 import com.ue.coloring.widget.TipDialog
-import com.ue.fingercoloring.R
+import com.ue.coloring.R
 import com.ue.library.util.ImageLoaderUtils
 import com.ue.library.util.IntentUtils
 import kotlinx.android.synthetic.main.co_activity_paint.*

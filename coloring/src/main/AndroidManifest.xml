@@ -4,7 +4,7 @@
 
     <application>
         <activity
-            android:name=".feature.main.MainListActivity"
+            android:name=".feature.main.ColoringThemesActivity"
             android:launchMode="singleTask"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"/>

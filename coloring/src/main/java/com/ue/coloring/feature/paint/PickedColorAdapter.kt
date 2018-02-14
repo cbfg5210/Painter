@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.gson.reflect.TypeToken
 import com.ue.adapterdelegate.OnDelegateClickListener
-import com.ue.fingercoloring.R
+import com.ue.coloring.R
 import com.ue.coloring.constant.SPKeys
 import com.ue.library.util.GsonHolder
 import com.ue.library.util.SPUtils

@@ -1,4 +1,4 @@
-package com.ue.fingercoloring;
+package com.ue.coloring;
 
 import org.junit.Test;
 

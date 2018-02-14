@@ -8,10 +8,11 @@ import com.ue.adapterdelegate.AdapterDelegate
 import com.ue.adapterdelegate.BaseViewHolder
 import com.ue.adapterdelegate.DelegationAdapter
 import com.ue.adapterdelegate.OnDelegateClickListener
+import com.ue.coloring.R
+import com.ue.coloring.constant.Constants.TAG_COLORING_THEMES
 import com.ue.coloring.feature.paint.PaintActivity
 import com.ue.coloring.model.ThemeItem
 import com.ue.coloring.model.ThemeTitle
-import com.ue.fingercoloring.R
 import com.ue.library.util.ImageLoaderUtils
 import kotlinx.android.synthetic.main.co_item_theme.view.*
 import kotlinx.android.synthetic.main.co_item_theme_title.view.*
@@ -109,7 +110,7 @@ internal class ThemeItemAdapter(private val activity: Activity, items: List<Any>
                         lp.setMargins(margin, margin, margin, margin)
                     }
                     //resize:有效减少内存、加快速度
-                    ImageLoaderUtils.display(ivThemeItem, item.imageUrl, Point(imgSize, imgSize), ThemesFragment.TAG_THEMES)
+                    ImageLoaderUtils.display(ivThemeItem, item.imageUrl, Point(imgSize, imgSize), TAG_COLORING_THEMES)
                 }
             }
         }

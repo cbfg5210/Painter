@@ -9,6 +9,12 @@ import java.io.File
 
 object Constants {
     const val ASSETS = "file:///android_asset/"
+    const val THEME_DEFAULT_IMAGE = "${ASSETS}secret_garden.jpg"
+    const val THEME_DEFAULT = "SecretGarden"
+    val THEME_DEFAULT_PREFIX = "$ASSETS$THEME_DEFAULT${File.separator}"
+
     val FOLDER_THEMES = "${Constants.PATH_COLORING}themes${File.separator}"
     val FOLDER_WORKS = "${Constants.PATH_COLORING}works${File.separator}"
+
+    const val TAG_COLORING_THEMES = "coloringThemes"
 }

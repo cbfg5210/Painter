@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
-import com.ue.fingercoloring.R
+import com.ue.coloring.R
 
 /**
  * Created by hawk on 2017/12/26.

@@ -14,7 +14,7 @@ import com.ue.coloring.event.OnChangeBorderListener
 import com.ue.coloring.factory.DialogHelper
 import com.ue.coloring.widget.DragedTextView
 import com.ue.coloring.widget.TipDialog
-import com.ue.fingercoloring.R
+import com.ue.coloring.R
 import com.ue.library.util.ImageLoaderUtils
 import kotlinx.android.synthetic.main.co_dialog_after_effect.view.*
 
