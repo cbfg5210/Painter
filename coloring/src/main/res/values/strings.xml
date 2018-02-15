@@ -12,7 +12,7 @@
     <string name="co_share">分享</string>
     <string name="co_saving_image">正在保存到本地</string>
     <string name="co_save_failed">保存失败</string>
-    <string name="co_save_success">您的大作已经保存到：</string>
+    <string name="co_save_success">您的大作已经保存到：%s</string>
     <string name="co_share_content">我在玩【颜色集-指尖填图】,快和我一起来玩吧！下载地址：http://app.mi.com/details?id=com.ue.colorful</string>
     <string name="co_please_select">请选择</string>
     <string name="co_share_my_work">快来看看我的新作。</string>

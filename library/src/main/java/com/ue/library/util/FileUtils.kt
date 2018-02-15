@@ -2,7 +2,6 @@ package com.ue.library.util
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.widget.Toast
 import com.ue.library.R
 import com.ue.library.event.SimplePermissionListener
 import java.io.File
@@ -13,6 +12,11 @@ import java.io.IOException
  * Created by hawk on 2018/1/10.
  */
 object FileUtils {
+
+    fun deleteFile(savedPicturePath: String): Boolean {
+        val file = File(savedPicturePath)
+        return if (file.exists()) file.delete() else false
+    }
 
     fun saveImageLocally(context: Context, bmp: Bitmap, path: String, workName: String, listener: OnSaveImageListener? = null, showToast: Boolean? = true) {
         PermissionUtils.checkReadWriteStoragePerms(context,
@@ -37,9 +41,9 @@ object FileUtils {
             out = FileOutputStream(File(path))
             bmp.compress(Bitmap.CompressFormat.PNG, 100, out)
             finalPath = path
-            if (showToast) Toast.makeText(context, context.getString(R.string.save_to, finalPath), Toast.LENGTH_LONG).show()
+            if (showToast) context.toast(context.getString(R.string.save_to, finalPath))
         } catch (exp: Exception) {
-            if (showToast) Toast.makeText(context, context.getString(R.string.save_error_reason, exp.message), Toast.LENGTH_LONG).show()
+            if (showToast) context.toast(context.getString(R.string.save_error_reason, exp.message))
         } finally {
             try {
                 out?.close()

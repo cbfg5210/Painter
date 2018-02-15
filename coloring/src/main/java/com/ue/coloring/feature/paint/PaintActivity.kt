@@ -9,16 +9,16 @@ import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import com.ue.adapterdelegate.OnDelegateClickListener
 import com.ue.coloring.R
 import com.ue.coloring.factory.DialogHelper
-import com.ue.coloring.util.FileUtils
 import com.ue.coloring.widget.ColorPicker
 import com.ue.coloring.widget.ColourImageView
 import com.ue.coloring.widget.TipDialog
+import com.ue.library.util.FileUtils
 import com.ue.library.util.ImageLoaderUtils
 import com.ue.library.util.IntentUtils
+import com.ue.library.util.toast
 import kotlinx.android.synthetic.main.co_activity_paint.*
 
 
@@ -149,7 +149,7 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
                     changeCurrentColor(color)
                     onPickColorCheckChanged(false)
                 } else {
-                    Toast.makeText(this@PaintActivity, getString(R.string.co_pick_color_error), Toast.LENGTH_SHORT).show()
+                    toast(R.string.co_pick_color_error)
                 }
             }
         })
@@ -220,12 +220,12 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
             override fun onSaved(path: String) {
                 tipDialog.dismiss()
                 if (TextUtils.isEmpty(path)) {
-                    Toast.makeText(this@PaintActivity, getString(R.string.co_save_failed), Toast.LENGTH_SHORT).show()
+                    toast(R.string.co_save_failed)
                     return
                 }
                 savedPicturePath = path
                 hasSaved = true
-                Toast.makeText(this@PaintActivity, getString(R.string.co_save_success) + path, Toast.LENGTH_SHORT).show()
+                toast(getString(R.string.co_save_success, path))
 
                 if (listener != null) {
                     listener.onSaved(path)
@@ -266,9 +266,9 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
             if (!TextUtils.isEmpty(savedPicturePath)) {
                 if (FileUtils.deleteFile(savedPicturePath)) {
                     savedPicturePath = ""
-                    Toast.makeText(this, getString(R.string.co_delete_completed), Toast.LENGTH_SHORT).show()
+                    toast(R.string.co_delete_completed)
                 } else {
-                    Toast.makeText(this, getString(R.string.co_delete_paint_failed), Toast.LENGTH_SHORT).show()
+                    toast(R.string.co_delete_paint_failed)
                 }
             }
         }

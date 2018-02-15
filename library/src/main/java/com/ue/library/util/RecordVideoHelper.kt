@@ -15,7 +15,6 @@ import android.os.Environment
 import android.support.v7.app.AppCompatActivity
 import android.util.SparseIntArray
 import android.view.Surface
-import android.widget.Toast
 import com.ue.library.R
 import com.ue.library.constant.Constants
 import com.ue.library.event.SimplePermissionListener
@@ -70,7 +69,7 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
             return
         }
         if (resultCode != Activity.RESULT_OK) {
-            Toast.makeText(activity, activity.getString(R.string.no_recording_perms), Toast.LENGTH_SHORT).show()
+            activity.toast(R.string.no_recording_perms)
             return
         }
         mMediaProjectionCallback = object : MediaProjection.Callback() {
@@ -81,9 +80,7 @@ class RecordVideoHelper(private val activity: AppCompatActivity) {
             }
         }
         mMediaProjection = mProjectionManager.getMediaProjection(resultCode, data)
-                .apply {
-                    registerCallback(mMediaProjectionCallback, null)
-                }
+                .apply { registerCallback(mMediaProjectionCallback, null) }
 
         recordVideo()
     }

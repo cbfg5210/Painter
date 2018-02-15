@@ -6,7 +6,6 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.SeekBar
-import android.widget.Toast
 import com.ue.coloring.R
 import com.ue.coloring.constant.SPKeys
 import com.ue.coloring.event.OnAddWordsSuccessListener
@@ -14,6 +13,7 @@ import com.ue.coloring.event.OnChangeBorderListener
 import com.ue.coloring.widget.ColorPickerSeekBar
 import com.ue.library.util.SPUtils
 import com.ue.library.util.dip2px
+import com.ue.library.util.toast
 import kotlinx.android.synthetic.main.co_layout_check_box.view.*
 import kotlinx.android.synthetic.main.co_view_addborder.view.*
 import kotlinx.android.synthetic.main.co_view_addwords.view.*
@@ -46,7 +46,7 @@ class DialogHelper(private val context: Context) {
                 .setTitle(R.string.co_add_text)
                 .setPositiveButton(R.string.co_ok) { _, _ ->
                     if (layout.addeditwords.text.toString().trim { it <= ' ' }.isEmpty()) {
-                        Toast.makeText(context, context.getString(R.string.co_no_words), Toast.LENGTH_SHORT).show()
+                        context.toast(R.string.co_no_words)
                         return@setPositiveButton
                     }
                     onAddWordsSuccessListener.addWordsSuccess(DragTextViewFactory.getInstance().createUserWordTextView(context, layout.addeditwords.text.toString(), layout.addeditwords.currentTextColor, layout.addeditwords.textSize.toInt()))
