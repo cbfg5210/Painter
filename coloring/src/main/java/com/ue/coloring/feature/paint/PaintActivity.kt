@@ -3,6 +3,7 @@ package com.ue.coloring.feature.paint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
@@ -12,13 +13,14 @@ import android.view.View
 import com.ue.adapterdelegate.OnDelegateClickListener
 import com.ue.coloring.R
 import com.ue.coloring.factory.DialogHelper
-import com.ue.coloring.widget.ColorPicker
 import com.ue.coloring.widget.ColourImageView
 import com.ue.coloring.widget.TipDialog
 import com.ue.library.util.FileUtils
 import com.ue.library.util.ImageLoaderUtils
 import com.ue.library.util.IntentUtils
 import com.ue.library.util.toast
+import com.ue.library.widget.colorpicker.ColorPicker
+import com.ue.library.widget.colorpicker.SatValView
 import kotlinx.android.synthetic.main.co_activity_paint.*
 
 
@@ -36,11 +38,14 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var pickedColorAdapter: PickedColorAdapter
     private var hasSaved = true
 
+    private lateinit var cpPaletteColorPicker: ColorPicker
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.co_activity_paint)
 
-        val intent = intent
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         isFromThemes = intent.getBooleanExtra(ARG_IS_FROM_THEMES, true)
         pictureName = intent.getStringExtra(ARG_PICTURE_NAME)
         picturePath = intent.getStringExtra(ARG_PICTURE_PATH)
@@ -49,9 +54,13 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
         tipDialog = TipDialog.newInstance()
         mDialogHelper = DialogHelper(this)
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         mDialogHelper.showEnterHintDialog()
+
+        cpPaletteColorPicker = ColorPicker(this, Color.BLACK, object : SatValView.OnColorChangeListener {
+            override fun onColorChanged(newColor: Int) {
+                changeCurrentColor(newColor)
+            }
+        })
 
         initViews()
         loadPicture()
@@ -89,12 +98,6 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
         tvPickColor.setOnClickListener(this)
         tvGradient.setOnClickListener(this)
 
-        cpPaletteColorPicker.setOnChangedListener(object : ColorPicker.OnColorChangedListener {
-            override fun colorChangedListener(color: Int) {
-                changeCurrentColor(color)
-            }
-        })
-
         civColoring.setOnRedoUndoListener(object : ColourImageView.OnRedoUndoListener {
             override fun onRedoUndo(undoSize: Int, redoSize: Int) {
                 undo.isEnabled = undoSize != 0
@@ -111,7 +114,7 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
 
         adapter.setColorSelectedListener(object : OnDelegateClickListener {
             override fun onClick(view: View, color: Int) {
-                cpPaletteColorPicker.color = color
+                cpPaletteColorPicker.setColor(color)
                 changeCurrentColor(color)
             }
         })
@@ -177,16 +180,14 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
             R.id.tvPickColor -> onPickColorCheckChanged(!tvPickColor.isSelected)
             R.id.tvGradient -> onJianBianColorCheckChanged(!tvGradient.isSelected)
 
-            R.id.tvTogglePalette ->
-                cpPaletteColorPicker.visibility =
-                        if (cpPaletteColorPicker.visibility == View.VISIBLE) View.GONE
-                        else View.VISIBLE
+            R.id.tvTogglePalette -> cpPaletteColorPicker.show(tvTogglePalette)
 
             R.id.ivToggleActionBar -> {
-                supportActionBar ?: return
-                ivToggleActionBar.isSelected = !supportActionBar!!.isShowing
-                if (ivToggleActionBar.isSelected) supportActionBar!!.show()
-                else supportActionBar!!.hide()
+                supportActionBar?.apply {
+                    ivToggleActionBar.isSelected = isShowing
+                    if (ivToggleActionBar.isSelected) show()
+                    else hide()
+                }
             }
         }
     }
@@ -200,7 +201,7 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
         onPickColorCheckChanged(false)
         pickedColorAdapter.updateColor(newColor)
 
-        cpPaletteColorPicker.color = newColor
+        cpPaletteColorPicker.setColor(newColor)
         civColoring.setColor(newColor)
     }
 
