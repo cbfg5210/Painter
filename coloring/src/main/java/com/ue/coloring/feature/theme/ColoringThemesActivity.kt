@@ -1,4 +1,4 @@
-package com.ue.coloring.feature.main
+package com.ue.coloring.feature.theme
 
 import android.content.Context
 import android.content.Intent

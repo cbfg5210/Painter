@@ -8,7 +8,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager
 import android.view.MenuItem
 import com.squareup.picasso.Picasso
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
-import com.ue.coloring.feature.main.WorksAdapter
+import com.ue.coloring.feature.theme.WorksAdapter
 import com.ue.library.util.toast
 import com.ue.painter.model.Work
 import com.ue.painter.model.WorkShop

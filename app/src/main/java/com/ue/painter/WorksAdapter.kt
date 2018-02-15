@@ -1,4 +1,4 @@
-package com.ue.coloring.feature.main
+package com.ue.coloring.feature.theme
 
 import android.app.Activity
 import android.graphics.Point

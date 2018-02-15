@@ -16,7 +16,7 @@
         android:label="@string/module_coloring"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
-        <activity android:name=".feature.main.ColoringThemesActivity">
+        <activity android:name=".feature.theme.ColoringThemesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
