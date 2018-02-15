@@ -10,7 +10,7 @@ import com.yanzhenjie.permission.PermissionListener
  * Created by hawk on 2018/1/8.
  */
 object PermissionUtils {
-    val REQ_PERM_READ_WRITE_STORAGE = 11
+    const val REQ_PERM_READ_WRITE_STORAGE = 11
 
     fun checkReadWriteStoragePerms(context: Context, failureTip: String, successCallback: SimplePermissionListener) {
         checkPermissions(context,
@@ -23,7 +23,9 @@ object PermissionUtils {
     fun checkPermissions(context: Context, reqCode: Int, perms: Array<String>, failureTip: String, callback: SimplePermissionListener) {
         val callback = object : PermissionListener {
             override fun onSucceed(requestCode: Int, grantPermissions: MutableList<String>) {
-                callback.onSucceed(requestCode, grantPermissions)
+                if (reqCode == requestCode) {
+                    callback.onSucceed(requestCode, grantPermissions)
+                }
             }
 
             override fun onFailed(requestCode: Int, deniedPermissions: MutableList<String>) {

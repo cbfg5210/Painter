@@ -11,12 +11,12 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.ue.adapterdelegate.OnDelegateClickListener
+import com.ue.coloring.R
 import com.ue.coloring.factory.DialogHelper
 import com.ue.coloring.util.FileUtils
 import com.ue.coloring.widget.ColorPicker
 import com.ue.coloring.widget.ColourImageView
 import com.ue.coloring.widget.TipDialog
-import com.ue.coloring.R
 import com.ue.library.util.ImageLoaderUtils
 import com.ue.library.util.IntentUtils
 import kotlinx.android.synthetic.main.co_activity_paint.*
@@ -49,7 +49,6 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
         tipDialog = TipDialog.newInstance()
         mDialogHelper = DialogHelper(this)
 
-        setTitle(R.string.co_module_name)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         mDialogHelper.showEnterHintDialog()
@@ -233,16 +232,14 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
                     return
                 }
 
-                if (saveFlag == FLAG_EXIT)
-                    finish()
+                if (saveFlag == FLAG_EXIT) finish()
+                else if (saveFlag == FLAG_EFFECT) showEffectDialog(path)
                 else if (saveFlag == FLAG_SHARE)
                     IntentUtils.shareImage(
                             this@PaintActivity,
-                            getString(R.string.co_module_name),
+                            getString(R.string.module_coloring),
                             getString(R.string.co_share_my_work) + getString(R.string.co_share_content),
                             path)
-                else if (saveFlag == FLAG_EFFECT)
-                    showEffectDialog(path)
             }
         }
 
@@ -279,7 +276,8 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
         civColoring.clearStack()
         hasSaved = true
 
-        ImageLoaderUtils.display(civColoring, path ?: picturePath, 0, getString(R.string.co_load_picture_failed), object : ImageLoaderUtils.ImageLoaderCallback2 {
+        ImageLoaderUtils.display(civColoring, path
+                ?: picturePath, 0, getString(R.string.co_load_picture_failed), object : ImageLoaderUtils.ImageLoaderCallback2 {
             override fun onBitmapResult(bitmap: Bitmap?) {
                 tipDialog.dismiss()
                 bitmap ?: finish()

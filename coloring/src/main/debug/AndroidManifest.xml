@@ -13,7 +13,7 @@
         android:name=".DebugApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/co_module_name"
+        android:label="@string/module_coloring"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
         <activity android:name=".feature.main.ColoringThemesActivity">

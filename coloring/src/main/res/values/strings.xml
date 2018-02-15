@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="co_module_name">指尖填图</string>
     <string name="co_action_settings">更多功能</string>
     <string name="co_action_about">关于</string>
     <string name="co_grab_data">读取数据中...</string>

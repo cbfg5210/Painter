@@ -7,11 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
+import com.ue.coloring.R
 import com.ue.coloring.constant.SPKeys
 import com.ue.coloring.event.OnAddWordsSuccessListener
 import com.ue.coloring.event.OnChangeBorderListener
 import com.ue.coloring.widget.ColorPickerSeekBar
-import com.ue.coloring.R
 import com.ue.library.util.SPUtils
 import com.ue.library.util.dip2px
 import kotlinx.android.synthetic.main.co_layout_check_box.view.*
@@ -131,7 +131,7 @@ class DialogHelper(private val context: Context) {
     }
 
     fun showEnterHintDialog() {
-        showOnceHintDialog(R.string.co_module_name, R.string.co_paint_hint, R.string.co_got_it, null, 0, SPKeys.SHOW_ENTER_HINT)
+        showOnceHintDialog(R.string.module_coloring, R.string.co_paint_hint, R.string.co_got_it, null, 0, SPKeys.SHOW_ENTER_HINT)
     }
 
     fun showExitPaintDialog(saveListener: View.OnClickListener?, quitListener: View.OnClickListener?) {
