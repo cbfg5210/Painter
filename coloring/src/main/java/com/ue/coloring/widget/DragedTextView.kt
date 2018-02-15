@@ -56,8 +56,4 @@ class DragedTextView : TextView {
         }
         return true
     }
-
-    companion object {
-        private val TAG = "qt"
-    }
 }

@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.au_item_paint_color.view.*
  */
 class PaintColorAdapter(activity: Activity, bgs: Array<Int>) : DelegationAdapter<Int>(), OnDelegateClickListener {
     companion object {
-        private val SP_PAINT_COLOR_INDEX = "sp_paint_color_index"
+        private const val SP_PAINT_COLOR_INDEX = "sp_paint_color_index"
     }
 
     private var lastSelectedIndex = 0

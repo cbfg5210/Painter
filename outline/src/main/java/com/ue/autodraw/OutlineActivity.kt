@@ -25,10 +25,10 @@ class OutlineActivity : RxAppCompatActivity(),
         NumberSelectorView.OnNumberChangeListener {
 
     companion object {
-        private val REQ_PICK_PHOTO = 2
-        private val SP_OUTLINE_OBJ_PATH = "sp_outline_obj_path"
-        private val SP_RECORD_TIP_VISIBLE = "sp_record_tip_visible"
-        private val SP_OUTLINE_TIP_VISIBLE = "sp_outline_tip_visible"
+        private const val REQ_PICK_PHOTO = 2
+        private const val SP_OUTLINE_OBJ_PATH = "sp_outline_obj_path"
+        private const val SP_RECORD_TIP_VISIBLE = "sp_record_tip_visible"
+        private const val SP_OUTLINE_TIP_VISIBLE = "sp_outline_tip_visible"
     }
 
     private var disposable: Disposable? = null

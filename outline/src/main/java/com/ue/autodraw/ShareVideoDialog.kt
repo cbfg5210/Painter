@@ -14,7 +14,7 @@ class ShareVideoDialog : DialogFragment() {
     private var shareDialog: AlertDialog? = null
 
     companion object {
-        private val ARG_VIDEO_PATH = "arg_video_path"
+        private const val ARG_VIDEO_PATH = "arg_video_path"
 
         fun newInstance(videoPath: String): ShareVideoDialog {
             val dialog = ShareVideoDialog()

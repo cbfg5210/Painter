@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.co_item_theme_title.view.*
  */
 internal class ThemeItemAdapter(private val activity: Activity, items: List<Any>?) : DelegationAdapter<Any>(), OnDelegateClickListener {
     companion object {
-        private val TYPE_TITLE = -1
+        private const val TYPE_TITLE = -1
     }
 
     init {

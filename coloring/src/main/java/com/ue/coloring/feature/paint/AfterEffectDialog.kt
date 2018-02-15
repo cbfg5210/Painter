@@ -9,12 +9,12 @@ import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.ue.coloring.R
 import com.ue.coloring.event.OnAddWordsSuccessListener
 import com.ue.coloring.event.OnChangeBorderListener
 import com.ue.coloring.factory.DialogHelper
 import com.ue.coloring.widget.DragedTextView
 import com.ue.coloring.widget.TipDialog
-import com.ue.coloring.R
 import com.ue.library.util.ImageLoaderUtils
 import kotlinx.android.synthetic.main.co_dialog_after_effect.view.*
 
@@ -38,7 +38,7 @@ class AfterEffectDialog : DialogFragment() {
     }
 
     companion object {
-        private val ARG_PICTURE_PATH = "arg_picture_path"
+        private const val ARG_PICTURE_PATH = "arg_picture_path"
 
         fun newInstance(picturePath: String): AfterEffectDialog {
             val dialog = AfterEffectDialog()

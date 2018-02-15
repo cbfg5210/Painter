@@ -212,7 +212,7 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
         tipDialog.showTip(supportFragmentManager, getString(R.string.co_saving_image))
 
         val picName =
-                if (isFromThemes) pictureName.replace(".png", "_") + "fc.png"
+                if (isFromThemes) "${pictureName.replace(".png", "_")}fc.png"
                 else pictureName
 
         val bitmapToSave = bitmap ?: civColoring.getBitmap()!!
@@ -320,13 +320,13 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     companion object {
-        private val ARG_IS_FROM_THEMES = "arg_is_from_themes"
-        private val ARG_PICTURE_NAME = "arg_picture_name"
-        private val ARG_PICTURE_PATH = "arg_picture_path"
-        private val FLAG_SAVE = 0
-        private val FLAG_EXIT = 1
-        private val FLAG_SHARE = 2
-        private val FLAG_EFFECT = 3
+        private const val ARG_IS_FROM_THEMES = "arg_is_from_themes"
+        private const val ARG_PICTURE_NAME = "arg_picture_name"
+        private const val ARG_PICTURE_PATH = "arg_picture_path"
+        private const val FLAG_SAVE = 0
+        private const val FLAG_EXIT = 1
+        private const val FLAG_SHARE = 2
+        private const val FLAG_EFFECT = 3
 
         fun start(context: Context, isFromThemes: Boolean, pictureName: String, picturePath: String) {
             val intent = Intent(context, PaintActivity::class.java)

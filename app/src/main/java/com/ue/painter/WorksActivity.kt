@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.co_fragment_works.*
  */
 class WorksActivity : RxAppCompatActivity() {
     companion object {
-        val TAG_WORKS = "works"
+        const val TAG_WORKS = "works"
         fun start(context: Context) {
             context.startActivity(Intent(context, WorksActivity::class.java))
         }

@@ -15,10 +15,10 @@ import kotlinx.android.synthetic.main.item_module.view.*
  */
 class ModuleAdapter(activity: Activity) : DelegationAdapter<ModuleItem>() {
     companion object {
-        private val OUTLINE = 0
-        private val COLORING = 1
-        private val GRAFFITI = 2
-        private val PIXEL = 3
+        private const val OUTLINE = 0
+        private const val COLORING = 1
+        private const val GRAFFITI = 2
+        private const val PIXEL = 3
     }
 
     init {

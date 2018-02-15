@@ -19,7 +19,6 @@ import android.widget.ImageView
 import android.widget.Toast
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.ue.graffiti.R
-import com.ue.graffiti.R.id.*
 import com.ue.graffiti.constant.DrawPelFlags
 import com.ue.graffiti.constant.SPKeys
 import com.ue.graffiti.event.OnMultiTouchListener
@@ -28,7 +27,10 @@ import com.ue.graffiti.event.OnStepListener
 import com.ue.graffiti.helper.DialogHelper
 import com.ue.graffiti.model.*
 import com.ue.graffiti.touch.*
-import com.ue.graffiti.util.*
+import com.ue.graffiti.util.calPelCenterPoint
+import com.ue.graffiti.util.calPelSavedMatrix
+import com.ue.graffiti.util.toRedoUpdate
+import com.ue.graffiti.util.toUndoUpdate
 import com.ue.library.util.FileUtils
 import com.ue.library.util.IntentUtils
 import com.ue.library.util.SPUtils
@@ -579,9 +581,9 @@ class GraffitiActivity : RxAppCompatActivity(), View.OnClickListener {
     }
 
     companion object {
-        private val REQUEST_CODE_NONE = 0
-        val REQUEST_CODE_GRAPH = 1//拍照
-        val REQUEST_CODE_PICTURE = 2 //缩放
-        val IMAGE_UNSPECIFIED = "image/*"
+        private const val REQUEST_CODE_NONE = 0
+        const val REQUEST_CODE_GRAPH = 1//拍照
+        const val REQUEST_CODE_PICTURE = 2 //缩放
+        const val IMAGE_UNSPECIFIED = "image/*"
     }
 }
