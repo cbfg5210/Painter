@@ -38,8 +38,8 @@ class ColorPicker(c: Context, startColor: Int, listener: SatValView.OnColorChang
     }
 
     fun show(anchor: View) {
-        if (!popupWindow.isShowing) popupWindow.showAsDropDown(anchor, -popupWindow.width / 2 + anchor.width / 2, 0)
-        else popupWindow.dismiss()
+        if (popupWindow.isShowing) popupWindow.dismiss()
+        else popupWindow.showAsDropDown(anchor, -popupWindow.width / 2 + anchor.width / 2, 0)
     }
 
     fun setColor(color: Int) {

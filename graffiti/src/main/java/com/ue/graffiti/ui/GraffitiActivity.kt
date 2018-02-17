@@ -3,10 +3,7 @@ package com.ue.graffiti.ui
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.Matrix
-import android.graphics.Paint
-import android.graphics.PointF
+import android.graphics.*
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -35,6 +32,8 @@ import com.ue.library.util.FileUtils
 import com.ue.library.util.IntentUtils
 import com.ue.library.util.SPUtils
 import com.ue.library.util.toast
+import com.ue.library.widget.colorpicker.ColorPicker
+import com.ue.library.widget.colorpicker.SatValView
 import kotlinx.android.synthetic.main.gr_activity_graffiti.*
 import kotlinx.android.synthetic.main.gr_layout_bottom_menu.*
 import kotlinx.android.synthetic.main.gr_layout_right_menu.*
@@ -61,6 +60,8 @@ class GraffitiActivity : RxAppCompatActivity(), View.OnClickListener {
     private var lastEditActionId = 0
 
     private var graffitiName = ""
+
+    private lateinit var cpPaletteColorPicker: ColorPicker
 
     //单手操作传感器监听者
     private val singleHandSensorEventListener = object : SensorEventListener {
@@ -92,6 +93,14 @@ class GraffitiActivity : RxAppCompatActivity(), View.OnClickListener {
 
         mMainPresenter = MainPresenter(this)
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
+        cpPaletteColorPicker = ColorPicker(this, Color.BLACK, object : SatValView.OnColorChangeListener {
+            override fun onColorChanged(newColor: Int) {
+                SPUtils.putInt(SPKeys.SP_PAINT_COLOR, newColor)
+                tvColor.setTextColor(newColor)
+                cvGraffitiView.paintColor = newColor
+            }
+        })
 
         initViews()
 
@@ -429,18 +438,12 @@ class GraffitiActivity : RxAppCompatActivity(), View.OnClickListener {
         }
         val viewId = v.id
         when (viewId) {
-        /*
+            /*
             * top menu listener
             * */
             R.id.tvPen -> DialogHelper.showPenDialog(this@GraffitiActivity, cvGraffitiView.getCurrentPaint())
             R.id.tvSave -> saveGraffiti()
-            R.id.tvColor -> DialogHelper.showColorPickerDialog(this@GraffitiActivity, object : ColorPickerDialog.OnColorPickerListener {
-                override fun onColorPicked(color: Int) {
-                    SPUtils.putInt(SPKeys.SP_PAINT_COLOR, color)
-                    tvColor.setTextColor(color)
-                    cvGraffitiView.paintColor = color
-                }
-            })
+            R.id.tvColor ->cpPaletteColorPicker.show(tvColor)
             R.id.tvClear -> DialogHelper.showClearDialog(this, DialogInterface.OnClickListener { _, _ ->
                 //清空内部所有数据
                 cvGraffitiView.clearData()

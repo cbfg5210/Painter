@@ -10,8 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import com.ue.graffiti.R
 import com.ue.graffiti.event.OnSingleResultListener
-import com.ue.graffiti.ui.ColorPickerDialog
-import com.ue.graffiti.ui.ColorPickerDialog.OnColorPickerListener
 import com.ue.graffiti.ui.DrawPictureDialog
 import com.ue.graffiti.ui.DrawTextDialog
 import com.ue.graffiti.ui.PenDialog
@@ -25,17 +23,6 @@ import kotlinx.android.synthetic.main.gr_layout_input.view.*
  */
 
 object DialogHelper {
-    fun showColorPickerDialog(activity: FragmentActivity, colorPickerListener: OnColorPickerListener) {
-        val fragmentManager = activity.supportFragmentManager
-        val tag = ColorPickerDialog::class.java.simpleName
-        val fragment = fragmentManager.findFragmentByTag(tag)
-        val colorPickerDialog = fragment as? ColorPickerDialog ?: ColorPickerDialog.newInstance()
-        if (colorPickerDialog.isAdded) {
-            return
-        }
-        colorPickerDialog.colorPickerListener = colorPickerListener
-        colorPickerDialog.show(fragmentManager, tag)
-    }
 
     fun showPenDialog(activity: FragmentActivity, paint: Paint) {
         val fragmentManager = activity.supportFragmentManager

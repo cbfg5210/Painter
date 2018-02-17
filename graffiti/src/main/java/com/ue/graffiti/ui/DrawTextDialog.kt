@@ -2,6 +2,7 @@ package com.ue.graffiti.ui
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
@@ -17,6 +18,9 @@ import com.ue.graffiti.model.Pel
 import com.ue.graffiti.util.loadDrawTextImageAnimations
 import com.ue.graffiti.widget.CanvasView
 import com.ue.graffiti.widget.TextImageView
+import com.ue.library.widget.colorpicker.ColorPicker
+import com.ue.library.widget.colorpicker.SatValView
+import kotlinx.android.synthetic.main.gr_dialog_draw_text.*
 import kotlinx.android.synthetic.main.gr_dialog_draw_text.view.*
 
 /**
@@ -46,6 +50,8 @@ class DrawTextDialog : DialogFragment(), View.OnClickListener {
     fun setDrawTextListener(drawTextListener: OnDrawTextListener) {
         mDrawTextListener = drawTextListener
     }
+
+    private lateinit var cpPaletteColorPicker: ColorPicker
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val contentView = LayoutInflater.from(context).inflate(R.layout.gr_dialog_draw_text, null)
@@ -77,6 +83,13 @@ class DrawTextDialog : DialogFragment(), View.OnClickListener {
         savedCanvas.setBitmap(savedBitmap)
         drawPels()
         tivCanvas.setBitmap(savedBitmap, mCanvasWidth, mCanvasHeight, paintColor)
+
+        cpPaletteColorPicker = ColorPicker(context, Color.BLACK, object : SatValView.OnColorChangeListener {
+            override fun onColorChanged(newColor: Int) {
+                paintColor = newColor
+                tivCanvas.setTextColor(newColor)
+            }
+        })
 
         return contentView
     }
@@ -161,6 +174,7 @@ class DrawTextDialog : DialogFragment(), View.OnClickListener {
         when (viewId) {
             R.id.ivCancel -> dismiss()
             R.id.tvTextContent -> demandContent()
+            R.id.tvTextColor ->cpPaletteColorPicker.show(tvTextColor)
             R.id.ivInsertText -> {
                 //构造该次的文本对象,并装入图元对象
                 drawPels()
@@ -168,12 +182,6 @@ class DrawTextDialog : DialogFragment(), View.OnClickListener {
                 //结束该活动
                 dismiss()
             }
-            R.id.tvTextColor -> DialogHelper.showColorPickerDialog(activity, object : ColorPickerDialog.OnColorPickerListener {
-                override fun onColorPicked(color: Int) {
-                    paintColor = color
-                    tivCanvas.setTextColor(color)
-                }
-            })
         }
     }
 
