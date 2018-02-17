@@ -39,9 +39,9 @@ class DrawPictureDialog : DialogFragment(), View.OnClickListener {
     private var canvasHeight = 0
 
     //显示动画：上、下
-    private var showAnimations: Array<Animation>? = null
+    private val showAnimations: Array<Animation> by lazy { loadDrawTextImageAnimations(context, true) }
     //隐藏动画：上、下
-    private var hideAnimations: Array<Animation>? = null
+    private val hideAnimations: Array<Animation> by lazy { loadDrawTextImageAnimations(context, false) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val contentView = inflater.inflate(R.layout.gr_dialog_draw_picture, null)
@@ -130,17 +130,7 @@ class DrawPictureDialog : DialogFragment(), View.OnClickListener {
     }
 
     private fun getToggleAnimations(isVisible: Boolean): Array<Animation> {
-        return if (isVisible) {
-            if (showAnimations == null) {
-                showAnimations = loadDrawTextImageAnimations(context, isVisible)
-            }
-            showAnimations!!
-        } else {
-            if (hideAnimations == null) {
-                hideAnimations = loadDrawTextImageAnimations(context, isVisible)
-            }
-            hideAnimations!!
-        }
+        return if (isVisible) showAnimations else hideAnimations
     }
 
     override fun onClick(v: View) {
@@ -171,6 +161,6 @@ class DrawPictureDialog : DialogFragment(), View.OnClickListener {
     }
 
     companion object {
-        fun newInstance()=DrawPictureDialog().apply { setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialog) }
+        fun newInstance() = DrawPictureDialog().apply { setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialog) }
     }
 }

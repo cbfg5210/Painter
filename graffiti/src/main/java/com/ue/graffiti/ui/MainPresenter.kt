@@ -19,10 +19,10 @@ import com.trello.rxlifecycle2.android.ActivityEvent
 import com.ue.graffiti.R
 import com.ue.graffiti.touch.*
 import com.ue.graffiti.util.loadToggleMenuAnimations
-import com.ue.library.util.toast
 import com.ue.graffiti.widget.CanvasView
 import com.ue.library.constant.Constants
 import com.ue.library.util.FileUtils
+import com.ue.library.util.toast
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -38,22 +38,12 @@ class MainPresenter(private val mGraffitiActivity: GraffitiActivity) {
     private var pelsPopupWindow: PopupWindow? = null
     private var canvasBgsPopupWindow: PopupWindow? = null
     //四个方向的显示动画：左、上、右、下
-    private var showAnimations: Array<Animation>? = null
+    private val showAnimations: Array<Animation> by lazy { loadToggleMenuAnimations(mGraffitiActivity, true) }
     //四个方向的隐藏动画：左、上、右、下
-    private var hideAnimations: Array<Animation>? = null
+    private val hideAnimations: Array<Animation> by lazy { loadToggleMenuAnimations(mGraffitiActivity, false) }
 
     fun getToggleAnimations(isShown: Boolean): Array<Animation> {
-        return if (isShown) {
-            if (showAnimations == null) {
-                showAnimations = loadToggleMenuAnimations(mGraffitiActivity, isShown)
-            }
-            showAnimations!!
-        } else {
-            if (hideAnimations == null) {
-                hideAnimations = loadToggleMenuAnimations(mGraffitiActivity, isShown)
-            }
-            hideAnimations!!
-        }
+        return if (isShown) showAnimations else hideAnimations
     }
 
     fun capturePhoto(REQUEST_CODE_GRAPH: Int) {
