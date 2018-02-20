@@ -136,19 +136,19 @@ class GraffitiActivity : RxAppCompatActivity(), View.OnClickListener {
     }
 
     private fun setListeners() {
-        setListenerForViews(intArrayOf(
-                R.id.tvColor, R.id.tvPen, R.id.tvClear, R.id.tvSave, R.id.tvShare,
-                R.id.ivUndo, R.id.ivRedo,
-                R.id.rbDraw, R.id.rbEdit, R.id.rbFill, R.id.rbBg, R.id.rbText, R.id.rbImage),
+        setListenerForViews(arrayOf(
+                tvColor, tvPen, tvClear, tvSave, tvShare,
+                ivUndo, ivRedo,
+                rbDraw, rbEdit, rbFill, rbBg, rbText, rbImage),
                 this)
-        setListenerForViews(intArrayOf(
-                R.id.ivDelete, R.id.ivCopy, R.id.ivRotate, R.id.ivZoomIn, R.id.ivZoomOut, R.id.ivFill, R.id.ivToggleOptions),
+        setListenerForViews(arrayOf(
+                ivDelete, ivCopy, ivRotate, ivZoomIn, ivZoomOut, ivFill, ivToggleOptions),
                 View.OnClickListener { v -> onSwitchEditMenuAction(v) })
     }
 
-    private fun setListenerForViews(viewIds: IntArray, listener: View.OnClickListener) {
-        for (i in viewIds.indices) {
-            findViewById<View>(viewIds[i]).setOnClickListener(listener)
+    private fun setListenerForViews(views: Array<View>, listener: View.OnClickListener) {
+        for (i in views.indices) {
+            views[i].setOnClickListener(listener)
         }
     }
 
