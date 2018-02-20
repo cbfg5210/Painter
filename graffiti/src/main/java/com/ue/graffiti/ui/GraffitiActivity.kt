@@ -136,26 +136,20 @@ class GraffitiActivity : RxAppCompatActivity(), View.OnClickListener {
     }
 
     private fun setListeners() {
-        setListenerForViews(arrayOf(
+        val toolViews = arrayOf(
                 tvColor, tvPen, tvClear, tvSave, tvShare,
                 ivUndo, ivRedo,
-                rbDraw, rbEdit, rbFill, rbBg, rbText, rbImage),
-                this)
-        setListenerForViews(arrayOf(
-                ivDelete, ivCopy, ivRotate, ivZoomIn, ivZoomOut, ivFill, ivToggleOptions),
-                View.OnClickListener { v -> onSwitchEditMenuAction(v) })
-    }
+                rbDraw, rbEdit, rbFill, rbBg, rbText, rbImage)
+        for (i in toolViews.indices) toolViews[i].setOnClickListener(this)
 
-    private fun setListenerForViews(views: Array<View>, listener: View.OnClickListener) {
-        for (i in views.indices) {
-            views[i].setOnClickListener(listener)
-        }
+        val editViews = arrayOf(ivDelete, ivCopy, ivRotate, ivZoomIn, ivZoomOut, ivFill, ivToggleOptions)
+        val listener = View.OnClickListener { v -> onSwitchEditMenuAction(v) }
+        for (i in editViews.indices) editViews[i].setOnClickListener(listener)
     }
 
     private fun openTools() {
-        if (vgRightMenu.visibility == View.VISIBLE) {
-            vgRightMenu.visibility = View.GONE
-        }
+        if (vgRightMenu.visibility == View.VISIBLE) vgRightMenu.visibility = View.GONE
+
         toggleMenuVisibility(true)
     }
 
