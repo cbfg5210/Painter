@@ -10,6 +10,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
@@ -18,7 +19,6 @@ import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.ue.graffiti.R
 import com.ue.graffiti.constant.DrawPelFlags
 import com.ue.graffiti.constant.SPKeys
-import com.ue.graffiti.event.OnMultiTouchListener
 import com.ue.graffiti.event.OnSingleResultListener
 import com.ue.graffiti.event.OnStepListener
 import com.ue.graffiti.helper.DialogHelper
@@ -144,17 +144,6 @@ class GraffitiActivity : RxAppCompatActivity(), View.OnClickListener {
         setListenerForViews(intArrayOf(
                 R.id.ivDelete, R.id.ivCopy, R.id.ivRotate, R.id.ivZoomIn, R.id.ivZoomOut, R.id.ivFill, R.id.ivToggleOptions),
                 View.OnClickListener { v -> onSwitchEditMenuAction(v) })
-
-        cvGraffitiView.setMultiTouchListener(object : OnMultiTouchListener {
-            override fun onMultiTouch() {
-                if (vgTopMenu.visibility == View.VISIBLE) {
-                    closeTools()
-                    return
-                }
-                ensurePelFinished()
-                openTools()
-            }
-        })
     }
 
     private fun setListenerForViews(viewIds: IntArray, listener: View.OnClickListener) {
@@ -438,12 +427,12 @@ class GraffitiActivity : RxAppCompatActivity(), View.OnClickListener {
         }
         val viewId = v.id
         when (viewId) {
-            /*
-            * top menu listener
-            * */
+        /*
+        * top menu listener
+        * */
             R.id.tvPen -> DialogHelper.showPenDialog(this@GraffitiActivity, cvGraffitiView.getCurrentPaint())
             R.id.tvSave -> saveGraffiti()
-            R.id.tvColor ->cpPaletteColorPicker.show(tvColor)
+            R.id.tvColor -> cpPaletteColorPicker.show(tvColor)
             R.id.tvClear -> DialogHelper.showClearDialog(this, DialogInterface.OnClickListener { _, _ ->
                 //清空内部所有数据
                 cvGraffitiView.clearData()
@@ -581,6 +570,27 @@ class GraffitiActivity : RxAppCompatActivity(), View.OnClickListener {
             mMainPresenter.dismissPopupWindows()
         }
         return true
+    }
+
+    private var lastMultiTouchTime = 0L
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        /*
+        * 如果是多指触摸的话，显示/隐藏工具栏
+        * */
+        if (event.pointerCount > 2) {
+            if (event.eventTime - lastMultiTouchTime < 1000) return true
+
+            lastMultiTouchTime = event.eventTime
+            if (vgTopMenu.visibility == View.VISIBLE) {
+                closeTools()
+                return true
+            }
+            ensurePelFinished()
+            openTools()
+            return true
+        }
+        return super.onTouchEvent(event)
     }
 
     companion object {

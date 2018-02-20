@@ -8,7 +8,6 @@ import android.util.AttributeSet
 import android.view.View
 import com.ue.graffiti.R
 import com.ue.graffiti.constant.SPKeys
-import com.ue.graffiti.event.OnMultiTouchListener
 import com.ue.graffiti.event.SimpleTouchListener
 import com.ue.graffiti.model.Pel
 import com.ue.graffiti.model.Step
@@ -67,14 +66,10 @@ class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), 
         set(childTouch) {
             field = childTouch
             touch!!.setTouchListener(this, this)
-            if (mMultiTouchListener != null) {
-                touch!!.setMultiTouchListener(mMultiTouchListener!!)
-            }
         }
     private var cacheCanvas: Canvas? = null
 
     private var isSensorRegistered: Boolean = false
-    private var mMultiTouchListener: OnMultiTouchListener? = null
 
     var paintColor: Int
         get() = currentPaint.color
@@ -82,11 +77,6 @@ class CanvasView(context: Context, attrs: AttributeSet) : View(context, attrs), 
             drawPelPaint.color = paintColor
             drawTextPaint.color = paintColor
         }
-
-    fun setMultiTouchListener(multiTouchListener: OnMultiTouchListener) {
-        mMultiTouchListener = multiTouchListener
-        this.touch?.setMultiTouchListener(multiTouchListener)
-    }
 
     override fun isSensorRegistered(): Boolean {
         return isSensorRegistered

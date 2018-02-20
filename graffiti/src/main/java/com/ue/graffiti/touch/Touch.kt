@@ -9,7 +9,6 @@ import android.graphics.Region
 import android.view.MotionEvent
 import android.view.View
 import com.ue.graffiti.R
-import com.ue.graffiti.event.OnMultiTouchListener
 import com.ue.graffiti.event.SimpleTouchListener
 import com.ue.graffiti.model.Pel
 import com.ue.graffiti.model.Step
@@ -45,14 +44,8 @@ open class Touch(canvasView: CanvasView?) : View.OnTouchListener {
         protected set
     private var progressDialog: ProgressDialog? = null
 
-    private var mMultiTouchListener: OnMultiTouchListener? = null
-
     protected val context: Context
         get() = mSimpleTouchListener!!.getContext()
-
-    fun setMultiTouchListener(multiTouchListener: OnMultiTouchListener) {
-        mMultiTouchListener = multiTouchListener
-    }
 
     init {
         beginPoint = PointF()
@@ -144,10 +137,6 @@ open class Touch(canvasView: CanvasView?) : View.OnTouchListener {
         // 第一只手指按下
             MotionEvent.ACTION_DOWN -> down1()
             MotionEvent.ACTION_POINTER_DOWN -> {
-                if (event.pointerCount > 2 && mMultiTouchListener != null) {
-                    mMultiTouchListener!!.onMultiTouch()
-                    return true
-                }
                 // 第二个手指按下
                 down2()
             }
