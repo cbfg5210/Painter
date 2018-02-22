@@ -36,8 +36,7 @@
         <RadioButton
             android:id="@+id/rbDraw"
             style="@style/gr_GraffitiButton"
-            android:drawableTop="@drawable/gr_sel_draw_pel"
-            android:text="@string/gr_draw"/>
+            android:drawableTop="@drawable/gr_sel_draw_pel"/>
 
         <View
             style="@style/gr_MenuSeparator"/>
@@ -45,8 +44,7 @@
         <RadioButton
             android:id="@+id/rbEdit"
             style="@style/gr_GraffitiButton"
-            android:drawableTop="@drawable/gr_sel_edit_pel"
-            android:text="@string/gr_edit"/>
+            android:drawableTop="@drawable/gr_sel_edit_pel"/>
 
         <View
             style="@style/gr_MenuSeparator"/>
@@ -54,8 +52,7 @@
         <RadioButton
             android:id="@+id/rbFill"
             style="@style/gr_GraffitiButton"
-            android:drawableTop="@drawable/gr_sel_fill_pel"
-            android:text="@string/gr_fill"/>
+            android:drawableTop="@drawable/gr_sel_fill_pel"/>
 
         <View
             style="@style/gr_MenuSeparator"/>
@@ -63,8 +60,7 @@
         <RadioButton
             android:id="@+id/rbBg"
             style="@style/gr_GraffitiButton"
-            android:drawableTop="@drawable/btn_setbg_normal"
-            android:text="@string/gr_bg"/>
+            android:drawableTop="@drawable/btn_setbg_normal"/>
 
         <View
             style="@style/gr_MenuSeparator"/>
@@ -72,8 +68,7 @@
         <RadioButton
             android:id="@+id/rbText"
             style="@style/gr_GraffitiButton"
-            android:drawableTop="@drawable/btn_text_normal"
-            android:text="@string/gr_text"/>
+            android:drawableTop="@drawable/btn_text_normal"/>
 
         <View
             style="@style/gr_MenuSeparator"/>
@@ -81,7 +76,6 @@
         <RadioButton
             android:id="@+id/rbImage"
             style="@style/gr_GraffitiButton"
-            android:drawableTop="@drawable/btn_picture_normal"
-            android:text="@string/gr_image"/>
+            android:drawableTop="@drawable/btn_picture_normal"/>
     </RadioGroup>
 </LinearLayout>

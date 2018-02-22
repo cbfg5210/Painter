@@ -97,7 +97,6 @@ class GraffitiActivity : RxAppCompatActivity(), View.OnClickListener {
         cpPaletteColorPicker = ColorPicker(this, Color.BLACK, object : SatValView.OnColorChangeListener {
             override fun onColorChanged(newColor: Int) {
                 SPUtils.putInt(SPKeys.SP_PAINT_COLOR, newColor)
-                tvColor.setTextColor(newColor)
                 cvGraffitiView.paintColor = newColor
             }
         })
@@ -113,7 +112,6 @@ class GraffitiActivity : RxAppCompatActivity(), View.OnClickListener {
         curToolVi = rbDraw
 
         val lastColor = SPUtils.getInt(SPKeys.SP_PAINT_COLOR, resources.getColor(R.color.col_298ecb))
-        tvColor.setTextColor(lastColor)
         cvGraffitiView.paintColor = lastColor
 
         whiteCanvasBgVi = mMainPresenter.initCanvasBgsPopupWindow(R.layout.gr_popup_canvas_bgs, R.id.vgCanvasBgs, object : View.OnClickListener {

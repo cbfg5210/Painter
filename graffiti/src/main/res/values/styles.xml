@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
+
     <style name="gr_GraffitiButton">
-        <item name="android:textSize">@dimen/font_size_12</item>
-        <item name="android:textColor">@color/gr_sel_menu_text_color</item>
         <item name="android:background">@color/col_384252</item>
-        <item name="android:paddingTop">@dimen/widget_size_4</item>
         <item name="android:gravity">center</item>
         <item name="android:button">@null</item>
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">@dimen/widget_size_45</item>
+        <item name="android:padding">@dimen/widget_size_5</item>
         <item name="android:shadowColor">@color/col_181e2a</item>
         <item name="android:shadowDy">1.0</item>
         <item name="android:shadowRadius">1.0</item>
         <item name="android:layout_weight">1.0</item>
-        <item name="android:paddingBottom">@dimen/widget_size_4</item>
     </style>
 
     <style name="gr_MenuPanel">

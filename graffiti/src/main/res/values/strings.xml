@@ -52,7 +52,7 @@
     <string name="gr_save_error_null">保存失败：作品名称不能为空~</string>
     <string name="gr_dont_show_next_time">下次不再提示</string>
     <string name="gr_draw_gesture_title">菜单栏手势说明</string>
-    <string name="gr_draw_gesture_tip">多点触摸屏幕可以打开或关闭菜单栏，比如3个手指触摸屏幕，指尖距离大些更有效哦。</string>
+    <string name="gr_draw_gesture_tip">多点触摸屏幕可以打开或关闭菜单栏，比如3个手指触摸屏幕。</string>
     <string name="gr_got_it">知道了</string>
     <string name="gr_text_gesture_title">文本手势说明</string>
     <string name="gr_text_gesture_tip">两指水平方向收伸可以缩放文字，垂直方向收伸可以旋转文字；手指按住平移可以移动文字。</string>
