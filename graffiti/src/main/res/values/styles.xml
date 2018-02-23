@@ -22,9 +22,9 @@
 
     <style name="gr_MenuSeparator">
         <item name="android:layout_width">1px</item>
-        <item name="android:layout_height">@dimen/widget_size_15</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:background">@color/col_343d4d</item>
+        <item name="android:background">@color/black</item>
     </style>
 
     <style name="gr_GraffitiDialog">
