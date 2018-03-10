@@ -26,9 +26,9 @@ import com.ue.library.constant.Constants
 import com.ue.library.constant.Modules
 import com.ue.library.event.OnTextInputListener
 import com.ue.library.util.*
-import com.ue.pixel.R
 import com.ue.library.widget.colorpicker.ColorPicker
 import com.ue.library.widget.colorpicker.SatValView
+import com.ue.pixel.R
 import com.ue.pixel.event.ItemTouchCallback
 import com.ue.pixel.event.OnItemClickListener2
 import com.ue.pixel.event.OnProjectInfoListener
