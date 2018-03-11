@@ -10,15 +10,13 @@ import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import com.afollestad.materialdialogs.MaterialDialog
 import com.ue.adapterdelegate.OnDelegateClickListener
 import com.ue.coloring.R
 import com.ue.coloring.factory.DialogHelper
 import com.ue.coloring.widget.ColourImageView
 import com.ue.coloring.widget.TipDialog
-import com.ue.library.util.FileUtils
-import com.ue.library.util.ImageLoaderUtils
-import com.ue.library.util.IntentUtils
-import com.ue.library.util.toast
+import com.ue.library.util.*
 import com.ue.library.widget.colorpicker.ColorPicker
 import com.ue.library.widget.colorpicker.SatValView
 import kotlinx.android.synthetic.main.co_activity_paint.*
@@ -296,11 +294,7 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
             android.R.id.home -> onBackPressed()
             R.id.menuSave -> saveToLocal(FLAG_SAVE)
             R.id.menuShare -> saveToLocal(FLAG_SHARE)
-            R.id.menuDelete -> {
-                mDialogHelper.showRepaintDialog(View.OnClickListener {
-                    repaint(true)
-                })
-            }
+            R.id.menuDelete -> mDialogHelper.showRepaintDialog(MaterialDialog.SingleButtonCallback { _, _ -> repaint(true) })
         }
         return true
     }
@@ -315,9 +309,9 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
             super.onBackPressed()
             return
         }
-        mDialogHelper.showExitPaintDialog(
-                View.OnClickListener { saveToLocal(FLAG_EXIT) },
-                View.OnClickListener { finish() })
+
+        DialogUtils.showExitDialogWithCheck(this, getString(R.string.co_save_work), true,
+                MaterialDialog.SingleButtonCallback { dialog, _ -> if (dialog.isPromptCheckBoxChecked) saveToLocal(FLAG_EXIT) else finish() })
     }
 
     companion object {

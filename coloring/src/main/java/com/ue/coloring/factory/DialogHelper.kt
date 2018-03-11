@@ -6,15 +6,15 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.SeekBar
+import com.afollestad.materialdialogs.MaterialDialog
 import com.ue.coloring.R
 import com.ue.coloring.constant.SPKeys
 import com.ue.coloring.event.OnAddWordsSuccessListener
 import com.ue.coloring.event.OnChangeBorderListener
 import com.ue.coloring.widget.ColorPickerSeekBar
-import com.ue.library.util.SPUtils
+import com.ue.library.util.DialogUtils
 import com.ue.library.util.dip2px
 import com.ue.library.util.toast
-import kotlinx.android.synthetic.main.co_layout_check_box.view.*
 import kotlinx.android.synthetic.main.co_view_addborder.view.*
 import kotlinx.android.synthetic.main.co_view_addwords.view.*
 
@@ -57,13 +57,8 @@ class DialogHelper(private val context: Context) {
                 .show()
     }
 
-    fun showRepaintDialog(confirm: View.OnClickListener?) {
-        AlertDialog.Builder(context)
-                .setTitle(R.string.co_confirm_repaint)
-                .setPositiveButton(R.string.co_cancel, null)
-                .setNegativeButton(R.string.co_ok) { _, _ -> confirm?.onClick(null) }
-                .create()
-                .show()
+    fun showRepaintDialog(callback: MaterialDialog.SingleButtonCallback?) {
+        DialogUtils.showNormalDialog(context, R.string.co_confirm_repaint, 0, R.string.co_cancel, null, R.string.co_ok, callback)
     }
 
     fun showAddBorderDialog(listener: OnChangeBorderListener) {
@@ -96,52 +91,19 @@ class DialogHelper(private val context: Context) {
                 .show()
     }
 
-    private fun showOnceHintDialog(titleRes: Int, hintRes: Int, positiveRes: Int, positiveListener: View.OnClickListener?, negativeRes: Int, checkedSpKey: String) {
-        val showHint = SPUtils.getBoolean(checkedSpKey, true)
-        if (!showHint) {
-            positiveListener?.onClick(null)
-            return
-        }
-        val checkBoxLayout = LayoutInflater.from(context).inflate(R.layout.co_layout_check_box, null)
-        val negativeBtnTxt = if (negativeRes == 0) null else context.getString(negativeRes)
-
-        AlertDialog.Builder(context)
-                .setTitle(titleRes)
-                .setMessage(hintRes)
-                .setPositiveButton(positiveRes) { _, _ ->
-                    if (checkBoxLayout.cbCheck.isChecked) SPUtils.putBoolean(checkedSpKey, false)
-                    positiveListener?.onClick(null)
-                }
-                .setNegativeButton(negativeBtnTxt, null)
-                .setView(checkBoxLayout)
-                .create()
-                .show()
-    }
-
     fun showEffectHintDialog(listener: View.OnClickListener?) {
-        showOnceHintDialog(R.string.co_after_effect, R.string.co_effect_hint, R.string.co_go_on, listener, R.string.co_cancel, SPKeys.SHOW_EFFECT_HINT)
+        DialogUtils.showOnceHintDialog(context, R.string.co_after_effect, R.string.co_effect_hint, R.string.co_go_on, listener, SPKeys.SHOW_EFFECT_HINT)
     }
 
     fun showPickColorHintDialog() {
-        showOnceHintDialog(R.string.co_pick_color, R.string.co_pick_color_hint, R.string.co_got_it, null, 0, SPKeys.PickColorDialogEnable)
+        DialogUtils.showOnceHintDialog(context, R.string.co_pick_color, R.string.co_pick_color_hint, R.string.co_got_it, null, 0, SPKeys.PickColorDialogEnable)
     }
 
     fun showGradualHintDialog() {
-        showOnceHintDialog(R.string.co_gradual_model, R.string.co_gradual_model_hint, R.string.co_got_it, null, 0, SPKeys.GradualModel)
+        DialogUtils.showOnceHintDialog(context, R.string.co_gradual_model, R.string.co_gradual_model_hint, R.string.co_got_it, null, 0, SPKeys.GradualModel)
     }
 
     fun showEnterHintDialog() {
-        showOnceHintDialog(R.string.module_coloring, R.string.co_paint_hint, R.string.co_got_it, null, 0, SPKeys.SHOW_ENTER_HINT)
-    }
-
-    fun showExitPaintDialog(saveListener: View.OnClickListener?, quitListener: View.OnClickListener?) {
-        AlertDialog.Builder(context)
-                .setTitle(R.string.co_is_exit)
-                .setMessage(R.string.co_quit_or_save)
-                .setPositiveButton(R.string.co_cancel, null)
-                .setNegativeButton(R.string.co_save_exit) { _, _ -> saveListener?.onClick(null) }
-                .setNeutralButton(R.string.co_quit_exit) { _, _ -> quitListener?.onClick(null) }
-                .create()
-                .show()
+        DialogUtils.showOnceHintDialog(context, R.string.module_coloring, R.string.co_paint_hint, R.string.co_got_it, null, 0, SPKeys.SHOW_ENTER_HINT)
     }
 }

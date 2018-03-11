@@ -66,4 +66,5 @@
     <string name="co_quit_exit">不保存并退出</string>
     <string name="co_no_external_permission">读取文件失败：应用没有被授予外部存储权限</string>
     <string name="co_read_data_error">读取数据出错:%s</string>
+    <string name="co_save_work">保存当前作品</string>
 </resources>

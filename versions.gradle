@@ -5,7 +5,7 @@
 ext.deps = [:]
 def versions = [:]
 versions.arch = "1.0.0-alpha9"
-versions.support = "26.1.0"
+versions.support = "27.0.1"
 versions.constraintLayout = "1.0.2"
 versions.rxjava2 = "2.1.3"
 versions.rxAndroid = "2.0.1"
@@ -14,7 +14,7 @@ versions.picasso = "2.5.2"
 versions.gson = "2.8.2"
 versions.recyclerAdapterDelegate = "0.81"
 versions.androidGradlePlugin = "3.0.1"
-versions.kotlin = "1.2.21"
+versions.kotlin = "1.2.30"
 versions.androidMavenPlugin = "1.5"
 versions.butterknife = "8.5.1"
 versions.eventbus = "3.0.0"
@@ -38,6 +38,7 @@ versions.spinKit = "1.1.0"
 versions.discreteScrollView = "1.3.2"
 versions.banner = "1.4.10"
 versions.qmui = "1.0.6"
+versions.materialDialogs = "0.9.6.0"
 
 
 def deps = [:]
@@ -110,6 +111,11 @@ deps.spinKit = "com.github.ybq:Android-SpinKit:$versions.spinKit"
 deps.discreteScrollView = "com.yarolegovich:discrete-scrollview:$versions.discreteScrollView"
 deps.banner = "com.youth.banner:banner:$versions.banner"
 deps.qmui = "com.qmuiteam:qmui:$versions.qmui"
+
+def materialDialogs = [:]
+materialDialogs.common = "com.afollestad.material-dialogs:commons:$versions.materialDialogs"
+materialDialogs.core = "com.afollestad.material-dialogs:core:$versions.materialDialogs"
+deps.materialDialogs = materialDialogs
 
 ext.deps = deps
 

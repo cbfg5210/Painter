@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-
 import com.ue.coloring.R
 
 /**
@@ -18,7 +17,7 @@ class TipDialog : DialogFragment() {
     private var tvTipTxt: TextView? = null
     private var tip: String? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = LayoutInflater.from(context).inflate(R.layout.co_dialog_tip, null)
         tvTipTxt = rootView.findViewById(R.id.tvTipTxt)
         return rootView

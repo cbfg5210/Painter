@@ -1,12 +1,9 @@
 package com.ue.library.util
 
 import android.content.Context
-import android.support.v7.app.AlertDialog
-import android.view.LayoutInflater
 import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.ue.library.R
-import kotlinx.android.synthetic.main.layout_check_box.view.*
 
 /**
  * Created by hawk on 2018/1/14.
@@ -23,9 +20,8 @@ object DialogUtils {
     fun showExitDialog(context: Context) {
         MaterialDialog.Builder(context)
                 .title(R.string.sure_exit)
-//                .content("Sure to exit?")
-                .positiveText(R.string.sure)
-                .negativeText(R.string.cancel)
+                .positiveText(R.string.cancel)
+                .negativeText(R.string.sure)
                 .show()
     }
 
@@ -33,9 +29,9 @@ object DialogUtils {
         MaterialDialog.Builder(context)
                 .content(R.string.sure_exit)
                 .checkBoxPrompt(checkTxt, defChecked, null)
-                .positiveText(R.string.sure)
-                .onPositive(callback)
-                .negativeText(R.string.cancel)
+                .positiveText(R.string.cancel)
+                .negativeText(R.string.sure)
+                .onNegative(callback)
                 .show()
     }
 
@@ -50,23 +46,47 @@ object DialogUtils {
                            positiveListener: View.OnClickListener?,
                            negativeRes: Int,
                            checkedSpKey: String) {
+
         if (!SPUtils.getBoolean(checkedSpKey, true)) {
             positiveListener?.onClick(null)
             return
         }
-        val checkBoxLayout = LayoutInflater.from(context).inflate(R.layout.layout_check_box, null)
-        val negativeBtnTxt = if (negativeRes == 0) null else context.getString(negativeRes)
 
-        AlertDialog.Builder(context)
-                .setTitle(titleRes)
-                .setMessage(hintRes)
-                .setPositiveButton(positiveRes) { _, _ ->
-                    if (checkBoxLayout.cbCheck.isChecked) SPUtils.putBoolean(checkedSpKey, false)
+        val dialogBuilder = MaterialDialog.Builder(context)
+                .title(titleRes)
+                .content(hintRes)
+                .checkBoxPrompt(context.getString(R.string.dont_show_next_time), false, null)
+                .positiveText(positiveRes)
+                .onPositive { dialog, _ ->
+                    if (dialog.isPromptCheckBoxChecked) SPUtils.putBoolean(checkedSpKey, false)
                     positiveListener?.onClick(null)
                 }
-                .setNegativeButton(negativeBtnTxt, null)
-                .setView(checkBoxLayout)
-                .create()
-                .show()
+
+        if (negativeRes != 0) dialogBuilder.negativeText(context.getString(negativeRes))
+
+        dialogBuilder.show()
+    }
+
+    fun showNormalDialog(context: Context,
+                         titleRes: Int,
+                         hintRes: Int,
+                         positiveRes: Int,
+                         positiveListener: MaterialDialog.SingleButtonCallback?,
+                         negativeRes: Int,
+                         negativeListener: MaterialDialog.SingleButtonCallback?) {
+
+        val dialogBuilder = MaterialDialog.Builder(context)
+        if (titleRes != 0) dialogBuilder.title(titleRes)
+        if (hintRes != 0) dialogBuilder.content(hintRes)
+        if (positiveRes != 0) {
+            dialogBuilder.positiveText(positiveRes)
+            if (positiveListener != null) dialogBuilder.onPositive(positiveListener)
+        }
+        if (negativeRes != 0) {
+            dialogBuilder.negativeText(negativeRes)
+            if (negativeListener != null) dialogBuilder.onNegative(negativeListener)
+        }
+
+        dialogBuilder.show()
     }
 }

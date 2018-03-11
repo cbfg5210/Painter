@@ -64,8 +64,8 @@ dependencies {
     implementation('com.github.clans:fab:1.6.4') {
         exclude group: 'com.android.support'
     }
-    implementation 'com.afollestad.material-dialogs:commons:0.9.4.5'
-    implementation 'com.afollestad.material-dialogs:core:0.9.4.5'
+    implementation deps.materialDialogs.common
+    implementation deps.materialDialogs.core
     implementation deps.gson
     implementation deps.recyclerAdapterDelegate
     implementation deps.rxjava2

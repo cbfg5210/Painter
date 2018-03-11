@@ -68,4 +68,6 @@ dependencies {
     implementation deps.rxAndroid
     implementation deps.gson
     implementation deps.spinKit
+    implementation deps.materialDialogs.common
+    implementation deps.materialDialogs.core
 }

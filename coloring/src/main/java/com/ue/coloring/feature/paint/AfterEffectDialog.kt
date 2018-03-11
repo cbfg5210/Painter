@@ -54,11 +54,11 @@ class AfterEffectDialog : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        presenter = PaintPresenter(context as AppCompatActivity)
+        val ctx = context as AppCompatActivity
+        presenter = PaintPresenter(ctx)
         tipDialog = TipDialog.newInstance()
-        mDialogHelper = DialogHelper(context)
-
-        imageUri = arguments.getString(ARG_PICTURE_PATH)
+        mDialogHelper = DialogHelper(ctx)
+        imageUri = arguments!!.getString(ARG_PICTURE_PATH)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -94,7 +94,7 @@ class AfterEffectDialog : DialogFragment() {
         rootView.addWords.setOnClickListener(listener)
         rootView.addBorder.setOnClickListener(listener)
 
-        return AlertDialog.Builder(context)
+        return AlertDialog.Builder(context!!)
                 .setTitle(R.string.co_after_effect)
                 .setView(rootView)
                 .setPositiveButton(R.string.co_ok) { _, _ -> saveEffectWork() }
