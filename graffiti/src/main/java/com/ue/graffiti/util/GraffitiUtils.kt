@@ -236,7 +236,8 @@ fun fillInWhiteBitmap(step: CrossFillStep, bitmap: Bitmap) {
 /*
 * load animation utils
 * */
-fun loadDrawTextImageAnimations(context: Context, isVisible: Boolean): Array<Animation> {
+fun loadDrawTextImageAnimations(context: Context?, isVisible: Boolean): Array<Animation>? {
+    context ?: return null
     return if (isVisible) arrayOf(
             AnimationUtils.loadAnimation(context, R.anim.gr_top_appear),
             AnimationUtils.loadAnimation(context, R.anim.gr_down_appear))

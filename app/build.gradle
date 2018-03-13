@@ -43,10 +43,10 @@ dependencies {
 
     implementation project(':library')
     if (!isRunAlone.toBoolean()) {
-        implementation project(':autodraw')
+        implementation project(':outline')
         implementation project(':coloring')
         implementation project(':graffiti')
-        //implementation project(':pixelpaint')
+        implementation project(':pixel')
     }
 
     implementation deps.banner

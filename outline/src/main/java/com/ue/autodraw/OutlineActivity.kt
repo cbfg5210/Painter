@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.RadioGroup
+import com.afollestad.materialdialogs.MaterialDialog
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.ue.library.event.HomeWatcher
 import com.ue.library.event.SimplePermissionListener
@@ -32,7 +33,7 @@ class OutlineActivity : RxAppCompatActivity(),
     }
 
     private var disposable: Disposable? = null
-    private lateinit var loadingDialog: LoadingDialog
+    private lateinit var loadingDialog: MaterialDialog
     private var recordVideoHelper: RecordVideoHelper? = null
     //when ready,true:draw,false:record
     private lateinit var homeWatcher: HomeWatcher
@@ -48,7 +49,7 @@ class OutlineActivity : RxAppCompatActivity(),
         initRecyclerViews()
         setListeners()
 
-        loadingDialog = LoadingDialog.newInstance()
+        loadingDialog = DialogUtils.getProgressDialog(this,getString(R.string.au_is_loading))
 
         val outlineObjPath = SPUtils.getString(SP_OUTLINE_OBJ_PATH)
         if (TextUtils.isEmpty(outlineObjPath)) loadPhoto(R.mipmap.test)
@@ -87,7 +88,7 @@ class OutlineActivity : RxAppCompatActivity(),
         advOutline.autoDrawListener = object : AutoDrawView.OnAutoDrawListener {
             override fun onReady() {
                 isProcessing = false
-                if (loadingDialog.isAdded) loadingDialog.dismiss()
+                if (loadingDialog.isShowing) loadingDialog.dismiss()
                 advOutline.startDrawing()
             }
 
@@ -186,7 +187,7 @@ class OutlineActivity : RxAppCompatActivity(),
 
     private fun checkIsProcessing(): Boolean {
         if (isProcessing) {
-            loadingDialog.showLoading(supportFragmentManager, getString(R.string.au_is_loading))
+            loadingDialog.show()
             return true
         }
         return false
@@ -274,7 +275,7 @@ class OutlineActivity : RxAppCompatActivity(),
     * */
     private fun loadPhoto(photo: Any) {
         isProcessing = true
-        loadingDialog.showLoading(supportFragmentManager, getString(R.string.au_is_loading))
+        loadingDialog.show()
 
         ImageLoaderUtils.display(ivObjectView, photo, R.mipmap.test, getString(R.string.au_load_photo_failed),
                 object : ImageLoaderUtils.ImageLoaderCallback2 {

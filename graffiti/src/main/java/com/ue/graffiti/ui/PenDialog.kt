@@ -73,7 +73,7 @@ class PenDialog : DialogFragment(), OnSeekBarChangeListener {
         }
 
     private fun getPenShapes(flag: Int, imageArrayId: Int, nameArrayId: Int, lastIndex: Int): ArrayList<Any> {
-        val images = context.getXmlImageArray(imageArrayId)
+        val images = context!!.getXmlImageArray(imageArrayId)
         val names = resources.getStringArray(nameArrayId)
 
         return images.indices.mapTo(ArrayList<Any>(images.size)) { PenShapeItem(flag, images[it], names[it], it, lastIndex == it) }
@@ -108,7 +108,7 @@ class PenDialog : DialogFragment(), OnSeekBarChangeListener {
         /*
         * init effect list
         * */
-        gAdapter = PenStyleAdapter(activity, penList)
+        gAdapter = PenStyleAdapter(activity!!, penList)
         gAdapter.delegateClickListener = penShapeListener
 
         contentView.rvPenStyles.apply {

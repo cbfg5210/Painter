@@ -330,7 +330,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                     .initialPath(ExportingUtils.projectPath)
                     .extensionsFilter(PixelCanvasView.PIXEL_EXTENSION_NAME)
                     .goUpLabel(".../")
-                    .show()
+                    .show(this)
             R.id.newp -> createNewProject()
             R.id.resetvp -> pvPixelCanvasView.resetViewPort()
             R.id.hidealllayers -> run {

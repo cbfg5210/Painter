@@ -15,7 +15,7 @@ class TimeLineDecoration(private val mContext: Context, private val distance: In
     private val linePaint: Paint
 
     init {
-        drawable = ContextCompat.getDrawable(mContext, R.drawable.co_svg_time)
+        drawable = ContextCompat.getDrawable(mContext, R.drawable.co_svg_time)!!
 
         linePaint = Paint()
         linePaint.strokeWidth = 2f

@@ -69,4 +69,6 @@ dependencies {
     implementation deps.recyclerAdapterDelegate
     implementation deps.rxLifecycle.lib
     implementation deps.rxLifecycle.components
+    implementation deps.materialDialogs.common
+    implementation deps.materialDialogs.core
 }

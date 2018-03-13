@@ -15,6 +15,7 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.Toast
+import com.afollestad.materialdialogs.MaterialDialog
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.ue.graffiti.R
 import com.ue.graffiti.constant.DrawPelFlags
@@ -28,10 +29,7 @@ import com.ue.graffiti.util.calPelCenterPoint
 import com.ue.graffiti.util.calPelSavedMatrix
 import com.ue.graffiti.util.toRedoUpdate
 import com.ue.graffiti.util.toUndoUpdate
-import com.ue.library.util.FileUtils
-import com.ue.library.util.IntentUtils
-import com.ue.library.util.SPUtils
-import com.ue.library.util.toast
+import com.ue.library.util.*
 import com.ue.library.widget.colorpicker.ColorPicker
 import com.ue.library.widget.colorpicker.SatValView
 import kotlinx.android.synthetic.main.gr_activity_graffiti.*
@@ -103,7 +101,7 @@ class GraffitiActivity : RxAppCompatActivity(), View.OnClickListener {
 
         initViews()
 
-        DialogHelper.showOnceHintDialog(this, R.string.gr_draw_gesture_title, R.string.gr_draw_gesture_tip, R.string.gr_got_it, SPKeys.SHOW_DRAW_GESTURE_HINT)
+        DialogUtils.showOnceHintDialog(this,R.string.gr_draw_gesture_title,R.string.gr_draw_gesture_tip,R.string.gr_got_it,null,SPKeys.SHOW_DRAW_GESTURE_HINT)
     }
 
     private fun initViews() {
@@ -391,12 +389,14 @@ class GraffitiActivity : RxAppCompatActivity(), View.OnClickListener {
     }
 
     override fun onBackPressed() {
-        DialogHelper.showExitDialog(this, View.OnClickListener {
-            saveGraffiti(object : FileUtils.OnSaveImageListener {
-                override fun onSaved(path: String) {
-                    finish()
-                }
-            })
+        DialogUtils.showExitDialogWithCheck(this, getString(R.string.gr_exit_tip), true, MaterialDialog.SingleButtonCallback { dialog, _ ->
+            if (dialog.isPromptCheckBoxChecked) {
+                saveGraffiti(object : FileUtils.OnSaveImageListener {
+                    override fun onSaved(path: String) {
+                        finish()
+                    }
+                })
+            }
         })
     }
 

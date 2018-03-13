@@ -27,11 +27,11 @@ class ShareVideoDialog : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        videoPath = arguments.getString(ARG_VIDEO_PATH)
+        videoPath = arguments!!.getString(ARG_VIDEO_PATH)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val shareDialog = AlertDialog.Builder(context)
+        val shareDialog = AlertDialog.Builder(context!!)
                 .setTitle(R.string.au_share_draw_video)
                 .setMessage(R.string.au_share_draw_video_tip)
                 .setPositiveButton(R.string.au_share, null)
@@ -48,7 +48,7 @@ class ShareVideoDialog : DialogFragment() {
 
     override fun onResume() {
         super.onResume()
-        shareDialog!!.getButton(AlertDialog.BUTTON_POSITIVE)?.setOnClickListener { IntentUtils.shareVideo(context, videoPath) }
-        shareDialog?.getButton(AlertDialog.BUTTON_NEGATIVE)?.setOnClickListener { IntentUtils.playVideo(context, videoPath) }
+        shareDialog!!.getButton(AlertDialog.BUTTON_POSITIVE)?.setOnClickListener { IntentUtils.shareVideo(context!!, videoPath) }
+        shareDialog?.getButton(AlertDialog.BUTTON_NEGATIVE)?.setOnClickListener { IntentUtils.playVideo(context!!, videoPath) }
     }
 }

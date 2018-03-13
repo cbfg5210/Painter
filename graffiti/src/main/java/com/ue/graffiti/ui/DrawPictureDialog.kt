@@ -11,11 +11,11 @@ import android.view.animation.Animation
 import com.ue.graffiti.R
 import com.ue.graffiti.constant.SPKeys
 import com.ue.graffiti.event.BarSensorListener
-import com.ue.graffiti.helper.DialogHelper
 import com.ue.graffiti.model.Pel
 import com.ue.graffiti.util.loadDrawTextImageAnimations
 import com.ue.graffiti.widget.CanvasView
 import com.ue.graffiti.widget.TextImageView
+import com.ue.library.util.DialogUtils
 import kotlinx.android.synthetic.main.gr_dialog_draw_picture.view.*
 
 /**
@@ -39,9 +39,9 @@ class DrawPictureDialog : DialogFragment(), View.OnClickListener {
     private var canvasHeight = 0
 
     //显示动画：上、下
-    private val showAnimations: Array<Animation> by lazy { loadDrawTextImageAnimations(context, true) }
+    private val showAnimations: Array<Animation>? by lazy { loadDrawTextImageAnimations(context, true) }
     //隐藏动画：上、下
-    private val hideAnimations: Array<Animation> by lazy { loadDrawTextImageAnimations(context, false) }
+    private val hideAnimations: Array<Animation>? by lazy { loadDrawTextImageAnimations(context, false) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val contentView = inflater.inflate(R.layout.gr_dialog_draw_picture, null)
@@ -112,7 +112,7 @@ class DrawPictureDialog : DialogFragment(), View.OnClickListener {
                 savedCanvas.translate(picture!!.transDx, picture.transDy)
                 savedCanvas.scale(picture.scale, picture.scale, picture.centerPoint.x, picture.centerPoint.y)
                 savedCanvas.rotate(picture.degree, picture.centerPoint.x, picture.centerPoint.y)
-                savedCanvas.drawBitmap(picture.createContent(context)!!, picture.beginPoint.x, picture.beginPoint.y, null)
+                savedCanvas.drawBitmap(picture.createContent(context!!)!!, picture.beginPoint.x, picture.beginPoint.y, null)
                 savedCanvas.restore()
             }
         }
@@ -121,15 +121,16 @@ class DrawPictureDialog : DialogFragment(), View.OnClickListener {
     private fun toggleMenuVisibility(isVisible: Boolean) {
         val visibility = if (isVisible) View.VISIBLE else View.GONE
         val animations = getToggleAnimations(isVisible)
-
-        vgTopToolbar.startAnimation(animations[0])
-        vgDownToolbar.startAnimation(animations[1])
+        if (animations != null) {
+            vgTopToolbar.startAnimation(animations[0])
+            vgDownToolbar.startAnimation(animations[1])
+        }
 
         vgDownToolbar.visibility = visibility
         vgTopToolbar.visibility = visibility
     }
 
-    private fun getToggleAnimations(isVisible: Boolean): Array<Animation> {
+    private fun getToggleAnimations(isVisible: Boolean): Array<Animation>? {
         return if (isVisible) showAnimations else hideAnimations
     }
 
@@ -153,7 +154,7 @@ class DrawPictureDialog : DialogFragment(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        DialogHelper.showOnceHintDialog(context, R.string.gr_image_gesture_title, R.string.gr_image_gesture_tip, R.string.gr_got_it, SPKeys.SHOW_IMAGE_GESTURE_HINT)
+        DialogUtils.showOnceHintDialog(context!!, R.string.gr_image_gesture_title, R.string.gr_image_gesture_tip, R.string.gr_got_it, null, SPKeys.SHOW_IMAGE_GESTURE_HINT)
     }
 
     interface OnDrawPictureListener {

@@ -21,12 +21,12 @@ class PictureDialog : DialogFragment() {
         rvPictures.setHasFixedSize(true)
 
         val pictureNameArray = resources.getStringArray(R.array.gr_pictureNameArray)
-        val pictureResArray = context.getXmlImageArray(R.array.gr_pictureResArray)
+        val pictureResArray = context!!.getXmlImageArray(R.array.gr_pictureResArray)
 
         val pictureItems = ArrayList<PictureItem>(pictureNameArray.size)
         pictureNameArray.indices.mapTo(pictureItems) { PictureItem(pictureNameArray[it], pictureResArray[it]) }
 
-        rvPictures.adapter = PictureAdapter(activity, pictureItems).apply {
+        rvPictures.adapter = PictureAdapter(activity!!, pictureItems).apply {
             itemClickListener = object : PictureAdapter.OnPictureItemListener {
                 override fun onItemClick(position: Int, pictureItem: PictureItem) {
                     pickPictureListener?.onPicturePicked(pictureItem.res)

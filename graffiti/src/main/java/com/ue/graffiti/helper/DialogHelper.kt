@@ -1,21 +1,17 @@
 package com.ue.graffiti.helper
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Paint
 import android.support.v4.app.FragmentActivity
 import android.view.LayoutInflater
-import android.view.View
 import com.ue.graffiti.R
 import com.ue.graffiti.event.OnSingleResultListener
 import com.ue.graffiti.ui.DrawPictureDialog
 import com.ue.graffiti.ui.DrawTextDialog
 import com.ue.graffiti.ui.PenDialog
 import com.ue.graffiti.widget.CanvasView
-import com.ue.library.util.SPUtils
-import kotlinx.android.synthetic.main.gr_layout_check_box.view.*
 import kotlinx.android.synthetic.main.gr_layout_input.view.*
 
 /**
@@ -67,17 +63,6 @@ object DialogHelper {
         dialog.show(fragmentManager, tag)
     }
 
-    fun showExitDialog(activity: Activity, saveListener: View.OnClickListener) {
-        AlertDialog.Builder(activity)
-                .setTitle(R.string.gr_exit)
-                .setMessage(R.string.gr_exit_tip)
-                .setPositiveButton(R.string.gr_exit_save) { _, _ -> saveListener.onClick(null) }
-                .setNegativeButton(R.string.gr_cancel, null)
-                .setNeutralButton(R.string.gr_exit_not_save) { _, _ -> activity.finish() }
-                .create()
-                .show()
-    }
-
     fun showInputDialog(context: Context, tip: String, singleResultListener: OnSingleResultListener) {
         showInputDialog(context, tip, null, singleResultListener)
     }
@@ -110,25 +95,6 @@ object DialogHelper {
                 .setMessage(tip)
                 .setPositiveButton(R.string.gr_ok, okListener)
                 .setNegativeButton(R.string.gr_cancel, null)
-                .create()
-                .show()
-    }
-
-    fun showOnceHintDialog(context: Context, titleRes: Int, hintRes: Int, positiveRes: Int, spKey: String) {
-        val showHint = SPUtils.getBoolean(spKey, true)
-        if (!showHint) {
-            return
-        }
-        val checkBoxLayout = LayoutInflater.from(context).inflate(R.layout.gr_layout_check_box, null)
-        AlertDialog.Builder(context)
-                .setTitle(titleRes)
-                .setMessage(hintRes)
-                .setPositiveButton(positiveRes) { _, _ ->
-                    if (checkBoxLayout.cbCheck.isChecked) {
-                        SPUtils.putBoolean(spKey, false)
-                    }
-                }
-                .setView(checkBoxLayout)
                 .create()
                 .show()
     }

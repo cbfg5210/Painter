@@ -18,6 +18,7 @@ import com.ue.graffiti.model.Pel
 import com.ue.graffiti.util.loadDrawTextImageAnimations
 import com.ue.graffiti.widget.CanvasView
 import com.ue.graffiti.widget.TextImageView
+import com.ue.library.util.DialogUtils
 import com.ue.library.widget.colorpicker.ColorPicker
 import com.ue.library.widget.colorpicker.SatValView
 import kotlinx.android.synthetic.main.gr_dialog_draw_text.*
@@ -43,9 +44,9 @@ class DrawTextDialog : DialogFragment(), View.OnClickListener {
     private var mCanvasHeight = 0
     private var paintColor = 0
     //显示动画：上、下
-    private val showAnimations: Array<Animation> by lazy { loadDrawTextImageAnimations(context, true) }
+    private val showAnimations: Array<Animation>? by lazy { loadDrawTextImageAnimations(context, true) }
     //隐藏动画：上、下
-    private val hideAnimations: Array<Animation> by lazy { loadDrawTextImageAnimations(context, false) }
+    private val hideAnimations: Array<Animation>? by lazy { loadDrawTextImageAnimations(context, false) }
 
     fun setDrawTextListener(drawTextListener: OnDrawTextListener) {
         mDrawTextListener = drawTextListener
@@ -53,7 +54,7 @@ class DrawTextDialog : DialogFragment(), View.OnClickListener {
 
     private lateinit var cpPaletteColorPicker: ColorPicker
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val contentView = LayoutInflater.from(context).inflate(R.layout.gr_dialog_draw_text, null)
         tivCanvas = contentView.tivCanvas
         tivCanvas.barSensorListener = object : BarSensorListener {
@@ -84,7 +85,7 @@ class DrawTextDialog : DialogFragment(), View.OnClickListener {
         drawPels()
         tivCanvas.setBitmap(savedBitmap, mCanvasWidth, mCanvasHeight, paintColor)
 
-        cpPaletteColorPicker = ColorPicker(context, Color.BLACK, object : SatValView.OnColorChangeListener {
+        cpPaletteColorPicker = ColorPicker(context!!, Color.BLACK, object : SatValView.OnColorChangeListener {
             override fun onColorChanged(newColor: Int) {
                 paintColor = newColor
                 tivCanvas.setTextColor(newColor)
@@ -123,7 +124,7 @@ class DrawTextDialog : DialogFragment(), View.OnClickListener {
                 savedCanvas.translate(picture!!.transDx, picture.transDy)
                 savedCanvas.scale(picture.scale, picture.scale, picture.centerPoint.x, picture.centerPoint.y)
                 savedCanvas.rotate(picture.degree, picture.centerPoint.x, picture.centerPoint.y)
-                savedCanvas.drawBitmap(picture.createContent(context)!!, picture.beginPoint.x, picture.beginPoint.y, null)
+                savedCanvas.drawBitmap(picture.createContent(context!!)!!, picture.beginPoint.x, picture.beginPoint.y, null)
                 savedCanvas.restore()
             }
         }
@@ -132,11 +133,11 @@ class DrawTextDialog : DialogFragment(), View.OnClickListener {
     override fun onResume() {
         super.onResume()
         demandContent()
-        DialogHelper.showOnceHintDialog(context, R.string.gr_text_gesture_title, R.string.gr_text_gesture_tip, R.string.gr_got_it, SPKeys.SHOW_TEXT_GESTURE_HINT)
+        DialogUtils.showOnceHintDialog(context!!, R.string.gr_text_gesture_title, R.string.gr_text_gesture_tip, R.string.gr_got_it, null, SPKeys.SHOW_TEXT_GESTURE_HINT)
     }
 
     private fun demandContent() {
-        DialogHelper.showInputDialog(context, getString(R.string.gr_input_text), getString(R.string.gr_module_name), object : OnSingleResultListener {
+        DialogHelper.showInputDialog(context!!, getString(R.string.gr_input_text), getString(R.string.gr_module_name), object : OnSingleResultListener {
             override fun onResult(result: Any) {
                 tivCanvas.setTextContent(result as String)
                 tivCanvas.invalidate()
@@ -147,15 +148,16 @@ class DrawTextDialog : DialogFragment(), View.OnClickListener {
     private fun toggleMenuVisibility(isVisible: Boolean) {
         val visibility = if (isVisible) View.VISIBLE else View.GONE
         val animations = getToggleAnimations(isVisible)
-
-        vgDrawTextTopMenu.startAnimation(animations[0])
-        vgDrawTextBottomMenu.startAnimation(animations[1])
+        if (animations != null) {
+            vgDrawTextTopMenu.startAnimation(animations[0])
+            vgDrawTextBottomMenu.startAnimation(animations[1])
+        }
 
         vgDrawTextBottomMenu.visibility = visibility
         vgDrawTextTopMenu.visibility = visibility
     }
 
-    private fun getToggleAnimations(isVisible: Boolean): Array<Animation> {
+    private fun getToggleAnimations(isVisible: Boolean): Array<Animation>? {
         return if (isVisible) showAnimations else hideAnimations
     }
 
