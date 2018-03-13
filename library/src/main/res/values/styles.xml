@@ -1,28 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppTheme" parent="QMUI_Theme">
-        <!-- 配置qmui提供的theme -->
-        <item name="qmui_content_spacing_horizontal">@dimen/widget_size_20</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!--设置fontFamily,toast出错:Error inflating class android.widget.TextView-->
+        <!--<item name="android:fontFamily">sans-serif-light</item>-->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <!--&lt;!&ndash; Base application theme. &ndash;&gt;-->
-    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
-        <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
-        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
-        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
-        <!--<item name="colorAccent">@color/colorAccent</item>-->
-        <!--&lt;!&ndash;windowBackground vs colorBackground-->
-         <!--the difference is that when the app starts the android:windowBackground is visible first,-->
-         <!--for a brief moment, and then the layout background color takes over.-->
-         <!--So if you use two different colors, it will flicker on the screen-->
-        <!--&ndash;&gt;-->
-        <!--<item name="android:windowBackground">@color/colorWindowBg</item>-->
-        <!--<item name="android:colorBackground">@color/colorWindowBg</item>-->
-        <!--&lt;!&ndash;&ndash;&gt;-->
-    <!--</style>-->
-
     <style name="FullScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>

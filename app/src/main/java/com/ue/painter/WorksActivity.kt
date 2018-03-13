@@ -12,7 +12,7 @@ import com.ue.coloring.feature.theme.WorksAdapter
 import com.ue.library.util.toast
 import com.ue.painter.model.Work
 import com.ue.painter.model.WorkShop
-import kotlinx.android.synthetic.main.co_fragment_works.*
+import kotlinx.android.synthetic.main.activity_works.*
 
 /**
  * Created by hawk on 2018/1/27.
@@ -31,7 +31,7 @@ class WorksActivity : RxAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.co_fragment_works)
+        setContentView(R.layout.activity_works)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 

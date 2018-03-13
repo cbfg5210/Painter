@@ -13,7 +13,7 @@ import com.ue.painter.R
 import com.ue.painter.WorksActivity
 import com.ue.painter.model.VideoWork
 import com.ue.painter.model.Work
-import kotlinx.android.synthetic.main.co_item_work.view.*
+import kotlinx.android.synthetic.main.item_work.view.*
 import java.text.SimpleDateFormat
 
 internal class WorksAdapter(activity: Activity, works: List<Work>? = null) : DelegationAdapter<Work>(), OnDelegateClickListener {
@@ -49,7 +49,7 @@ internal class WorksAdapter(activity: Activity, works: List<Work>? = null) : Del
         }
     }
 
-    private inner class VideoWorkDelegate(activity: Activity) : AdapterDelegate<Work>(activity, R.layout.co_item_work) {
+    private inner class VideoWorkDelegate(activity: Activity) : AdapterDelegate<Work>(activity, R.layout.item_work) {
         override fun onCreateViewHolder(itemView: View): BaseViewHolder<Work> {
             return object : BaseViewHolder<Work>(itemView) {
                 private val ivThemeImage = itemView.ivThemeImage
@@ -72,7 +72,7 @@ internal class WorksAdapter(activity: Activity, works: List<Work>? = null) : Del
         }
     }
 
-    private inner class PictureWorkDelegate(activity: Activity) : AdapterDelegate<Work>(activity, R.layout.co_item_work) {
+    private inner class PictureWorkDelegate(activity: Activity) : AdapterDelegate<Work>(activity, R.layout.item_work) {
         override fun onCreateViewHolder(itemView: View): BaseViewHolder<Work> {
             return object : BaseViewHolder<Work>(itemView) {
                 private val ivThemeImage = itemView.ivThemeImage

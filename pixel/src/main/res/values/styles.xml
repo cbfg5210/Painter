@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!--设置fontFamily,toast出错:Error inflating class android.widget.TextView-->
-        <!--<item name="android:fontFamily">sans-serif-light</item>-->
-        <item name="android:windowBackground">@null</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">-->
+        <!--&lt;!&ndash;设置fontFamily,toast出错:Error inflating class android.widget.TextView&ndash;&gt;-->
+        <!--&lt;!&ndash;<item name="android:fontFamily">sans-serif-light</item>&ndash;&gt;-->
+        <!--<item name="android:windowBackground">@null</item>-->
+        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
+        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
+    <!--</style>-->
 
-    <style name="AppTheme.Splash" parent="AppTheme">
+    <!--<style name="AppTheme.Splash" parent="AppTheme">-->
 
-    </style>
+    <!--</style>-->
 
     <style name="TextTheme" parent="TextAppearance.AppCompat">
         <item name="android:fontFamily">sans-serif-light</item>
