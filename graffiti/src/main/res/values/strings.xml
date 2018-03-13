@@ -69,4 +69,5 @@
     <string name="gr_share_work_app_module_link">我在%s-%s完成了一个作品，快来看一下吧！(下载链接:%s)</string>
     <string name="gr_module_name">指尖涂鸦</string>
     <string name="gr_download_link">http://app.mi.com/details?id=com.ue.painter</string>
+    <string name="gr_save_work">保存当前作品</string>
 </resources>

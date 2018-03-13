@@ -1,13 +1,18 @@
 package com.ue.painter
 
 import android.app.Activity
+import android.content.Intent
 import android.support.v4.content.ContextCompat
 import android.view.View
 import com.ue.adapterdelegate.AdapterDelegate
 import com.ue.adapterdelegate.BaseViewHolder
 import com.ue.adapterdelegate.DelegationAdapter
 import com.ue.adapterdelegate.OnDelegateClickListener
+import com.ue.autodraw.OutlineActivity
+import com.ue.coloring.feature.theme.ColoringThemesActivity
+import com.ue.graffiti.ui.GraffitiActivity
 import com.ue.painter.model.ModuleItem
+import com.ue.pixel.ui.DrawingActivity
 import kotlinx.android.synthetic.main.item_module.view.*
 
 /**
@@ -33,10 +38,10 @@ class ModuleAdapter(activity: Activity) : DelegationAdapter<ModuleItem>() {
             override fun onClick(v: View, position: Int) {
                 val flag = items[position].flag
                 when (flag) {
-//                        OUTLINE -> v.activity.startActivity(Intent(v.activity, AutoDrawActivity::class.java))
-//                        COLORING -> v.activity.startActivity(Intent(v.activity, MainListActivity::class.java))
-//                        GRAFFITI -> v.activity.startActivity(Intent(v.activity, GraffitiActivity::class.java))
-//                        PIXEL -> Intent()
+                        OUTLINE -> activity.startActivity(Intent(activity, OutlineActivity::class.java))
+                        COLORING -> activity.startActivity(Intent(activity, ColoringThemesActivity::class.java))
+                        GRAFFITI -> activity.startActivity(Intent(activity, GraffitiActivity::class.java))
+                        PIXEL -> activity.startActivity(Intent(activity, DrawingActivity::class.java))
                 }
             }
         }

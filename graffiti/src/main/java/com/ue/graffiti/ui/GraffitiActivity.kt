@@ -101,7 +101,7 @@ class GraffitiActivity : RxAppCompatActivity(), View.OnClickListener {
 
         initViews()
 
-        DialogUtils.showOnceHintDialog(this,R.string.gr_draw_gesture_title,R.string.gr_draw_gesture_tip,R.string.gr_got_it,null,SPKeys.SHOW_DRAW_GESTURE_HINT)
+        DialogUtils.showOnceHintDialog(this, R.string.gr_draw_gesture_title, R.string.gr_draw_gesture_tip, R.string.gr_got_it, null, SPKeys.SHOW_DRAW_GESTURE_HINT)
     }
 
     private fun initViews() {
@@ -389,14 +389,14 @@ class GraffitiActivity : RxAppCompatActivity(), View.OnClickListener {
     }
 
     override fun onBackPressed() {
-        DialogUtils.showExitDialogWithCheck(this, getString(R.string.gr_exit_tip), true, MaterialDialog.SingleButtonCallback { dialog, _ ->
+        DialogUtils.showExitDialogWithCheck(this, getString(R.string.gr_save_work), true, MaterialDialog.SingleButtonCallback { dialog, _ ->
             if (dialog.isPromptCheckBoxChecked) {
                 saveGraffiti(object : FileUtils.OnSaveImageListener {
                     override fun onSaved(path: String) {
                         finish()
                     }
                 })
-            }
+            } else finish()
         })
     }
 
