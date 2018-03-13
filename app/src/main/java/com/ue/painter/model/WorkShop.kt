@@ -113,7 +113,7 @@ class WorkShop {
 
     fun getRecentWorks(atyOrFrag: Any, listener: OnFetchPicWorksListener) {
         val context = if (atyOrFrag is android.support.v4.app.Fragment) atyOrFrag.context else atyOrFrag as Context
-        context?:return
+        context ?: return
         PermissionUtils.checkReadWriteStoragePerms(context, context.getString(R.string.load_photo_err_no_perm), object : SimplePermissionListener() {
             override fun onSucceed(requestCode: Int, grantPermissions: MutableList<String>) {
                 Observable

@@ -30,7 +30,8 @@
         </activity>
         <activity
             android:name="com.ue.pixel.ui.ProjectManagerActivity"
-            android:label="@string/pi_project_manager"/>
+            android:label="@string/pi_project_manager"
+            android:theme="@style/FullScreenTheme"/>
     </application>
 
 </manifest>

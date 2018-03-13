@@ -3,6 +3,7 @@ package com.ue.library.util
 import android.content.Context
 import android.graphics.Bitmap
 import com.ue.library.R
+import com.ue.library.constant.FileTypes
 import com.ue.library.event.SimplePermissionListener
 import java.io.File
 import java.io.FileOutputStream
@@ -29,7 +30,7 @@ object FileUtils {
                         }
                         if (!dir.exists()) dir.mkdirs()
 
-                        saveImage(context, bmp, "$path$workName.png", listener, showToast!!)
+                        saveImage(context, bmp, "$path$workName${FileTypes.PNG}", listener, showToast!!)
                     }
                 })
     }

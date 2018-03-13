@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.util.Log
+import com.ue.library.constant.FileTypes
 import com.ue.library.util.bindUtilDestroy
 import com.ue.pixel.event.OnProjectInfoListener
 import com.ue.pixel.gifencoder.AnimatedGifEncoder
@@ -36,7 +37,7 @@ object ExportUtils {
                                     .filter { pixelCanvasView.pixelCanvasLayers[it].visible }
                                     .forEach { canvas.drawBitmap(pixelCanvasView.pixelCanvasLayers[it].bitmap, null, Rect(0, 0, width, height), paint) }
 
-                            val file = File(ExportingUtils.instance.checkAndCreateProjectDirs(), fileName + ".png")
+                            val file = File(ExportingUtils.instance.checkAndCreateProjectDirs(), fileName + FileTypes.PNG)
                             var out: FileOutputStream? = null
                             try {
                                 file.createNewFile()

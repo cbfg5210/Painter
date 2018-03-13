@@ -65,7 +65,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
     var isEdited = false
         set(value) {
             field = value
-            tvTitle.text = fromHtml("PxerStudio<br><small><small>${projectName}${(if (value) "*" else "")}</small></small>")
+            tvTitle.text = fromHtml("像素画<br><small><small>${projectName}${(if (value) "*" else "")}</small></small>")
         }
 
     private lateinit var layerAdt: LayerThumbAdapter
@@ -524,7 +524,7 @@ class DrawingActivity : AppCompatActivity(), FileChooserDialog.FileCallback, Ite
                 }
             }
         }
-        currentProjectPath = Environment.getExternalStorageDirectory().path + Constants.PATH_PIXEL + (projectName + ".pxer")
+        currentProjectPath = "${Environment.getExternalStorageDirectory().path}${Constants.PATH_PIXEL}$projectName.pxer"
         setTitle(projectName, false)
         Tool.saveProject(projectName + PixelCanvasView.PIXEL_EXTENSION_NAME, gson.toJson(out))
         return true

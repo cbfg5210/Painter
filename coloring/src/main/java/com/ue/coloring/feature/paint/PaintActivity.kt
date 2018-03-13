@@ -16,6 +16,7 @@ import com.ue.coloring.R
 import com.ue.coloring.factory.DialogHelper
 import com.ue.coloring.widget.ColourImageView
 import com.ue.coloring.widget.TipDialog
+import com.ue.library.constant.FileTypes
 import com.ue.library.util.*
 import com.ue.library.widget.colorpicker.ColorPicker
 import com.ue.library.widget.colorpicker.SatValView
@@ -211,7 +212,7 @@ class PaintActivity : AppCompatActivity(), View.OnClickListener {
         tipDialog.showTip(supportFragmentManager, getString(R.string.co_saving_image))
 
         val picName =
-                if (isFromThemes) "${pictureName.replace(".png", "_")}fc.png"
+                if (isFromThemes) "${pictureName.replace(FileTypes.PNG, "_")}fc${FileTypes.PNG}"
                 else pictureName
 
         val bitmapToSave = bitmap ?: civColoring.getBitmap()!!

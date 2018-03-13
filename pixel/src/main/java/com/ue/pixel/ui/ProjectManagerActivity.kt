@@ -12,7 +12,7 @@ import java.io.FileFilter
 import java.util.*
 
 class ProjectManagerActivity : AppCompatActivity() {
-    internal var projectFiles = ArrayList<File>()
+    private var projectFiles = ArrayList<File>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

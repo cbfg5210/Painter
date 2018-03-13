@@ -15,6 +15,7 @@ import com.ue.coloring.event.OnChangeBorderListener
 import com.ue.coloring.factory.DialogHelper
 import com.ue.coloring.widget.DragedTextView
 import com.ue.coloring.widget.TipDialog
+import com.ue.library.constant.FileTypes
 import com.ue.library.util.ImageLoaderUtils
 import kotlinx.android.synthetic.main.co_dialog_after_effect.view.*
 
@@ -127,6 +128,6 @@ class AfterEffectDialog : DialogFragment() {
     }
 
     private fun getBorderWorkName(path: String): String {
-        return path.substring(path.lastIndexOf("/") + 1).replace(".png", "_bd.png")
+        return path.substring(path.lastIndexOf("/") + 1).replace(FileTypes.PNG, "_bd${FileTypes.PNG}")
     }
 }
