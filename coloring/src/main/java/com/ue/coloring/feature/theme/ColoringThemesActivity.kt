@@ -10,8 +10,8 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.squareup.picasso.Picasso
 import com.ue.coloring.R
-import com.ue.coloring.constant.Constants
-import com.ue.coloring.constant.Constants.TAG_COLORING_THEMES
+import com.ue.coloring.constant.CoConstants
+import com.ue.coloring.constant.CoConstants.TAG_COLORING_THEMES
 import com.ue.coloring.model.ThemeItem
 import com.ue.coloring.model.ThemeTitle
 import com.ue.library.event.SimplePermissionListener
@@ -59,11 +59,11 @@ class ColoringThemesActivity : AppCompatActivity() {
 
     private fun loadData(): ArrayList<Any> {
         val items = ArrayList<Any>()
-        items.add(ThemeTitle(Constants.THEME_DEFAULT_IMAGE, getString(R.string.co_secret_garden)))
+        items.add(ThemeTitle(CoConstants.THEME_DEFAULT_IMAGE, getString(R.string.co_secret_garden)))
         try {
-            val images = assets.list(Constants.THEME_DEFAULT)
+            val images = assets.list(CoConstants.THEME_DEFAULT)
             val len = images.size
-            (0 until len).mapTo(items) { ThemeItem(images[it], "${Constants.THEME_DEFAULT_PREFIX}${images[it]}", false) }
+            (0 until len).mapTo(items) { ThemeItem(images[it], "${CoConstants.THEME_DEFAULT_PREFIX}${images[it]}", false) }
         } catch (e: IOException) {
             e.printStackTrace()
         }

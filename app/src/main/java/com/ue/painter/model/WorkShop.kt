@@ -41,9 +41,9 @@ class WorkShop {
                             val externalPath = Environment.getExternalStorageDirectory().path
 
                             getOutlineWorks("$externalPath${Constants.PATH_OUTLINE}")?.apply { works.addAll(this) }
-                            getPicWorks(Modules.COLORING, "$externalPath${Constants.PATH_COLORING}")?.apply { works.addAll(this) }
+                            getPicWorks(Modules.COLORING, "$externalPath${Constants.PATH_COLORING_WORKS}")?.apply { works.addAll(this) }
                             getPicWorks(Modules.GRAFFITI, "$externalPath${Constants.PATH_GRAFFITI}")?.apply { works.addAll(this) }
-                            getPicWorks(Modules.PIXEL, "$externalPath${Constants.PATH_PIXEL}")?.apply { works.addAll(this) }
+                            getPicWorks(Modules.PIXEL, "$externalPath${Constants.PATH_PIXEL}", true)?.apply { works.addAll(this) }
 
                             works.sortByDescending { it.lastModTime }
 
@@ -98,15 +98,17 @@ class WorkShop {
         return list
     }
 
-    private fun getPicWorks(cat: Int, dirPath: String): Array<PictureWork>? {
+    private fun getPicWorks(cat: Int, dirPath: String, enablePicFilter: Boolean = false): Array<PictureWork>? {
         val dir = File(dirPath)
         if (!dir.exists() || !dir.isDirectory) return null
         val files = dir.listFiles() ?: return null
         if (files.isEmpty()) return null
 
+        val finalFiles = if (enablePicFilter) files.filter { it.name.endsWith(FileTypes.PNG) }.toTypedArray() else files
+
         var file: File
-        return Array<PictureWork>(files.size, { i ->
-            file = files[i]
+        return Array<PictureWork>(finalFiles.size, { i ->
+            file = finalFiles[i]
             PictureWork(cat, "${FileTypes.getRawName(file.name)}", "file://${file.absolutePath}", file.lastModified()).apply { wvHRadio = getPicWvHRatio(file) }
         })
     }

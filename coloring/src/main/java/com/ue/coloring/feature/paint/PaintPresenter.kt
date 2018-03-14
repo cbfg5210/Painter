@@ -3,7 +3,7 @@ package com.ue.coloring.feature.paint
 import android.graphics.Bitmap
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
-import com.ue.coloring.constant.Constants
+import com.ue.library.constant.Constants
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -21,7 +21,7 @@ class PaintPresenter(private val mPaintActivity: AppCompatActivity) {
     fun saveImageLocally(bmp: Bitmap, paintName: String, listener: OnSaveImageListener) {
         Observable
                 .create(ObservableOnSubscribe<String> { e ->
-                    val path = Environment.getExternalStorageDirectory().getPath() + Constants.FOLDER_WORKS
+                    val path = Environment.getExternalStorageDirectory().path + Constants.PATH_COLORING_WORKS
                     val dir = File(path)
                     if (!dir.exists()) dir.mkdirs()
 
@@ -45,7 +45,7 @@ class PaintPresenter(private val mPaintActivity: AppCompatActivity) {
                 .subscribeOn(Schedulers.single())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ s ->
-                    if (!mPaintActivity.isFinishing){
+                    if (!mPaintActivity.isFinishing) {
                         listener.onSaved(s)
                     }
                 })

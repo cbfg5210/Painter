@@ -9,7 +9,7 @@ import com.ue.adapterdelegate.BaseViewHolder
 import com.ue.adapterdelegate.DelegationAdapter
 import com.ue.adapterdelegate.OnDelegateClickListener
 import com.ue.coloring.R
-import com.ue.coloring.constant.Constants.TAG_COLORING_THEMES
+import com.ue.coloring.constant.CoConstants.TAG_COLORING_THEMES
 import com.ue.coloring.feature.paint.PaintActivity
 import com.ue.coloring.model.ThemeItem
 import com.ue.coloring.model.ThemeTitle
